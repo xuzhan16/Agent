@@ -1,4 +1,4 @@
-"""
+﻿"""
 main_pipeline_demo.py
 
 基于 AI 的大学生职业规划智能体：单样本最小闭环联调主流程。
@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -36,7 +35,6 @@ from pipeline_utils import (
 )
 
 
-os.environ.setdefault("JOB_AGENT_LLM_MODE", "mock")
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -66,9 +64,9 @@ except ModuleNotFoundError:
     from student_profile_service import run_student_profile_service  # type: ignore
 
 try:
-    from job_profile.job_profile_service import run_job_profile_service as real_run_job_profile_service
-except Exception:
-    real_run_job_profile_service = None
+    from job_profile.job_profile_service import run_job_profile_service
+except ModuleNotFoundError:
+    from job_profile_service import run_job_profile_service  # type: ignore
 
 try:
     from job_match.job_match_service import run_job_match_service
@@ -168,27 +166,6 @@ def load_job_group_data(config: PipelineDemoConfig) -> Any:
     return records
 
 
-def mock_run_job_profile_service(target_job_name: str) -> Dict[str, Any]:
-    """最小静态 mock 兜底：只保证下游 job_match 能继续执行。"""
-    return {
-        "standard_job_name": target_job_name,
-        "job_category": "数据类",
-        "job_level": "初级",
-        "degree_requirement": "本科",
-        "major_requirement": ["数据科学与大数据技术", "统计学", "计算机科学与技术"],
-        "experience_requirement": ["有数据分析项目或实习经验优先"],
-        "hard_skills": ["SQL", "Python", "Excel", "数据分析"],
-        "tools_or_tech_stack": ["Excel", "Tableau", "Power BI"],
-        "certificate_requirement": ["CET-6"],
-        "practice_requirement": ["项目经验", "实习经验"],
-        "soft_skills": ["沟通协作", "逻辑分析", "学习能力"],
-        "summary": f"{target_job_name}岗位关注数据提取、分析建模、可视化表达与业务沟通能力。",
-        "vertical_paths": [f"{target_job_name} -> 高级{target_job_name}"],
-        "transfer_paths": [f"{target_job_name} -> 商业分析师"],
-        "group_summary": {"job_count": 2},
-    }
-
-
 def init_or_load_state(state_manager: StateManager, config: PipelineDemoConfig) -> Dict[str, Any]:
     """加载或初始化 student.json。"""
     config.state_path.parent.mkdir(parents=True, exist_ok=True)
@@ -286,20 +263,12 @@ def step_job_profile(state_manager: StateManager, config: PipelineDemoConfig) ->
     ensure_stage_result_exists(student_state, "student_profile_result", "job_profile")
 
     job_group_data = load_job_group_data(config)
-    if real_run_job_profile_service is not None and pd is not None:
-        job_profile_result = real_run_job_profile_service(
-            df=job_group_data,
-            standard_job_name=config.target_job_name,
-            output_path=config.snapshot_dir / "job_profile_service_result.json",
-            extra_context={"demo_name": "main_pipeline_demo_job_profile"},
-        )
-    else:
-        print_module_log(
-            "job_profile",
-            "当前环境无法直接运行真实 job_profile_service，使用静态 mock 结果兜底",
-            status="WARN",
-        )
-        job_profile_result = mock_run_job_profile_service(config.target_job_name)
+    job_profile_result = run_job_profile_service(
+        df=job_group_data,
+        standard_job_name=config.target_job_name,
+        output_path=config.snapshot_dir / "job_profile_service_result.json",
+        extra_context={"demo_name": "main_pipeline_demo_job_profile"},
+    )
 
     return save_stage_result_to_state(state_manager, "job_profile", safe_dict(job_profile_result), config)
 
@@ -494,3 +463,5 @@ def build_config_from_args(args: argparse.Namespace) -> PipelineDemoConfig:
 
 if __name__ == "__main__":
     run_main_pipeline(build_config_from_args(parse_args()))
+
+

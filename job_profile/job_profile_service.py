@@ -32,11 +32,11 @@ import pandas as pd
 from .job_profile_aggregator import aggregate_job_profile_group, build_demo_dataframe as build_aggregator_demo_df
 from .job_profile_builder import build_job_profile_input_payload
 from llm_interface_layer.llm_service import call_llm
-
+from llm_interface_layer.state_manager import StateManager
 
 LOGGER = logging.getLogger(__name__)
 DEFAULT_OUTPUT_PATH = Path("outputs/state/job_profile_service_result.json")
-
+DEFAULT_STATE_PATH = Path("outputs/state/student.json")
 
 @dataclass
 class JobProfileLLMSupplement:
@@ -49,7 +49,6 @@ class JobProfileLLMSupplement:
     summary: str = ""
     vertical_paths: List[str] = field(default_factory=list)
     transfer_paths: List[str] = field(default_factory=list)
-
 
 @dataclass
 class JobProfileServiceResult:
@@ -82,7 +81,6 @@ class JobProfileServiceResult:
     llm_profile_result: Dict[str, Any] = field(default_factory=dict)
     build_warnings: List[str] = field(default_factory=list)
 
-
 def setup_logging() -> None:
     """初始化日志配置。"""
     if LOGGER.handlers:
@@ -91,7 +89,6 @@ def setup_logging() -> None:
         level=logging.INFO,
         format="[%(asctime)s] [%(levelname)s] %(message)s",
     )
-
 
 def clean_text(value: Any) -> str:
     """安全文本清洗。"""
@@ -104,11 +101,9 @@ def clean_text(value: Any) -> str:
         return ""
     return text
 
-
 def safe_dict(value: Any) -> Dict[str, Any]:
     """安全转 dict。"""
     return value if isinstance(value, dict) else {}
-
 
 def safe_list(value: Any) -> List[Any]:
     """安全转 list。"""
@@ -117,7 +112,6 @@ def safe_list(value: Any) -> List[Any]:
     if value is None or (isinstance(value, float) and pd.isna(value)) or value == "":
         return []
     return [value]
-
 
 def dedup_keep_order(values: List[Any]) -> List[Any]:
     """对可 JSON 序列化对象做稳定去重。"""
@@ -132,7 +126,6 @@ def dedup_keep_order(values: List[Any]) -> List[Any]:
             result.append(item)
     return result
 
-
 def save_json(data: Dict[str, Any], output_path: Optional[str | Path]) -> None:
     """按需保存 JSON。"""
     if not output_path:
@@ -141,7 +134,6 @@ def save_json(data: Dict[str, Any], output_path: Optional[str | Path]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-
 
 def build_degree_requirement_text(
     builder_payload: Dict[str, Any],
@@ -164,7 +156,6 @@ def build_degree_requirement_text(
         if top_degree and top_degree != "未明确":
             return top_degree
     return ""
-
 
 def normalize_llm_job_profile_result(
     llm_result: Dict[str, Any],
@@ -219,7 +210,6 @@ def normalize_llm_job_profile_result(
         transfer_paths=transfer_paths,
     )
     return asdict(normalized) | {"raw_llm_result": source}
-
 
 def merge_job_profile_results(
     builder_payload: Dict[str, Any],
@@ -304,7 +294,6 @@ def merge_job_profile_results(
     )
     return asdict(result)
 
-
 def build_job_profile_llm_input(
     builder_payload: Dict[str, Any],
     aggregation_result: Dict[str, Any],
@@ -326,9 +315,11 @@ def build_job_profile_llm_input(
         "output_schema_hint": asdict(JobProfileLLMSupplement()),
     }
 
-
 class JobProfileService:
     """job_profile 业务服务编排器。"""
+
+    def __init__(self, state_manager: Optional[StateManager] = None) -> None:
+        self.state_manager = state_manager or StateManager()
 
     def build_features(
         self,
@@ -357,6 +348,7 @@ class JobProfileService:
         self,
         builder_payload: Dict[str, Any],
         aggregation_result: Dict[str, Any],
+        student_state: Optional[Dict[str, Any]] = None,
         context_data: Optional[Dict[str, Any]] = None,
         extra_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
@@ -384,21 +376,38 @@ class JobProfileService:
             task_type="job_profile",
             input_data=input_data,
             context_data=context_data,
-            student_state=None,
+            student_state=student_state,
             extra_context=merged_extra_context,
+        )
+
+    def update_student_state(
+        self,
+        job_profile_result: Dict[str, Any],
+        state_path: str | Path = DEFAULT_STATE_PATH,
+        student_state: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """写回 student.json 的 job_profile_result 字段。"""
+        return self.state_manager.update_state(
+            task_type="job_profile",
+            task_result=job_profile_result,
+            state_path=state_path,
+            student_state=student_state,
         )
 
     def run(
         self,
         df: pd.DataFrame,
         standard_job_name: str,
+        state_path: str | Path = DEFAULT_STATE_PATH,
         context_data: Optional[Dict[str, Any]] = None,
         extra_context: Optional[Dict[str, Any]] = None,
         output_path: Optional[str | Path] = DEFAULT_OUTPUT_PATH,
     ) -> Dict[str, Any]:
         """执行完整 job_profile 服务流程。"""
         setup_logging()
+        state_path = Path(state_path)
         service_warnings = []
+        student_state = self.state_manager.load_state(state_path)
 
         LOGGER.info("Step 1/4: build job profile payload for %s", standard_job_name)
         try:
@@ -441,6 +450,7 @@ class JobProfileService:
             llm_result = self.call_job_profile_llm(
                 builder_payload=builder_payload,
                 aggregation_result=aggregation_result,
+                student_state=student_state,
                 context_data=context_data,
                 extra_context=extra_context,
             )
@@ -456,6 +466,12 @@ class JobProfileService:
             llm_result=llm_result,
             service_warnings=service_warnings,
         )
+
+        self.update_student_state(
+            job_profile_result=final_result,
+            state_path=state_path,
+            student_state=student_state,
+        )
         save_json(final_result, output_path)
 
         LOGGER.info(
@@ -466,10 +482,10 @@ class JobProfileService:
         )
         return final_result
 
-
 def run_job_profile_service(
     df: pd.DataFrame,
     standard_job_name: str,
+    state_path: str | Path = DEFAULT_STATE_PATH,
     context_data: Optional[Dict[str, Any]] = None,
     extra_context: Optional[Dict[str, Any]] = None,
     output_path: Optional[str | Path] = DEFAULT_OUTPUT_PATH,
@@ -478,11 +494,11 @@ def run_job_profile_service(
     return JobProfileService().run(
         df=df,
         standard_job_name=standard_job_name,
+        state_path=state_path,
         context_data=context_data,
         extra_context=extra_context,
         output_path=output_path,
     )
-
 
 def parse_args() -> argparse.Namespace:
     """命令行参数解析。"""
@@ -503,7 +519,6 @@ def parse_args() -> argparse.Namespace:
         help="job_profile_result JSON 输出路径",
     )
     return parser.parse_args()
-
 
 if __name__ == "__main__":
     args = parse_args()
@@ -531,3 +546,5 @@ if __name__ == "__main__":
         output_path=args.output,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
+
+

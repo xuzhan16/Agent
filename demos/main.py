@@ -120,17 +120,20 @@ def save_dataframe(df: pd.DataFrame, output_path: Path, description: str) -> Non
     log(f"{description} saved: {output_path}")
 
 
-def print_pipeline_config(paths: PipelinePaths, sheet_name: int | str, log_every: int) -> None:
+def print_pipeline_config(paths: PipelinePaths, sheet_name: int | str, log_every: int, extract_max_workers: int) -> None:
     """
     在流水线启动前打印当前的所有关键配置，方便排查问题。
     """
-    llm_mode = os.getenv("JOB_AGENT_LLM_MODE", "mock")
+    llm_api_base_url = os.getenv("LLM_API_BASE_URL", "").strip() or os.getenv("LLM_BASE_URL", "").strip()
+    llm_model = os.getenv("LLM_MODEL_NAME", "").strip() or os.getenv("LLM_MODEL", "").strip()
     log("Pipeline configuration:")
     log(f"  input_excel: {paths.input_excel}")
     log(f"  output_root: {paths.output_root}")
     log(f"  sheet_name: {sheet_name}")
-    log(f"  llm_mode: {llm_mode}")
+    log(f"  llm_api_base_url: {llm_api_base_url}")
+    log(f"  llm_model: {llm_model}")
     log(f"  log_every: {log_every}")
+    log(f"  extract_max_workers: {extract_max_workers}")
 
 
 def run_pipeline(
@@ -140,6 +143,7 @@ def run_pipeline(
     sqlite_db_name: str = "jobs.db",
     dedup_threshold: float = 0.60,
     log_every: int = 50,
+    extract_max_workers: int = 4,
 ) -> None:
     """
     执行完整的数据处理流水线。
@@ -150,7 +154,8 @@ def run_pipeline(
         sheet_name: Excel 的 Sheet 索引或名称。
         sqlite_db_name: 生成的数据库文件名。
         dedup_threshold: 语义去重的置信度阈值。
-        log_every: 每处理多少行数据输出一次进度日志。
+        log_every: 每处理多少条/多少个唯一抽取任务输出一次进度日志。
+        extract_max_workers: 岗位画像抽取阶段并发调用大模型的线程数。
     """
     paths = PipelinePaths.from_args(
         input_excel=input_excel,
@@ -162,7 +167,7 @@ def run_pipeline(
     if not paths.input_excel.exists():
         raise FileNotFoundError(f"Input Excel file not found: {paths.input_excel}")
 
-    print_pipeline_config(paths, sheet_name=sheet_name, log_every=log_every)
+    print_pipeline_config(paths, sheet_name=sheet_name, log_every=log_every, extract_max_workers=extract_max_workers)
 
     # Step 1: 基础清洗 - 处理 Excel 格式、统一列名、解析薪资等
     log("Step 1/5: Start data cleaning.")
@@ -192,6 +197,7 @@ def run_pipeline(
         df=dedup_df,
         output_csv_path=str(paths.extracted_csv),
         log_every=log_every,
+        max_workers=extract_max_workers,
     )
     save_dataframe(
         extracted_profile_df,
@@ -263,7 +269,13 @@ def parse_args() -> argparse.Namespace:
         "--log-every",
         type=int,
         default=50,
-        help="岗位画像抽取时每处理多少条打印一次日志",
+        help="岗位画像抽取时每处理多少个唯一任务打印一次日志",
+    )
+    parser.add_argument(
+        "--extract-max-workers",
+        type=int,
+        default=4,
+        help="岗位画像抽取阶段并发调用大模型的线程数；如果接口限流明显可调小",
     )
     return parser.parse_args()
 
@@ -277,6 +289,10 @@ if __name__ == "__main__":
         sqlite_db_name=args.sqlite_db_name,
         dedup_threshold=args.dedup_threshold,
         log_every=args.log_every,
+        extract_max_workers=args.extract_max_workers,
     )
+
+
+
 
 

@@ -1,13 +1,12 @@
-"""
+﻿"""
 config.py
 
 统一大模型调用接口层配置。
-只管理配置，不写真实 API Key。
 
-兼容早期岗位流水线使用的环境变量（与当时独立脚本约定一致）：
-- JOB_AGENT_LLM_MODE=mock | openai_compatible（若设置则优先于 LLM_MOCK_ENABLED）
-- LLM_BASE_URL（在 LLM_API_BASE_URL 未设置时作为回退）
-- LLM_MODEL（在 LLM_MODEL_NAME 未设置时作为回退）
+读取优先级：
+1. llm_interface_layer/local_llm_config.py 中的本地调试配置；
+2. 环境变量；
+3. 代码内默认 Base URL / 默认模型。
 """
 
 from __future__ import annotations
@@ -15,48 +14,67 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
+
+try:
+    from .local_llm_config import (
+        LOCAL_LLM_API_BASE_URL,
+        LOCAL_LLM_API_KEY,
+        LOCAL_LLM_MODEL,
+    )
+except ModuleNotFoundError:
+    LOCAL_LLM_API_BASE_URL = ""
+    LOCAL_LLM_API_KEY = ""
+    LOCAL_LLM_MODEL = ""
 
 
-def _truthy_env(name: str, default: str = "0") -> bool:
-    return os.getenv(name, default).strip().lower() in {"1", "true", "yes", "y"}
+DEFAULT_API_BASE_URL = "https://aihubmix.com/v1"
+DEFAULT_MODEL_NAME = "coding-glm-5-free"
 
 
-def _resolve_mock_enabled() -> bool:
-    legacy = os.getenv("JOB_AGENT_LLM_MODE", "").strip().lower()
-    if legacy == "mock":
-        return True
-    if legacy == "openai_compatible":
-        return False
-    return _truthy_env("LLM_MOCK_ENABLED", "1")
+def _clean_config_text(value: Optional[str]) -> str:
+    """统一清理配置字符串。"""
+    return str(value or "").strip()
 
 
 def _resolve_api_base_url() -> str:
-    return os.getenv("LLM_API_BASE_URL", "").strip() or os.getenv("LLM_BASE_URL", "").strip()
-
-
-def _resolve_model_name() -> str:
+    """读取真实大模型 API Base URL。"""
     return (
-        os.getenv("LLM_MODEL_NAME", "").strip()
-        or os.getenv("LLM_MODEL", "").strip()
-        or "mock-gpt"
+        _clean_config_text(LOCAL_LLM_API_BASE_URL)
+        or _clean_config_text(os.getenv("LLM_API_BASE_URL"))
+        or _clean_config_text(os.getenv("LLM_BASE_URL"))
+        or DEFAULT_API_BASE_URL
     )
 
 
-_MOCK_ENABLED = _resolve_mock_enabled()
-_API_BASE_URL = _resolve_api_base_url()
-_MODEL_NAME = _resolve_model_name()
+def _resolve_model_name() -> str:
+    """读取真实大模型名称。"""
+    return (
+        _clean_config_text(LOCAL_LLM_MODEL)
+        or _clean_config_text(os.getenv("LLM_MODEL_NAME"))
+        or _clean_config_text(os.getenv("LLM_MODEL"))
+        or DEFAULT_MODEL_NAME
+    )
+
+
+def _resolve_api_key() -> str:
+    """读取真实大模型 API Key。"""
+    return (
+        _clean_config_text(LOCAL_LLM_API_KEY)
+        or _clean_config_text(os.getenv("LLM_API_KEY"))
+    )
 
 
 @dataclass(frozen=True)
 class LLMConfig:
-    """大模型客户端配置。"""
+    """真实大模型客户端配置。"""
 
-    model_name: str = _MODEL_NAME
+    model_name: str = _resolve_model_name()
     temperature: float = float(os.getenv("LLM_TEMPERATURE", "0.2"))
     timeout_seconds: int = int(os.getenv("LLM_TIMEOUT_SECONDS", "60"))
     retry_times: int = int(os.getenv("LLM_RETRY_TIMES", "2"))
-    mock_enabled: bool = _MOCK_ENABLED
-    api_base_url: str = _API_BASE_URL
+    api_base_url: str = _resolve_api_base_url()
+    api_key: str = _resolve_api_key()
     api_key_env_name: str = os.getenv("LLM_API_KEY_ENV_NAME", "LLM_API_KEY")
 
 

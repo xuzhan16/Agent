@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import re
+import time
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from difflib import SequenceMatcher
@@ -500,7 +501,9 @@ def judge_candidate_pair_with_llm(candidate_row: pd.Series) -> PairDecision:
 
 
 def judge_candidate_pairs(candidate_pairs: pd.DataFrame) -> pd.DataFrame:
+    """逐对调用大模型判断岗位是否同类，并打印实时进度日志。"""
     if candidate_pairs.empty:
+        print("[job_dedup] No candidate pairs recalled, skip LLM pair judgement.")
         return pd.DataFrame(
             columns=[
                 "title_id_1", "title_id_2", "raw_job_name_1", "raw_job_name_2",
@@ -508,9 +511,39 @@ def judge_candidate_pairs(candidate_pairs: pd.DataFrame) -> pd.DataFrame:
                 "standard_job_name", "confidence", "merge_reason", "llm_raw_response",
             ]
         )
+
+    total_pairs = len(candidate_pairs)
+    print(f"[job_dedup] Start LLM pair judgement, candidate pairs: {total_pairs}")
+
     decisions = []
-    for _, row in candidate_pairs.iterrows():
-        decisions.append(judge_candidate_pair_with_llm(row).__dict__)
+    for idx, (_, row) in enumerate(candidate_pairs.iterrows(), start=1):
+        pair_label = f"{clean_text(row.get('raw_job_name_1'))} <-> {clean_text(row.get('raw_job_name_2'))}"
+        print(
+            f"[job_dedup] Judging pair {idx}/{total_pairs}: {pair_label} | "
+            f"rule_recall_score={row.get('rule_recall_score')}"
+        )
+
+        start_time = time.time()
+        try:
+            decision = judge_candidate_pair_with_llm(row)
+        except Exception as exc:
+            elapsed = time.time() - start_time
+            print(
+                f"[job_dedup] Pair {idx}/{total_pairs} failed after {elapsed:.2f}s: "
+                f"{pair_label} | error={exc}"
+            )
+            raise
+
+        elapsed = time.time() - start_time
+        print(
+            f"[job_dedup] Pair {idx}/{total_pairs} done in {elapsed:.2f}s: "
+            f"is_same={decision.is_same_standard_job}, "
+            f"standard_job_name={decision.standard_job_name}, "
+            f"confidence={decision.confidence}"
+        )
+        decisions.append(decision.__dict__)
+
+    print(f"[job_dedup] Finished LLM pair judgement, processed pairs: {len(decisions)}")
     return pd.DataFrame(decisions)
 
 
@@ -690,5 +723,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
 
