@@ -1,0 +1,65 @@
+.job-matching-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.match-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.match-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.match-card :global(.ant-card-head) {
+  border-bottom: 2px solid #f0f2f5;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+.match-detail-item {
+  padding: 16px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.match-detail-item:global(.ant-progress) {
+  margin-bottom: 8px;
+}
+
+/* 表格样式优化 */
+.match-card :global(.ant-table) {
+  font-size: 13px;
+}
+
+.match-card :global(.ant-table-cell) {
+  padding: 12px 16px;
+}
+
+.match-card :global(.ant-table-row) {
+  transition: all 0.3s ease;
+}
+
+.match-card :global(.ant-table-row:hover) {
+  background-color: #f5f7fa;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .match-detail-item {
+    padding: 12px;
+  }
+  
+  .match-card :global(.ant-card-head) {
+    padding: 12px 16px;
+  }
+  
+  .match-card :global(.ant-table-cell) {
+    padding: 8px 12px;
+  }
+}

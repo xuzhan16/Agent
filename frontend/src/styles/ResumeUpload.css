@@ -1,0 +1,87 @@
+.resume-upload-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.upload-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.upload-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.upload-area {
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border: 2px dashed rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+}
+
+.upload-area :global(.ant-upload-drag) {
+  border-radius: 12px;
+}
+
+.progress-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: none;
+}
+
+.result-item {
+  padding: 12px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.result-item label {
+  display: block;
+  color: #667eea;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.result-item p {
+  margin: 0;
+  color: #333;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.skill-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .resume-upload-container {
+    margin: 0 auto;
+  }
+  
+  .upload-area {
+    padding: 20px !important;
+  }
+  
+  .skill-tag {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+}

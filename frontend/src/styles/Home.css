@@ -1,0 +1,80 @@
+.home-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  margin-bottom: 40px;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.hero-section .page-title {
+  font-size: 36px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-section .page-description {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.feature-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: none;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.feature-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.feature-card :global(.ant-card-head) {
+  border-bottom: 2px solid #f0f2f5;
+  background: transparent;
+}
+
+.feature-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-card li {
+  margin-bottom: 12px;
+  padding: 8px 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.feature-card strong {
+  color: #667eea;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 40px 24px;
+  }
+  
+  .hero-section .page-title {
+    font-size: 28px;
+  }
+  
+  .hero-section .page-description {
+    font-size: 14px;
+  }
+}

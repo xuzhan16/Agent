@@ -1,0 +1,98 @@
+.student-profile-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.profile-card :global(.ant-card-head) {
+  border-bottom: 2px solid #f0f2f5;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+.skill-item {
+  padding: 12px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.skill-item:global(.ant-rate) {
+  color: #667eea !important;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 24px;
+  padding: 16px 0;
+  border-left: 3px solid #667eea;
+  padding-left: 20px;
+  margin-left: -20px;
+}
+
+.timeline-year {
+  color: #667eea;
+  font-weight: 600;
+  min-width: 100px;
+  font-size: 12px;
+}
+
+.timeline-content {
+  flex: 1;
+}
+
+.timeline-content p {
+  margin: 0;
+}
+
+.timeline-item-detail {
+  background: #f5f7fa;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.timeline-item-detail h4 {
+  color: #333;
+  font-weight: 600;
+}
+
+.assessment-item {
+  text-align: center;
+  padding: 24px 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+}
+
+.assessment-item:global(.ant-progress) {
+  display: inline-flex;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .timeline-item {
+    gap: 12px;
+    padding-left: 12px;
+    margin-left: -12px;
+  }
+  
+  .timeline-year {
+    min-width: 80px;
+  }
+  
+  .assessment-item {
+    padding: 16px 8px;
+  }
+}
