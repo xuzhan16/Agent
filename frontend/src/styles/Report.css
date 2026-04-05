@@ -1,0 +1,141 @@
+.report-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.report-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.report-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.report-card :global(.ant-card-head) {
+  border-bottom: 2px solid #f0f2f5;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+.config-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.config-item label {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.config-item :global(.ant-select),
+.config-item :global(.ant-picker) {
+  width: 100%;
+}
+
+.sections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.section-item {
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-radius: 8px;
+  border: 2px solid #667eea;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.section-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.section-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 8px;
+}
+
+.section-name {
+  font-size: 12px;
+  color: #333;
+  font-weight: 600;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  min-width: 200px;
+}
+
+.primary-button:hover {
+  opacity: 0.8;
+}
+
+.action-button {
+  border-radius: 8px;
+  min-height: 40px;
+}
+
+.action-button:hover {
+  color: #667eea;
+  border-color: #667eea;
+}
+
+.summary-item {
+  padding: 16px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.summary-item h4 {
+  margin: 0 0 8px 0;
+  color: #667eea;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.summary-item p {
+  margin: 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.report-card ul {
+  padding-left: 24px;
+  margin: 0;
+}
+
+.report-card li {
+  margin: 8px 0;
+  color: #333;
+}
+
+.mb-24 {
+  margin-bottom: 24px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .sections-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  
+  .primary-button {
+    min-width: 150px;
+  }
+}

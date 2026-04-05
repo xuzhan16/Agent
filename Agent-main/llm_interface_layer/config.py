@@ -72,7 +72,7 @@ class LLMConfig:
     model_name: str = _resolve_model_name()
     temperature: float = float(os.getenv("LLM_TEMPERATURE", "0.2"))
     timeout_seconds: int = int(os.getenv("LLM_TIMEOUT_SECONDS", "60"))
-    retry_times: int = int(os.getenv("LLM_RETRY_TIMES", "2"))
+    retry_times: int = int(os.getenv("LLM_RETRY_TIMES", "5"))
     api_base_url: str = _resolve_api_base_url()
     api_key: str = _resolve_api_key()
     api_key_env_name: str = os.getenv("LLM_API_KEY_ENV_NAME", "LLM_API_KEY")

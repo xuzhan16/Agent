@@ -1,0 +1,115 @@
+/* 全局样式 */
+.ant-layout {
+  min-height: 100vh;
+  background: #f0f2f5;
+}
+
+.ant-layout-content {
+  background: transparent;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+..stat-card {
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+}
+
+.stat-card:hover {
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+  transform: translateY(-2px);
+}
+
+/* 页面标题样式 */
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-description {
+  color: #475569;
+  margin-bottom: 28px;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* 上传区域样式 */
+.upload-area {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.upload-area :global(.ant-upload-drag) {
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* 图表容器 */
+.chart-container {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+}
+
+/* 按钮样式 */
+.primary-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+}
+
+.primary-button:hover {
+  opacity: 0.8;
+}
+
+/* 列表项样式 */
+.list-item {
+  padding: 16px;
+  border-left: 4px solid #667eea;
+  background: #f9fafb;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+.list-item:hover {
+  background: #f0f2f5;
+  transform: translateX(4px);
+}
+
+/* 进度条样式 */
+.progress-bar {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .card-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .chart-container {
+    padding: 16px;
+  }
+}

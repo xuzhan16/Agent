@@ -37,7 +37,9 @@ class LLMClient:
                 return self._real_generate(system_prompt, user_prompt)
             except Exception as exc:
                 last_error = exc
-                time.sleep(0.5)
+                import time
+                print(f"LLM请求受限 (429/并发超限等)，等待 10 秒后重试... ({exc})")
+                time.sleep(10)
 
         raise RuntimeError(f"LLM request failed after retries: {last_error}") from last_error
 

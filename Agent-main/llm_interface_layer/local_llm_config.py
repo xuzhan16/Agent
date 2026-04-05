@@ -9,7 +9,7 @@ local_llm_config.py
 """
 
 LOCAL_LLM_API_BASE_URL = "https://aihubmix.com/v1"
-LOCAL_LLM_MODEL = "coding-minimax-m2-free"
+LOCAL_LLM_MODEL = "coding-minimax-m2.1-free"
 
 # 请把你的真实 API Key 填在这里。
-LOCAL_LLM_API_KEY = "sk-beteTrAgLm9uFD8KA9C84e23358b4fD8B626B53a12C604B4"
+LOCAL_LLM_API_KEY = "sk-2vLxblVtOdDSEaGp32EfD9E0235f4aD98aB680D805599b7a"

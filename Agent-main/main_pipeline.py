@@ -67,10 +67,24 @@ def run_pipeline(resume_path: str, initial_target_job: str, state_path: str = "s
     
     # 【1】resume_parse_module：读取简历，抽取结构化信息
     logger.info("启动第 1 步: resume_parse")
-    # 这里直接走统一的大模型接口 task_type="resume_parse" 
-    # 实际应用中可结合 pypdf / python-docx 提取文本作为 input_data
-    # 为演示，这里模拟读取到了全文
-    resume_text = f"读取了简历文件: {resume_path} 里的内容..." 
+    # 实装读取文件
+    import os
+    try:
+        from resume_parse_module.resume_parser import extract_text_from_docx, extract_text_from_pdf, extract_text_from_txt
+
+        ext = os.path.splitext(resume_path)[1].lower()
+        if ext == ".docx":
+            resume_text = extract_text_from_docx(resume_path)
+        elif ext == ".pdf":
+            resume_text = extract_text_from_pdf(resume_path)
+        elif ext == ".txt":
+            resume_text = extract_text_from_txt(resume_path)
+        else:
+            resume_text = f"读取了简历文件: {resume_path} 里的内容..."
+    except Exception as e:
+        logger.warning(f"无法读取简历文本, 退回默认文本: {e}")
+        resume_text = f"读取了简历文件: {resume_path} 里的内容..."
+        
     try:
         from resume_parse_module.resume_parser import parse_resume_to_json
         resume_result = parse_resume_to_json(resume_text, state.state)
