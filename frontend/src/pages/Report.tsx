@@ -1,8 +1,9 @@
-import { Card, Row, Col, Button, Space, Alert, Select, DatePicker, Statistic, Badge, message } from 'antd'
+import { Card, Row, Col, Button, Space, Alert, Select, DatePicker, Statistic, Badge, message, Input, Tag } from 'antd'
 import { DownloadOutlined, FileTextOutlined, ShareAltOutlined, PrinterOutlined, CheckCircleOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { useCareerStore } from '../store'
 import { careerApi } from '../services/api'
+import { ReportDetail } from '../types'
 import '../styles/Report.css'
 
 const Report = () => {
@@ -15,8 +16,25 @@ const Report = () => {
   const [reportGenerated, setReportGenerated] = useState(false)
   const [reportFileName, setReportFileName] = useState<string | null>(null)
   const [reportContent, setReportContent] = useState<string | null>(null)
+  const [editableReport, setEditableReport] = useState('')
+  const [reportDetail, setReportDetail] = useState<ReportDetail | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [downloading, setDownloading] = useState(false)
+  const [savingEdits, setSavingEdits] = useState(false)
+
+  const loadReportDetail = async () => {
+    const detailResponse = await careerApi.getReportDetail()
+    if (!detailResponse.success) {
+      throw new Error(detailResponse.message || '获取报告详情失败')
+    }
+
+    const detail = detailResponse.data
+    setReportDetail(detail)
+    setReportContent(detail.report_text)
+    setEditableReport(detail.report_text || '')
+    setReportFileName(detail.file_name || 'final_report.md')
+    return detail
+  }
 
   const handleGenerateReport = async () => {
     console.log('[Report] handleGenerateReport called')
@@ -52,13 +70,8 @@ const Report = () => {
         console.log('[Report] Report generated successfully, filename:', response.data)
         setReportFileName(response.data)
         setReportGenerated(true)
-        
-        const contentResponse = await careerApi.getReport()
-        console.log('[Report] getReport response:', contentResponse)
-        if (contentResponse.success) {
-          setReportContent(contentResponse.data)
-          console.log('[Report] Report content loaded, length:', contentResponse.data?.length)
-        }
+        const detail = await loadReportDetail()
+        console.log('[Report] Report detail loaded, length:', detail.report_text?.length)
       } else {
         const msg = response.message || '报告生成失败，请重试'
         console.error('[Report]', msg)
@@ -73,7 +86,7 @@ const Report = () => {
   }
 
   const previewReport = async () => {
-    const content = reportContent || reportDataToText()
+    const content = editableReport || reportContent || reportDataToText()
 
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8"/><title>报告预览</title><style>body{font-family: Arial, Helvetica, sans-serif; padding:24px; color:#111;} pre{white-space: pre-wrap; word-break: break-word; font-size:14px; line-height:1.75;}</style></head><body><pre>${content
       .replace(/&/g, '&amp;')
@@ -116,20 +129,11 @@ const Report = () => {
       console.log('[Report] Starting download with format:', reportFormat)
       
       // 获取报告内容
-      let content = reportContent
+      let content = editableReport || reportContent
       if (!content) {
         console.log('[Report] Fetching report content from server')
-        const response = await careerApi.getReport()
-        console.log('[Report] getReport response:', response)
-
-        if (!response.success) {
-          const errMsg = '获取报告内容失败，请重新生成'
-          console.error('[Report]', errMsg)
-          setError(errMsg)
-          return
-        }
-        content = response.data
-        setReportContent(content)
+        const detail = await loadReportDetail()
+        content = detail.report_text
       }
 
       console.log('[Report] Content length:', content?.length)
@@ -262,15 +266,10 @@ const Report = () => {
     if (!reportFileName) return
 
     try {
-      let content = reportContent
+      let content = editableReport || reportContent
       if (!content) {
-        const response = await careerApi.getReport()
-        if (!response.success) {
-          setError(response.message || '获取报告内容失败')
-          return
-        }
-        content = response.data
-        setReportContent(content)
+        const detail = await loadReportDetail()
+        content = detail.report_text
       }
 
       const html = `<!DOCTYPE html><html><head><meta charset="utf-8"/><title>报告预览</title><style>body{font-family: Arial, Helvetica, sans-serif; padding:24px; color:#111;} pre{white-space: pre-wrap; word-break: break-word; font-size:14px; line-height:1.75;}</style></head><body><pre>${content
@@ -289,6 +288,34 @@ const Report = () => {
     } catch (err) {
       console.error(err)
       setError('打印预览失败，请检查后端服务或浏览器弹窗设置')
+    }
+  }
+
+  const saveReportEdits = async () => {
+    if (!editableReport.trim()) {
+      setError('报告内容不能为空')
+      return
+    }
+
+    setSavingEdits(true)
+    setError(null)
+
+    try {
+      const response = await careerApi.updateReport(editableReport)
+      if (!response.success) {
+        throw new Error(response.message || '保存失败')
+      }
+      setReportContent(editableReport)
+      if (response.data) {
+        setReportFileName(response.data)
+      }
+      await loadReportDetail()
+      message.success('报告内容已保存')
+    } catch (err) {
+      console.error('[Report] saveReportEdits error:', err)
+      setError('保存报告内容失败，请稍后重试')
+    } finally {
+      setSavingEdits(false)
     }
   }
 
@@ -331,16 +358,18 @@ const Report = () => {
     generatedTime: new Date().toLocaleString(),
     studentName: studentInfo?.name || '张三',
     reportId: reportFileName || 'RPT-2026-0001',
-    primaryTarget: careerPath?.primary_target_job || '数据分析师',
+    primaryTarget: careerPath?.primary_target_job || '未明确目标岗位',
     matchScore: jobMatches.length > 0 ? Math.round(jobMatches.reduce((sum, job) => sum + job.match_score, 0) / jobMatches.length * 100) / 100 : 78.57,
-    sections: [
-      '学生基本信息',
-      '能力评估',
-      '岗位匹配分析',
-      '职业规划建议',
-      '改进行动计划',
-      '长期发展路径'
-    ]
+    sections: reportDetail?.report_sections?.length
+      ? reportDetail.report_sections.map((section) => section.section_title)
+      : [
+          '学生基本信息',
+          '能力评估',
+          '岗位匹配分析',
+          '职业规划建议',
+          '改进行动计划',
+          '长期发展路径'
+        ]
   }
 
   return (
@@ -610,7 +639,7 @@ const Report = () => {
                   <Col xs={24} sm={12}>
                     <div className="summary-item">
                       <h4>岗位匹配度</h4>
-                      <p>{reportData.matchScore}% (中等匹配)</p>
+                      <p>{reportData.matchScore}%</p>
                     </div>
                   </Col>
                   <Col xs={24} sm={12}>
@@ -620,6 +649,72 @@ const Report = () => {
                     </div>
                   </Col>
                 </Row>
+              </Card>
+            </Col>
+          </Row>
+
+          <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+            <Col xs={24} lg={12}>
+              <Card className="report-card" title="完整性检查">
+                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                  <Tag color={reportDetail?.completeness_check?.is_complete ? 'success' : 'warning'}>
+                    {reportDetail?.completeness_check?.is_complete ? '报告结构完整' : '仍有缺失章节'}
+                  </Tag>
+                  {reportDetail?.report_summary && (
+                    <Alert
+                      message="报告摘要"
+                      description={reportDetail.report_summary}
+                      type="info"
+                      showIcon
+                    />
+                  )}
+                  {(reportDetail?.completeness_check?.missing_sections || []).length > 0 && (
+                    <div>
+                      <p style={{ marginBottom: 8, color: '#666' }}>缺失章节</p>
+                      <Space wrap>
+                        {reportDetail?.completeness_check?.missing_sections?.map((item, index) => (
+                          <Tag key={`${item}-${index}`} color="orange">
+                            {item}
+                          </Tag>
+                        ))}
+                      </Space>
+                    </div>
+                  )}
+                </Space>
+              </Card>
+            </Col>
+            <Col xs={24} lg={12}>
+              <Card className="report-card" title="编辑建议">
+                {(reportDetail?.edit_suggestions || []).length > 0 ? (
+                  <ul style={{ lineHeight: 2, paddingLeft: 20, margin: 0 }}>
+                    {reportDetail?.edit_suggestions?.map((item, index) => (
+                      <li key={`edit-suggestion-${index}`}>{item}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span style={{ color: '#999' }}>当前没有额外编辑建议。</span>
+                )}
+              </Card>
+            </Col>
+          </Row>
+
+          <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+            <Col xs={24}>
+              <Card
+                className="report-card"
+                title="报告内容编辑"
+                extra={
+                  <Button type="primary" onClick={saveReportEdits} loading={savingEdits}>
+                    保存修改
+                  </Button>
+                }
+              >
+                <Input.TextArea
+                  value={editableReport}
+                  onChange={(event) => setEditableReport(event.target.value)}
+                  autoSize={{ minRows: 14, maxRows: 28 }}
+                  placeholder="你可以在这里继续润色或手动调整报告内容。"
+                />
               </Card>
             </Col>
           </Row>

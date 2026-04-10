@@ -45,9 +45,8 @@ const JobMatching = () => {
   }
 
   // 计算总体匹配度
-  const overallScore = jobMatches.length > 0
-    ? Math.round(jobMatches.reduce((sum, job) => sum + job.match_score, 0) / jobMatches.length)
-    : 0
+  const primaryMatch = jobMatches[0]
+  const overallScore = primaryMatch ? Math.round(primaryMatch.match_score) : 0
 
   const getMatchLevel = (score: number) => {
     if (score >= 90) return 'A+'
@@ -62,30 +61,50 @@ const JobMatching = () => {
   }
 
   const matchResult = {
-    targetJob: jobMatches[0]?.job_name || '数据分析师',
+    targetJob: primaryMatch?.job_name || '未明确目标岗位',
     overallScore: overallScore,
-    matchLevel: getMatchLevel(overallScore),
-    matchDescription: overallScore >= 80 ? '优秀匹配' : overallScore >= 70 ? '良好匹配' : overallScore >= 60 ? '中等匹配' : '需要改进',
+    matchLevel: primaryMatch?.match_level || getMatchLevel(overallScore),
+    matchDescription:
+      primaryMatch?.analysis_summary
+      || (overallScore >= 80 ? '优秀匹配' : overallScore >= 70 ? '良好匹配' : overallScore >= 60 ? '中等匹配' : '需要改进'),
   }
 
   const matchDetails = [
-    { category: '学历背景', score: 85, required: '本科及以上', status: '符合' },
-    { category: '专业方向', score: 80, required: '计算机/统计学', status: '符合' },
-    { category: '技能要求', score: 75, required: 'Python/SQL', status: '部分符合' },
-    { category: '工作经验', score: 60, required: '2-3年', status: '不足' },
-    { category: '项目经验', score: 70, required: '数据分析相关', status: '符合' },
-    { category: '工具掌握', score: 65, required: 'Excel/BI工具', status: '部分符合' },
+    {
+      category: '基础要求',
+      score: Math.round(primaryMatch?.dimension_scores?.basic_requirement_score || 0),
+      required: '学历 / 专业 / 证书',
+      status: (primaryMatch?.dimension_scores?.basic_requirement_score || 0) >= 80 ? '符合' : '部分符合',
+    },
+    {
+      category: '职业技能',
+      score: Math.round(primaryMatch?.dimension_scores?.vocational_skill_score || 0),
+      required: '硬技能 / 工具技能',
+      status: (primaryMatch?.dimension_scores?.vocational_skill_score || 0) >= 80 ? '符合' : '部分符合',
+    },
+    {
+      category: '职业素质',
+      score: Math.round(primaryMatch?.dimension_scores?.professional_quality_score || 0),
+      required: '实践经历 / 软技能',
+      status: (primaryMatch?.dimension_scores?.professional_quality_score || 0) >= 80 ? '符合' : '部分符合',
+    },
+    {
+      category: '发展潜力',
+      score: Math.round(primaryMatch?.dimension_scores?.development_potential_score || 0),
+      required: '成长潜力 / 方向匹配',
+      status: (primaryMatch?.dimension_scores?.development_potential_score || 0) >= 80 ? '符合' : '部分符合',
+    },
   ]
 
   const jobRecommendations = jobMatches.map((job, index) => ({
     key: `${index}`,
     jobName: job.job_name,
-    company: '暂无公司信息',
+    company: job.company || '暂无公司信息',
     score: Math.round(job.match_score),
     level: job.match_level,
     match: job.reasons?.join('、') || '暂无说明',
     requirement: job.reasons?.slice(0, 3).join('、') || '技能匹配',
-    salary: '面议',
+    salary: job.salary || '暂无薪资信息',
   }))
 
   const handleGenerateCareerPath = async () => {
@@ -231,23 +250,25 @@ const JobMatching = () => {
         <Col xs={24} lg={12}>
           <Card className="match-card" title="匹配说明">
             <div style={{ padding: '20px 0' }}>
-              <p style={{ margin: '12px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 16 }} />
-                <span>学历背景满足岗位要求 <strong>本科及以上</strong></span>
-              </p>
-              <p style={{ margin: '12px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 16 }} />
-                <span>专业方向匹配，具备<strong>计算机基础</strong></span>
-              </p>
-              <Divider />
-              <p style={{ margin: '12px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <ExclamationCircleOutlined style={{ color: '#faad14', fontSize: 16 }} />
-                <span>工作经验缺乏，建议补强实习时长</span>
-              </p>
-              <p style={{ margin: '12px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <ExclamationCircleOutlined style={{ color: '#faad14', fontSize: 16 }} />
-                <span>BI工具掌握不足，建议学习相关工具</span>
-              </p>
+              {(primaryMatch?.strengths?.length || primaryMatch?.weaknesses?.length) ? (
+                <>
+                  {(primaryMatch?.strengths || []).slice(0, 3).map((item, index) => (
+                    <p key={`strength-${index}`} style={{ margin: '12px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 16 }} />
+                      <span>{item}</span>
+                    </p>
+                  ))}
+                  <Divider />
+                  {(primaryMatch?.weaknesses || []).slice(0, 3).map((item, index) => (
+                    <p key={`weakness-${index}`} style={{ margin: '12px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <ExclamationCircleOutlined style={{ color: '#faad14', fontSize: 16 }} />
+                      <span>{item}</span>
+                    </p>
+                  ))}
+                </>
+              ) : (
+                <p style={{ color: '#999' }}>当前没有更详细的匹配说明。</p>
+              )}
             </div>
           </Card>
         </Col>
@@ -305,20 +326,26 @@ const JobMatching = () => {
       <Row gutter={[24, 24]} style={{ marginTop: 24 }} className="mb-24">
         <Col xs={24}>
           <Card className="match-card" title="💡 改进建议">
-            <ol style={{ lineHeight: 2, paddingLeft: 24 }}>
-              <li>
-                <strong>补强实习经验</strong> - 利用大二/大三时间争取数据分析岗位实习机会，积累行业实战经验
-              </li>
-              <li>
-                <strong>学习BI工具</strong> - 掌握 Tableau、Power BI 等可视化工具，提升竞争力
-              </li>
-              <li>
-                <strong>完成项目作品</strong> - 完成 1-2 个数据分析完整项目，建立作品集
-              </li>
-              <li>
-                <strong>完善简历与面试材料</strong> - 针对目标岗位进行简历和项目包装
-              </li>
-            </ol>
+            {(primaryMatch?.improvement_suggestions?.length || primaryMatch?.recommendation) ? (
+              <>
+                <ol style={{ lineHeight: 2, paddingLeft: 24 }}>
+                  {(primaryMatch?.improvement_suggestions || []).map((item, index) => (
+                    <li key={`suggestion-${index}`}>{item}</li>
+                  ))}
+                </ol>
+                {primaryMatch?.recommendation && (
+                  <Alert
+                    message="投递建议"
+                    description={primaryMatch.recommendation}
+                    type="info"
+                    showIcon
+                    style={{ marginTop: 16 }}
+                  />
+                )}
+              </>
+            ) : (
+              <span style={{ color: '#999' }}>当前没有更详细的改进建议。</span>
+            )}
           </Card>
         </Col>
       </Row>

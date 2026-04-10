@@ -52,7 +52,7 @@ const CareerPath = () => {
 
   const shortTermPlan = careerPath.short_term_plan?.map((plan, index) => ({
     title: plan,
-    timeline: index === 0 ? '3个月内' : index === 1 ? '1个月内' : '2个月内',
+    timeline: index === 0 ? '1个月内' : index === 1 ? '2-3个月' : '3-6个月',
     status: index < 2 ? 'current' : 'pending'
   })) || []
 
@@ -62,14 +62,16 @@ const CareerPath = () => {
     status: 'pending'
   })) || []
 
-  const longTermPlan = [
-    { title: '争取获得 2 年以上数据分析工作经验', timeline: '2+ 年', status: 'pending' },
-    { title: '晋升为高级数据分析师或数据产品经理', timeline: '3-5 年', status: 'pending' },
-    { title: '建立个人数据分析品牌和影响力', timeline: '5+ 年', status: 'pending' },
-  ]
+  const longTermPlan = careerPath.long_term_path?.map((plan, index) => ({
+    title: plan,
+    timeline: index === 0 ? '1-2 年' : index === 1 ? '3-5 年' : '5+ 年',
+    status: 'pending'
+  })) || []
 
   const riskGaps = careerPath.risk_and_gap || []
   const fallbackStrategy = careerPath.fallback_strategy || '暂无备选策略'
+  const targetReasons = careerPath.target_selection_reason || []
+  const pathReasons = careerPath.path_selection_reason || []
 
   return (
     <div className="career-path-container">
@@ -153,25 +155,19 @@ const CareerPath = () => {
         <Col xs={24}>
           <Card className="path-card" title="长期发展路径 (5+ 年)">
             <div className="long-term-timeline">
-              <div className="timeline-stage">
-                <h4>应届→1年</h4>
-                <p>{careerPathData.longTermPath[0]}</p>
-              </div>
-              <div className="timeline-arrow">→</div>
-              <div className="timeline-stage">
-                <h4>1-3年</h4>
-                <p>{careerPathData.longTermPath[1]}</p>
-              </div>
-              <div className="timeline-arrow">→</div>
-              <div className="timeline-stage">
-                <h4>3-5年</h4>
-                <p>{careerPathData.longTermPath[2]}</p>
-              </div>
-              <div className="timeline-arrow">→</div>
-              <div className="timeline-stage">
-                <h4>5+年</h4>
-                <p>{careerPathData.longTermPath[3]}</p>
-              </div>
+              {careerPathData.longTermPath.length > 0 ? (
+                careerPathData.longTermPath.map((path, index) => (
+                  <div key={`${path}-${index}`} style={{ display: 'contents' }}>
+                    <div className="timeline-stage">
+                      <h4>{index === 0 ? '应届→1年' : index === 1 ? '1-3年' : index === 2 ? '3-5年' : '5+年'}</h4>
+                      <p>{path}</p>
+                    </div>
+                    {index < careerPathData.longTermPath.length - 1 && <div className="timeline-arrow">→</div>}
+                  </div>
+                ))
+              ) : (
+                <p style={{ color: '#999' }}>暂无长期路径数据</p>
+              )}
             </div>
           </Card>
         </Col>
@@ -262,36 +258,47 @@ const CareerPath = () => {
               items={[
                 {
                   key: '1',
-                  label: <strong>🎓 学习资源推荐</strong>,
+                  label: <strong>🎯 目标选择依据</strong>,
                   children: (
-                    <ul>
-                      <li>Python数据分析: DataCamp、Coursera、知乎专栏</li>
-                      <li>SQL优化: LeetCode Database、SQLZoo</li>
-                      <li>可视化工具: Tableau Public、Power BI官方教程</li>
-                      <li>统计学基础: Khan Academy、B站免费公开课</li>
-                    </ul>
+                    targetReasons.length > 0 ? (
+                      <ul>
+                        {targetReasons.map((item, index) => (
+                          <li key={`target-reason-${index}`}>{item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>暂无更详细的目标选择依据。</p>
+                    )
                   ),
                 },
                 {
                   key: '2',
-                  label: <strong>💼 实习机会</strong>,
+                  label: <strong>🧭 路径决策依据</strong>,
                   children: (
-                    <ul>
-                      <li>常见招聘渠道: 前程无忧、BOSS直聘、拉勾网</li>
-                      <li>重点公司: BAT、字节跳动、美团、滴滴等科技公司</li>
-                      <li>时间规划: 尽早积累实习经验 (大二/大三开始)</li>
-                    </ul>
+                    pathReasons.length > 0 ? (
+                      <ul>
+                        {pathReasons.map((item, index) => (
+                          <li key={`path-reason-${index}`}>{item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>暂无更详细的路径决策依据。</p>
+                    )
                   ),
                 },
                 {
                   key: '3',
-                  label: <strong>📊 作品集构建</strong>,
+                  label: <strong>🛠️ 执行提醒</strong>,
                   children: (
-                    <ul>
-                      <li>完成至少 2-3 个完整的数据分析项目</li>
-                      <li>上传到 GitHub 建立个人作品库</li>
-                      <li>撰写分析文章发布到知乎/掘金提升影响力</li>
-                    </ul>
+                    riskGaps.length > 0 ? (
+                      <ul>
+                        {riskGaps.map((item, index) => (
+                          <li key={`risk-gap-${index}`}>{item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>当前没有额外风险提醒。</p>
+                    )
                   ),
                 },
               ]}

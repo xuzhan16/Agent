@@ -1,4 +1,4 @@
-import { Upload, Card, Row, Col, Button, Steps, Alert, Space, Spin, message } from 'antd'
+import { Upload, Card, Row, Col, Button, Steps, Alert, Space, Spin, message, Input } from 'antd'
 import { UploadOutlined, FileTextOutlined, CheckCircleOutlined, SyncOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +10,7 @@ const { Dragger } = Upload
 
 const ResumeUpload = () => {
   const [file, setFile] = useState<File | null>(null)
+  const [manualResumeText, setManualResumeText] = useState('')
   const [uploading, setUploading] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [parseResult, setParseResult] = useState<any>(null)
@@ -19,6 +20,20 @@ const ResumeUpload = () => {
   const setStudentProfile = useCareerStore((state) => state.setStudentProfile)
   const navigate = useNavigate()
 
+  const handlePipelineSuccess = async (studentInfo: any) => {
+    setParseResult(studentInfo)
+    setUploadSuccess(true)
+    setStudentInfo(studentInfo)
+
+    const profileResponse = await careerApi.buildStudentProfile(studentInfo)
+    if (profileResponse.success) {
+      setStudentProfile(profileResponse.data)
+      message.success('简历解析成功，学生画像生成完毕')
+    } else {
+      message.warning('简历解析成功，但学生画像生成失败，请稍后重试')
+    }
+  }
+
   const handleUpload = async (uploadFile: File) => {
     setFile(uploadFile)
     setUploading(true)
@@ -27,18 +42,7 @@ const ResumeUpload = () => {
     try {
       const response = await careerApi.parseResume(uploadFile)
       if (response.success) {
-        const studentInfo = response.data
-        setParseResult(studentInfo)
-        setUploadSuccess(true)
-        setStudentInfo(studentInfo)
-
-        const profileResponse = await careerApi.buildStudentProfile(studentInfo)
-        if (profileResponse.success) {
-          setStudentProfile(profileResponse.data)
-          message.success('简历解析成功，学生画像生成完毕')
-        } else {
-          message.warning('简历解析成功，但学生画像生成失败，请稍后重试')
-        }
+        await handlePipelineSuccess(response.data)
       } else {
         setError(response.message || '简历解析失败，请重试')
         message.error(response.message || '简历解析失败，请重试')
@@ -46,6 +50,31 @@ const ResumeUpload = () => {
     } catch (err) {
       setError('简历解析接口调用失败，请检查后端服务')
       message.error('简历解析接口调用失败，请检查后端服务')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleManualSubmit = async () => {
+    if (!manualResumeText.trim()) {
+      message.warning('请先粘贴简历文本内容')
+      return
+    }
+
+    setUploading(true)
+    setError(null)
+
+    try {
+      const response = await careerApi.parseManualResume(manualResumeText)
+      if (response.success) {
+        await handlePipelineSuccess(response.data)
+      } else {
+        setError(response.message || '简历解析失败，请重试')
+        message.error(response.message || '简历解析失败，请重试')
+      }
+    } catch (err) {
+      setError('手动录入简历接口调用失败，请检查后端服务')
+      message.error('手动录入简历接口调用失败，请检查后端服务')
     } finally {
       setUploading(false)
     }
@@ -110,13 +139,35 @@ const ResumeUpload = () => {
         </Col>
 
         <Col xs={24} lg={12}>
+          <Card className="upload-card" title="步骤 1：手动录入">
+            <Input.TextArea
+              value={manualResumeText}
+              onChange={(event) => setManualResumeText(event.target.value)}
+              placeholder="如果你暂时没有文件，也可以直接粘贴简历正文。建议至少包含：教育背景、项目经历、实习经历、技能证书、求职意向。"
+              autoSize={{ minRows: 10, maxRows: 16 }}
+              maxLength={12000}
+            />
+            <div style={{ marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+              <span style={{ color: '#666', fontSize: 12 }}>
+                已输入 {manualResumeText.length} / 12000 字
+              </span>
+              <Button type="primary" onClick={handleManualSubmit} loading={uploading}>
+                使用文本生成画像
+              </Button>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+        <Col xs={24}>
           <Card className="progress-card" title="处理进度">
             <Steps
               current={uploadSuccess ? 2 : uploading ? 1 : 0}
               items={[
                 {
                   title: '上传文件',
-                  description: file ? '已选择' : '等待上传',
+                  description: file ? '已选择文件' : manualResumeText ? '已录入文本' : '等待上传',
                   icon: <UploadOutlined />,
                 },
                 {

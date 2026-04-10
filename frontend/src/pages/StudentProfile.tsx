@@ -64,6 +64,29 @@ const StudentProfile = () => {
 
   const projectExperience = studentInfo.project_experience || []
   const internshipExperience = studentInfo.internship_experience || []
+  const profilePayload = studentProfile?.profile_input_payload
+  const normalizedProfile = profilePayload?.normalized_profile
+  const explicitProfile = profilePayload?.explicit_profile
+  const practiceProfile = profilePayload?.practice_profile
+
+  const technicalScore = Math.round(studentProfile?.competitiveness_score || 0)
+  const completenessScore = Math.round(studentProfile?.complete_score || 0)
+  const practiceScore = Math.min(
+    100,
+    Math.round(
+      ((practiceProfile?.project_count || projectExperience.length) * 20)
+      + ((practiceProfile?.internship_count || internshipExperience.length) * 30)
+      + ((explicitProfile?.certificates?.length || studentInfo.certificates.length) > 0 ? 10 : 0)
+    )
+  )
+
+  const hardSkills = normalizedProfile?.hard_skills || studentInfo.skills || []
+  const toolSkills = normalizedProfile?.tool_skills || []
+  const softSkills = studentProfile?.soft_skills || []
+  const strengths = studentProfile?.strengths || []
+  const weaknesses = studentProfile?.weaknesses || []
+  const missingDimensions = studentProfile?.missing_dimensions || []
+  const preferredDirections = studentProfile?.potential_profile?.preferred_directions || normalizedProfile?.occupation_hints || []
 
   return (
     <div className="student-profile-container">
@@ -143,8 +166,8 @@ const StudentProfile = () => {
         <Col xs={24}>
           <Card title={<span><CodeOutlined /> 技能概览</span>} className="profile-card">
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {studentInfo.skills.length > 0 ? (
-                studentInfo.skills.map((skill, index) => (
+              {hardSkills.length > 0 ? (
+                hardSkills.map((skill, index) => (
                   <Tag key={index} color="blue" style={{ padding: '6px 14px' }}>
                     {skill}
                   </Tag>
@@ -153,6 +176,30 @@ const StudentProfile = () => {
                 <span style={{ color: '#999' }}>暂无技能数据</span>
               )}
             </div>
+            {toolSkills.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <p style={{ marginBottom: 8, color: '#666' }}>工具技能</p>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {toolSkills.map((skill, index) => (
+                    <Tag key={`${skill}-${index}`} color="geekblue">
+                      {skill}
+                    </Tag>
+                  ))}
+                </div>
+              </div>
+            )}
+            {softSkills.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <p style={{ marginBottom: 8, color: '#666' }}>软技能</p>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {softSkills.map((skill, index) => (
+                    <Tag key={`${skill}-${index}`} color="purple">
+                      {skill}
+                    </Tag>
+                  ))}
+                </div>
+              </div>
+            )}
           </Card>
         </Col>
       </Row>
@@ -212,7 +259,7 @@ const StudentProfile = () => {
                   <p style={{ margin: '0 0 12px 0', color: '#667eea', fontWeight: 600 }}>技术能力</p>
                   <Progress
                     type="circle"
-                    percent={75}
+                    percent={technicalScore}
                     format={(percent) => `${percent}%`}
                     width={100}
                     strokeColor="#667eea"
@@ -224,7 +271,7 @@ const StudentProfile = () => {
                   <p style={{ margin: '0 0 12px 0', color: '#764ba2', fontWeight: 600 }}>学历背景</p>
                   <Progress
                     type="circle"
-                    percent={85}
+                    percent={completenessScore}
                     format={(percent) => `${percent}%`}
                     width={100}
                     strokeColor="#764ba2"
@@ -236,7 +283,7 @@ const StudentProfile = () => {
                   <p style={{ margin: '0 0 12px 0', color: '#52c41a', fontWeight: 600 }}>实践经验</p>
                   <Progress
                     type="circle"
-                    percent={60}
+                    percent={practiceScore}
                     format={(percent) => `${percent}%`}
                     width={100}
                     strokeColor="#52c41a"
@@ -247,6 +294,76 @@ const StudentProfile = () => {
           </Card>
         </Col>
       </Row>
+
+      {studentProfile && (
+        <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+          <Col xs={24} lg={12}>
+            <Card title="画像总结" className="profile-card">
+              <p style={{ marginBottom: 12, color: '#333', lineHeight: 1.8 }}>
+                {studentProfile.summary || '暂无总结'}
+              </p>
+              <p style={{ marginBottom: 8, color: '#666' }}>
+                竞争力等级：<strong>{studentProfile.score_level || '待评估'}</strong>
+              </p>
+              {preferredDirections.length > 0 && (
+                <div style={{ marginTop: 12 }}>
+                  <p style={{ marginBottom: 8, color: '#666' }}>推荐方向</p>
+                  <Space wrap>
+                    {preferredDirections.map((direction, index) => (
+                      <Tag key={`${direction}-${index}`} color="cyan">
+                        {direction}
+                      </Tag>
+                    ))}
+                  </Space>
+                </div>
+              )}
+            </Card>
+          </Col>
+
+          <Col xs={24} lg={12}>
+            <Card title="优势与待补强项" className="profile-card">
+              <div style={{ marginBottom: 16 }}>
+                <p style={{ marginBottom: 8, color: '#16a34a', fontWeight: 600 }}>优势</p>
+                {strengths.length > 0 ? (
+                  <ul style={{ paddingLeft: 20, margin: 0, lineHeight: 1.9 }}>
+                    {strengths.slice(0, 5).map((item, index) => (
+                      <li key={`strength-${index}`}>{item}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span style={{ color: '#999' }}>暂无优势总结</span>
+                )}
+              </div>
+
+              <div style={{ marginBottom: 16 }}>
+                <p style={{ marginBottom: 8, color: '#f59e0b', fontWeight: 600 }}>待补强项</p>
+                {weaknesses.length > 0 ? (
+                  <ul style={{ paddingLeft: 20, margin: 0, lineHeight: 1.9 }}>
+                    {weaknesses.slice(0, 5).map((item, index) => (
+                      <li key={`weakness-${index}`}>{item}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span style={{ color: '#999' }}>暂无短板总结</span>
+                )}
+              </div>
+
+              {missingDimensions.length > 0 && (
+                <div>
+                  <p style={{ marginBottom: 8, color: '#666' }}>缺失维度</p>
+                  <Space wrap>
+                    {missingDimensions.map((item, index) => (
+                      <Tag key={`${item}-${index}`} color="orange">
+                        {item}
+                      </Tag>
+                    ))}
+                  </Space>
+                </div>
+              )}
+            </Card>
+          </Col>
+        </Row>
+      )}
 
       <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
         <Col xs={24}>

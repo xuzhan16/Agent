@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { StudentInfo, JobProfile, JobMatchResult, CareerPathResult } from '../types'
+import { StudentInfo, StudentProfileResult, JobMatchResult, CareerPathResult } from '../types'
 
 interface CareerState {
   // 学生信息
@@ -7,8 +7,8 @@ interface CareerState {
   setStudentInfo: (info: StudentInfo) => void
 
   // 学生画像
-  studentProfile: JobProfile | null
-  setStudentProfile: (profile: JobProfile) => void
+  studentProfile: StudentProfileResult | null
+  setStudentProfile: (profile: StudentProfileResult) => void
 
   // 岗位匹配结果
   jobMatches: JobMatchResult[]

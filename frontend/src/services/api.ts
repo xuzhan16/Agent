@@ -1,5 +1,12 @@
 import axios from 'axios'
-import { StudentInfo, JobProfile, JobMatchResult, CareerPathResult, ApiResponse } from '../types'
+import {
+  StudentInfo,
+  StudentProfileResult,
+  JobMatchResult,
+  CareerPathResult,
+  ApiResponse,
+  ReportDetail,
+} from '../types'
 
 const api = axios.create({
   baseURL: '/api',
@@ -41,18 +48,28 @@ export const careerApi = {
     })
   },
 
+  // 文本手动录入简历
+  parseManualResume: (resumeText: string): Promise<ApiResponse<StudentInfo>> => {
+    return api.post('/resume/manual', {
+      resume_text: resumeText,
+    })
+  },
+
   // 学生画像构建
-  buildStudentProfile: (studentInfo: StudentInfo): Promise<ApiResponse<JobProfile>> => {
+  buildStudentProfile: (studentInfo: StudentInfo): Promise<ApiResponse<StudentProfileResult>> => {
     return api.post('/student/profile', studentInfo)
   },
 
   // 岗位匹配
-  matchJobs: (studentProfile: JobProfile): Promise<ApiResponse<JobMatchResult[]>> => {
+  matchJobs: (studentProfile: StudentProfileResult): Promise<ApiResponse<JobMatchResult[]>> => {
     return api.post('/job/match', studentProfile)
   },
 
   // 职业路径规划
-  planCareerPath: (studentProfile: JobProfile, jobMatches: JobMatchResult[]): Promise<ApiResponse<CareerPathResult>> => {
+  planCareerPath: (
+    studentProfile: StudentProfileResult,
+    jobMatches: JobMatchResult[]
+  ): Promise<ApiResponse<CareerPathResult>> => {
     return api.post('/career/path', {
       student_profile: studentProfile,
       job_matches: jobMatches,
@@ -62,7 +79,7 @@ export const careerApi = {
   // 生成报告
   generateReport: (data: {
     student_info: StudentInfo
-    student_profile: JobProfile
+    student_profile: StudentProfileResult
     job_matches: JobMatchResult[]
     career_path: CareerPathResult
     report_format?: string
@@ -73,6 +90,18 @@ export const careerApi = {
   // 获取已生成报告内容
   getReport: (): Promise<ApiResponse<string>> => {
     return api.get('/report')
+  },
+
+  // 获取报告详情
+  getReportDetail: (): Promise<ApiResponse<ReportDetail>> => {
+    return api.get('/report/detail')
+  },
+
+  // 保存编辑后的报告
+  updateReport: (reportText: string): Promise<ApiResponse<string>> => {
+    return api.post('/report/update', {
+      report_text: reportText,
+    })
   },
 
   // 获取共享报告内容
