@@ -15,7 +15,7 @@
   margin-top: 24px;
 }
 
-..stat-card {
+.stat-card {
   border-radius: 20px;
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
   transition: all 0.3s ease;
