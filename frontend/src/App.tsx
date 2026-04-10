@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
-import { Layout, Affix, Button } from 'antd'
+import { Layout, Button } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import Sidebar from './components/Sidebar'
 import Home from './pages/Home'

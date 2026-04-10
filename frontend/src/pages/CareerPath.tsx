@@ -6,8 +6,6 @@ import '../styles/CareerPath.css'
 
 const CareerPath = () => {
   const studentInfo = useCareerStore((state) => state.studentInfo)
-  const studentProfile = useCareerStore((state) => state.studentProfile)
-  const jobMatches = useCareerStore((state) => state.jobMatches)
   const careerPath = useCareerStore((state) => state.careerPath)
   const navigate = useNavigate()
 
@@ -58,7 +56,7 @@ const CareerPath = () => {
     status: index < 2 ? 'current' : 'pending'
   })) || []
 
-  const midTermPlan = careerPath.mid_term_plan?.map((plan, index) => ({
+  const midTermPlan = careerPath.mid_term_plan?.map((plan) => ({
     title: plan,
     timeline: '6-12个月',
     status: 'pending'
@@ -187,7 +185,7 @@ const CareerPath = () => {
               current={0}
               direction="vertical"
               style={{ marginTop: 16 }}
-              items={shortTermPlan.map((plan, index) => ({
+              items={shortTermPlan.map((plan) => ({
                 title: plan.title,
                 description: <p style={{ margin: 0, fontSize: 12, color: '#666' }}>{plan.timeline}</p>,
                 status: plan.status === 'current' ? 'process' : 'wait',
@@ -204,7 +202,7 @@ const CareerPath = () => {
             <Steps
               direction="vertical"
               style={{ marginTop: 16 }}
-              items={midTermPlan.map((plan, index) => ({
+              items={midTermPlan.map((plan) => ({
                 title: plan.title,
                 description: <p style={{ margin: 0, fontSize: 12, color: '#666' }}>{plan.timeline}</p>,
                 status: 'wait',
@@ -221,7 +219,7 @@ const CareerPath = () => {
             <Steps
               direction="vertical"
               style={{ marginTop: 16 }}
-              items={longTermPlan.map((plan, index) => ({
+              items={longTermPlan.map((plan) => ({
                 title: plan.title,
                 description: <p style={{ margin: 0, fontSize: 12, color: '#666' }}>{plan.timeline}</p>,
                 status: 'wait',

@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.venv/
+venv/
+env/
+
+.vscode/
+
+outputs/
+build/
+dist/
+.DS_Store
+.env.neo4j
+.infra/neo4j/

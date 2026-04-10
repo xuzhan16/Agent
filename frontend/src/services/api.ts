@@ -3,7 +3,7 @@ import { StudentInfo, JobProfile, JobMatchResult, CareerPathResult, ApiResponse 
 
 const api = axios.create({
   baseURL: '/api',
-  timeout: 10000,
+  timeout: 300000, // 修改为5分钟，因为后台执行完整流水线需要经过 6 次 LLM 推理
 })
 
 // 请求拦截器

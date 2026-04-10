@@ -80,7 +80,7 @@ const JobMatching = () => {
   const jobRecommendations = jobMatches.map((job, index) => ({
     key: `${index}`,
     jobName: job.job_name,
-    company: job.company || '未知公司',
+    company: '暂无公司信息',
     score: Math.round(job.match_score),
     level: job.match_level,
     match: job.reasons?.join('、') || '暂无说明',

@@ -1,5 +1,5 @@
 import { Card, Row, Col, Statistic, Button, Timeline, Space } from 'antd'
-import { UserOutlined, BarChartOutlined, NodeIndexOutlined, FileTextOutlined, RocketOutlined, TeamOutlined, CheckCircleOutlined } from '@ant-design/icons'
+import { UserOutlined, BarChartOutlined, NodeIndexOutlined, FileTextOutlined, RocketOutlined, CheckCircleOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import '../styles/Home.css'
 

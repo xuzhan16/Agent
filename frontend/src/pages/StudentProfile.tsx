@@ -1,5 +1,5 @@
-import { Card, Row, Col, Progress, Avatar, Tag, Space, Timeline, Divider, Alert, Button } from 'antd'
-import { UserOutlined, DatabaseOutlined, CodeOutlined, TeamOutlined, FileTextOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import { Card, Row, Col, Progress, Avatar, Tag, Space, Timeline, Alert, Button } from 'antd'
+import { UserOutlined, DatabaseOutlined, CodeOutlined, FileTextOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { useCareerStore } from '../store'
 import { useNavigate } from 'react-router-dom'
 import { careerApi } from '../services/api'

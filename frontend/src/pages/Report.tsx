@@ -1,10 +1,8 @@
-import { Card, Row, Col, Button, Space, Alert, Spin, Select, DatePicker, Empty, Statistic, Badge, message } from 'antd'
+import { Card, Row, Col, Button, Space, Alert, Select, DatePicker, Statistic, Badge, message } from 'antd'
 import { DownloadOutlined, FileTextOutlined, ShareAltOutlined, PrinterOutlined, CheckCircleOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { useCareerStore } from '../store'
 import { careerApi } from '../services/api'
-import { useNavigate } from 'react-router-dom'
-import jsPDF from 'jspdf'
 import '../styles/Report.css'
 
 const Report = () => {
@@ -12,7 +10,6 @@ const Report = () => {
   const studentProfile = useCareerStore((state) => state.studentProfile)
   const jobMatches = useCareerStore((state) => state.jobMatches)
   const careerPath = useCareerStore((state) => state.careerPath)
-  const navigate = useNavigate()
   const [generating, setGenerating] = useState(false)
   const [reportFormat, setReportFormat] = useState<'pdf' | 'html' | 'txt'>('txt')
   const [reportGenerated, setReportGenerated] = useState(false)
@@ -382,7 +379,7 @@ const Report = () => {
                         onChange={setReportFormat}
                         options={[
                           { value: 'pdf', label: 'PDF (最推荐)' },
-                          { value: 'word', label: 'Word (.docx)' },
+                          { value: 'txt', label: 'TXT (兼容性最好)' },
                           { value: 'html', label: 'HTML (在线查看)' },
                         ]}
                       />
