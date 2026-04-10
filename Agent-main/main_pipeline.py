@@ -1,23 +1,37 @@
 """
-main_pipeline.py - 全流程统一调度入口（基于文档要求的标准链式调度体系）
+main_pipeline.py - 全流程统一调度入口
 
-1. 读取 student.json 状态
-2. 按 6 个阶段顺序调度大模型请求，并从 SQLite、Neo4j 补充上下文喂给大模型
-3. 每步结果即时落盘
+主流程：
+1. resume_parse：读取简历并写回 state；
+2. student_profile：调用 builder + scorer + LLM 补充能力画像；
+3. job_profile：从 SQLite/Neo4j 拉取岗位知识，先规则聚合再补充语义画像；
+4. job_match：基于规则评分结果 + LLM 解释生成人岗匹配分析；
+5. career_path_plan：先 selector 选目标和路径，再由 LLM 做规划解释；
+6. career_report：先 formatter 组章节草稿，再由 LLM 做润色成文。
+
+设计原则：
+- 尽量复用 service 层已有的“规则先行 + LLM 补充”能力；
+- 避免主流程再次拼接大而全的 prompt；
+- 保持 mock LLM 链路与前端接口可继续使用。
 """
 from __future__ import annotations
 
 import argparse
-import json
-import os
 import logging
+import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Iterable, List
 
+import pandas as pd
+
+from career_path_plan.career_path_plan_service import run_career_path_plan_service_from_state
+from career_report.career_report_service import run_career_report_service_from_state
+from db_helper import query_neo4j, query_sqlite
+from job_match.job_match_service import run_job_match_service_from_state
+from job_profile.job_profile_service import run_job_profile_service
 from llm_interface_layer.state_manager import StateManager
-from llm_interface_layer.llm_service import call_llm
-
-from db_helper import query_sqlite, query_neo4j
+from resume_parse_module.resume_parser import process_resume_file
+from student_profile.student_profile_service import run_student_profile_service
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -26,190 +40,347 @@ logger = logging.getLogger(__name__)
 SQLITE_DB_PATH = "outputs/sql/jobs.db"
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.getenv("NEO4J_USERNAME", "neo4j")
-NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "ChangeThisPassword_123!") # 这与 docker-compose.neo4j.yml 里的默认密码对应
-
-class StudentState:
-    """对 student.json 的存取管理"""
-    def __init__(self, filepath: str | Path):
-        self.filepath = Path(filepath)
-        self.state: Dict[str, Any] = {
-            "basic_info": {},
-            "resume_parse_result": {},
-            "job_profile_result": {},
-            "student_profile_result": {},
-            "job_match_result": {},
-            "career_path_plan_result": {},
-            "career_report_result": {}
-        }
-        self.load()
-
-    def load(self) -> None:
-        if self.filepath.exists():
-            try:
-                with open(self.filepath, "r", encoding="utf-8") as f:
-                    self.state.update(json.load(f))
-                logger.info(f"成功加载状态: {self.filepath}")
-            except Exception as e:
-                logger.warning(f"读取失败，使用空状态: {e}")
-
-    def update(self, module_name: str, result: Dict[str, Any]) -> None:
-        self.state[module_name] = result
-        self.save()
-        logger.info(f">> 【{module_name}】阶段处理完成并写盘。")
-
-    def save(self) -> None:
-        self.filepath.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.filepath, "w", encoding="utf-8") as f:
-            json.dump(self.state, f, ensure_ascii=False, indent=2)
-
-def run_pipeline(resume_path: str, initial_target_job: str, state_path: str = "student.json") -> None:
-    state = StudentState(state_path)
-    
-    # 【1】resume_parse_module：读取简历，抽取结构化信息
-    logger.info("启动第 1 步: resume_parse")
-    # 实装读取文件
-    import os
-    try:
-        from resume_parse_module.resume_parser import extract_text_from_docx, extract_text_from_pdf, extract_text_from_txt
-
-        ext = os.path.splitext(resume_path)[1].lower()
-        if ext == ".docx":
-            resume_text = extract_text_from_docx(resume_path)
-        elif ext == ".pdf":
-            resume_text = extract_text_from_pdf(resume_path)
-        elif ext == ".txt":
-            resume_text = extract_text_from_txt(resume_path)
-        else:
-            resume_text = f"读取了简历文件: {resume_path} 里的内容..."
-    except Exception as e:
-        logger.warning(f"无法读取简历文本, 退回默认文本: {e}")
-        resume_text = f"读取了简历文件: {resume_path} 里的内容..."
-        
-    try:
-        from resume_parse_module.resume_parser import parse_resume_to_json
-        resume_result = parse_resume_to_json(resume_text, state.state)
-    except Exception:
-        # Fallback to direct raw call_llm
-        resume_result = call_llm(
-            task_type="resume_parse",
-            input_data={"resume_text": resume_text},
-            student_state=state.state
-        )
-    state.update("resume_parse_result", resume_result)
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "ChangeThisPassword_123!")
 
 
-    # 【2】student_profile：基于解析字典生成学生能力画像
-    logger.info("启动第 2 步: student_profile")
-    # 可结合图谱补齐一些技能和专业的上下文分类
-    # 图谱查询：获取学生技能是否属于某个分类
-    student_skills = resume_result.get("skills", [])
-    skill_context = ""
-    # 若有neo4j驱动，可查: query_neo4j(...) 
-    
-    profile_result = call_llm(
-        task_type="student_profile",
-        input_data=resume_result, # 用解析后的简历结构去生成多维画像
-        context_data={"KG_SkillContext": skill_context}, 
-        student_state=state.state
+def _clean_text(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _dedup_keep_order(values: Iterable[Any]) -> List[str]:
+    seen = set()
+    result: List[str] = []
+    for value in values:
+        cleaned = _clean_text(value)
+        if not cleaned or cleaned in seen:
+            continue
+        seen.add(cleaned)
+        result.append(cleaned)
+    return result
+
+
+def _resolve_effective_target_job(
+    state_manager: StateManager,
+    state_path: str | Path,
+    initial_target_job: str,
+) -> str:
+    """
+    以“简历解析结果中的求职意向”为主，外部传入岗位为兜底，解析出本次流水线的实际目标岗位。
+    """
+    state = state_manager.load_state(state_path)
+    resume_parse_result = (
+        state.get("resume_parse_result")
+        if isinstance(state.get("resume_parse_result"), dict)
+        else {}
     )
-    state.update("student_profile_result", profile_result)
+    resume_target_job = _clean_text(resume_parse_result.get("target_job_intention"))
+    fallback_target_job = _clean_text(initial_target_job)
+    effective_target_job = resume_target_job or fallback_target_job
+
+    basic_info = state.get("basic_info") if isinstance(state.get("basic_info"), dict) else {}
+    if effective_target_job:
+        basic_info["target_job"] = effective_target_job
+    state["basic_info"] = basic_info
+
+    if effective_target_job and not resume_target_job:
+        resume_parse_result["target_job_intention"] = effective_target_job
+    state["resume_parse_result"] = resume_parse_result
+
+    state_manager.save_state(state, state_path)
+    return effective_target_job
 
 
-    # 【3】job_profile：获取目标岗位的画像 (结合SQLite和Neo4j)
-    logger.info("启动第 3 步: job_profile，拉取后端数据库知识")
-    # 从 SQLite 中拉取同名词岗位分布明细 (薪资/城市)
-    sql_summary = query_sqlite(
+def _resolve_target_job_from_student_profile(
+    state_manager: StateManager,
+    state_path: str | Path,
+    student_profile_bundle: Dict[str, Any],
+) -> str:
+    """
+    仅当简历未解析出目标岗位时，尝试从学生画像中已有的 occupation_hints 兜底出一个候选岗位。
+    """
+    profile_input_payload = (
+        student_profile_bundle.get("profile_input_payload")
+        if isinstance(student_profile_bundle.get("profile_input_payload"), dict)
+        else {}
+    )
+    normalized_profile = (
+        profile_input_payload.get("normalized_profile")
+        if isinstance(profile_input_payload.get("normalized_profile"), dict)
+        else {}
+    )
+    occupation_hints = _dedup_keep_order(normalized_profile.get("occupation_hints", []))
+    inferred_target_job = occupation_hints[0] if occupation_hints else ""
+    if not inferred_target_job:
+        return ""
+
+    state = state_manager.load_state(state_path)
+    basic_info = state.get("basic_info") if isinstance(state.get("basic_info"), dict) else {}
+    basic_info["target_job"] = inferred_target_job
+    state["basic_info"] = basic_info
+
+    resume_parse_result = (
+        state.get("resume_parse_result")
+        if isinstance(state.get("resume_parse_result"), dict)
+        else {}
+    )
+    if not _clean_text(resume_parse_result.get("target_job_intention")):
+        resume_parse_result["target_job_intention"] = inferred_target_job
+    state["resume_parse_result"] = resume_parse_result
+
+    state_manager.save_state(state, state_path)
+    return inferred_target_job
+
+
+def _query_job_profile_rows(initial_target_job: str) -> List[Dict[str, Any]]:
+    """
+    查询岗位画像规则层需要的关键字段，避免 service 因上游列缺失而退化。
+    """
+    return query_sqlite(
         db_path=SQLITE_DB_PATH,
-        query="SELECT job_name_raw, city, salary_month_min, salary_month_max, company_name_clean FROM job_detail WHERE standard_job_name = ? LIMIT 50",
-        parameters=(initial_target_job,)
-    )
-    
-    # 从 Neo4j 图谱中拉取知识（如它依赖什么技能，向上晋升的路径）
-    neo4j_summary = query_neo4j(
-        uri=NEO4J_URI, user=NEO4J_USER, password=NEO4J_PASSWORD,
         query="""
-        MATCH (j:Job {name: $job})-[r:REQUIRES_SKILL]->(s:Skill) 
-        RETURN s.name AS skill 
-        LIMIT 10
+        SELECT
+            standard_job_name,
+            job_name_raw AS job_name,
+            city,
+            province,
+            industry,
+            company_name_clean AS company_name,
+            company_type,
+            company_size,
+            salary_month_min AS salary_min_month,
+            salary_month_max AS salary_max_month,
+            job_desc,
+            company_desc,
+            update_date
+        FROM job_detail
+        WHERE standard_job_name = ?
+        LIMIT 80
         """,
-        parameters={"job": initial_target_job}
+        parameters=(initial_target_job,),
     )
-    
-    db_context = {
-        "SQL_Stats": sql_summary,
-        "KG_Stats": neo4j_summary
+
+
+def _build_job_profile_dataframe(
+    sql_rows: List[Dict[str, Any]],
+    initial_target_job: str,
+) -> pd.DataFrame:
+    columns = [
+        "standard_job_name",
+        "job_name",
+        "city",
+        "province",
+        "industry",
+        "company_name",
+        "company_type",
+        "company_size",
+        "salary_min_month",
+        "salary_max_month",
+        "job_desc",
+        "company_desc",
+        "update_date",
+        "salary_raw",
+    ]
+    if not sql_rows:
+        return pd.DataFrame(columns=columns)
+
+    normalized_rows = []
+    for row in sql_rows:
+        normalized = {column: row.get(column, "") for column in columns}
+        normalized["standard_job_name"] = _clean_text(
+            row.get("standard_job_name") or initial_target_job
+        )
+        salary_min = row.get("salary_min_month")
+        salary_max = row.get("salary_max_month")
+        if salary_min or salary_max:
+            normalized["salary_raw"] = f"{salary_min or '?'}-{salary_max or '?'}"
+        normalized_rows.append(normalized)
+
+    return pd.DataFrame(normalized_rows)
+
+
+def _query_job_graph_context(initial_target_job: str) -> Dict[str, List[str]]:
+    required_skills = [
+        item.get("skill")
+        for item in query_neo4j(
+            uri=NEO4J_URI,
+            user=NEO4J_USER,
+            password=NEO4J_PASSWORD,
+            query="""
+            MATCH (j:Job {name: $job})-[:REQUIRES_SKILL]->(s:Skill)
+            RETURN s.name AS skill
+            LIMIT 10
+            """,
+            parameters={"job": initial_target_job},
+        )
+    ]
+    transfer_paths = [
+        item.get("next_job")
+        for item in query_neo4j(
+            uri=NEO4J_URI,
+            user=NEO4J_USER,
+            password=NEO4J_PASSWORD,
+            query="""
+            MATCH (j:Job {name: $job})-[:TRANSFER_TO]->(target:Job)
+            RETURN target.name AS next_job
+            LIMIT 5
+            """,
+            parameters={"job": initial_target_job},
+        )
+    ]
+    promote_paths = [
+        item.get("next_job")
+        for item in query_neo4j(
+            uri=NEO4J_URI,
+            user=NEO4J_USER,
+            password=NEO4J_PASSWORD,
+            query="""
+            MATCH (j:Job {name: $job})-[:PROMOTE_TO]->(target:Job)
+            RETURN target.name AS next_job
+            LIMIT 5
+            """,
+            parameters={"job": initial_target_job},
+        )
+    ]
+    return {
+        "required_skills": _dedup_keep_order(required_skills),
+        "transfer_paths": _dedup_keep_order(transfer_paths),
+        "promote_paths": _dedup_keep_order(promote_paths),
     }
-    
-    job_profile_result = call_llm(
-        task_type="job_profile",
-        input_data={"target_job": initial_target_job},
-        context_data=db_context,
-        student_state=state.state
+
+
+def _build_compact_sql_context(sql_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    cities = _dedup_keep_order(row.get("city") for row in sql_rows)[:8]
+    industries = _dedup_keep_order(row.get("industry") for row in sql_rows)[:8]
+    company_types = _dedup_keep_order(row.get("company_type") for row in sql_rows)[:6]
+    return {
+        "job_count": len(sql_rows),
+        "top_cities": cities,
+        "top_industries": industries,
+        "top_company_types": company_types,
+    }
+
+
+def _export_report_markdown(report_result: Dict[str, Any], state_path: str | Path) -> None:
+    report_text = ""
+    if isinstance(report_result, dict):
+        report_text = _clean_text(
+            report_result.get("report_text_markdown") or report_result.get("report_text")
+        )
+    if not report_text:
+        return
+
+    output_path = Path(state_path).resolve().with_name("final_report.md")
+    output_path.write_text(report_text, encoding="utf-8")
+    logger.info("最终报告已导出为 %s", output_path)
+
+
+def run_pipeline(
+    resume_path: str,
+    initial_target_job: str,
+    state_path: str = "student.json",
+) -> Dict[str, Any]:
+    state_manager = StateManager()
+    state_path = str(state_path)
+
+    logger.info("启动第 1 步: resume_parse")
+    process_resume_file(
+        file_path=resume_path,
+        state_path=state_path,
     )
-    state.update("job_profile_result", job_profile_result)
+    effective_target_job = _resolve_effective_target_job(
+        state_manager=state_manager,
+        state_path=state_path,
+        initial_target_job=initial_target_job,
+    )
+    logger.info(
+        "本次流水线目标岗位=%s",
+        effective_target_job or "未从简历中解析到明确目标岗位",
+    )
 
+    logger.info("启动第 2 步: student_profile")
+    student_profile_bundle = run_student_profile_service(
+        state_path=state_path,
+    )
+    logger.info(
+        "student_profile 完成，summary长度=%s",
+        len(_clean_text(student_profile_bundle.get("student_profile_result", {}).get("summary"))),
+    )
 
-    # 【4】job_match：计算学生能力与刚才提炼出的该岗位画像的匹配度
+    if not effective_target_job:
+        inferred_target_job = _resolve_target_job_from_student_profile(
+            state_manager=state_manager,
+            state_path=state_path,
+            student_profile_bundle=student_profile_bundle,
+        )
+        if inferred_target_job:
+            effective_target_job = inferred_target_job
+            logger.info("简历未明确目标岗位，已根据学生画像 occupation_hints 兜底为=%s", effective_target_job)
+
+    logger.info("启动第 3 步: job_profile，拉取后端数据库知识")
+    sql_rows = _query_job_profile_rows(effective_target_job) if effective_target_job else []
+    graph_context = _query_job_graph_context(effective_target_job) if effective_target_job else {
+        "required_skills": [],
+        "transfer_paths": [],
+        "promote_paths": [],
+    }
+    job_profile_df = _build_job_profile_dataframe(sql_rows, effective_target_job)
+    job_profile_context = {
+        "sql_context": _build_compact_sql_context(sql_rows),
+        "graph_context": graph_context,
+    }
+    job_profile_result = run_job_profile_service(
+        df=job_profile_df,
+        standard_job_name=effective_target_job,
+        state_path=state_path,
+        context_data=job_profile_context,
+    )
+    logger.info(
+        "job_profile 完成，hard_skills=%s",
+        len(job_profile_result.get("hard_skills", []))
+        if isinstance(job_profile_result, dict)
+        else 0,
+    )
+
     logger.info("启动第 4 步: job_match")
-    match_result = call_llm(
-        task_type="job_match",
-        input_data={
-            "student_profile": profile_result,
-            "job_profile": job_profile_result
-        },
-        student_state=state.state
+    job_match_result = run_job_match_service_from_state(
+        state_path=state_path,
     )
-    state.update("job_match_result", match_result)
+    logger.info(
+        "job_match 完成，overall_match_score=%s",
+        job_match_result.get("overall_match_score")
+        if isinstance(job_match_result, dict)
+        else "",
+    )
 
-
-    # 【5】career_path_plan：根据差距规划路径 (结合Neo4j中的路径)
     logger.info("启动第 5 步: career_path_plan，引入图谱晋升换岗数据")
-    # 去图谱里问：这个岗位可以往哪晋升？可以平调去哪？
-    transfer_paths = query_neo4j(
-        NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD,
-        query="MATCH (j:Job {name: $job})-[:TRANSFER_TO]->(target:Job) RETURN target.name AS next_job LIMIT 5",
-        parameters={"job": initial_target_job}
-    )
-    promote_paths = query_neo4j(
-        NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD,
-        query="MATCH (j:Job {name: $job})-[:PROMOTE_TO]->(target:Job) RETURN target.name AS next_job LIMIT 5",
-        parameters={"job": initial_target_job}
-    )
-    
     plan_context = {
-        "neo4j_transfer_paths": transfer_paths,
-        "neo4j_promote_paths": promote_paths
-    }
-    
-    plan_result = call_llm(
-        task_type="career_path_plan",
-        input_data={
-            "match_result": match_result,
-            "job_profile": job_profile_result,
-            "student_profile": profile_result
+        "graph_context": {
+            "transfer_paths": graph_context.get("transfer_paths", []),
+            "promote_paths": graph_context.get("promote_paths", []),
         },
+        "sql_context": job_profile_context.get("sql_context", {}),
+    }
+    career_path_plan_result = run_career_path_plan_service_from_state(
+        state_path=state_path,
         context_data=plan_context,
-        student_state=state.state
     )
-    state.update("career_path_plan_result", plan_result)
+    logger.info(
+        "career_path_plan 完成，primary_target_job=%s",
+        career_path_plan_result.get("primary_target_job")
+        if isinstance(career_path_plan_result, dict)
+        else "",
+    )
 
-
-    # 【6】career_report：长文集成生成
     logger.info("启动第 6 步: career_report")
-    report_result = call_llm(
-        task_type="career_report",
-        input_data={}, # 所有必要资料都在 state 里了
-        student_state=state.state
+    career_report_result = run_career_report_service_from_state(
+        state_path=state_path,
     )
-    state.update("career_report_result", report_result)
-    
-    # 额外写出一份 Markdown
-    if isinstance(report_result, dict) and "report_text_markdown" in report_result:
-        with open("final_report.md", "w", encoding="utf-8") as f:
-            f.write(report_result["report_text_markdown"])
-        logger.info("最终报告已导出为 final_report.md !")
-    
+    _export_report_markdown(career_report_result, state_path)
+
     logger.info("=========== 流水线圆满结束 ===========")
+    return state_manager.load_state(state_path)
 
 
 if __name__ == "__main__":
@@ -218,5 +389,5 @@ if __name__ == "__main__":
     parser.add_argument("--job", type=str, required=True, help="目标应聘岗位")
     parser.add_argument("--out", type=str, default="student.json")
     args = parser.parse_args()
-    
+
     run_pipeline(args.resume, args.job, args.out)

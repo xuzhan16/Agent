@@ -166,10 +166,39 @@ def build_career_report_llm_input(
     report_text_draft: str,
 ) -> Dict[str, Any]:
     """组装 career_report 大模型输入。"""
+    del report_text_draft
+
+    section_outline = [
+        {
+            "section_title": clean_text(safe_dict(item).get("section_title")),
+            "section_content": clean_text(safe_dict(item).get("section_content")),
+        }
+        for item in safe_list(report_sections_draft)
+        if clean_text(safe_dict(item).get("section_title"))
+    ]
+
     return {
-        "report_input_payload": deepcopy(safe_dict(report_input_payload)),
-        "report_sections_draft": deepcopy(safe_list(report_sections_draft)),
-        "report_text_draft": clean_text(report_text_draft),
+        "report_meta": deepcopy(safe_dict(report_input_payload.get("report_meta"))),
+        "upstream_snapshots": {
+            "student_snapshot": deepcopy(safe_dict(report_input_payload.get("student_snapshot"))),
+            "job_snapshot": deepcopy(safe_dict(report_input_payload.get("job_snapshot"))),
+            "job_match_snapshot": deepcopy(safe_dict(report_input_payload.get("job_match_snapshot"))),
+            "career_path_plan_snapshot": deepcopy(
+                safe_dict(report_input_payload.get("career_path_plan_snapshot"))
+            ),
+        },
+        "report_generation_context": deepcopy(
+            safe_dict(report_input_payload.get("report_generation_context"))
+        ),
+        "report_sections_draft": section_outline,
+        "report_outline": {
+            "section_titles": [
+                clean_text(item.get("section_title"))
+                for item in section_outline
+                if clean_text(item.get("section_title"))
+            ],
+            "section_count": len(section_outline),
+        },
         "generation_requirements": {
             "task_goal": "在保留固定章节骨架和事实内容不变的前提下，对各章节进行润色、增强段落衔接，并生成完整自然语言职业发展报告。",
             "must_keep_sections": REPORT_SECTION_TITLES,

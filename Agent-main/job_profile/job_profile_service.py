@@ -299,10 +299,45 @@ def build_job_profile_llm_input(
     aggregation_result: Dict[str, Any],
 ) -> Dict[str, Any]:
     """组装 job_profile 大模型输入。"""
+    normalized_req = safe_dict(builder_payload.get("normalized_requirements"))
+    group_summary = safe_dict(builder_payload.get("group_summary"))
+
+    representative_samples = []
+    for item in safe_list(builder_payload.get("representative_samples"))[:3]:
+        item_dict = safe_dict(item)
+        representative_samples.append(
+            {
+                "job_name_raw": clean_text(item_dict.get("job_name_raw") or item_dict.get("job_name")),
+                "city": clean_text(item_dict.get("city")),
+                "company_name": clean_text(item_dict.get("company_name_clean") or item_dict.get("company_name")),
+                "salary": clean_text(item_dict.get("salary_raw")),
+            }
+        )
+
     return {
         "target_job_name": clean_text(builder_payload.get("standard_job_name")),
-        "builder_payload": deepcopy(builder_payload),
-        "aggregation_result": deepcopy(aggregation_result),
+        "job_requirement_snapshot": {
+            "group_summary": deepcopy(group_summary),
+            "degree_tags": deepcopy(safe_list(normalized_req.get("degree_tags"))[:5]),
+            "major_tags": deepcopy(safe_list(normalized_req.get("major_tags"))[:8]),
+            "experience_tags": deepcopy(safe_list(normalized_req.get("experience_tags"))[:6]),
+            "hard_skill_tags": deepcopy(safe_list(normalized_req.get("hard_skill_tags"))[:12]),
+            "tool_skill_tags": deepcopy(safe_list(normalized_req.get("tool_skill_tags"))[:10]),
+            "certificate_tags": deepcopy(safe_list(normalized_req.get("certificate_tags"))[:8]),
+            "soft_skill_tags": deepcopy(safe_list(normalized_req.get("soft_skill_tags"))[:8]),
+            "practice_tags": deepcopy(safe_list(normalized_req.get("practice_tags"))[:8]),
+            "representative_samples": representative_samples,
+        },
+        "aggregation_snapshot": {
+            "job_count": aggregation_result.get("job_count", 0),
+            "skill_frequency": deepcopy(safe_list(aggregation_result.get("skill_frequency"))[:10]),
+            "degree_requirement_distribution": deepcopy(
+                safe_list(aggregation_result.get("degree_requirement_distribution"))[:5]
+            ),
+            "industry_distribution": deepcopy(safe_list(aggregation_result.get("industry_distribution"))[:5]),
+            "city_distribution": deepcopy(safe_list(aggregation_result.get("city_distribution"))[:5]),
+            "salary_stats": deepcopy(safe_dict(aggregation_result.get("salary_stats"))),
+        },
         "generation_requirements": {
             "job_category": "归纳该岗位所属大类，例如数据类、算法类、开发类、产品类。",
             "job_level": "根据岗位要求和经验分布推断适合的岗位层级，例如实习/初级/中级/高级。",

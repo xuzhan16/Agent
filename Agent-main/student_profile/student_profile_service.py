@@ -322,9 +322,81 @@ def build_student_profile_llm_input(
     rule_score_result: Dict[str, Any],
 ) -> Dict[str, Any]:
     """组装 student_profile 任务的大模型输入。"""
+    explicit_profile = _safe_dict(profile_input_payload.get("explicit_profile"))
+    normalized_profile = _safe_dict(profile_input_payload.get("normalized_profile"))
+    practice_profile = _safe_dict(profile_input_payload.get("practice_profile"))
+    score_reasons = _safe_dict(rule_score_result.get("score_reasons"))
+
+    project_examples = []
+    for item in _safe_list(explicit_profile.get("project_experience"))[:2]:
+        item_dict = _safe_dict(item)
+        project_examples.append(
+            {
+                "name": _clean_text(item_dict.get("name") or item_dict.get("project_name")),
+                "role": _clean_text(item_dict.get("role")),
+                "desc": _clean_text(item_dict.get("desc") or item_dict.get("description")),
+            }
+        )
+
+    internship_examples = []
+    for item in _safe_list(explicit_profile.get("internship_experience"))[:2]:
+        item_dict = _safe_dict(item)
+        internship_examples.append(
+            {
+                "company": _clean_text(item_dict.get("company")),
+                "role": _clean_text(item_dict.get("role")),
+                "desc": _clean_text(item_dict.get("desc") or item_dict.get("description")),
+            }
+        )
+
     return {
-        "profile_input_payload": deepcopy(profile_input_payload),
-        "rule_score_result": deepcopy(rule_score_result),
+        "student_snapshot": {
+            "basic_info": {
+                "school": _clean_text(explicit_profile.get("school")),
+                "major": _clean_text(explicit_profile.get("major")),
+                "degree": _clean_text(explicit_profile.get("degree")),
+                "graduation_year": _clean_text(explicit_profile.get("graduation_year")),
+                "target_job": _clean_text(explicit_profile.get("target_job")),
+            },
+            "skills": {
+                "hard_skills": [
+                    _clean_text(item)
+                    for item in _safe_list(normalized_profile.get("hard_skills"))
+                    if _clean_text(item)
+                ][:12],
+                "tool_skills": [
+                    _clean_text(item)
+                    for item in _safe_list(normalized_profile.get("tool_skills"))
+                    if _clean_text(item)
+                ][:10],
+                "qualification_tags": [
+                    _clean_text(item)
+                    for item in _safe_list(normalized_profile.get("qualification_tags"))
+                    if _clean_text(item)
+                ][:10],
+            },
+            "experience_summary": {
+                "project_count": len(_safe_list(explicit_profile.get("project_experience"))),
+                "internship_count": len(_safe_list(explicit_profile.get("internship_experience"))),
+                "project_keywords": deepcopy(_safe_list(practice_profile.get("project_keywords"))[:8]),
+                "internship_keywords": deepcopy(_safe_list(practice_profile.get("internship_keywords"))[:8]),
+                "project_examples": project_examples,
+                "internship_examples": internship_examples,
+            },
+            "career_hints": {
+                "occupation_hints": deepcopy(_safe_list(normalized_profile.get("occupation_hints"))[:6]),
+                "domain_tags": deepcopy(_safe_list(normalized_profile.get("domain_tags"))[:6]),
+                "experience_tags": deepcopy(_safe_list(normalized_profile.get("experience_tags"))[:8]),
+            },
+        },
+        "rule_score_snapshot": {
+            "profile_completeness_score": float(rule_score_result.get("profile_completeness_score") or 0.0),
+            "competitiveness_base_score": float(rule_score_result.get("competitiveness_base_score") or 0.0),
+            "score_level": _clean_text(rule_score_result.get("score_level")),
+            "strengths": deepcopy(_safe_list(score_reasons.get("strengths"))[:6]),
+            "weaknesses": deepcopy(_safe_list(score_reasons.get("weaknesses"))[:6]),
+            "suggestions": deepcopy(_safe_list(score_reasons.get("suggestions"))[:6]),
+        },
         "generation_requirements": {
             "soft_skills": "从项目、实习、自我评价和经历表述中归纳软技能标签。",
             "potential_profile": "结合专业、技能、实践、方向聚焦度，给出潜力画像。",

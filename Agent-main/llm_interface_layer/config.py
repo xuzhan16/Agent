@@ -37,6 +37,14 @@ def _clean_config_text(value: Optional[str]) -> str:
     return str(value or "").strip()
 
 
+def _resolve_bool_env(env_name: str, default: bool) -> bool:
+    """解析布尔环境变量。"""
+    raw_value = _clean_config_text(os.getenv(env_name))
+    if not raw_value:
+        return default
+    return raw_value.lower() not in {"0", "false", "no", "off"}
+
+
 def _resolve_api_base_url() -> str:
     """读取真实大模型 API Base URL。"""
     return (
@@ -76,6 +84,8 @@ class LLMConfig:
     api_base_url: str = _resolve_api_base_url()
     api_key: str = _resolve_api_key()
     api_key_env_name: str = os.getenv("LLM_API_KEY_ENV_NAME", "LLM_API_KEY")
+    cache_enabled: bool = _resolve_bool_env("LLM_CACHE_ENABLED", True)
+    cache_dir: Path = Path(os.getenv("LLM_CACHE_DIR", "outputs/cache/llm"))
 
 
 @dataclass(frozen=True)

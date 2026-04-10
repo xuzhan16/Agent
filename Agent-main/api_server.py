@@ -25,7 +25,30 @@ logger = logging.getLogger(__name__)
 
 # 保存全局状态给前后端串联
 STATE_FILE = "student_api_state.json"
-GLOBAL_JOB = "数据分析师" 
+
+
+def _clean_text(value):
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _safe_dict(value):
+    return value if isinstance(value, dict) else {}
+
+
+def _resolve_state_target_job(all_data: dict) -> str:
+    candidates = [
+        _safe_dict(all_data.get("career_path_plan_result")).get("primary_target_job"),
+        _safe_dict(all_data.get("job_profile_result")).get("standard_job_name"),
+        _safe_dict(all_data.get("resume_parse_result")).get("target_job_intention"),
+        _safe_dict(all_data.get("basic_info")).get("target_job"),
+    ]
+    for item in candidates:
+        cleaned = _clean_text(item)
+        if cleaned:
+            return cleaned
+    return "未明确目标岗位"
 
 @app.post("/api/resume/parse")
 async def parse_resume(resume: UploadFile = File(...)):
@@ -35,7 +58,7 @@ async def parse_resume(resume: UploadFile = File(...)):
             tmp_path = tmp.name
         
         # 跑全流水线 (目前前端一键跑完，我们放在这一步调用后端 pipeline)
-        run_pipeline(tmp_path, GLOBAL_JOB, STATE_FILE)
+        run_pipeline(tmp_path, "", STATE_FILE)
         
         # 返回第一步的数据
         if os.path.exists(STATE_FILE):
@@ -75,9 +98,10 @@ async def match_jobs(req: Request):
         with open(STATE_FILE, 'r', encoding='utf-8') as f:
             all_data = json.load(f)
             match_res = all_data.get("job_match_result", {})
+            current_target_job = _resolve_state_target_job(all_data)
             
             if isinstance(match_res, dict) and match_res:
-                score = match_res.get("overall_score", 0)
+                score = match_res.get("overall_match_score", match_res.get("overall_score", 0))
                 level = "高度匹配" if score >= 80 else ("较好匹配" if score >= 60 else "需转型突破")
                 
                 reasons = []
@@ -85,13 +109,21 @@ async def match_jobs(req: Request):
                 if isinstance(strengths, list):
                     for s in strengths:
                         reasons.append(str(s.get("description", s) if isinstance(s, dict) else s))
-                gaps = match_res.get("gaps", [])
-                if isinstance(gaps, list):
-                    for g in gaps:
+                weaknesses = match_res.get("weaknesses") or match_res.get("gaps") or []
+                if isinstance(weaknesses, list):
+                    for g in weaknesses:
                         reasons.append(str(g.get("description", g) if isinstance(g, dict) else g))
+                if not reasons:
+                    missing_items = match_res.get("missing_items", [])
+                    if isinstance(missing_items, list):
+                        for item in missing_items:
+                            if isinstance(item, dict):
+                                reason = item.get("reason") or item.get("required_item")
+                                if reason:
+                                    reasons.append(str(reason))
                 
                 data = [{
-                    "job_name": GLOBAL_JOB,
+                    "job_name": current_target_job,
                     "match_score": score,
                     "match_level": level,
                     "reasons": reasons
@@ -100,7 +132,11 @@ async def match_jobs(req: Request):
                 data = match_res
                 
     if not data:
-         data = [{"job_name": GLOBAL_JOB, "match_score": 85, "match_level": "较好匹配", "reasons": ["无法获得匹配详情"]}]
+         fallback_job_name = "未明确目标岗位"
+         if os.path.exists(STATE_FILE):
+             with open(STATE_FILE, 'r', encoding='utf-8') as f:
+                 fallback_job_name = _resolve_state_target_job(json.load(f))
+         data = [{"job_name": fallback_job_name, "match_score": 85, "match_level": "较好匹配", "reasons": ["无法获得匹配详情"]}]
          
     return {"success": True, "data": data}
 
@@ -140,14 +176,14 @@ async def career_path(req: Request):
                 return res
 
             data = {
-                "primary_target_job": raw.get("primary_target_job", GLOBAL_JOB),
-                "secondary_target_jobs": raw.get("backup_target_jobs", []),
+                "primary_target_job": raw.get("primary_target_job", _resolve_state_target_job(all_data)),
+                "secondary_target_jobs": raw.get("secondary_target_jobs", raw.get("backup_target_jobs", [])),
                 "direct_path": flatten_list(raw.get("direct_path", [])),
                 "transition_path": flatten_list(raw.get("transition_path", [])),
-                "long_term_path": [],
+                "long_term_path": flatten_list(raw.get("long_term_path", [])),
                 "short_term_plan": flatten_list(raw.get("short_term_plan", [])),
                 "mid_term_plan": flatten_list(raw.get("mid_term_plan", [])),
-                "risk_and_gap": flatten_list(raw.get("risk_notes", [])),
+                "risk_and_gap": flatten_list(raw.get("risk_and_gap", raw.get("risk_notes", []))),
             }
     return {"success": True, "data": data}
 
@@ -157,7 +193,8 @@ async def generate_report(req: Request):
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, 'r', encoding='utf-8') as f:
             all_data = json.load(f)
-            data = all_data.get("career_report_result", {}).get("report_text", "No Report")
+            report_res = all_data.get("career_report_result", {})
+            data = report_res.get("report_text_markdown") or report_res.get("report_text") or "No Report"
     return {"success": True, "data": data}
 
 @app.get("/api/report")
@@ -166,7 +203,8 @@ async def get_report():
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, 'r', encoding='utf-8') as f:
             all_data = json.load(f)
-            data = all_data.get("career_report_result", {}).get("report_text", "No Report")
+            report_res = all_data.get("career_report_result", {})
+            data = report_res.get("report_text_markdown") or report_res.get("report_text") or "No Report"
     return {"success": True, "data": data}
 
 if __name__ == "__main__":

@@ -346,9 +346,53 @@ def build_career_path_plan_llm_input(
     selector_result: Dict[str, Any],
 ) -> Dict[str, Any]:
     """组装 career_path_plan 大模型输入。"""
+    planner_context = safe_dict(career_plan_input_payload.get("planner_context"))
+
+    gap_snapshot = []
+    for item in safe_list(career_plan_input_payload.get("gap_analysis"))[:6]:
+        item_dict = safe_dict(item)
+        gap_snapshot.append(
+            {
+                "gap_item": clean_text(item_dict.get("gap_item")),
+                "priority": clean_text(item_dict.get("priority")),
+                "action_hint": clean_text(item_dict.get("action_hint")),
+            }
+        )
+
     return {
-        "career_plan_input_payload": deepcopy(safe_dict(career_plan_input_payload)),
-        "selector_result": deepcopy(safe_dict(selector_result)),
+        "student_snapshot": deepcopy(safe_dict(career_plan_input_payload.get("student_snapshot"))),
+        "target_job_snapshot": deepcopy(safe_dict(career_plan_input_payload.get("target_job_snapshot"))),
+        "match_snapshot": deepcopy(safe_dict(career_plan_input_payload.get("match_snapshot"))),
+        "goal_options_snapshot": {
+            "candidate_goal_jobs": deepcopy(safe_list(career_plan_input_payload.get("candidate_goal_jobs"))[:5]),
+            "direct_path_options": deepcopy(safe_list(career_plan_input_payload.get("direct_path_options"))[:5]),
+            "transition_path_options": deepcopy(
+                safe_list(career_plan_input_payload.get("transition_path_options"))[:5]
+            ),
+            "gap_analysis": gap_snapshot,
+            "planning_constraints": deepcopy(
+                safe_dict(career_plan_input_payload.get("planning_constraints"))
+            ),
+            "planner_context": {
+                "strengths": deepcopy(safe_list(planner_context.get("strengths"))[:6]),
+                "weaknesses": deepcopy(safe_list(planner_context.get("weaknesses"))[:6]),
+                "improvement_suggestions": deepcopy(
+                    safe_list(planner_context.get("improvement_suggestions"))[:6]
+                ),
+            },
+        },
+        "selector_snapshot": {
+            "primary_target_job": clean_text(selector_result.get("primary_target_job")),
+            "secondary_target_jobs": deepcopy(safe_list(selector_result.get("secondary_target_jobs"))[:5]),
+            "goal_positioning": clean_text(selector_result.get("goal_positioning")),
+            "direct_path": deepcopy(safe_list(selector_result.get("direct_path"))[:5]),
+            "transition_path": deepcopy(safe_list(selector_result.get("transition_path"))[:5]),
+            "long_term_path": deepcopy(safe_list(selector_result.get("long_term_path"))[:5]),
+            "path_strategy": clean_text(selector_result.get("path_strategy")),
+            "target_selection_reason": deepcopy(safe_list(selector_result.get("target_selection_reason"))[:5]),
+            "path_selection_reason": deepcopy(safe_list(selector_result.get("path_selection_reason"))[:5]),
+            "risk_notes": deepcopy(safe_list(selector_result.get("risk_notes"))[:6]),
+        },
         "generation_requirements": {
             "goal_reason": "解释为什么选择当前主目标岗位和备选岗位，要求结合学生画像、人岗匹配结果和路径可达性。",
             "decision_summary": "输出一段更自然、可直接用于报告模块的职业目标与路径决策摘要。",

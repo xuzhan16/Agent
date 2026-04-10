@@ -273,9 +273,61 @@ def build_job_match_llm_input(
     rule_score_result: Dict[str, Any],
 ) -> Dict[str, Any]:
     """组装 job_match 大模型输入。"""
+    student_profile = safe_dict(match_input_payload.get("student_profile"))
+    job_profile = safe_dict(match_input_payload.get("job_profile"))
+
+    matched_items = []
+    for item in safe_list(rule_score_result.get("matched_items"))[:6]:
+        item_dict = safe_dict(item)
+        matched_items.append(
+            {
+                "dimension": clean_text(item_dict.get("dimension")),
+                "required_item": clean_text(item_dict.get("required_item")),
+                "evidence": clean_text(item_dict.get("evidence")),
+            }
+        )
+
+    missing_items = []
+    for item in safe_list(rule_score_result.get("missing_items"))[:6]:
+        item_dict = safe_dict(item)
+        missing_items.append(
+            {
+                "dimension": clean_text(item_dict.get("dimension")),
+                "required_item": clean_text(item_dict.get("required_item")),
+                "reason": clean_text(item_dict.get("reason")),
+            }
+        )
+
     return {
-        "match_input_payload": deepcopy(safe_dict(match_input_payload)),
-        "rule_score_result": deepcopy(safe_dict(rule_score_result)),
+        "student_snapshot": {
+            "major": clean_text(student_profile.get("major")),
+            "degree": clean_text(student_profile.get("degree")),
+            "hard_skills": deepcopy(safe_list(student_profile.get("hard_skills"))[:12]),
+            "tool_skills": deepcopy(safe_list(student_profile.get("tool_skills"))[:10]),
+            "soft_skills": deepcopy(safe_list(student_profile.get("soft_skills"))[:8]),
+            "strengths": deepcopy(safe_list(student_profile.get("strengths"))[:6]),
+            "summary": clean_text(student_profile.get("summary")),
+        },
+        "job_snapshot": {
+            "standard_job_name": clean_text(job_profile.get("standard_job_name")),
+            "degree_requirement": clean_text(job_profile.get("degree_requirement")),
+            "major_requirement": deepcopy(safe_list(job_profile.get("major_requirement"))[:8]),
+            "hard_skills": deepcopy(safe_list(job_profile.get("hard_skills"))[:12]),
+            "tools_or_tech_stack": deepcopy(safe_list(job_profile.get("tools_or_tech_stack"))[:10]),
+            "soft_skills": deepcopy(safe_list(job_profile.get("soft_skills"))[:8]),
+            "summary": clean_text(job_profile.get("summary")),
+        },
+        "rule_score_snapshot": {
+            "basic_requirement_score": safe_float(rule_score_result.get("basic_requirement_score"), default=0.0),
+            "vocational_skill_score": safe_float(rule_score_result.get("vocational_skill_score"), default=0.0),
+            "professional_quality_score": safe_float(rule_score_result.get("professional_quality_score"), default=0.0),
+            "development_potential_score": safe_float(rule_score_result.get("development_potential_score"), default=0.0),
+            "overall_match_score": safe_float(rule_score_result.get("overall_match_score"), default=0.0),
+            "score_level": clean_text(rule_score_result.get("score_level")),
+            "matched_items": matched_items,
+            "missing_items": missing_items,
+            "rule_summary": clean_text(rule_score_result.get("rule_summary")),
+        },
         "generation_requirements": {
             "strengths": "结合 matched_items 和岗位画像，总结候选人相对该岗位的核心优势点。",
             "weaknesses": "结合 missing_items 和岗位画像，总结候选人当前最关键的短板。",

@@ -1,10 +1,12 @@
 # Neo4j Docker 导入说明
 
+后端主目录为 `Agent-main/`。以下命令都应在 `E:\Agent\Agent-main` 目录下执行。
+
 ## 1. 准备数据
 岗位图谱 CSV 已导出到 `outputs/neo4j/`。
 
 ## 2. 初始化并导入
-在项目根目录执行：
+在后端目录执行：
 
 ```powershell
 .\scripts\neo4j\import-graph.ps1

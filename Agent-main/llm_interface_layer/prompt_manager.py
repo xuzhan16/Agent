@@ -12,6 +12,10 @@ from typing import Dict, Tuple
 from .schemas import TaskType, get_default_output_dict
 
 
+def _compact_json(value: Dict) -> str:
+    return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+
+
 class PromptManager:
     """根据 task_type 返回对应 prompt。"""
 
@@ -78,14 +82,14 @@ class PromptManager:
         normalized_task = TaskType.normalize(task_type)
         system_prompt = self._system_prompts[normalized_task]
         output_schema = get_default_output_dict(normalized_task)
+        compact_schema = _compact_json(output_schema)
+        compact_context = _compact_json(context_payload)
 
         user_prompt = (
             f"任务类型：{normalized_task.value}\n"
             f"任务要求：{self._task_instructions[normalized_task]}\n"
-            "请严格按下面的输出 JSON 模板返回，字段缺失时补空字符串、空数组、空对象或 0。\n"
-            "输出 JSON 模板：\n"
-            f"{json.dumps(output_schema, ensure_ascii=False, indent=2)}\n\n"
-            "输入上下文 JSON：\n"
-            f"{json.dumps(context_payload, ensure_ascii=False, indent=2)}"
+            "只返回合法 JSON；缺失字段按模板类型补空值，不要输出 Markdown、代码块或额外解释。\n"
+            f"输出模板(JSON)：{compact_schema}\n"
+            f"输入(JSON)：{compact_context}"
         )
         return system_prompt, user_prompt
