@@ -25,7 +25,7 @@ import re
 import zipfile
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 from xml.etree import ElementTree
 
 from llm_interface_layer.llm_service import call_llm
@@ -40,6 +40,84 @@ except ImportError:
 LOGGER = logging.getLogger(__name__)
 # 与 load_resume_file 分支一一对应；新增格式需同步扩展抽取函数与 file_meta
 SUPPORTED_SUFFIXES = {".txt", ".docx", ".pdf"}
+DATE_RANGE_PATTERN = re.compile(
+    r"(?P<start>\d{4}[./-]\d{1,2})\s*(?:~|-|—|–|至|到)\s*(?P<end>(?:\d{4}[./-]\d{1,2})|(?:\d{1,2}[./-]\d{1,2})|至今|现在)"
+)
+SECTION_KEYWORDS = {
+    "education": ["教育经历", "教育背景", "学历背景", "学习经历"],
+    "internship": ["实习经历", "工作经历", "实践经历", "校园经历"],
+    "project": ["项目经历", "项目经验", "科研项目", "课程项目"],
+    "skills": ["专业技能", "技能特长", "技能证书", "掌握技能", "语言能力", "计算机能力"],
+    "awards": ["获奖情况", "荣誉奖项", "奖励荣誉"],
+    "self_evaluation": ["自我评价", "个人总结", "个人优势"],
+    "target_job": ["求职意向", "目标岗位", "应聘岗位", "目标职位", "意向岗位"],
+}
+DEGREE_KEYWORDS = ("博士研究生", "硕士研究生", "硕士", "本科", "大专", "专科", "中专")
+COMPANY_SUFFIX_KEYWORDS = (
+    "有限责任公司",
+    "股份有限公司",
+    "有限公司",
+    "集团",
+    "科技",
+    "网络",
+    "软件",
+    "信息技术",
+    "研究院",
+    "工作室",
+    "银行",
+    "中心",
+)
+POSITION_TITLE_KEYWORDS = (
+    "高级软件工程师",
+    "软件研发工程师",
+    "后端开发工程师",
+    "前端开发工程师",
+    "Java工程师",
+    "Java开发工程师",
+    "Python工程师",
+    "数据分析师",
+    "产品经理",
+    "测试工程师",
+    "开发工程师",
+    "软件工程师",
+    "前端工程师",
+    "后端工程师",
+    "算法工程师",
+    "运维工程师",
+    "实施工程师",
+    "销售工程师",
+    "运营专员",
+    "运营助理",
+    "产品助理",
+    "技术助理",
+    "研究助理",
+    "工程师",
+    "实习生",
+    "助理",
+    "专员",
+)
+SKILL_PATTERNS = [
+    ("C++", re.compile(r"c\+\+", re.IGNORECASE)),
+    ("Java", re.compile(r"java", re.IGNORECASE)),
+    ("JavaScript", re.compile(r"javascript|\bjs\b", re.IGNORECASE)),
+    ("Oracle", re.compile(r"oracle", re.IGNORECASE)),
+    ("Mysql", re.compile(r"mysql", re.IGNORECASE)),
+    ("SQL", re.compile(r"sql", re.IGNORECASE)),
+    ("eclipse", re.compile(r"eclipse", re.IGNORECASE)),
+    ("Linux", re.compile(r"linux", re.IGNORECASE)),
+    ("Netty", re.compile(r"netty", re.IGNORECASE)),
+    ("Dubbo", re.compile(r"dubbo", re.IGNORECASE)),
+    ("Jquery", re.compile(r"jquery", re.IGNORECASE)),
+    ("Bootstrap", re.compile(r"bootstrap", re.IGNORECASE)),
+    ("SSH", re.compile(r"ssh", re.IGNORECASE)),
+    ("C", re.compile(r"(?:\bc\b|c语言)", re.IGNORECASE)),
+]
+CERTIFICATE_PATTERNS = [
+    ("大学英语六级", re.compile(r"(?:大学英语六级|英语六级|cet-?6)", re.IGNORECASE)),
+    ("普通话二级甲等", re.compile(r"普通话二级甲等", re.IGNORECASE)),
+    ("C1驾照", re.compile(r"(?:c1驾照|c1驾驶证)", re.IGNORECASE)),
+]
+AWARD_HINT_KEYWORDS = ("奖学金", "励志奖", "优秀", "一等奖", "二等奖", "三等奖", "国家励志")
 
 # ---------------------------------------------------------------------------
 # 日志
@@ -102,7 +180,7 @@ def extract_text_from_docx(file_path: str | Path) -> str:
         if paragraph_text:
             texts.append(paragraph_text)
 
-    return "\n".join(texts)
+    return "\n".join(_dedup_nearby_lines(texts))
 
 
 def _load_pdf_reader(file_path: str | Path):
@@ -195,6 +273,592 @@ def clean_resume_text(text: str) -> str:
     return cleaned.strip()
 
 
+def _normalize_compare_text(text: Any) -> str:
+    normalized = str(text or "")
+    normalized = normalized.replace("\u00a0", " ").replace("\u3000", " ")
+    normalized = re.sub(r"\s+", "", normalized)
+    normalized = re.sub(r"[：:，,；;。、“”\"'·\-_~—–|/\\()（）\[\]【】]+", "", normalized)
+    return normalized.lower()
+
+
+def _dedup_nearby_lines(lines: Iterable[str]) -> List[str]:
+    """去掉相邻或近邻重复段落，降低 docx 复杂排版导致的重复噪声。"""
+    result: List[str] = []
+    recent_keys: List[str] = []
+    for line in lines:
+        text = str(line or "").strip()
+        if not text:
+            continue
+        key = _normalize_compare_text(text)
+        if not key:
+            continue
+        if key in recent_keys[-4:]:
+            continue
+        result.append(text)
+        recent_keys.append(key)
+    return result
+
+
+def _dedup_keep_order(values: Iterable[str]) -> List[str]:
+    seen = set()
+    result = []
+    for value in values:
+        text = str(value or "").strip()
+        if not text or text in seen:
+            continue
+        seen.add(text)
+        result.append(text)
+    return result
+
+
+def _dedup_object_list(
+    rows: Iterable[Dict[str, Any]],
+    key_fields: Tuple[str, ...],
+) -> List[Dict[str, Any]]:
+    seen = set()
+    result = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        key = tuple(str(row.get(field, "") or "").strip() for field in key_fields)
+        if not any(key):
+            key = (str(row.get("description", "") or "").strip(),)
+        if not any(key) or key in seen:
+            continue
+        seen.add(key)
+        result.append(row)
+    return result
+
+
+def _match_section_heading(line: str) -> str:
+    compact = _normalize_compare_text(line)
+    if not compact:
+        return ""
+    for section_name, keywords in SECTION_KEYWORDS.items():
+        for keyword in keywords:
+            keyword_compact = _normalize_compare_text(keyword)
+            if compact == keyword_compact or compact == keyword_compact * 2:
+                return section_name
+            if compact.startswith(keyword_compact) and len(compact) <= len(keyword_compact) * 3:
+                return section_name
+    return ""
+
+
+def _match_section_heading_with_content(line: str) -> Tuple[str, str]:
+    stripped = str(line or "").strip()
+    matched_section = _match_section_heading(stripped)
+    if matched_section:
+        return matched_section, ""
+
+    for section_name, keywords in SECTION_KEYWORDS.items():
+        for keyword in keywords:
+            pattern = rf"^\s*{re.escape(keyword)}\s*[:：]?\s*(.*)$"
+            match = re.match(pattern, stripped)
+            if match:
+                return section_name, match.group(1).strip()
+    return "", ""
+
+
+def _extract_resume_sections(resume_text: str) -> Dict[str, List[str]]:
+    sections: Dict[str, List[str]] = {"header": []}
+    current_section = "header"
+    for raw_line in resume_text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        matched_section, remaining_text = _match_section_heading_with_content(line)
+        if matched_section:
+            current_section = matched_section
+            sections.setdefault(current_section, [])
+            if remaining_text:
+                sections[current_section].append(remaining_text)
+            continue
+        sections.setdefault(current_section, []).append(line)
+
+    return {
+        section_name: _dedup_nearby_lines(section_lines)
+        for section_name, section_lines in sections.items()
+    }
+
+
+def _extract_phone(text: str) -> str:
+    match = re.search(r"1[3-9]\d[- ]?\d{4}[- ]?\d{4}", text)
+    return match.group(0).replace(" ", "") if match else ""
+
+
+def _extract_email(text: str) -> str:
+    match = re.search(r"[A-Za-z0-9_.+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9-.]+", text)
+    return match.group(0) if match else ""
+
+
+def _extract_gender(text: str) -> str:
+    match = re.search(r"(?:性别[:：]?\s*)(男|女)", text)
+    return match.group(1) if match else ""
+
+
+def _extract_name(header_lines: List[str]) -> str:
+    for line in header_lines[:8]:
+        candidate = line.strip()
+        if not candidate:
+            continue
+        if any(keyword in candidate for keywords in SECTION_KEYWORDS.values() for keyword in keywords):
+            continue
+        if re.search(r"\d|@|大学|学院|公司|项目|经历", candidate):
+            continue
+        if re.fullmatch(r"[\u4e00-\u9fa5]{2,4}", candidate):
+            return candidate
+    return ""
+
+
+def _extract_target_job_by_rule(section_lines: List[str], resume_text: str) -> str:
+    search_text = "\n".join(section_lines) + "\n" + resume_text
+    match = re.search(
+        r"(?:目标岗位|求职意向|应聘岗位|目标职位|意向岗位)\s*[:：]?\s*([^\n\r]{2,40})",
+        search_text,
+    )
+    if not match:
+        return ""
+    candidate = match.group(1).strip()
+    candidate = re.split(
+        r"(?:语言能力|计算机能力|其他能力|教育背景|工作经历|实习经历|项目经历|技能证书|专业技能|自我评价|获奖情况|校园经历|个人总结|个人优势|$)",
+        candidate,
+        maxsplit=1,
+    )[0].strip()
+    candidate = re.split(r"[，,；;。\n]", candidate)[0].strip()
+    return candidate
+
+
+def _extract_date_range(text: str) -> Tuple[str, str]:
+    match = DATE_RANGE_PATTERN.search(text)
+    if not match:
+        return "", ""
+    start_date = match.group("start")
+    end_date = match.group("end")
+    if re.fullmatch(r"\d{1,2}[./-]\d{1,2}", end_date):
+        end_date = f"{start_date[:4]}.{end_date.replace('-', '.')}"
+    return start_date.replace("-", "."), end_date.replace("-", ".")
+
+
+def _remove_date_range_prefix(text: str) -> str:
+    return DATE_RANGE_PATTERN.sub("", text, count=1).strip(" ：:，,；;")
+
+
+def _split_lines_by_date_ranges(section_lines: List[str]) -> List[str]:
+    normalized_lines: List[str] = []
+    for raw_line in section_lines:
+        line = str(raw_line or "").strip()
+        if not line:
+            continue
+        matches = list(DATE_RANGE_PATTERN.finditer(line))
+        if len(matches) <= 1:
+            normalized_lines.append(line)
+            continue
+        for index, match in enumerate(matches):
+            chunk_start = match.start()
+            chunk_end = matches[index + 1].start() if index + 1 < len(matches) else len(line)
+            chunk = line[chunk_start:chunk_end].strip(" ，,；;")
+            if chunk:
+                normalized_lines.append(chunk)
+    return _dedup_nearby_lines(normalized_lines)
+
+
+def _parse_school_major_degree(text: str) -> Tuple[str, str, str, str]:
+    body = str(text or "").strip()
+    school = ""
+    major = ""
+    degree = ""
+    description = ""
+
+    school_match = re.search(r"(.+?(?:大学|学院|学校))", body)
+    if school_match:
+        school = school_match.group(1).strip()
+        body = body[school_match.end():].strip()
+
+    after_degree = ""
+    for degree_keyword in DEGREE_KEYWORDS:
+        if degree_keyword in body:
+            degree = degree_keyword
+            degree_pattern = re.escape(degree_keyword) + r"(?:学位)?"
+            split_parts = re.split(degree_pattern, body, maxsplit=1)
+            before_degree = split_parts[0]
+            after_degree = split_parts[1] if len(split_parts) > 1 else ""
+            body = before_degree
+            break
+
+    body = re.sub(r"[，,；;。]+", " ", body)
+    body = re.sub(r"\s+", " ", body).strip()
+    split_match = re.search(
+        r"(毕业设计|项目经历|工作经历|实习经历|技能证书|语言能力|计算机能力|其他能力|奖学金|获奖|优秀等级)",
+        body,
+    )
+    if split_match:
+        major = body[: split_match.start()].strip()
+        description = body[split_match.start():].strip()
+    else:
+        major = body
+
+    after_degree = re.sub(r"[，,；;。]+", " ", after_degree)
+    after_degree = re.sub(r"\s+", " ", after_degree).strip()
+    description = f"{description} {after_degree}".strip()
+    return school, major, degree, description
+
+
+def _append_description(current: Dict[str, Any], line: str) -> None:
+    if not line or not isinstance(current, dict):
+        return
+    existing = str(current.get("description", "") or "").strip()
+    if line in existing:
+        return
+    current["description"] = f"{existing} {line}".strip()
+
+
+def _parse_education_entries(section_lines: List[str]) -> List[Dict[str, str]]:
+    entries: List[Dict[str, str]] = []
+    current: Optional[Dict[str, str]] = None
+
+    for line in _split_lines_by_date_ranges(section_lines):
+        start_date, end_date = _extract_date_range(line)
+        line_has_school = any(token in line for token in ("大学", "学院", "学校"))
+        if start_date and (line_has_school or any(keyword in line for keyword in DEGREE_KEYWORDS)):
+            if current:
+                entries.append(current)
+            school, major, degree, inline_description = _parse_school_major_degree(_remove_date_range_prefix(line))
+            current = {
+                "school": school,
+                "major": major,
+                "degree": degree,
+                "start_date": start_date,
+                "end_date": end_date,
+                "description": inline_description,
+            }
+            continue
+        if current:
+            _append_description(current, line)
+
+    if current:
+        entries.append(current)
+
+    return _dedup_object_list(entries, ("school", "major", "start_date", "end_date"))
+
+
+def _split_company_and_position(text: str) -> Tuple[str, str, str]:
+    body = str(text or "").strip()
+    for suffix in COMPANY_SUFFIX_KEYWORDS:
+        index = body.find(suffix)
+        if index != -1:
+            company = body[: index + len(suffix)].strip()
+            remaining = body[index + len(suffix):].strip(" ：:，,；;")
+            for keyword in POSITION_TITLE_KEYWORDS:
+                keyword_index = remaining.find(keyword)
+                if keyword_index != -1:
+                    position = remaining[: keyword_index + len(keyword)].strip(" ：:，,；;")
+                    description = remaining[keyword_index + len(keyword):].strip(" ：:，,；;")
+                    return company, position, description
+            return company, remaining, ""
+
+    parts = body.split()
+    if len(parts) >= 2:
+        return parts[0].strip(), " ".join(parts[1:]).strip(), ""
+    return "", body, ""
+
+
+def _parse_internship_entries(section_lines: List[str]) -> List[Dict[str, str]]:
+    entries: List[Dict[str, str]] = []
+    current: Optional[Dict[str, str]] = None
+
+    for line in _split_lines_by_date_ranges(section_lines):
+        start_date, end_date = _extract_date_range(line)
+        if start_date:
+            if current:
+                entries.append(current)
+            body = _remove_date_range_prefix(line)
+            company_name, position, inline_description = _split_company_and_position(body)
+            current = {
+                "company_name": company_name,
+                "position": position,
+                "start_date": start_date,
+                "end_date": end_date,
+                "description": inline_description,
+            }
+            continue
+        if current:
+            _append_description(current, line)
+
+    if current:
+        entries.append(current)
+
+    filtered_entries = [
+        item
+        for item in entries
+        if item.get("company_name") or item.get("position") or item.get("description")
+    ]
+    return _dedup_object_list(
+        filtered_entries,
+        ("company_name", "position", "start_date", "end_date"),
+    )
+
+
+def _parse_project_entries(section_lines: List[str]) -> List[Dict[str, str]]:
+    entries: List[Dict[str, str]] = []
+    current: Optional[Dict[str, str]] = None
+
+    for line in _split_lines_by_date_ranges(section_lines):
+        start_date, end_date = _extract_date_range(line)
+        if start_date:
+            if current:
+                entries.append(current)
+            body = _remove_date_range_prefix(line)
+            project_name = re.split(r"(?:开发环境|项目描述|项目介绍|责任描述|职责描述)[:：]", body, maxsplit=1)[0]
+            description = ""
+            if project_name != body:
+                description = body[len(project_name):].strip(" ：:，,；;")
+            current = {
+                "project_name": project_name.strip(),
+                "role": "",
+                "start_date": start_date,
+                "end_date": end_date,
+                "description": description,
+            }
+            continue
+        if current:
+            if not current.get("role"):
+                role_match = re.search(r"(?:角色|岗位|担任)[:：]\s*([^\n，,；;。]{2,30})", line)
+                if role_match:
+                    current["role"] = role_match.group(1).strip()
+                    continue
+            _append_description(current, line)
+
+    if current:
+        entries.append(current)
+
+    filtered_entries = [
+        item
+        for item in entries
+        if item.get("project_name") or item.get("description")
+    ]
+    return _dedup_object_list(filtered_entries, ("project_name", "start_date", "end_date"))
+
+
+def _extract_skills_by_rule(section_lines: List[str], resume_text: str) -> List[str]:
+    text = "\n".join(section_lines) + "\n" + resume_text
+    extracted = []
+    for skill_name, pattern in SKILL_PATTERNS:
+        if pattern.search(text):
+            extracted.append(skill_name)
+    return _dedup_keep_order(extracted)
+
+
+def _extract_certificates_by_rule(section_lines: List[str], resume_text: str) -> List[str]:
+    text = "\n".join(section_lines) if section_lines else resume_text
+    extracted = []
+    for cert_name, pattern in CERTIFICATE_PATTERNS:
+        if pattern.search(text):
+            extracted.append(cert_name)
+    return _dedup_keep_order(extracted)
+
+
+def _extract_awards_by_rule(section_lines: List[str], resume_text: str) -> List[str]:
+    text = "\n".join(section_lines) if section_lines else resume_text
+    extracted = []
+    for fragment in re.split(r"[。；;\n]", text):
+        candidate = fragment.strip(" ，,")
+        if candidate and any(keyword in candidate for keyword in AWARD_HINT_KEYWORDS):
+            extracted.append(candidate)
+    return _dedup_keep_order(extracted)
+
+
+def _build_rule_resume_parse_result(resume_text: str) -> Tuple[Dict[str, Any], Dict[str, List[str]]]:
+    sections = _extract_resume_sections(resume_text)
+    all_lines = _dedup_nearby_lines(resume_text.splitlines())
+    header_lines = sections.get("header", [])
+    education_lines = sections.get("education", [])
+    internship_lines = sections.get("internship", [])
+    project_lines = sections.get("project", [])
+    skill_lines = sections.get("skills", [])
+    award_lines = sections.get("awards", [])
+    self_eval_lines = sections.get("self_evaluation", [])
+    target_job_lines = sections.get("target_job", [])
+
+    education_candidate_lines = _dedup_nearby_lines(
+        education_lines
+        + [
+            line
+            for line in all_lines
+            if DATE_RANGE_PATTERN.search(line)
+            and any(token in line for token in ("大学", "学院", "学校"))
+            and any(keyword in line for keyword in DEGREE_KEYWORDS)
+        ]
+    )
+    education_experience = _parse_education_entries(education_candidate_lines)
+    internship_experience = _parse_internship_entries(internship_lines)
+    project_experience = _parse_project_entries(project_lines)
+    target_job_intention = _extract_target_job_by_rule(target_job_lines, resume_text)
+    skills = _extract_skills_by_rule(skill_lines, resume_text)
+    certificates = _extract_certificates_by_rule(skill_lines, resume_text)
+    awards = _extract_awards_by_rule(award_lines + education_lines, resume_text)
+
+    fallback_school = education_experience[0]["school"] if education_experience else ""
+    fallback_major = education_experience[0]["major"] if education_experience else ""
+    fallback_degree = education_experience[0]["degree"] if education_experience else ""
+    fallback_graduation_year = education_experience[0]["end_date"][:4] if education_experience and education_experience[0]["end_date"] else ""
+
+    rule_result = default_resume_parse_result_dict()
+    rule_result["basic_info"] = {
+        "name": _extract_name(header_lines),
+        "gender": _extract_gender(resume_text),
+        "phone": _extract_phone(resume_text),
+        "email": _extract_email(resume_text),
+        "school": fallback_school,
+        "major": fallback_major,
+        "degree": fallback_degree,
+        "graduation_year": fallback_graduation_year,
+    }
+    rule_result["education_experience"] = education_experience
+    rule_result["internship_experience"] = internship_experience
+    rule_result["project_experience"] = project_experience
+    rule_result["skills"] = skills
+    rule_result["certificates"] = certificates
+    rule_result["awards"] = awards
+    rule_result["self_evaluation"] = " ".join(self_eval_lines[:8]).strip()
+    rule_result["target_job_intention"] = target_job_intention
+    rule_result["raw_resume_text"] = resume_text
+
+    parse_warnings = []
+    if education_lines and not education_experience:
+        parse_warnings.append("教育背景正文存在，但未解析到结构化教育经历")
+    if internship_lines and not internship_experience:
+        parse_warnings.append("工作/实习经历正文存在，但未解析到结构化实习经历")
+    if project_lines and not project_experience:
+        parse_warnings.append("项目经历正文存在，但未解析到结构化项目经历")
+    if target_job_lines and not target_job_intention:
+        parse_warnings.append("目标岗位正文存在，但未解析到明确目标岗位")
+    if skill_lines and not skills:
+        parse_warnings.append("技能相关正文存在，但未解析到稳定技能列表")
+    rule_result["parse_warnings"] = _dedup_keep_order(parse_warnings)
+    return rule_result, sections
+
+
+def _merge_basic_info(
+    llm_basic_info: Dict[str, Any],
+    rule_basic_info: Dict[str, Any],
+) -> Dict[str, str]:
+    merged = {}
+    for field_name in default_resume_parse_result_dict()["basic_info"].keys():
+        llm_value = _ensure_str(llm_basic_info.get(field_name, ""))
+        rule_value = _ensure_str(rule_basic_info.get(field_name, ""))
+        merged[field_name] = llm_value or rule_value
+    return merged
+
+
+def _merge_object_rows(
+    rule_rows: List[Dict[str, Any]],
+    llm_rows: List[Dict[str, Any]],
+    key_fields: Tuple[str, ...],
+    description_priority: str = "llm",
+) -> List[Dict[str, Any]]:
+    if not rule_rows:
+        return _dedup_object_list(llm_rows, key_fields)
+    if not llm_rows:
+        return _dedup_object_list(rule_rows, key_fields)
+
+    remaining_llm_rows = []
+    llm_index = {}
+    for row in llm_rows:
+        key = tuple(_ensure_str(row.get(field, "")) for field in key_fields)
+        llm_index.setdefault(key, row)
+        remaining_llm_rows.append(row)
+
+    merged_rows = []
+    for rule_row in rule_rows:
+        key = tuple(_ensure_str(rule_row.get(field, "")) for field in key_fields)
+        llm_row = llm_index.get(key, {})
+        merged_row = {}
+        for field_name in rule_row.keys():
+            llm_value = _ensure_str(llm_row.get(field_name, ""))
+            rule_value = _ensure_str(rule_row.get(field_name, ""))
+            if field_name == "description":
+                merged_row[field_name] = llm_value if description_priority == "llm" and llm_value else rule_value or llm_value
+            else:
+                merged_row[field_name] = rule_value or llm_value
+        merged_rows.append(merged_row)
+
+    existing_keys = {
+        tuple(_ensure_str(row.get(field, "")) for field in key_fields)
+        for row in merged_rows
+    }
+    for llm_row in llm_rows:
+        llm_key = tuple(_ensure_str(llm_row.get(field, "")) for field in key_fields)
+        if llm_key not in existing_keys:
+            merged_rows.append(llm_row)
+
+    return _dedup_object_list(merged_rows, key_fields)
+
+
+def _merge_resume_parse_results(
+    llm_result: Dict[str, Any],
+    rule_result: Dict[str, Any],
+    rule_sections: Dict[str, List[str]],
+    raw_resume_text: str,
+) -> Dict[str, Any]:
+    normalized_llm = validate_resume_parse_result(llm_result, raw_resume_text=raw_resume_text)
+    normalized_rule = validate_resume_parse_result(rule_result, raw_resume_text=raw_resume_text)
+
+    merged = default_resume_parse_result_dict()
+    merged["basic_info"] = _merge_basic_info(
+        normalized_llm.get("basic_info", {}),
+        normalized_rule.get("basic_info", {}),
+    )
+    merged["education_experience"] = _merge_object_rows(
+        normalized_rule.get("education_experience", []),
+        normalized_llm.get("education_experience", []),
+        ("school", "major", "start_date", "end_date"),
+    )
+    merged["internship_experience"] = _merge_object_rows(
+        normalized_rule.get("internship_experience", []),
+        normalized_llm.get("internship_experience", []),
+        ("company_name", "position", "start_date", "end_date"),
+    )
+    merged["project_experience"] = _merge_object_rows(
+        normalized_rule.get("project_experience", []),
+        normalized_llm.get("project_experience", []),
+        ("project_name", "start_date", "end_date"),
+    )
+    merged["skills"] = _dedup_keep_order(
+        normalized_rule.get("skills", []) + normalized_llm.get("skills", [])
+    )
+    merged["certificates"] = _dedup_keep_order(
+        normalized_rule.get("certificates", []) + normalized_llm.get("certificates", [])
+    )
+    merged["awards"] = _dedup_keep_order(
+        normalized_rule.get("awards", []) + normalized_llm.get("awards", [])
+    )
+    merged["self_evaluation"] = _ensure_str(
+        normalized_llm.get("self_evaluation") or normalized_rule.get("self_evaluation")
+    )
+    merged["target_job_intention"] = _ensure_str(
+        normalized_rule.get("target_job_intention")
+        or normalized_llm.get("target_job_intention")
+    )
+    merged["raw_resume_text"] = _ensure_str(raw_resume_text)
+    merged["parse_warnings"] = _dedup_keep_order(
+        normalized_llm.get("parse_warnings", [])
+        + normalized_rule.get("parse_warnings", [])
+    )
+
+    if rule_sections.get("education") and not merged["education_experience"]:
+        merged["parse_warnings"].append("教育背景正文存在，但最终结构化教育经历仍为空")
+    if rule_sections.get("internship") and not merged["internship_experience"]:
+        merged["parse_warnings"].append("工作/实习经历正文存在，但最终结构化实习经历仍为空")
+    if rule_sections.get("project") and not merged["project_experience"]:
+        merged["parse_warnings"].append("项目经历正文存在，但最终结构化项目经历仍为空")
+    if rule_sections.get("target_job") and not merged["target_job_intention"]:
+        merged["parse_warnings"].append("目标岗位正文存在，但最终目标岗位字段仍为空")
+    if rule_sections.get("skills") and not merged["skills"]:
+        merged["parse_warnings"].append("技能相关正文存在，但最终技能列表仍为空")
+
+    return validate_resume_parse_result(merged, raw_resume_text=raw_resume_text)
+
+
 # ---------------------------------------------------------------------------
 # LLM 输入构造（section_hints + output_requirements）
 # ---------------------------------------------------------------------------
@@ -204,19 +868,9 @@ def _extract_resume_section_hints(resume_text: str) -> Dict[str, str]:
     """
     轻量提取分块提示，不做复杂业务解析，只给 LLM 额外上下文。
     """
-    section_keywords = {
-        "education": ["教育经历", "教育背景", "学历背景", "学习经历"],
-        "internship": ["实习经历", "工作经历", "实践经历", "校园经历"],
-        "project": ["项目经历", "项目经验", "科研项目", "课程项目"],
-        "skills": ["专业技能", "技能特长", "技能证书", "掌握技能"],
-        "awards": ["获奖情况", "荣誉奖项", "奖励荣誉"],
-        "self_evaluation": ["自我评价", "个人总结", "个人优势"],
-        "target_job": ["求职意向", "目标岗位", "应聘岗位"],
-    }
-
     hints: Dict[str, str] = {}
     lines = [line.strip() for line in resume_text.splitlines() if line.strip()]
-    for section_name, keywords in section_keywords.items():
+    for section_name, keywords in SECTION_KEYWORDS.items():
         matched_line = next(
             (line for line in lines if any(keyword in line for keyword in keywords)),
             "",
@@ -435,11 +1089,20 @@ def parse_resume_with_llm(
     异常时返回带 parse_warnings 的默认结构，不向外抛 LLM 异常。
     """
     cleaned_resume_text = clean_resume_text(resume_text)
+    rule_result, rule_sections = _build_rule_resume_parse_result(cleaned_resume_text)
     input_data = build_resume_parse_input(cleaned_resume_text, file_meta=file_meta)
 
     merged_extra_context = {
         "resume_module": "resume_parse_module",
         "schema_hint": default_resume_parse_result_dict(),
+        "rule_extracted_facts": {
+            "basic_info": deepcopy(rule_result.get("basic_info", {})),
+            "target_job_intention": rule_result.get("target_job_intention", ""),
+            "education_experience_count": len(rule_result.get("education_experience", [])),
+            "internship_experience_count": len(rule_result.get("internship_experience", [])),
+            "project_experience_count": len(rule_result.get("project_experience", [])),
+            "skills": deepcopy(rule_result.get("skills", [])),
+        },
     }
     if extra_context:
         merged_extra_context.update(deepcopy(extra_context))
@@ -454,23 +1117,28 @@ def parse_resume_with_llm(
         )
     except Exception as exc:
         LOGGER.exception("call_llm('resume_parse', ...) failed")
-        fallback = default_resume_parse_result_dict()
-        fallback["raw_resume_text"] = cleaned_resume_text
-        fallback["parse_warnings"] = [f"LLM 调用失败: {exc}"]
-        return fallback
+        rule_result["parse_warnings"] = _dedup_keep_order(
+            rule_result.get("parse_warnings", []) + [f"LLM 调用失败: {exc}"]
+        )
+        return validate_resume_parse_result(
+            rule_result,
+            raw_resume_text=cleaned_resume_text,
+        )
 
-    normalized_result = validate_resume_parse_result(
-        raw_result,
+    merged_result = _merge_resume_parse_results(
+        llm_result=raw_result,
+        rule_result=rule_result,
+        rule_sections=rule_sections,
         raw_resume_text=cleaned_resume_text,
     )
 
     if file_meta and file_meta.get("maybe_scanned_pdf"):
-        normalized_result["parse_warnings"].append(
+        merged_result["parse_warnings"].append(
             "PDF 文本提取内容过少，疑似扫描件；OCR 接口已预留但当前未启用"
         )
     # 二次校验：合并扫描件警告后再次去重/补全
     return validate_resume_parse_result(
-        normalized_result,
+        merged_result,
         raw_resume_text=cleaned_resume_text,
     )
 

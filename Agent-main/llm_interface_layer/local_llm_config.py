@@ -8,8 +8,8 @@ local_llm_config.py
 3. 如果这里填写了值，config.py 会优先读取这里的配置。
 """
 
-LOCAL_LLM_API_BASE_URL = "https://aihubmix.com/v1"
-LOCAL_LLM_MODEL = "coding-glm-5-free"
+LOCAL_LLM_API_BASE_URL = "https://api-inference.modelscope.cn/v1"
+LOCAL_LLM_MODEL = "deepseek-ai/DeepSeek-V3.2"
 
 # 请把你的真实 API Key 填在这里。
-LOCAL_LLM_API_KEY = "sk-PHNhMDTobgukVxcsEa9219CdCc2e466e96568106D64d85F9"
+LOCAL_LLM_API_KEY = "ms-eedc3818-45b6-4c66-b909-934307b0697c"

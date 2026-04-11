@@ -162,7 +162,7 @@ LOCAL_LLM_API_KEY = "your-api-key"
 ### 7.2 启动后端
 
 ```powershell
-Set-Location E:\Agent\Agent-main
+cd E:\Agent\Agent-main
 python -m uvicorn api_server:app --reload --host 127.0.0.1 --port 8000
 ```
 

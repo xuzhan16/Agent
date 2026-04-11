@@ -10,6 +10,8 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
+import time
 from pathlib import Path
 from urllib import error, request
 
@@ -60,8 +62,10 @@ class LLMClient:
                 return raw_text
             except Exception as exc:
                 last_error = exc
-                import time
-                print(f"LLM请求受限 (429/并发超限等)，等待 10 秒后重试... ({exc})")
+                if not self._should_retry(exc):
+                    raise
+
+                print(f"LLM请求受限或服务暂不可用，等待 10 秒后重试... ({exc})")
                 time.sleep(10)
 
         raise RuntimeError(f"LLM request failed after retries: {last_error}") from last_error
@@ -177,3 +181,36 @@ class LLMClient:
 
     def _resolve_max_tokens(self, task_type: TaskType) -> int:
         return _TASK_MAX_TOKENS.get(task_type, 1000)
+
+    def _extract_http_status(self, exc: Exception) -> int | None:
+        match = re.search(r"status=(\d{3})", str(exc))
+        if match:
+            try:
+                return int(match.group(1))
+            except ValueError:
+                return None
+        return None
+
+    def _should_retry(self, exc: Exception) -> bool:
+        status_code = self._extract_http_status(exc)
+        if status_code is not None:
+            if status_code in {400, 401, 403, 404}:
+                return False
+            if status_code in {408, 409, 425, 429}:
+                return True
+            if 500 <= status_code < 600:
+                return True
+
+        if isinstance(exc, error.URLError):
+            return True
+
+        error_text = str(exc).lower()
+        transient_markers = (
+            "timed out",
+            "timeout",
+            "temporarily unavailable",
+            "connection reset",
+            "connection aborted",
+            "remote end hung up unexpectedly",
+        )
+        return any(marker in error_text for marker in transient_markers)
