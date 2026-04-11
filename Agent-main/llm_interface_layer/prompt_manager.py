@@ -27,7 +27,9 @@ class PromptManager:
             ),
             TaskType.JOB_EXTRACT: (
                 "你是一名招聘岗位要求结构化抽取助手。"
-                "根据岗位名称、JD、公司信息抽取学历、经验、技能、证书、软技能等字段，仅返回合法 JSON。"
+                "根据岗位名称、JD、公司信息抽取学历、经验、技能、证书、软技能等字段，"
+                "并分析该标准岗位常见的纵向晋升路径和横向转岗路径。"
+                "岗位关系属于静态岗位知识，不要结合具体学生画像生成，仅返回合法 JSON。"
             ),
             TaskType.JOB_DEDUP: (
                 "你是一名招聘岗位名称标准化与重复判断助手。"
@@ -59,7 +61,8 @@ class PromptManager:
             TaskType.RESUME_PARSE: "从简历文本抽取 basic_info、技能、证书、项目、实习等结构化信息。",
             TaskType.JOB_EXTRACT: (
                 "按输出模板填写：标准岗位名、岗位大类、学历/专业/经验要求、硬技能与工具栈、证书、软技能、"
-                "实习实践要求、职级、适合候选人画像、需求摘要；不确定的字段填空字符串或空列表。"
+                "实习实践要求、职级、适合候选人画像、需求摘要、vertical_paths、transfer_paths、path_relation_details；"
+                "其中路径关系面向岗位知识本身而非具体学生，不确定的字段填空字符串或空列表。"
             ),
             TaskType.JOB_DEDUP: (
                 "优先输出 is_same_standard_job、standard_job_name、confidence、merge_reason；"

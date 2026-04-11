@@ -126,6 +126,49 @@ def dedup_keep_order(values: List[Any]) -> List[Any]:
             result.append(item)
     return result
 
+
+def normalize_text_list(value: Any) -> List[str]:
+    """统一字符串列表格式。"""
+    return dedup_keep_order(clean_text(item) for item in safe_list(value) if clean_text(item))
+
+
+def _normalize_path_strings(values: List[str], source_job_name: str) -> List[str]:
+    """把图谱中的目标岗位名补成标准路径字符串。"""
+    source_job = clean_text(source_job_name)
+    normalized: List[str] = []
+    for item in values:
+        text = clean_text(item)
+        if not text:
+            continue
+        if "->" in text:
+            normalized.append(text)
+        elif source_job and text != source_job:
+            normalized.append(f"{source_job} -> {text}")
+        else:
+            normalized.append(text)
+    return dedup_keep_order(normalized)
+
+
+def extract_path_knowledge(
+    context_data: Optional[Dict[str, Any]],
+    source_job_name: str = "",
+) -> Dict[str, List[str]]:
+    """从 context_data 中提取优先复用的离线路径/图谱路径知识。"""
+    graph_context = safe_dict(safe_dict(context_data).get("graph_context"))
+    source_job = clean_text(source_job_name)
+    vertical_paths = dedup_keep_order(
+        _normalize_path_strings(normalize_text_list(graph_context.get("vertical_paths")), source_job)
+        + _normalize_path_strings(normalize_text_list(graph_context.get("promote_paths")), source_job)
+    )
+    transfer_paths = dedup_keep_order(
+        _normalize_path_strings(normalize_text_list(graph_context.get("transfer_paths")), source_job)
+        + _normalize_path_strings(normalize_text_list(graph_context.get("lateral_paths")), source_job)
+    )
+    return {
+        "vertical_paths": vertical_paths,
+        "transfer_paths": transfer_paths,
+    }
+
 def save_json(data: Dict[str, Any], output_path: Optional[str | Path]) -> None:
     """按需保存 JSON。"""
     if not output_path:
@@ -160,21 +203,25 @@ def build_degree_requirement_text(
 def normalize_llm_job_profile_result(
     llm_result: Dict[str, Any],
     builder_payload: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """对 call_llm('job_profile', ...) 返回做默认值补齐和字段兼容。"""
     source = safe_dict(llm_result)
     normalized_req = safe_dict(builder_payload.get("normalized_requirements"))
     standard_job_name = clean_text(builder_payload.get("standard_job_name"))
+    path_knowledge = extract_path_knowledge(context_data, source_job_name=standard_job_name)
 
     soft_skills = dedup_keep_order(
         [clean_text(item) for item in safe_list(source.get("soft_skills")) if clean_text(item)]
         + [clean_text(item) for item in safe_list(normalized_req.get("soft_skill_tags")) if clean_text(item)]
     )
     vertical_paths = dedup_keep_order(
-        [clean_text(item) for item in safe_list(source.get("vertical_paths")) if clean_text(item)]
+        path_knowledge.get("vertical_paths", [])
+        + [clean_text(item) for item in safe_list(source.get("vertical_paths")) if clean_text(item)]
     )
     transfer_paths = dedup_keep_order(
-        [clean_text(item) for item in safe_list(source.get("transfer_paths")) if clean_text(item)]
+        path_knowledge.get("transfer_paths", [])
+        + [clean_text(item) for item in safe_list(source.get("transfer_paths")) if clean_text(item)]
     )
 
     if not vertical_paths and standard_job_name:
@@ -215,6 +262,7 @@ def merge_job_profile_results(
     builder_payload: Dict[str, Any],
     aggregation_result: Dict[str, Any],
     llm_result: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
     service_warnings: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """合并 builder 结果、aggregator 结果和 LLM 结果。"""
@@ -222,7 +270,7 @@ def merge_job_profile_results(
     aggregation_result = safe_dict(aggregation_result)
     normalized_req = safe_dict(builder_payload.get("normalized_requirements"))
     explicit_req = safe_dict(builder_payload.get("explicit_requirements"))
-    normalized_llm = normalize_llm_job_profile_result(llm_result, builder_payload)
+    normalized_llm = normalize_llm_job_profile_result(llm_result, builder_payload, context_data=context_data)
 
     merged_hard_skills = dedup_keep_order(
         [clean_text(item) for item in safe_list(normalized_req.get("hard_skill_tags")) if clean_text(item)]
@@ -297,10 +345,15 @@ def merge_job_profile_results(
 def build_job_profile_llm_input(
     builder_payload: Dict[str, Any],
     aggregation_result: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """组装 job_profile 大模型输入。"""
     normalized_req = safe_dict(builder_payload.get("normalized_requirements"))
     group_summary = safe_dict(builder_payload.get("group_summary"))
+    path_knowledge = extract_path_knowledge(
+        context_data,
+        source_job_name=clean_text(builder_payload.get("standard_job_name")),
+    )
 
     representative_samples = []
     for item in safe_list(builder_payload.get("representative_samples"))[:3]:
@@ -338,14 +391,19 @@ def build_job_profile_llm_input(
             "city_distribution": deepcopy(safe_list(aggregation_result.get("city_distribution"))[:5]),
             "salary_stats": deepcopy(safe_dict(aggregation_result.get("salary_stats"))),
         },
+        "path_knowledge_snapshot": {
+            "vertical_paths": deepcopy(path_knowledge.get("vertical_paths", [])[:5]),
+            "transfer_paths": deepcopy(path_knowledge.get("transfer_paths", [])[:5]),
+            "instruction": "以上路径若已存在，视为离线沉淀的岗位知识，优先复用；仅在明显缺失时补充新的常见路径建议。",
+        },
         "generation_requirements": {
             "job_category": "归纳该岗位所属大类，例如数据类、算法类、开发类、产品类。",
             "job_level": "根据岗位要求和经验分布推断适合的岗位层级，例如实习/初级/中级/高级。",
             "soft_skills": "根据岗位描述和要求句归纳 3-8 个软技能标签。",
             "suitable_student_profile": "描述适合投递该岗位的学生画像，要求具体可执行。",
             "summary": "输出一段简洁岗位画像摘要。",
-            "vertical_paths": "输出该岗位常见纵向晋升路径。",
-            "transfer_paths": "输出该岗位常见横向转岗路径。",
+            "vertical_paths": "若已有离线路径知识则优先沿用；仅在缺失时补充该岗位常见纵向晋升路径。",
+            "transfer_paths": "若已有离线路径知识则优先沿用；仅在缺失时补充该岗位常见横向转岗路径。",
         },
         "output_schema_hint": asdict(JobProfileLLMSupplement()),
     }
@@ -391,6 +449,7 @@ class JobProfileService:
         input_data = build_job_profile_llm_input(
             builder_payload=builder_payload,
             aggregation_result=aggregation_result,
+            context_data=context_data,
         )
         merged_extra_context = {
             "service_name": "job_profile_service",
@@ -499,6 +558,7 @@ class JobProfileService:
             builder_payload=builder_payload,
             aggregation_result=aggregation_result,
             llm_result=llm_result,
+            context_data=context_data,
             service_warnings=service_warnings,
         )
 

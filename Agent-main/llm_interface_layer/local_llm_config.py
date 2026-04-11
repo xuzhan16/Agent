@@ -12,4 +12,4 @@ LOCAL_LLM_API_BASE_URL = "https://api-inference.modelscope.cn/v1"
 LOCAL_LLM_MODEL = "deepseek-ai/DeepSeek-V3.2"
 
 # 请把你的真实 API Key 填在这里。
-LOCAL_LLM_API_KEY = "ms-eedc3818-45b6-4c66-b909-934307b0697c"
+LOCAL_LLM_API_KEY = "ms-7873ccd0-68be-41d9-82b6-79295d72ff49"

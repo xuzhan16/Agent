@@ -102,7 +102,7 @@ SKILL_PATTERNS = [
     ("JavaScript", re.compile(r"javascript|\bjs\b", re.IGNORECASE)),
     ("Oracle", re.compile(r"oracle", re.IGNORECASE)),
     ("Mysql", re.compile(r"mysql", re.IGNORECASE)),
-    ("SQL", re.compile(r"sql", re.IGNORECASE)),
+    ("SQL", re.compile(r"(?:\bsql\b|sql语句|sql语言)", re.IGNORECASE)),
     ("eclipse", re.compile(r"eclipse", re.IGNORECASE)),
     ("Linux", re.compile(r"linux", re.IGNORECASE)),
     ("Netty", re.compile(r"netty", re.IGNORECASE)),
@@ -118,6 +118,17 @@ CERTIFICATE_PATTERNS = [
     ("C1驾照", re.compile(r"(?:c1驾照|c1驾驶证)", re.IGNORECASE)),
 ]
 AWARD_HINT_KEYWORDS = ("奖学金", "励志奖", "优秀", "一等奖", "二等奖", "三等奖", "国家励志")
+DESCRIPTION_LABELS = (
+    "开发环境：",
+    "项目描述：",
+    "项目介绍：",
+    "责任描述：",
+    "职责描述：",
+    "语言能力：",
+    "计算机能力：",
+    "其他能力：",
+    "毕业设计",
+)
 
 # ---------------------------------------------------------------------------
 # 日志
@@ -506,10 +517,28 @@ def _parse_school_major_degree(text: str) -> Tuple[str, str, str, str]:
 def _append_description(current: Dict[str, Any], line: str) -> None:
     if not line or not isinstance(current, dict):
         return
-    existing = str(current.get("description", "") or "").strip()
-    if line in existing:
+    existing = _clean_description_text(current.get("description", ""))
+    incoming = _clean_description_text(line)
+    if not incoming or incoming in existing:
         return
-    current["description"] = f"{existing} {line}".strip()
+    current["description"] = _clean_description_text(f"{existing} {incoming}".strip())
+
+
+def _clean_description_text(text: Any) -> str:
+    description = str(text or "").strip()
+    if not description:
+        return ""
+    description = description.replace("\u00a0", " ").replace("\u3000", " ")
+    description = re.sub(r"\s+", " ", description)
+    for label in DESCRIPTION_LABELS:
+        description = re.sub(
+            rf"(?<!^)\s*{re.escape(label)}",
+            f" {label}",
+            description,
+        )
+    description = re.sub(r"([；;。])(?=[^\s])", r"\1 ", description)
+    description = re.sub(r"\s+", " ", description)
+    return description.strip(" ，,；;")
 
 
 def _parse_education_entries(section_lines: List[str]) -> List[Dict[str, str]]:
@@ -529,7 +558,7 @@ def _parse_education_entries(section_lines: List[str]) -> List[Dict[str, str]]:
                 "degree": degree,
                 "start_date": start_date,
                 "end_date": end_date,
-                "description": inline_description,
+                "description": _clean_description_text(inline_description),
             }
             continue
         if current:
@@ -578,7 +607,7 @@ def _parse_internship_entries(section_lines: List[str]) -> List[Dict[str, str]]:
                 "position": position,
                 "start_date": start_date,
                 "end_date": end_date,
-                "description": inline_description,
+                "description": _clean_description_text(inline_description),
             }
             continue
         if current:
@@ -617,7 +646,7 @@ def _parse_project_entries(section_lines: List[str]) -> List[Dict[str, str]]:
                 "role": "",
                 "start_date": start_date,
                 "end_date": end_date,
-                "description": description,
+                "description": _clean_description_text(description),
             }
             continue
         if current:
@@ -640,12 +669,21 @@ def _parse_project_entries(section_lines: List[str]) -> List[Dict[str, str]]:
 
 
 def _extract_skills_by_rule(section_lines: List[str], resume_text: str) -> List[str]:
-    text = "\n".join(section_lines) + "\n" + resume_text
-    extracted = []
+    explicit_text = "\n".join(section_lines).strip()
+    explicit_matches = []
+    if explicit_text:
+        for skill_name, pattern in SKILL_PATTERNS:
+            if pattern.search(explicit_text):
+                explicit_matches.append(skill_name)
+    if explicit_matches:
+        return _dedup_keep_order(explicit_matches)
+
+    fallback_text = resume_text
+    fallback_matches = []
     for skill_name, pattern in SKILL_PATTERNS:
-        if pattern.search(text):
-            extracted.append(skill_name)
-    return _dedup_keep_order(extracted)
+        if pattern.search(fallback_text):
+            fallback_matches.append(skill_name)
+    return _dedup_keep_order(fallback_matches)
 
 
 def _extract_certificates_by_rule(section_lines: List[str], resume_text: str) -> List[str]:

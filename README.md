@@ -19,6 +19,7 @@ E:\Agent
 ├─ Agent-main/               # FastAPI 后端 + 主流程 + 岗位底库处理
 │  ├─ api_server.py          # 后端 HTTP 入口
 │  ├─ main_pipeline.py       # 6 段主流程编排入口
+│  ├─ job_data_pipeline.py   # 岗位底库一键处理入口
 │  ├─ mock_llm_server.py     # 假大模型服务
 │  ├─ llm_interface_layer/   # 统一大模型接口层
 │  ├─ job_data/              # 岗位数据清洗 / 去重 / 抽取 / 导出
@@ -197,6 +198,16 @@ npm run dev
 
 - `E:\Agent\frontend\src\services\api.ts`
 
+当前后端还额外提供了一个“岗位底库处理接口”：
+
+- `POST /api/data/process`
+
+它不会影响学生侧主链路，主要用于重新构建：
+
+- `outputs/intermediate/*.csv`
+- `outputs/sql/jobs.db`
+- `outputs/neo4j/*.csv`
+
 ### 7.5 真实模型模式下的重要产物
 
 运行后你会看到这些文件更新：
@@ -333,6 +344,7 @@ Set-Location E:\Agent\Agent-main
 - 你修改了岗位清洗规则
 - 你修改了岗位去重逻辑
 - 你修改了岗位抽取逻辑
+- 你修改了岗位晋升路径 / 转岗路径的离线抽取逻辑
 - 你想重新生成 SQLite / Neo4j 底库
 
 ---
@@ -341,7 +353,83 @@ Set-Location E:\Agent\Agent-main
 
 以下命令都在 `E:\Agent\Agent-main` 下执行。
 
-### 12.1 数据清洗
+### 12.1 一键重建岗位底库（推荐）
+
+现在项目已经支持统一入口：
+
+- 脚本入口：[job_data_pipeline.py](/E:/Agent/Agent-main/job_data_pipeline.py)
+- 后端接口：`POST /api/data/process`
+
+推荐优先用脚本入口，因为：
+
+- 日志最完整
+- 出错最好排查
+- 更适合本机重建底库
+
+直接执行：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+python .\job_data_pipeline.py `
+  --input .\20260226105856_457.xls
+```
+
+这条命令会自动串行执行：
+
+1. `data_cleaning.py`
+2. `job_dedup.py`
+3. `job_extract.py`
+4. `export_to_sql.py`
+5. `export_to_neo4j.py`
+
+输出结果会统一写入：
+
+- `E:\Agent\Agent-main\outputs\intermediate`
+- `E:\Agent\Agent-main\outputs\sql\jobs.db`
+- `E:\Agent\Agent-main\outputs\neo4j`
+
+注意：
+
+- 当前岗位晋升路径 / 转岗路径已经前移到离线阶段，主要在 `job_extract.py` 中由大模型分析并沉淀
+- 因此如果你想让新的路径图谱真正生效，至少需要重新跑到 `job_extract.py`
+
+### 12.2 通过后端接口触发（可选）
+
+如果你不想在终端里手动执行脚本，也可以在启动后端后，请求：
+
+```text
+POST http://127.0.0.1:8000/api/data/process
+```
+
+示例：
+
+```powershell
+Invoke-RestMethod `
+  -Uri "http://127.0.0.1:8000/api/data/process" `
+  -Method Post `
+  -ContentType "application/json" `
+  -Body (@{
+    input_file = "20260226105856_457.xls"
+    intermediate_dir = "outputs/intermediate"
+    sql_db_path = "outputs/sql/jobs.db"
+    neo4j_output_dir = "outputs/neo4j"
+    max_workers = 4
+    group_sample_size = 3
+  } | ConvertTo-Json)
+```
+
+这个接口适合：
+
+- 后面想在前端或管理端加“一键重建岗位底库”按钮
+- 想通过 HTTP 方式统一触发数据处理
+
+如果你只是自己本机重建数据，仍然建议优先使用 `job_data_pipeline.py`。
+
+### 12.3 分步重建（高级用法）
+
+如果你需要逐步排查某一层数据问题，再按下面的单脚本顺序执行。
+
+### 12.3.1 数据清洗
 
 ```powershell
 Set-Location E:\Agent\Agent-main
@@ -350,7 +438,7 @@ python .\job_data\data_cleaning.py `
   --output .\outputs\intermediate\jobs_cleaned.csv
 ```
 
-### 12.2 岗位去重 / 标准岗位归一
+### 12.3.2 岗位去重 / 标准岗位归一
 
 ```powershell
 python .\job_data\job_dedup.py `
@@ -360,7 +448,7 @@ python .\job_data\job_dedup.py `
   --output-pairs .\outputs\intermediate\job_dedup_pairs.csv
 ```
 
-### 12.3 岗位画像抽取
+### 12.3.3 岗位画像抽取与路径关系离线抽取
 
 这一步会调用大模型。
 
@@ -376,8 +464,10 @@ python .\job_data\job_extract.py `
 
 - `--max-workers` 越大越快，但更容易触发限流
 - `--group-sample-size` 越大，单次 prompt 越长，token 消耗越多
+- 当前岗位的 `vertical_paths`、`transfer_paths`、`path_relation_details` 主要在这一步离线生成
+- 后面的 SQLite / Neo4j 导出只是把这里已经生成的路径知识写入底库
 
-### 12.4 导出到 SQLite
+### 12.3.4 导出到 SQLite
 
 ```powershell
 python .\job_data\export_to_sql.py `
@@ -385,7 +475,7 @@ python .\job_data\export_to_sql.py `
   --db-path .\outputs\sql\jobs.db
 ```
 
-### 12.5 导出 Neo4j CSV
+### 12.3.5 导出 Neo4j CSV
 
 ```powershell
 python .\job_data\export_to_neo4j.py `
@@ -393,7 +483,7 @@ python .\job_data\export_to_neo4j.py `
   --output-dir .\outputs\neo4j
 ```
 
-### 12.6 重新导入 Neo4j
+### 12.3.6 重新导入 Neo4j
 
 ```powershell
 Set-Location E:\Agent\Agent-main

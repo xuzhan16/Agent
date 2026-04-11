@@ -88,6 +88,9 @@ class JobExtractOutput:
     job_level: str = ""
     suitable_student_profile: str = ""
     raw_requirement_summary: str = ""
+    vertical_paths: List[str] = field(default_factory=list)
+    transfer_paths: List[str] = field(default_factory=list)
+    path_relation_details: List[Dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass

@@ -5,12 +5,21 @@ import json
 import shutil
 import asyncio
 from pathlib import Path
+from typing import Union
 
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request, BackgroundTasks, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from pydantic import BaseModel
 
+from job_data_pipeline import (
+    DEFAULT_GROUP_SAMPLE_SIZE,
+    DEFAULT_INPUT_FILE,
+    DEFAULT_INTERMEDIATE_DIR,
+    DEFAULT_NEO4J_OUTPUT_DIR,
+    DEFAULT_SQL_DB_PATH,
+    run_job_data_pipeline,
+)
 from main_pipeline import run_pipeline
 
 app = FastAPI(title="AI Career Plan API")
@@ -39,6 +48,17 @@ class ReportUpdateRequest(BaseModel):
     report_text: str
 
 
+class JobDataProcessRequest(BaseModel):
+    input_file: str = DEFAULT_INPUT_FILE
+    intermediate_dir: str = DEFAULT_INTERMEDIATE_DIR
+    sql_db_path: str = DEFAULT_SQL_DB_PATH
+    neo4j_output_dir: str = DEFAULT_NEO4J_OUTPUT_DIR
+    sheet_name: Union[str, int] = 0
+    log_every: int = 50
+    max_workers: int = 4
+    group_sample_size: int = DEFAULT_GROUP_SAMPLE_SIZE
+
+
 def _clean_text(value):
     if value is None:
         return ""
@@ -63,6 +83,17 @@ def _state_file_path() -> Path:
 
 def _report_file_path() -> Path:
     return Path(__file__).resolve().with_name(REPORT_FILE_NAME)
+
+
+def _project_root() -> Path:
+    return Path(__file__).resolve().parent
+
+
+def _resolve_project_path(path_value: str) -> str:
+    path = Path(path_value)
+    if path.is_absolute():
+        return str(path)
+    return str((_project_root() / path).resolve())
 
 
 def _load_all_data() -> dict:
@@ -253,6 +284,26 @@ async def parse_manual_resume(req: ManualResumeRequest):
                 os.unlink(tmp_path)
         except OSError:
             pass
+
+
+@app.post("/api/data/process")
+async def process_job_data(req: JobDataProcessRequest):
+    try:
+        result = await asyncio.to_thread(
+            run_job_data_pipeline,
+            input_path=_resolve_project_path(req.input_file),
+            intermediate_dir=_resolve_project_path(req.intermediate_dir),
+            sql_db_path=_resolve_project_path(req.sql_db_path),
+            neo4j_output_dir=_resolve_project_path(req.neo4j_output_dir),
+            sheet_name=req.sheet_name,
+            log_every=req.log_every,
+            max_workers=req.max_workers,
+            group_sample_size=req.group_sample_size,
+        )
+        return {"success": True, "message": "岗位底库数据处理完成", "data": result}
+    except Exception as e:
+        logger.error(f"Error processing job data pipeline: {e}")
+        return {"success": False, "message": str(e), "data": {}}
 
 @app.post("/api/student/profile")
 async def build_student_profile(req: Request):

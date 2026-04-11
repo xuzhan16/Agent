@@ -166,6 +166,9 @@ def create_tables(conn: sqlite3.Connection) -> None:
             job_level TEXT,
             suitable_student_profile TEXT,
             raw_requirement_summary TEXT,
+            vertical_paths_json TEXT,
+            transfer_paths_json TEXT,
+            path_relation_details_json TEXT,
             extract_success TEXT,
             extract_error TEXT,
             job_extract_json TEXT
@@ -195,7 +198,31 @@ def create_tables(conn: sqlite3.Connection) -> None:
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_job_detail_city ON job_detail(city)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_job_profile_standard_job_name ON job_profile(standard_job_name)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_job_mapping_standard_job_name ON job_mapping(standard_job_name)")
+    ensure_table_columns(
+        conn,
+        "job_profile",
+        {
+            "vertical_paths_json": "TEXT",
+            "transfer_paths_json": "TEXT",
+            "path_relation_details_json": "TEXT",
+        },
+    )
     conn.commit()
+
+
+def ensure_table_columns(
+    conn: sqlite3.Connection,
+    table_name: str,
+    expected_columns: Dict[str, str],
+) -> None:
+    """为老版本表结构补充缺失列，兼容历史数据库文件。"""
+    cursor = conn.cursor()
+    cursor.execute(f"PRAGMA table_info({table_name})")
+    existing_columns = {str(row[1]) for row in cursor.fetchall()}
+    for column_name, column_type in expected_columns.items():
+        if column_name in existing_columns:
+            continue
+        cursor.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}")
 
 
 def clear_tables(conn: sqlite3.Connection, table_names: Sequence[str]) -> None:
@@ -287,6 +314,9 @@ def build_job_profile_dataframe(df: pd.DataFrame) -> pd.DataFrame:
                 "job_level": normalize_scalar(get_first_existing_value(row, ["job_level"])),
                 "suitable_student_profile": normalize_scalar(get_first_existing_value(row, ["suitable_student_profile"])),
                 "raw_requirement_summary": normalize_scalar(get_first_existing_value(row, ["raw_requirement_summary", "job_summary"])),
+                "vertical_paths_json": json_dumps_safe(get_first_existing_value(row, ["vertical_paths"])),
+                "transfer_paths_json": json_dumps_safe(get_first_existing_value(row, ["transfer_paths"])),
+                "path_relation_details_json": json_dumps_safe(get_first_existing_value(row, ["path_relation_details"])),
                 "extract_success": normalize_scalar(get_first_existing_value(row, ["extract_success"])),
                 "extract_error": normalize_scalar(get_first_existing_value(row, ["extract_error"])),
                 "job_extract_json": json_dumps_safe(get_first_existing_value(row, ["job_extract_json", "portrait_json"])),
@@ -425,6 +455,9 @@ def export_to_sqlite(df: pd.DataFrame, db_path: str) -> None:
         "job_level",
         "suitable_student_profile",
         "raw_requirement_summary",
+        "vertical_paths_json",
+        "transfer_paths_json",
+        "path_relation_details_json",
         "extract_success",
         "extract_error",
         "job_extract_json",
@@ -508,6 +541,17 @@ def build_demo_dataframe() -> pd.DataFrame:
                 "job_level": "普通",
                 "suitable_student_profile": "适合计算机相关专业、有后端开发基础的学生",
                 "raw_requirement_summary": "要求掌握 Java、Spring Boot、MySQL。",
+                "vertical_paths": ["Java开发工程师 -> 高级Java开发工程师", "高级Java开发工程师 -> 技术负责人"],
+                "transfer_paths": ["Java开发工程师 -> 后端开发工程师", "Java开发工程师 -> 技术支持工程师"],
+                "path_relation_details": [
+                    {
+                        "source_job": "Java开发工程师",
+                        "target_job": "高级Java开发工程师",
+                        "relation_type": "PROMOTE_TO",
+                        "reason": "在同一技术主线上承担更复杂系统设计与核心模块开发。",
+                        "confidence": "high",
+                    }
+                ],
                 "extract_success": "1",
                 "extract_error": "",
                 "job_extract_json": json.dumps(
@@ -515,6 +559,8 @@ def build_demo_dataframe() -> pd.DataFrame:
                         "standard_job_name": "Java开发工程师",
                         "job_category": "Java开发",
                         "degree_requirement": "本科及以上",
+                        "vertical_paths": ["Java开发工程师 -> 高级Java开发工程师"],
+                        "transfer_paths": ["Java开发工程师 -> 后端开发工程师"],
                     },
                     ensure_ascii=False,
                 ),

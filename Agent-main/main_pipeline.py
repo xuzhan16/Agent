@@ -17,6 +17,7 @@ main_pipeline.py - 全流程统一调度入口
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
 from pathlib import Path
@@ -59,6 +60,20 @@ def _dedup_keep_order(values: Iterable[Any]) -> List[str]:
         seen.add(cleaned)
         result.append(cleaned)
     return result
+
+
+def _parse_json_text_list(value: Any) -> List[str]:
+    text = _clean_text(value)
+    if not text:
+        return []
+    if text.startswith("[") and text.endswith("]"):
+        try:
+            loaded = json.loads(text)
+            if isinstance(loaded, list):
+                return _dedup_keep_order(loaded)
+        except json.JSONDecodeError:
+            pass
+    return _dedup_keep_order(text.split(","))
 
 
 def _resolve_effective_target_job(
@@ -250,6 +265,29 @@ def _query_job_graph_context(initial_target_job: str) -> Dict[str, List[str]]:
     }
 
 
+def _query_job_path_knowledge(initial_target_job: str) -> Dict[str, List[str]]:
+    """从 SQLite 的 job_profile 表读取离线路径知识，作为 Neo4j 的补充来源。"""
+    rows = query_sqlite(
+        db_path=SQLITE_DB_PATH,
+        query="""
+        SELECT
+            vertical_paths_json,
+            transfer_paths_json
+        FROM job_profile
+        WHERE standard_job_name = ?
+        LIMIT 1
+        """,
+        parameters=(initial_target_job,),
+    )
+    if not rows:
+        return {"vertical_paths": [], "transfer_paths": []}
+    row = rows[0]
+    return {
+        "vertical_paths": _parse_json_text_list(row.get("vertical_paths_json")),
+        "transfer_paths": _parse_json_text_list(row.get("transfer_paths_json")),
+    }
+
+
 def _build_compact_sql_context(sql_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
     cities = _dedup_keep_order(row.get("city") for row in sql_rows)[:8]
     industries = _dedup_keep_order(row.get("industry") for row in sql_rows)[:8]
@@ -324,6 +362,22 @@ def run_pipeline(
         "required_skills": [],
         "transfer_paths": [],
         "promote_paths": [],
+    }
+    offline_path_knowledge = _query_job_path_knowledge(effective_target_job) if effective_target_job else {
+        "vertical_paths": [],
+        "transfer_paths": [],
+    }
+    graph_context = {
+        "required_skills": _dedup_keep_order(graph_context.get("required_skills", [])),
+        "promote_paths": _dedup_keep_order(
+            graph_context.get("promote_paths", []) + offline_path_knowledge.get("vertical_paths", [])
+        ),
+        "transfer_paths": _dedup_keep_order(
+            graph_context.get("transfer_paths", []) + offline_path_knowledge.get("transfer_paths", [])
+        ),
+        "vertical_paths": _dedup_keep_order(
+            graph_context.get("promote_paths", []) + offline_path_knowledge.get("vertical_paths", [])
+        ),
     }
     job_profile_df = _build_job_profile_dataframe(sql_rows, effective_target_job)
     job_profile_context = {

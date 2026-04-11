@@ -493,6 +493,7 @@ class CareerPathPlanService:
         student_profile_result: Dict[str, Any],
         job_profile_result: Dict[str, Any],
         job_match_result: Dict[str, Any],
+        context_data: Optional[Dict[str, Any]] = None,
         output_path: Optional[str | Path] = DEFAULT_BUILDER_OUTPUT_PATH,
     ) -> Dict[str, Any]:
         """调用 builder 构造 career_plan_input_payload。"""
@@ -500,6 +501,7 @@ class CareerPathPlanService:
             student_profile_result=student_profile_result,
             job_profile_result=job_profile_result,
             job_match_result=job_match_result,
+            context_data=context_data,
             output_path=output_path,
         )
 
@@ -575,6 +577,7 @@ class CareerPathPlanService:
                 student_profile_result=student_profile_result,
                 job_profile_result=job_profile_result,
                 job_match_result=job_match_result,
+                context_data=context_data,
                 output_path=builder_output_path,
             )
         except Exception as exc:

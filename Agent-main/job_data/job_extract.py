@@ -44,6 +44,9 @@ DEFAULT_JOB_PROFILE: Dict[str, Any] = {
     "job_level": "",
     "suitable_student_profile": "",
     "raw_requirement_summary": "",
+    "vertical_paths": [],
+    "transfer_paths": [],
+    "path_relation_details": [],
 }
 
 LIST_FIELDS = {
@@ -51,7 +54,10 @@ LIST_FIELDS = {
     "tools_or_tech_stack",
     "certificate_requirement",
     "soft_skills",
+    "vertical_paths",
+    "transfer_paths",
 }
+OBJECT_LIST_FIELDS = {"path_relation_details"}
 
 
 def clean_text(value: object) -> str:
@@ -141,6 +147,114 @@ def normalize_list_value(value: object) -> List[str]:
     return sorted({clean_text(part) for part in parts if clean_text(part)})
 
 
+def normalize_path_relation_details(
+    value: object,
+    source_job_name: str = "",
+) -> List[Dict[str, Any]]:
+    """
+    统一解析岗位关系明细。
+
+    支持：
+    - list[dict]
+    - JSON 字符串
+    - 缺失时返回空列表
+    """
+    items: List[Any] = []
+    if isinstance(value, list):
+        items = value
+    else:
+        text = clean_text(value)
+        if text.startswith("[") and text.endswith("]"):
+            try:
+                loaded = json.loads(text)
+                if isinstance(loaded, list):
+                    items = loaded
+            except json.JSONDecodeError:
+                items = []
+
+    relation_rows: List[Dict[str, Any]] = []
+    seen = set()
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        source_job = clean_text(item.get("source_job") or source_job_name)
+        target_job = clean_text(item.get("target_job") or item.get("to_job"))
+        relation_type = clean_text(
+            item.get("relation_type")
+            or item.get("path_type")
+            or item.get("type")
+        ).upper()
+        if relation_type not in {"PROMOTE_TO", "TRANSFER_TO"}:
+            continue
+        if not source_job or not target_job or source_job == target_job:
+            continue
+        row = {
+            "source_job": source_job,
+            "target_job": target_job,
+            "relation_type": relation_type,
+            "reason": clean_text(item.get("reason")),
+            "confidence": clean_text(item.get("confidence")),
+        }
+        key = (
+            row["source_job"],
+            row["target_job"],
+            row["relation_type"],
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        relation_rows.append(row)
+    return relation_rows
+
+
+def build_path_relation_details(
+    standard_job_name: str,
+    vertical_paths: List[str],
+    transfer_paths: List[str],
+    existing_details: Optional[List[Dict[str, Any]]] = None,
+) -> List[Dict[str, Any]]:
+    """根据路径字段补齐路径关系明细。"""
+    source_job = clean_text(standard_job_name)
+    relation_rows = normalize_path_relation_details(existing_details or [], source_job_name=source_job)
+    existing_keys = {
+        (row["source_job"], row["target_job"], row["relation_type"])
+        for row in relation_rows
+    }
+
+    def _append_from_path_values(path_values: List[str], relation_type: str) -> None:
+        for raw_value in path_values:
+            text = clean_text(raw_value)
+            if not text:
+                continue
+            if "->" in text:
+                parts = [clean_text(part) for part in text.split("->") if clean_text(part)]
+                if len(parts) >= 2:
+                    source = parts[0]
+                    target = parts[-1]
+                else:
+                    continue
+            else:
+                source = source_job
+                target = text
+            key = (source, target, relation_type)
+            if not source or not target or source == target or key in existing_keys:
+                continue
+            relation_rows.append(
+                {
+                    "source_job": source,
+                    "target_job": target,
+                    "relation_type": relation_type,
+                    "reason": "",
+                    "confidence": "",
+                }
+            )
+            existing_keys.add(key)
+
+    _append_from_path_values(vertical_paths, "PROMOTE_TO")
+    _append_from_path_values(transfer_paths, "TRANSFER_TO")
+    return relation_rows
+
+
 def normalize_profile_fields(
     parsed_result: Dict[str, Any],
     record: pd.Series,
@@ -212,10 +326,33 @@ def normalize_profile_fields(
         or parsed_result.get("summary", "")
         or parsed_result.get("raw_requirement_summary", "")
     )
+    profile["vertical_paths"] = normalize_list_value(
+        profile["vertical_paths"]
+        or parsed_result.get("vertical_paths", [])
+        or parsed_result.get("promote_paths", [])
+        or parsed_result.get("promotion_paths", [])
+    )
+    profile["transfer_paths"] = normalize_list_value(
+        profile["transfer_paths"]
+        or parsed_result.get("transfer_paths", [])
+        or parsed_result.get("lateral_paths", [])
+        or parsed_result.get("transition_paths", [])
+    )
 
     # 再兜底标准岗位名
     profile["standard_job_name"] = clean_text(
         parsed_result.get("standard_job_name", "") or profile["standard_job_name"]
+    )
+    profile["path_relation_details"] = build_path_relation_details(
+        standard_job_name=profile["standard_job_name"],
+        vertical_paths=profile["vertical_paths"],
+        transfer_paths=profile["transfer_paths"],
+        existing_details=normalize_path_relation_details(
+            parsed_result.get("path_relation_details")
+            or parsed_result.get("job_path_relations")
+            or parsed_result.get("path_relations"),
+            source_job_name=profile["standard_job_name"],
+        ),
     )
 
     return profile
@@ -227,6 +364,11 @@ def validate_profile(profile: Dict[str, Any]) -> Dict[str, Any]:
     for field, default_value in DEFAULT_JOB_PROFILE.items():
         if field in LIST_FIELDS:
             fixed[field] = normalize_list_value(profile.get(field, default_value))
+        elif field in OBJECT_LIST_FIELDS:
+            fixed[field] = normalize_path_relation_details(
+                profile.get(field, default_value),
+                source_job_name=clean_text(profile.get("standard_job_name", "")),
+            )
         else:
             fixed[field] = clean_text(profile.get(field, default_value))
 
@@ -406,7 +548,26 @@ def call_job_extract_llm(input_data: Dict[str, Any]) -> Dict[str, Any]:
         "instruction": (
             "请严格按照输出 JSON 模板返回 JSON。"
             "如果某项信息无法确定，请返回空字符串或空列表。"
+            "vertical_paths 和 transfer_paths 面向岗位知识本身，不要结合具体学生画像。"
         ),
+        "expected_fields": [
+            "standard_job_name",
+            "job_category",
+            "degree_requirement",
+            "major_requirement",
+            "experience_requirement",
+            "hard_skills",
+            "tools_or_tech_stack",
+            "certificate_requirement",
+            "soft_skills",
+            "practice_requirement",
+            "job_level",
+            "suitable_student_profile",
+            "raw_requirement_summary",
+            "vertical_paths",
+            "transfer_paths",
+            "path_relation_details",
+        ],
     }
     return call_llm(
         "job_extract",
@@ -466,7 +627,7 @@ def convert_profile_to_row(profile: Dict[str, Any]) -> Dict[str, Any]:
     """把抽取结果转换成适合 DataFrame/CSV 的行结构。"""
     row = {}
     for field in DEFAULT_JOB_PROFILE:
-        if field in LIST_FIELDS:
+        if field in LIST_FIELDS or field in OBJECT_LIST_FIELDS:
             row[field] = json.dumps(profile.get(field, []), ensure_ascii=False)
         else:
             row[field] = clean_text(profile.get(field, ""))

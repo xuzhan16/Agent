@@ -418,16 +418,77 @@ def parse_path_text(path_text: Any, path_type: str, source: str) -> Dict[str, An
     return asdict(option)
 
 
+def extract_graph_path_context(context_data: Optional[Dict[str, Any]]) -> Dict[str, List[str]]:
+    """从上游 context_data 中提取图谱/离线路径候选。"""
+    graph_context = safe_dict(safe_dict(context_data).get("graph_context"))
+    return {
+        "promote_paths": normalize_text_list(
+            graph_context.get("promote_paths") or graph_context.get("vertical_paths")
+        ),
+        "transfer_paths": normalize_text_list(
+            graph_context.get("transfer_paths") or graph_context.get("lateral_paths")
+        ),
+    }
+
+
+def normalize_path_strings(values: List[str], source_job_name: str) -> List[str]:
+    """把仅包含目标岗位名的路径候选补成标准 'A -> B' 字符串。"""
+    source_job = clean_text(source_job_name)
+    normalized: List[str] = []
+    for item in values:
+        text = clean_text(item)
+        if not text:
+            continue
+        if "->" in text:
+            normalized.append(text)
+        elif source_job and text != source_job:
+            normalized.append(f"{source_job} -> {text}")
+        else:
+            normalized.append(text)
+    return dedup_keep_order(normalized)
+
+
+def annotate_path_option(
+    option: Dict[str, Any],
+    match_score: float,
+    score_delta: float = 0.0,
+    priority_hint: str = "",
+    source_tier: str = "",
+    is_fallback: bool = False,
+) -> Dict[str, Any]:
+    """统一补充路径候选的评分与来源元信息。"""
+    option = deepcopy(safe_dict(option))
+    option["path_score_hint"] = round(max(0.0, match_score + score_delta), 2)
+    option["priority_hint"] = priority_hint or ("high" if option["path_score_hint"] >= 75 else "medium")
+    option["source_tier"] = source_tier or ("fallback" if is_fallback else "knowledge")
+    option["is_fallback"] = bool(is_fallback)
+    return option
+
+
 def build_candidate_goal_jobs(
     student_snapshot: Dict[str, Any],
     target_job_snapshot: Dict[str, Any],
     match_snapshot: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
 ) -> List[str]:
     """构造候选目标岗位列表，供后续 selector 做主目标/备选目标选择。"""
     candidates = []
     target_job = clean_text(target_job_snapshot.get("standard_job_name"))
     if target_job:
         candidates.append(target_job)
+
+    graph_paths = extract_graph_path_context(context_data)
+    for path_text in normalize_path_strings(graph_paths.get("transfer_paths", []), target_job):
+        path_option = parse_path_text(path_text, path_type="transfer", source="graph_context.transfer_paths")
+        to_job = clean_text(path_option.get("to_job"))
+        if to_job:
+            candidates.append(to_job)
+
+    for path_text in normalize_path_strings(graph_paths.get("promote_paths", []), target_job):
+        path_option = parse_path_text(path_text, path_type="direct_vertical", source="graph_context.promote_paths")
+        to_job = clean_text(path_option.get("to_job"))
+        if to_job:
+            candidates.append(to_job)
 
     for path_text in normalize_text_list(target_job_snapshot.get("transfer_paths")):
         path_option = parse_path_text(path_text, path_type="transfer", source="job_profile.transfer_paths")
@@ -448,36 +509,63 @@ def build_candidate_goal_jobs(
 def build_direct_path_options(
     target_job_snapshot: Dict[str, Any],
     match_snapshot: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
-    """构造直接发展路径候选，优先来自目标岗位 vertical_paths。"""
+    """构造直接发展路径候选，优先来自图谱/离线路径，其次才是岗位画像与兜底。"""
     options = []
+    score = safe_float(match_snapshot.get("overall_match_score"), default=0.0)
+    graph_paths = extract_graph_path_context(context_data)
+    target_job = clean_text(target_job_snapshot.get("standard_job_name"))
+
+    for path_text in normalize_path_strings(graph_paths.get("promote_paths", []), target_job):
+        options.append(
+            annotate_path_option(
+                parse_path_text(
+                    path_text=path_text,
+                    path_type="direct_vertical",
+                    source="graph_context.promote_paths",
+                ),
+                match_score=score,
+                score_delta=8.0,
+                priority_hint="high",
+                source_tier="graph",
+            )
+        )
+
     for path_text in normalize_text_list(target_job_snapshot.get("vertical_paths")):
         options.append(
-            parse_path_text(
-                path_text=path_text,
-                path_type="direct_vertical",
-                source="job_profile.vertical_paths",
+            annotate_path_option(
+                parse_path_text(
+                    path_text=path_text,
+                    path_type="direct_vertical",
+                    source="job_profile.vertical_paths",
+                ),
+                match_score=score,
+                score_delta=4.0,
+                priority_hint="high" if score >= 75 else "medium",
+                source_tier="offline_profile",
             )
         )
 
-    target_job = clean_text(target_job_snapshot.get("standard_job_name"))
     if not options and target_job:
         options.append(
-            asdict(
-                CareerPlanPathOption(
-                    path_type="direct_target",
-                    from_job="当前学生画像",
-                    to_job=target_job,
-                    path_text=f"当前学生画像 -> {target_job}",
-                    source="fallback_target_job",
-                )
+            annotate_path_option(
+                asdict(
+                    CareerPlanPathOption(
+                        path_type="direct_target",
+                        from_job="当前学生画像",
+                        to_job=target_job,
+                        path_text=f"当前学生画像 -> {target_job}",
+                        source="fallback_target_job",
+                    )
+                ),
+                match_score=score,
+                score_delta=-8.0,
+                priority_hint="low",
+                source_tier="fallback",
+                is_fallback=True,
             )
         )
-
-    score = safe_float(match_snapshot.get("overall_match_score"), default=0.0)
-    for option in options:
-        option["path_score_hint"] = round(score, 2)
-        option["priority_hint"] = "high" if score >= 75 else "medium" if score >= 60 else "low"
     return dedup_keep_order(options)
 
 
@@ -485,39 +573,100 @@ def build_transition_path_options(
     student_snapshot: Dict[str, Any],
     target_job_snapshot: Dict[str, Any],
     match_snapshot: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
-    """构造过渡路径候选，优先来自岗位横向路径 + 学生职业方向信号。"""
+    """构造过渡路径候选，优先来自图谱/离线路径，学生方向桥接仅作为 fallback。"""
     options = []
     target_job = clean_text(target_job_snapshot.get("standard_job_name"))
+    score = safe_float(match_snapshot.get("overall_match_score"), default=0.0)
+    graph_paths = extract_graph_path_context(context_data)
 
-    for path_text in normalize_text_list(target_job_snapshot.get("transfer_paths")):
+    for path_text in normalize_path_strings(graph_paths.get("transfer_paths", []), target_job):
         options.append(
-            parse_path_text(
-                path_text=path_text,
-                path_type="transfer",
-                source="job_profile.transfer_paths",
+            annotate_path_option(
+                parse_path_text(
+                    path_text=path_text,
+                    path_type="transfer",
+                    source="graph_context.transfer_paths",
+                ),
+                match_score=max(50.0, score - 2.0),
+                score_delta=6.0,
+                priority_hint="high" if score < 80 else "medium",
+                source_tier="graph",
             )
         )
 
-    for direction in normalize_text_list(student_snapshot.get("occupation_hints")):
-        if target_job and direction and direction != target_job:
-            options.append(
-                asdict(
-                    CareerPlanPathOption(
-                        path_type="bridge",
-                        from_job=direction,
-                        to_job=target_job,
-                        path_text=f"{direction} -> {target_job}",
-                        source="student_profile.occupation_hints",
+    for path_text in normalize_text_list(target_job_snapshot.get("transfer_paths")):
+        options.append(
+            annotate_path_option(
+                parse_path_text(
+                    path_text=path_text,
+                    path_type="transfer",
+                    source="job_profile.transfer_paths",
+                ),
+                match_score=max(50.0, score - 5.0),
+                score_delta=3.0,
+                priority_hint="high" if score < 75 else "medium",
+                source_tier="offline_profile",
+            )
+        )
+
+    if not options:
+        for direction in normalize_text_list(student_snapshot.get("occupation_hints")):
+            if target_job and direction and direction != target_job:
+                options.append(
+                    annotate_path_option(
+                        asdict(
+                            CareerPlanPathOption(
+                                path_type="bridge",
+                                from_job=direction,
+                                to_job=target_job,
+                                path_text=f"{direction} -> {target_job}",
+                                source="student_profile.occupation_hints",
+                            )
+                        ),
+                        match_score=max(45.0, score - 10.0),
+                        score_delta=0.0,
+                        priority_hint="low",
+                        source_tier="fallback",
+                        is_fallback=True,
                     )
                 )
-            )
 
-    score = safe_float(match_snapshot.get("overall_match_score"), default=0.0)
-    for option in options:
-        option["path_score_hint"] = round(max(50.0, score - 5.0), 2)
-        option["priority_hint"] = "high" if score < 75 else "medium"
     return dedup_keep_order(options)
+
+
+def summarize_path_sources(
+    direct_path_options: List[Dict[str, Any]],
+    transition_path_options: List[Dict[str, Any]],
+) -> Dict[str, int]:
+    """统计路径候选来源，便于后续解释和调试。"""
+    summary: Dict[str, int] = {}
+    for option in direct_path_options + transition_path_options:
+        source = clean_text(safe_dict(option).get("source")) or "unknown"
+        summary[source] = summary.get(source, 0) + 1
+    return summary
+
+
+def build_direct_and_transition_paths(
+    student_snapshot: Dict[str, Any],
+    target_job_snapshot: Dict[str, Any],
+    match_snapshot: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """统一构造直接/过渡路径候选，集中管理路径来源优先级。"""
+    direct_path_options = build_direct_path_options(
+        target_job_snapshot=target_job_snapshot,
+        match_snapshot=match_snapshot,
+        context_data=context_data,
+    )
+    transition_path_options = build_transition_path_options(
+        student_snapshot=student_snapshot,
+        target_job_snapshot=target_job_snapshot,
+        match_snapshot=match_snapshot,
+        context_data=context_data,
+    )
+    return direct_path_options, transition_path_options
 
 
 def infer_gap_priority(gap_type: str, match_snapshot: Dict[str, Any]) -> str:
@@ -719,6 +868,7 @@ def build_planner_context(
         "direct_path_count": len(direct_path_options),
         "transition_path_count": len(transition_path_options),
         "high_priority_gap_count": sum(1 for gap in gap_analysis if safe_dict(gap).get("priority") == "high"),
+        "path_source_summary": summarize_path_sources(direct_path_options, transition_path_options),
         "expected_output_hint": {
             "primary_target_job": "首选目标岗位",
             "alternative_target_jobs": "备选岗位列表",
@@ -754,6 +904,10 @@ def build_warnings(
         warnings.append("job_match_result 缺少有效 overall_match_score")
     if not direct_path_options and not transition_path_options:
         warnings.append("当前未解析到可用岗位路径选项，后续 selector 可能只能基于目标岗位兜底生成路径")
+    if direct_path_options and all(bool(safe_dict(item).get("is_fallback")) for item in direct_path_options):
+        warnings.append("当前直接路径全部来自 fallback，说明离线岗位晋升路径/图谱路径仍不足")
+    if transition_path_options and all(bool(safe_dict(item).get("is_fallback")) for item in transition_path_options):
+        warnings.append("当前过渡路径全部来自 fallback，说明离线岗位转岗路径/图谱路径仍不足")
     return dedup_keep_order(clean_text(item) for item in warnings if clean_text(item))
 
 
@@ -761,6 +915,7 @@ def build_career_plan_input_payload(
     student_profile_result: Dict[str, Any],
     job_profile_result: Dict[str, Any],
     job_match_result: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
     output_path: Optional[str | Path] = None,
 ) -> Dict[str, Any]:
     """主入口：构造 career_plan_input_payload。"""
@@ -772,15 +927,13 @@ def build_career_plan_input_payload(
         student_snapshot=student_snapshot,
         target_job_snapshot=target_job_snapshot,
         match_snapshot=match_snapshot,
+        context_data=context_data,
     )
-    direct_path_options = build_direct_path_options(
-        target_job_snapshot=target_job_snapshot,
-        match_snapshot=match_snapshot,
-    )
-    transition_path_options = build_transition_path_options(
+    direct_path_options, transition_path_options = build_direct_and_transition_paths(
         student_snapshot=student_snapshot,
         target_job_snapshot=target_job_snapshot,
         match_snapshot=match_snapshot,
+        context_data=context_data,
     )
     gap_analysis = build_gap_analysis(
         student_snapshot=student_snapshot,
@@ -842,6 +995,7 @@ def load_upstream_results_from_state(
 
 def build_career_plan_input_payload_from_state(
     state_path: str | Path = DEFAULT_STATE_PATH,
+    context_data: Optional[Dict[str, Any]] = None,
     output_path: Optional[str | Path] = DEFAULT_OUTPUT_PATH,
 ) -> Dict[str, Any]:
     """从 student.json 读取上游结果并构造 career_plan_input_payload。"""
@@ -850,6 +1004,7 @@ def build_career_plan_input_payload_from_state(
         student_profile_result=student_profile_result,
         job_profile_result=job_profile_result,
         job_match_result=job_match_result,
+        context_data=context_data,
         output_path=output_path,
     )
 

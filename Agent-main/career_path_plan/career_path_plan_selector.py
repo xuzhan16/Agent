@@ -387,6 +387,16 @@ def select_best_path_option(
         path_type = clean_text(option_dict.get("path_type"))
         to_job = clean_text(option_dict.get("to_job"))
         reasons = [f"路径基础分 {score:.2f}。"]
+        source_tier = clean_text(option_dict.get("source_tier"))
+        if source_tier == "graph":
+            score += 8.0
+            reasons.append("该路径来自图谱/离线岗位关系，稳定性更高，加成 +8。")
+        elif source_tier == "offline_profile":
+            score += 4.0
+            reasons.append("该路径来自离线岗位画像，可信度较高，加成 +4。")
+        elif source_tier == "fallback":
+            score -= 10.0
+            reasons.append("该路径属于 fallback 兜底，仅在知识不足时使用，扣分 -10。")
 
         if clean_text(option_dict.get("priority_hint")) == "high":
             score += 5.0
@@ -471,6 +481,12 @@ def build_risk_notes(
     if not direct_path and not transition_path:
         notes.append("当前未形成明确直接路径或过渡路径，建议补充岗位知识图谱路径数据后再做更稳定规划。")
 
+    selector_metrics = safe_dict(selection_result.get("selector_metrics"))
+    if clean_text(selector_metrics.get("best_direct_source_tier")) == "fallback":
+        notes.append("当前直接路径来自 fallback 兜底，不代表稳定的岗位晋升知识，建议优先补齐离线路径或图谱边数据。")
+    if clean_text(selector_metrics.get("best_transition_source_tier")) == "fallback":
+        notes.append("当前过渡路径来自 fallback 兜底，更适合作为临时建议，不宜替代真实岗位转岗知识。")
+
     primary_target_job = clean_text(selection_result.get("primary_target_job"))
     if primary_target_job and primary_target_job != clean_text(payload.get("target_job_name")):
         notes.append(f"主目标岗位已从原始目标切换为 {primary_target_job}，需确认该方向是否符合学生真实求职偏好。")
@@ -548,6 +564,10 @@ def select_career_path_plan(
             "candidate_job_scores": deepcopy(normalize_path_option_list(goal_selection.get("candidate_job_scores"))),
             "direct_path_option_count": len(direct_path_options),
             "transition_path_option_count": len(transition_path_options),
+            "best_direct_source": clean_text(best_direct_option.get("source")),
+            "best_transition_source": clean_text(best_transition_option.get("source")),
+            "best_direct_source_tier": clean_text(best_direct_option.get("source_tier")),
+            "best_transition_source_tier": clean_text(best_transition_option.get("source_tier")),
             "high_priority_gap_count": count_high_priority_gaps(
                 normalize_path_option_list(payload.get("gap_analysis"))
             ),

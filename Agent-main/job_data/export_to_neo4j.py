@@ -106,6 +106,73 @@ def normalize_list_value(value: object) -> List[str]:
     return sorted({clean_text(part) for part in parts if clean_text(part)})
 
 
+def normalize_path_relation_details(value: object, source_job_name: str = "") -> List[Dict[str, str]]:
+    """
+    规范化离线路径关系明细。
+
+    支持：
+    - list[dict]
+    - JSON 字符串
+    - relation_type 兼容 PROMOTE_TO / TRANSFER_TO / vertical / transfer
+    """
+    if value is None:
+        return []
+
+    raw_items: List[object]
+    if isinstance(value, list):
+        raw_items = value
+    else:
+        text = clean_text(value)
+        if not text:
+            return []
+        if text.startswith("[") and text.endswith("]"):
+            try:
+                parsed = json.loads(text)
+                raw_items = parsed if isinstance(parsed, list) else []
+            except json.JSONDecodeError:
+                return []
+        else:
+            return []
+
+    source_clean = clean_text(source_job_name)
+    normalized: List[Dict[str, str]] = []
+    seen: Set[str] = set()
+    relation_alias = {
+        "PROMOTE_TO": "PROMOTE_TO",
+        "TRANSFER_TO": "TRANSFER_TO",
+        "vertical": "PROMOTE_TO",
+        "vertical_path": "PROMOTE_TO",
+        "promotion": "PROMOTE_TO",
+        "transfer": "TRANSFER_TO",
+        "transfer_path": "TRANSFER_TO",
+        "lateral": "TRANSFER_TO",
+    }
+    for item in raw_items:
+        if not isinstance(item, dict):
+            continue
+        relation_type = relation_alias.get(clean_text(item.get("relation_type")), "")
+        if not relation_type:
+            continue
+        source_job = clean_text(item.get("source_job") or source_clean)
+        target_job = clean_text(item.get("target_job"))
+        if not source_job or not target_job or source_job == target_job:
+            continue
+        key = f"{source_job}|{relation_type}|{target_job}"
+        if key in seen:
+            continue
+        seen.add(key)
+        normalized.append(
+            {
+                "source_job": source_job,
+                "target_job": target_job,
+                "relation_type": relation_type,
+                "reason": clean_text(item.get("reason")),
+                "confidence": clean_text(item.get("confidence")),
+            }
+        )
+    return normalized
+
+
 def normalize_degree_values(value: object) -> List[str]:
     """
     规范化学历节点。
@@ -214,6 +281,24 @@ def parse_path_targets(value: object, source_job_name: str) -> List[str]:
 
     source_clean = clean_text(source_job_name)
     return sorted({target for target in targets if target and target != source_clean})
+
+
+def build_fallback_path_details(
+    value: object,
+    source_job_name: str,
+    relation_type: str,
+) -> List[Dict[str, str]]:
+    """当没有结构化 relation_details 时，从简化路径字段兜底生成关系明细。"""
+    return [
+        {
+            "source_job": clean_text(source_job_name),
+            "target_job": target_job_name,
+            "relation_type": relation_type,
+            "reason": "",
+            "confidence": "",
+        }
+        for target_job_name in parse_path_targets(value, source_job_name)
+    ]
 
 
 def get_job_node_name(record: pd.Series) -> str:
@@ -415,29 +500,43 @@ def build_graph_tables(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
                 }
             )
 
-        # Vertical paths
-        for target_job_name in parse_path_targets(row.get("vertical_paths", ""), source_job_name):
-            jobs_df = ensure_job_node(jobs_df, target_job_name)
-            job_name_to_id[target_job_name] = stable_id("job", target_job_name)
-            rel_promote_to_rows.append(
-                {
-                    ":START_ID(Job-ID)": source_job_id,
-                    ":END_ID(Job-ID)": job_name_to_id[target_job_name],
-                    ":TYPE": "PROMOTE_TO",
-                }
+        relation_details = normalize_path_relation_details(
+            row.get("path_relation_details", "") or row.get("path_relation_details_json", ""),
+            source_job_name=source_job_name,
+        )
+        relation_details = normalize_path_relation_details(
+            relation_details
+            + build_fallback_path_details(
+                value=row.get("vertical_paths", ""),
+                source_job_name=source_job_name,
+                relation_type="PROMOTE_TO",
             )
+            + build_fallback_path_details(
+                value=row.get("transfer_paths", ""),
+                source_job_name=source_job_name,
+                relation_type="TRANSFER_TO",
+            ),
+            source_job_name=source_job_name,
+        )
 
-        # Transfer paths
-        for target_job_name in parse_path_targets(row.get("transfer_paths", ""), source_job_name):
+        for relation in relation_details:
+            target_job_name = clean_text(relation.get("target_job"))
+            relation_type = clean_text(relation.get("relation_type"))
+            if not target_job_name or relation_type not in {"PROMOTE_TO", "TRANSFER_TO"}:
+                continue
             jobs_df = ensure_job_node(jobs_df, target_job_name)
             job_name_to_id[target_job_name] = stable_id("job", target_job_name)
-            rel_transfer_to_rows.append(
-                {
-                    ":START_ID(Job-ID)": source_job_id,
-                    ":END_ID(Job-ID)": job_name_to_id[target_job_name],
-                    ":TYPE": "TRANSFER_TO",
-                }
-            )
+            relation_row = {
+                ":START_ID(Job-ID)": source_job_id,
+                ":END_ID(Job-ID)": job_name_to_id[target_job_name],
+                ":TYPE": relation_type,
+                "reason": clean_text(relation.get("reason")),
+                "confidence": clean_text(relation.get("confidence")),
+            }
+            if relation_type == "PROMOTE_TO":
+                rel_promote_to_rows.append(relation_row)
+            else:
+                rel_transfer_to_rows.append(relation_row)
 
     # 节点表
     skills_df = pd.DataFrame(
@@ -495,12 +594,12 @@ def build_graph_tables(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
 
     rel_promote_to_df = pd.DataFrame(
         rel_promote_to_rows,
-        columns=[":START_ID(Job-ID)", ":END_ID(Job-ID)", ":TYPE"],
+        columns=[":START_ID(Job-ID)", ":END_ID(Job-ID)", ":TYPE", "reason", "confidence"],
     ).drop_duplicates()
 
     rel_transfer_to_df = pd.DataFrame(
         rel_transfer_to_rows,
-        columns=[":START_ID(Job-ID)", ":END_ID(Job-ID)", ":TYPE"],
+        columns=[":START_ID(Job-ID)", ":END_ID(Job-ID)", ":TYPE", "reason", "confidence"],
     ).drop_duplicates()
 
     jobs_df = jobs_df.drop_duplicates(subset=["job_id:ID(Job-ID)"]).sort_values(by=["name"]).reset_index(drop=True)
