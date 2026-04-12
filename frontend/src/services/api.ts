@@ -6,6 +6,9 @@ import {
   CareerPathResult,
   ApiResponse,
   ReportDetail,
+  PipelineStatus,
+  AIContextSummaryData,
+  AIChatData,
 } from '../types'
 
 const api = axios.create({
@@ -55,25 +58,19 @@ export const careerApi = {
     })
   },
 
-  // 学生画像构建
-  buildStudentProfile: (studentInfo: StudentInfo): Promise<ApiResponse<StudentProfileResult>> => {
-    return api.post('/student/profile', studentInfo)
+  // 学生画像查询（状态接口，不消费请求体）
+  buildStudentProfile: (): Promise<ApiResponse<StudentProfileResult>> => {
+    return api.get('/student/profile')
   },
 
-  // 岗位匹配
-  matchJobs: (studentProfile: StudentProfileResult): Promise<ApiResponse<JobMatchResult[]>> => {
-    return api.post('/job/match', studentProfile)
+  // 岗位匹配查询（状态接口，不消费请求体）
+  matchJobs: (): Promise<ApiResponse<JobMatchResult[]>> => {
+    return api.get('/job/match')
   },
 
-  // 职业路径规划
-  planCareerPath: (
-    studentProfile: StudentProfileResult,
-    jobMatches: JobMatchResult[]
-  ): Promise<ApiResponse<CareerPathResult>> => {
-    return api.post('/career/path', {
-      student_profile: studentProfile,
-      job_matches: jobMatches,
-    })
+  // 职业路径查询（状态接口，不消费请求体）
+  planCareerPath: (): Promise<ApiResponse<CareerPathResult>> => {
+    return api.get('/career/path')
   },
 
   // 生成报告
@@ -107,6 +104,25 @@ export const careerApi = {
   // 获取共享报告内容
   getSharedReport: (fileName?: string): Promise<ApiResponse<string>> => {
     return api.get('/report/shared', { params: { file_name: fileName } })
+  },
+
+  // 查询流水线实时进度
+  getPipelineStatus: (): Promise<ApiResponse<PipelineStatus>> => {
+    return api.get('/pipeline/status')
+  },
+
+  // AI 上下文摘要
+  getAIContextSummary: (): Promise<ApiResponse<AIContextSummaryData>> => {
+    return api.get('/ai/context-summary')
+  },
+
+  // AI 对话
+  chatWithAI: (data: {
+    message: string
+    conversation_id?: string
+    web_search_enabled?: boolean
+  }): Promise<ApiResponse<AIChatData>> => {
+    return api.post('/ai/chat', data)
   },
 
   // 直接下载已生成报告文件

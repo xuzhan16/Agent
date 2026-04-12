@@ -1,9 +1,10 @@
 import { Upload, Card, Row, Col, Button, Steps, Alert, Space, Spin, message, Input } from 'antd'
 import { UploadOutlined, FileTextOutlined, CheckCircleOutlined, SyncOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { careerApi } from '../services/api'
 import { useCareerStore } from '../store'
+import { PipelineStatus } from '../types'
 import '../styles/ResumeUpload.css'
 
 const { Dragger } = Upload
@@ -15,17 +16,50 @@ const ResumeUpload = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [parseResult, setParseResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
+  const [pipelineStatus, setPipelineStatus] = useState<PipelineStatus | null>(null)
+  const pollTimerRef = useRef<number | null>(null)
 
   const setStudentInfo = useCareerStore((state) => state.setStudentInfo)
   const setStudentProfile = useCareerStore((state) => state.setStudentProfile)
   const navigate = useNavigate()
+
+  const stopPipelinePolling = () => {
+    if (pollTimerRef.current !== null) {
+      window.clearInterval(pollTimerRef.current)
+      pollTimerRef.current = null
+    }
+  }
+
+  const startPipelinePolling = () => {
+    stopPipelinePolling()
+    pollTimerRef.current = window.setInterval(async () => {
+      try {
+        const statusResponse = await careerApi.getPipelineStatus()
+        if (statusResponse.success) {
+          const statusData = statusResponse.data
+          setPipelineStatus(statusData)
+          if (statusData.status === 'completed' || statusData.status === 'failed') {
+            stopPipelinePolling()
+          }
+        }
+      } catch {
+        // 进度轮询失败时静默重试，避免打断主流程。
+      }
+    }, 2000)
+  }
+
+  useEffect(() => {
+    return () => {
+      stopPipelinePolling()
+    }
+  }, [])
 
   const handlePipelineSuccess = async (studentInfo: any) => {
     setParseResult(studentInfo)
     setUploadSuccess(true)
     setStudentInfo(studentInfo)
 
-    const profileResponse = await careerApi.buildStudentProfile(studentInfo)
+    const profileResponse = await careerApi.buildStudentProfile()
     if (profileResponse.success) {
       setStudentProfile(profileResponse.data)
       message.success('简历解析成功，学生画像生成完毕')
@@ -38,6 +72,14 @@ const ResumeUpload = () => {
     setFile(uploadFile)
     setUploading(true)
     setError(null)
+    setPipelineStatus({
+      status: 'running',
+      current_step: 0,
+      total_steps: 6,
+      step_name: '准备开始',
+      error: null,
+    })
+    startPipelinePolling()
 
     try {
       const response = await careerApi.parseResume(uploadFile)
@@ -51,6 +93,7 @@ const ResumeUpload = () => {
       setError('简历解析接口调用失败，请检查后端服务')
       message.error('简历解析接口调用失败，请检查后端服务')
     } finally {
+      stopPipelinePolling()
       setUploading(false)
     }
   }
@@ -63,6 +106,14 @@ const ResumeUpload = () => {
 
     setUploading(true)
     setError(null)
+    setPipelineStatus({
+      status: 'running',
+      current_step: 0,
+      total_steps: 6,
+      step_name: '准备开始',
+      error: null,
+    })
+    startPipelinePolling()
 
     try {
       const response = await careerApi.parseManualResume(manualResumeText)
@@ -76,6 +127,7 @@ const ResumeUpload = () => {
       setError('手动录入简历接口调用失败，请检查后端服务')
       message.error('手动录入简历接口调用失败，请检查后端服务')
     } finally {
+      stopPipelinePolling()
       setUploading(false)
     }
   }
@@ -190,6 +242,15 @@ const ResumeUpload = () => {
                 type="error"
                 showIcon
                 closable
+              />
+            )}
+            {uploading && pipelineStatus && (
+              <Alert
+                style={{ marginTop: 16 }}
+                message={`当前进度：第 ${pipelineStatus.current_step || 0}/${pipelineStatus.total_steps || 6} 步`}
+                description={`状态：${pipelineStatus.status || 'running'}；步骤：${pipelineStatus.step_name || '处理中'}${pipelineStatus.error ? `；错误：${pipelineStatus.error}` : ''}`}
+                type={pipelineStatus.status === 'failed' ? 'error' : 'info'}
+                showIcon
               />
             )}
           </Card>

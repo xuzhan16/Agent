@@ -27,8 +27,8 @@ const JobMatching = () => {
 
         <Card className="match-card" style={{ textAlign: 'center' }}>
           <Alert
-            message="还没有岗位匹配结果"
-            description="请先完成学生画像生成，系统会自动进行岗位匹配分析。"
+            message="暂无匹配结果"
+            description="暂无匹配结果，请先完成画像信息录入。"
             type="info"
             showIcon
           />
@@ -118,7 +118,7 @@ const JobMatching = () => {
     setError(null)
 
     try {
-      const response = await careerApi.planCareerPath(studentProfile, jobMatches)
+      const response = await careerApi.planCareerPath()
       if (response.success) {
         setCareerPath(response.data)
         navigate('/career')

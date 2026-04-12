@@ -26,9 +26,13 @@ const StudentProfile = () => {
     setError(null)
 
     try {
-      const response = await careerApi.matchJobs(studentProfile)
+      const response = await careerApi.matchJobs()
       if (response.success) {
-        setJobMatches(response.data)
+        const matches = Array.isArray(response.data) ? response.data : []
+        setJobMatches(matches)
+        if (response.status === 'no_data' || matches.length === 0) {
+          setError(response.message || '暂无匹配结果，请先完成画像信息录入')
+        }
         navigate('/matching')
       } else {
         setError(response.message || '岗位匹配失败，请重试')

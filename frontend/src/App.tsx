@@ -9,6 +9,7 @@ import JobMatching from './pages/JobMatching'
 import CareerPath from './pages/CareerPath'
 import Report from './pages/Report'
 import SharedReport from './pages/SharedReport'
+import AIAssistant from './pages/AIAssistant'
 import './App.css'
 import { useState } from 'react'
 
@@ -52,6 +53,7 @@ function App() {
               <Route path="/matching" element={<JobMatching />} />
               <Route path="/career" element={<CareerPath />} />
               <Route path="/report" element={<Report />} />
+              <Route path="/ai-assistant" element={<AIAssistant />} />
               <Route path="/report/view" element={<SharedReport />} />
             </Routes>
           </div>

@@ -26,9 +26,15 @@ const SharedReport = () => {
         } else {
           setError(response.message || '无法获取共享报告内容。')
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('[SharedReport] fetch error:', err)
-        setError('共享报告加载失败，请稍后重试。')
+        const statusCode = err?.response?.status
+        const detail = err?.response?.data?.detail
+        if (statusCode === 404) {
+          setError(detail || '报告已过期或不存在')
+        } else {
+          setError('共享报告加载失败，请稍后重试。')
+        }
       } finally {
         setLoading(false)
       }

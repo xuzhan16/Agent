@@ -156,9 +156,37 @@ export interface ReportDetail {
   }
 }
 
+export interface PipelineStatus {
+  status: 'idle' | 'running' | 'completed' | 'failed' | string
+  current_step: number
+  total_steps: number
+  step_name: string
+  error?: string | null
+  updated_at?: string
+}
+
+export interface AIContextSummaryData {
+  summary: string
+  loaded_files: string[]
+  missing_files: string[]
+}
+
+export interface AIChatData {
+  conversation_id: string
+  answer: string
+  source: string
+  context_summary: string
+  used_context_sources: string[]
+  loaded_files: string[]
+  missing_files: string[]
+}
+
 // API响应类型
 export interface ApiResponse<T> {
   success: boolean
   data: T
+  status?: string
+  source?: string
+  last_updated?: string
   message?: string
 }

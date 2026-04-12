@@ -1,5 +1,5 @@
 import { Menu, Layout } from 'antd'
-import { UploadOutlined, UserOutlined, BarChartOutlined, NodeIndexOutlined, FileTextOutlined, HomeOutlined } from '@ant-design/icons'
+import { UploadOutlined, UserOutlined, BarChartOutlined, NodeIndexOutlined, FileTextOutlined, HomeOutlined, MessageOutlined } from '@ant-design/icons'
 import { Link, useLocation } from 'react-router-dom'
 
 const { Sider } = Layout
@@ -41,6 +41,11 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
       key: '/report',
       icon: <FileTextOutlined />,
       label: <Link to="/report">报告生成</Link>,
+    },
+    {
+      key: '/ai-assistant',
+      icon: <MessageOutlined />,
+      label: <Link to="/ai-assistant">AI 助手</Link>,
     },
   ]
 

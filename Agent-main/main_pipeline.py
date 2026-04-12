@@ -20,6 +20,7 @@ import argparse
 import json
 import logging
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
@@ -42,6 +43,8 @@ SQLITE_DB_PATH = "outputs/sql/jobs.db"
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.getenv("NEO4J_USERNAME", "neo4j")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "ChangeThisPassword_123!")
+PIPELINE_STATUS_FILE_NAME = "pipeline_state.json"
+TOTAL_PIPELINE_STEPS = 6
 
 
 def _clean_text(value: Any) -> str:
@@ -314,6 +317,30 @@ def _export_report_markdown(report_result: Dict[str, Any], state_path: str | Pat
     logger.info("最终报告已导出为 %s", output_path)
 
 
+def _pipeline_status_path(state_path: str | Path) -> Path:
+    return Path(state_path).resolve().with_name(PIPELINE_STATUS_FILE_NAME)
+
+
+def _write_pipeline_status(
+    state_path: str | Path,
+    status: str,
+    current_step: int,
+    step_name: str,
+    error: str | None = None,
+) -> None:
+    payload = {
+        "status": status,
+        "current_step": current_step,
+        "total_steps": TOTAL_PIPELINE_STEPS,
+        "step_name": step_name,
+        "error": error,
+        "updated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+    }
+    path = _pipeline_status_path(state_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def run_pipeline(
     resume_path: str,
     initial_target_job: str,
@@ -321,120 +348,158 @@ def run_pipeline(
 ) -> Dict[str, Any]:
     state_manager = StateManager()
     state_path = str(state_path)
+    current_step = 0
+    current_step_name = "准备开始"
 
-    logger.info("启动第 1 步: resume_parse")
-    process_resume_file(
-        file_path=resume_path,
-        state_path=state_path,
-    )
-    effective_target_job = _resolve_effective_target_job(
-        state_manager=state_manager,
-        state_path=state_path,
-        initial_target_job=initial_target_job,
-    )
-    logger.info(
-        "本次流水线目标岗位=%s",
-        effective_target_job or "未从简历中解析到明确目标岗位",
-    )
+    def _mark_step(step: int, step_name: str) -> None:
+        nonlocal current_step, current_step_name
+        current_step = step
+        current_step_name = step_name
+        _write_pipeline_status(
+            state_path=state_path,
+            status="running",
+            current_step=step,
+            step_name=step_name,
+            error=None,
+        )
 
-    logger.info("启动第 2 步: student_profile")
-    student_profile_bundle = run_student_profile_service(
-        state_path=state_path,
-    )
-    logger.info(
-        "student_profile 完成，summary长度=%s",
-        len(_clean_text(student_profile_bundle.get("student_profile_result", {}).get("summary"))),
-    )
-
-    if not effective_target_job:
-        inferred_target_job = _resolve_target_job_from_student_profile(
+    try:
+        _mark_step(1, "简历解析")
+        logger.info("启动第 1 步: resume_parse")
+        process_resume_file(
+            file_path=resume_path,
+            state_path=state_path,
+        )
+        effective_target_job = _resolve_effective_target_job(
             state_manager=state_manager,
             state_path=state_path,
-            student_profile_bundle=student_profile_bundle,
+            initial_target_job=initial_target_job,
         )
-        if inferred_target_job:
-            effective_target_job = inferred_target_job
-            logger.info("简历未明确目标岗位，已根据学生画像 occupation_hints 兜底为=%s", effective_target_job)
+        logger.info(
+            "本次流水线目标岗位=%s",
+            effective_target_job or "未从简历中解析到明确目标岗位",
+        )
 
-    logger.info("启动第 3 步: job_profile，拉取后端数据库知识")
-    sql_rows = _query_job_profile_rows(effective_target_job) if effective_target_job else []
-    graph_context = _query_job_graph_context(effective_target_job) if effective_target_job else {
-        "required_skills": [],
-        "transfer_paths": [],
-        "promote_paths": [],
-    }
-    offline_path_knowledge = _query_job_path_knowledge(effective_target_job) if effective_target_job else {
-        "vertical_paths": [],
-        "transfer_paths": [],
-    }
-    graph_context = {
-        "required_skills": _dedup_keep_order(graph_context.get("required_skills", [])),
-        "promote_paths": _dedup_keep_order(
-            graph_context.get("promote_paths", []) + offline_path_knowledge.get("vertical_paths", [])
-        ),
-        "transfer_paths": _dedup_keep_order(
-            graph_context.get("transfer_paths", []) + offline_path_knowledge.get("transfer_paths", [])
-        ),
-        "vertical_paths": _dedup_keep_order(
-            graph_context.get("promote_paths", []) + offline_path_knowledge.get("vertical_paths", [])
-        ),
-    }
-    job_profile_df = _build_job_profile_dataframe(sql_rows, effective_target_job)
-    job_profile_context = {
-        "sql_context": _build_compact_sql_context(sql_rows),
-        "graph_context": graph_context,
-    }
-    job_profile_result = run_job_profile_service(
-        df=job_profile_df,
-        standard_job_name=effective_target_job,
-        state_path=state_path,
-        context_data=job_profile_context,
-    )
-    logger.info(
-        "job_profile 完成，hard_skills=%s",
-        len(job_profile_result.get("hard_skills", []))
-        if isinstance(job_profile_result, dict)
-        else 0,
-    )
+        _mark_step(2, "学生画像")
+        logger.info("启动第 2 步: student_profile")
+        student_profile_bundle = run_student_profile_service(
+            state_path=state_path,
+        )
+        logger.info(
+            "student_profile 完成，summary长度=%s",
+            len(_clean_text(student_profile_bundle.get("student_profile_result", {}).get("summary"))),
+        )
 
-    logger.info("启动第 4 步: job_match")
-    job_match_result = run_job_match_service_from_state(
-        state_path=state_path,
-    )
-    logger.info(
-        "job_match 完成，overall_match_score=%s",
-        job_match_result.get("overall_match_score")
-        if isinstance(job_match_result, dict)
-        else "",
-    )
+        if not effective_target_job:
+            inferred_target_job = _resolve_target_job_from_student_profile(
+                state_manager=state_manager,
+                state_path=state_path,
+                student_profile_bundle=student_profile_bundle,
+            )
+            if inferred_target_job:
+                effective_target_job = inferred_target_job
+                logger.info("简历未明确目标岗位，已根据学生画像 occupation_hints 兜底为=%s", effective_target_job)
 
-    logger.info("启动第 5 步: career_path_plan，引入图谱晋升换岗数据")
-    plan_context = {
-        "graph_context": {
-            "transfer_paths": graph_context.get("transfer_paths", []),
-            "promote_paths": graph_context.get("promote_paths", []),
-        },
-        "sql_context": job_profile_context.get("sql_context", {}),
-    }
-    career_path_plan_result = run_career_path_plan_service_from_state(
-        state_path=state_path,
-        context_data=plan_context,
-    )
-    logger.info(
-        "career_path_plan 完成，primary_target_job=%s",
-        career_path_plan_result.get("primary_target_job")
-        if isinstance(career_path_plan_result, dict)
-        else "",
-    )
+        _mark_step(3, "岗位画像")
+        logger.info("启动第 3 步: job_profile，拉取后端数据库知识")
+        sql_rows = _query_job_profile_rows(effective_target_job) if effective_target_job else []
+        graph_context = _query_job_graph_context(effective_target_job) if effective_target_job else {
+            "required_skills": [],
+            "transfer_paths": [],
+            "promote_paths": [],
+        }
+        offline_path_knowledge = _query_job_path_knowledge(effective_target_job) if effective_target_job else {
+            "vertical_paths": [],
+            "transfer_paths": [],
+        }
+        graph_context = {
+            "required_skills": _dedup_keep_order(graph_context.get("required_skills", [])),
+            "promote_paths": _dedup_keep_order(
+                graph_context.get("promote_paths", []) + offline_path_knowledge.get("vertical_paths", [])
+            ),
+            "transfer_paths": _dedup_keep_order(
+                graph_context.get("transfer_paths", []) + offline_path_knowledge.get("transfer_paths", [])
+            ),
+            "vertical_paths": _dedup_keep_order(
+                graph_context.get("promote_paths", []) + offline_path_knowledge.get("vertical_paths", [])
+            ),
+        }
+        job_profile_df = _build_job_profile_dataframe(sql_rows, effective_target_job)
+        job_profile_context = {
+            "sql_context": _build_compact_sql_context(sql_rows),
+            "graph_context": graph_context,
+        }
+        job_profile_result = run_job_profile_service(
+            df=job_profile_df,
+            standard_job_name=effective_target_job,
+            state_path=state_path,
+            context_data=job_profile_context,
+        )
+        logger.info(
+            "job_profile 完成，hard_skills=%s",
+            len(job_profile_result.get("hard_skills", []))
+            if isinstance(job_profile_result, dict)
+            else 0,
+        )
 
-    logger.info("启动第 6 步: career_report")
-    career_report_result = run_career_report_service_from_state(
-        state_path=state_path,
-    )
-    _export_report_markdown(career_report_result, state_path)
+        _mark_step(4, "岗位匹配")
+        logger.info("启动第 4 步: job_match")
+        job_match_result = run_job_match_service_from_state(
+            state_path=state_path,
+        )
+        logger.info(
+            "job_match 完成，overall_match_score=%s",
+            job_match_result.get("overall_match_score")
+            if isinstance(job_match_result, dict)
+            else "",
+        )
 
-    logger.info("=========== 流水线圆满结束 ===========")
-    return state_manager.load_state(state_path)
+        _mark_step(5, "职业路径规划")
+        logger.info("启动第 5 步: career_path_plan，引入图谱晋升换岗数据")
+        plan_context = {
+            "graph_context": {
+                "transfer_paths": graph_context.get("transfer_paths", []),
+                "promote_paths": graph_context.get("promote_paths", []),
+            },
+            "sql_context": job_profile_context.get("sql_context", {}),
+        }
+        career_path_plan_result = run_career_path_plan_service_from_state(
+            state_path=state_path,
+            context_data=plan_context,
+        )
+        logger.info(
+            "career_path_plan 完成，primary_target_job=%s",
+            career_path_plan_result.get("primary_target_job")
+            if isinstance(career_path_plan_result, dict)
+            else "",
+        )
+
+        _mark_step(6, "职业报告生成")
+        logger.info("启动第 6 步: career_report")
+        career_report_result = run_career_report_service_from_state(
+            state_path=state_path,
+        )
+        _export_report_markdown(career_report_result, state_path)
+
+        _write_pipeline_status(
+            state_path=state_path,
+            status="completed",
+            current_step=TOTAL_PIPELINE_STEPS,
+            step_name="流程完成",
+            error=None,
+        )
+        logger.info("=========== 流水线圆满结束 ===========")
+        return state_manager.load_state(state_path)
+    except Exception as exc:
+        logger.exception("流水线执行失败")
+        _write_pipeline_status(
+            state_path=state_path,
+            status="failed",
+            current_step=max(1, current_step),
+            step_name=current_step_name,
+            error=str(exc),
+        )
+        raise
 
 
 if __name__ == "__main__":
