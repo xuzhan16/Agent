@@ -16,6 +16,7 @@ class TaskType(str, Enum):
     """系统支持的大模型任务类型（含岗位数据流水线）。"""
 
     RESUME_PARSE = "resume_parse"
+    NON_CS_FILTER = "non_cs_filter"
     JOB_EXTRACT = "job_extract"
     JOB_DEDUP = "job_dedup"
     JOB_PROFILE = "job_profile"
@@ -40,6 +41,7 @@ class TaskType(str, Enum):
 
 TASK_RESULT_FIELD_MAP: Dict[TaskType, str] = {
     TaskType.RESUME_PARSE: "resume_parse_result",
+    TaskType.NON_CS_FILTER: "non_cs_filter_result",
     TaskType.JOB_EXTRACT: "job_extract_result",
     TaskType.JOB_DEDUP: "job_dedup_result",
     TaskType.JOB_PROFILE: "job_profile_result",
@@ -53,6 +55,20 @@ TASK_RESULT_FIELD_MAP: Dict[TaskType, str] = {
 @dataclass
 class ResumeParseInput:
     resume_text: str = ""
+
+
+@dataclass
+class NonCSFilterInput:
+    job_title: str = ""
+    industry: str = ""
+    job_description: str = ""
+
+
+@dataclass
+class NonCSFilterOutput:
+    is_cs_related: bool = False
+    confidence: float = 0.0
+    reason: str = ""
 
 
 @dataclass
@@ -240,6 +256,7 @@ class StudentState:
 
 TASK_INPUT_SCHEMA_MAP: Dict[TaskType, Type[Any]] = {
     TaskType.RESUME_PARSE: ResumeParseInput,
+    TaskType.NON_CS_FILTER: NonCSFilterInput,
     TaskType.JOB_EXTRACT: JobExtractInput,
     TaskType.JOB_DEDUP: JobDedupInput,
     TaskType.JOB_PROFILE: JobProfileInput,
@@ -251,6 +268,7 @@ TASK_INPUT_SCHEMA_MAP: Dict[TaskType, Type[Any]] = {
 
 TASK_OUTPUT_SCHEMA_MAP: Dict[TaskType, Type[Any]] = {
     TaskType.RESUME_PARSE: ResumeParseOutput,
+    TaskType.NON_CS_FILTER: NonCSFilterOutput,
     TaskType.JOB_EXTRACT: JobExtractOutput,
     TaskType.JOB_DEDUP: JobDedupOutput,
     TaskType.JOB_PROFILE: JobProfileOutput,
