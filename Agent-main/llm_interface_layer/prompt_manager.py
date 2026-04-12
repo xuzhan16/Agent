@@ -25,6 +25,10 @@ class PromptManager:
                 "你是一名简历结构化解析助手。"
                 "请仅返回合法 JSON，不要输出 Markdown 或额外解释。"
             ),
+            TaskType.NON_CS_FILTER: (
+                "你是一名岗位分类助手。"
+                "请判断岗位是否属于计算机/信息技术相关岗位，并仅返回合法 JSON。"
+            ),
             TaskType.JOB_EXTRACT: (
                 "你是一名招聘岗位要求结构化抽取助手。"
                 "根据岗位名称、JD、公司信息抽取学历、经验、技能、证书、软技能等字段，"
@@ -59,6 +63,10 @@ class PromptManager:
 
         self._task_instructions = {
             TaskType.RESUME_PARSE: "从简历文本抽取 basic_info、技能、证书、项目、实习等结构化信息。",
+            TaskType.NON_CS_FILTER: (
+                "根据岗位名称、行业和岗位描述，判断是否为计算机相关岗位；"
+                "输出 is_cs_related、confidence、reason。"
+            ),
             TaskType.JOB_EXTRACT: (
                 "按输出模板填写：标准岗位名、岗位大类、学历/专业/经验要求、硬技能与工具栈、证书、软技能、"
                 "实习实践要求、职级、适合候选人画像、需求摘要、vertical_paths、transfer_paths、path_relation_details；"
