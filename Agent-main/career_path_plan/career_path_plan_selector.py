@@ -235,15 +235,31 @@ def score_candidate_goal_job(
     for path_option in direct_paths:
         option = safe_dict(path_option)
         if candidate in {clean_text(option.get("from_job")), clean_text(option.get("to_job"))}:
-            score += 12.0
-            reasons.append(f"{candidate} 出现在直接路径候选中，可作为主目标或上升节点。")
+            source_tier = clean_text(option.get("source_tier"))
+            if source_tier == "graph":
+                score += 14.0
+                reasons.append(f"{candidate} 出现在图谱直接路径候选中，可作为优先主目标或上升节点。")
+            elif source_tier == "offline_profile":
+                score += 10.0
+                reasons.append(f"{candidate} 出现在离线路径候选中，可作为主目标或上升节点。")
+            else:
+                score += 4.0
+                reasons.append(f"{candidate} 出现在 fallback 直接路径候选中，但可信度低于图谱路径。")
             break
 
     for path_option in transition_paths:
         option = safe_dict(path_option)
         if candidate in {clean_text(option.get("from_job")), clean_text(option.get("to_job"))}:
-            score += 8.0
-            reasons.append(f"{candidate} 出现在过渡/转岗路径候选中，适合作为备选目标。")
+            source_tier = clean_text(option.get("source_tier"))
+            if source_tier == "graph":
+                score += 10.0
+                reasons.append(f"{candidate} 出现在图谱过渡/转岗路径候选中，适合作为高可信备选目标。")
+            elif source_tier == "offline_profile":
+                score += 7.0
+                reasons.append(f"{candidate} 出现在离线过渡路径候选中，适合作为备选目标。")
+            else:
+                score += 2.0
+                reasons.append(f"{candidate} 出现在 fallback 过渡路径候选中，可作为临时备选方向。")
             break
 
     for hint in normalize_text_list(student_snapshot.get("occupation_hints")):
@@ -389,14 +405,14 @@ def select_best_path_option(
         reasons = [f"路径基础分 {score:.2f}。"]
         source_tier = clean_text(option_dict.get("source_tier"))
         if source_tier == "graph":
-            score += 8.0
-            reasons.append("该路径来自图谱/离线岗位关系，稳定性更高，加成 +8。")
+            score += 10.0
+            reasons.append("该路径来自图谱岗位关系，稳定性更高，加成 +10。")
         elif source_tier == "offline_profile":
             score += 4.0
             reasons.append("该路径来自离线岗位画像，可信度较高，加成 +4。")
         elif source_tier == "fallback":
-            score -= 10.0
-            reasons.append("该路径属于 fallback 兜底，仅在知识不足时使用，扣分 -10。")
+            score -= 12.0
+            reasons.append("该路径属于 fallback 兜底，仅在知识不足时使用，扣分 -12。")
 
         if clean_text(option_dict.get("priority_hint")) == "high":
             score += 5.0

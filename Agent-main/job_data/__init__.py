@@ -12,6 +12,7 @@ from typing import Any
 
 __all__ = [
     "process_job_excel",
+    "process_non_cs_filter",
     "process_job_dedup",
     "process_job_extract",
     "process_export_to_sql",
@@ -24,6 +25,10 @@ def __getattr__(name: str) -> Any:
         from .data_cleaning import process_job_excel
 
         return process_job_excel
+    if name == "process_non_cs_filter":
+        from .non_cs_filter import process_non_cs_filter
+
+        return process_non_cs_filter
     if name == "process_job_dedup":
         from .job_dedup import process_job_dedup
 

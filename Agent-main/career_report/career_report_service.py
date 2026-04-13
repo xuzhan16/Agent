@@ -36,6 +36,7 @@ from .career_report_formatter import (
 )
 from llm_interface_layer.llm_service import call_llm
 from llm_interface_layer.state_manager import StateManager
+from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
 
 
 LOGGER = logging.getLogger(__name__)
@@ -43,6 +44,7 @@ DEFAULT_STATE_PATH = Path("outputs/state/student.json")
 DEFAULT_BUILDER_OUTPUT_PATH = Path("outputs/state/career_report_input_payload.json")
 DEFAULT_FORMATTER_OUTPUT_PATH = Path("outputs/state/career_report_sections_draft.json")
 DEFAULT_SERVICE_OUTPUT_PATH = Path("outputs/state/career_report_service_result.json")
+DEFAULT_SEMANTIC_TOP_K = 3
 
 
 @dataclass
@@ -160,10 +162,93 @@ def normalize_section_list(value: Any) -> List[Dict[str, Any]]:
     return []
 
 
+def extract_semantic_context(context_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """从 context_data 中提取语义知识快照。"""
+    semantic_context = safe_dict(safe_dict(context_data).get("semantic_context"))
+    hits = []
+    for item in safe_list(semantic_context.get("hits"))[:DEFAULT_SEMANTIC_TOP_K]:
+        item_dict = safe_dict(item)
+        hits.append(
+            {
+                "standard_job_name": clean_text(item_dict.get("standard_job_name")),
+                "job_category": clean_text(item_dict.get("job_category")),
+                "job_level": clean_text(item_dict.get("job_level")),
+                "score": item_dict.get("score", 0.0),
+                "doc_text_excerpt": clean_text(item_dict.get("doc_text_excerpt")),
+                "hard_skills": deepcopy(safe_list(item_dict.get("hard_skills"))[:8]),
+                "vertical_paths": deepcopy(safe_list(item_dict.get("vertical_paths"))[:4]),
+                "transfer_paths": deepcopy(safe_list(item_dict.get("transfer_paths"))[:4]),
+            }
+        )
+    return {
+        "query": clean_text(semantic_context.get("query")),
+        "top_k": len(hits),
+        "hits": hits,
+    }
+
+
+def build_semantic_query_for_career_report(
+    report_input_payload: Dict[str, Any],
+) -> str:
+    """构造 career_report 阶段的岗位语义检索 query。"""
+    payload = safe_dict(report_input_payload)
+    report_meta = safe_dict(payload.get("report_meta"))
+    student_snapshot = safe_dict(payload.get("student_snapshot"))
+    job_snapshot = safe_dict(payload.get("job_snapshot"))
+    job_match_snapshot = safe_dict(payload.get("job_match_snapshot"))
+    path_snapshot = safe_dict(payload.get("career_path_plan_snapshot"))
+    career_goal = safe_dict(path_snapshot.get("career_goal"))
+    career_path = safe_dict(path_snapshot.get("career_path"))
+    generation_context = safe_dict(payload.get("report_generation_context"))
+
+    gap_terms = dedup_keep_order(
+        clean_text(safe_dict(item).get("required_item"))
+        for item in safe_list(job_match_snapshot.get("missing_items"))
+        if clean_text(safe_dict(item).get("required_item"))
+    )
+    query_parts = [
+        f"报告目标岗位：{clean_text(report_meta.get('target_job_name') or career_goal.get('primary_target_job') or job_snapshot.get('standard_job_name'))}",
+        f"岗位类别：{clean_text(job_snapshot.get('job_category'))}",
+        f"岗位层级：{clean_text(job_snapshot.get('job_level'))}",
+        f"岗位核心技能：{'、'.join(safe_list(job_snapshot.get('hard_skills'))[:10])}",
+        f"学生摘要：{clean_text(student_snapshot.get('summary'))}",
+        f"匹配摘要：{clean_text(job_match_snapshot.get('analysis_summary'))}",
+        f"职业规划摘要：{clean_text(path_snapshot.get('decision_summary'))}",
+        f"主路径：{' -> '.join(safe_list(career_path.get('direct_path'))[:4])}",
+        f"过渡路径：{' -> '.join(safe_list(career_path.get('transition_path'))[:4])}",
+        f"长期路径：{' -> '.join(safe_list(career_path.get('long_term_path'))[:5])}",
+        f"关键缺口：{'、'.join(gap_terms[:6]) if gap_terms else ''}",
+        f"行动建议摘要：{clean_text(generation_context.get('recommendation'))}",
+    ]
+    return "\n".join(part for part in query_parts if clean_text(part))
+
+
+def build_semantic_context_for_career_report(
+    report_input_payload: Dict[str, Any],
+    top_k: int = DEFAULT_SEMANTIC_TOP_K,
+) -> Dict[str, Any]:
+    """基于岗位知识语义库，为 career_report 构造 semantic_context。"""
+    query_text = build_semantic_query_for_career_report(report_input_payload)
+    if not clean_text(query_text):
+        return {}
+
+    project_root = Path(__file__).resolve().parent.parent
+    retriever = SemanticJobKnowledgeRetriever.from_project_root(project_root)
+    semantic_context = retriever.build_semantic_context(
+        query_text=query_text,
+        top_k=top_k,
+        min_score=0.0,
+    )
+    if not safe_list(semantic_context.get("hits")):
+        return {}
+    return semantic_context
+
+
 def build_career_report_llm_input(
     report_input_payload: Dict[str, Any],
     report_sections_draft: List[Dict[str, Any]],
     report_text_draft: str,
+    context_data: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """组装 career_report 大模型输入。"""
     del report_text_draft
@@ -176,6 +261,9 @@ def build_career_report_llm_input(
         for item in safe_list(report_sections_draft)
         if clean_text(safe_dict(item).get("section_title"))
     ]
+    semantic_context = extract_semantic_context(context_data)
+    graph_context = safe_dict(safe_dict(context_data).get("graph_context"))
+    sql_context = safe_dict(safe_dict(context_data).get("sql_context"))
 
     return {
         "report_meta": deepcopy(safe_dict(report_input_payload.get("report_meta"))),
@@ -190,6 +278,22 @@ def build_career_report_llm_input(
         "report_generation_context": deepcopy(
             safe_dict(report_input_payload.get("report_generation_context"))
         ),
+        "knowledge_context_snapshot": {
+            "graph_context": {
+                "job_core": deepcopy(safe_dict(graph_context.get("job_core"))),
+                "required_skills": deepcopy(safe_list(graph_context.get("required_skills"))[:10]),
+                "related_jobs": deepcopy(safe_list(graph_context.get("related_jobs"))[:6]),
+                "promote_paths": deepcopy(safe_list(graph_context.get("promote_paths"))[:5]),
+                "transfer_paths": deepcopy(safe_list(graph_context.get("transfer_paths"))[:5]),
+            },
+            "sql_context": {
+                "salary_stats": deepcopy(safe_dict(sql_context.get("salary_stats"))),
+                "top_cities": deepcopy(safe_list(sql_context.get("top_cities"))[:5]),
+                "top_industries": deepcopy(safe_list(sql_context.get("top_industries"))[:5]),
+                "company_samples": deepcopy(safe_list(sql_context.get("company_samples"))[:6]),
+            },
+            "semantic_context": deepcopy(semantic_context),
+        },
         "report_sections_draft": section_outline,
         "report_outline": {
             "section_titles": [
@@ -200,7 +304,7 @@ def build_career_report_llm_input(
             "section_count": len(section_outline),
         },
         "generation_requirements": {
-            "task_goal": "在保留固定章节骨架和事实内容不变的前提下，对各章节进行润色、增强段落衔接，并生成完整自然语言职业发展报告。",
+            "task_goal": "在保留固定章节骨架和事实内容不变的前提下，对各章节进行润色、增强段落衔接，并结合 semantic_context 补充岗位语义解释依据，生成完整自然语言职业发展报告。",
             "must_keep_sections": REPORT_SECTION_TITLES,
             "report_title": "输出清晰正式的报告标题。",
             "report_summary": "输出一段可直接放在报告开头的摘要。",
@@ -427,6 +531,7 @@ class CareerReportService:
             report_input_payload=report_input_payload,
             report_sections_draft=report_sections_draft,
             report_text_draft=report_text_draft,
+            context_data=context_data,
         )
         merged_extra_context = {
             "service_name": "career_report_service",
@@ -465,6 +570,7 @@ class CareerReportService:
         """执行完整 career_report 服务流程并写回 student.json。"""
         setup_logging()
         service_warnings = []
+        merged_context_data = deepcopy(context_data) if isinstance(context_data, dict) else {}
 
         if student_state is None:
             student_state = self.state_manager.load_state(state_path)
@@ -491,6 +597,25 @@ class CareerReportService:
             }
             service_warnings.append(f"builder 执行失败: {exc}")
 
+        if not safe_dict(merged_context_data.get("semantic_context")):
+            try:
+                semantic_context = build_semantic_context_for_career_report(
+                    report_input_payload=report_input_payload,
+                )
+                if semantic_context:
+                    merged_context_data["semantic_context"] = semantic_context
+            except FileNotFoundError:
+                LOGGER.info("semantic knowledge base not found, skip semantic retrieval for career_report")
+            except Exception as exc:
+                LOGGER.warning("semantic retrieval for career_report failed: %s", exc)
+                service_warnings.append(f"语义知识检索失败: {exc}")
+
+        semantic_snapshot = extract_semantic_context(merged_context_data)
+        if semantic_snapshot:
+            report_generation_context = safe_dict(report_input_payload.get("report_generation_context"))
+            report_generation_context["semantic_fact_snapshot"] = deepcopy(semantic_snapshot)
+            report_input_payload["report_generation_context"] = report_generation_context
+
         LOGGER.info("Step 2/4: format report section drafts")
         try:
             report_sections_draft = self.format_sections(
@@ -514,7 +639,7 @@ class CareerReportService:
                 report_input_payload=report_input_payload,
                 report_sections_draft=report_sections_draft,
                 student_state=student_state,
-                context_data=context_data,
+                context_data=merged_context_data,
                 extra_context=extra_context,
             )
         except Exception as exc:

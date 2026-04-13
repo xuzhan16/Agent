@@ -21,12 +21,15 @@ from job_data_pipeline import (
     DEFAULT_GROUP_SAMPLE_SIZE,
     DEFAULT_INPUT_FILE,
     DEFAULT_INTERMEDIATE_DIR,
+    DEFAULT_KNOWLEDGE_OUTPUT_DIR,
     DEFAULT_NEO4J_OUTPUT_DIR,
     DEFAULT_SQL_DB_PATH,
     run_job_data_pipeline,
 )
 from main_pipeline import run_pipeline
 from llm_interface_layer.config import DEFAULT_LLM_CONFIG
+from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
+from semantic_retrieval.embedding_store import DEFAULT_HASH_EMBEDDING_MODEL
 
 app = FastAPI(title="AI Career Plan API")
 
@@ -51,6 +54,7 @@ AI_MEMORY_FILE = "ai_chat_memory.json"
 AI_MAX_HISTORY_MESSAGES = 12
 AI_MAX_CONTEXT_CHUNKS = 6
 AI_CONTEXT_CHUNK_MAX_CHARS = 420
+AI_SEMANTIC_TOP_K = 3
 PERSONAL_CONTEXT_PATTERN = re.compile(r"我|我的|根据我的|按我的|当前|这个岗位|结合我的")
 
 
@@ -68,10 +72,12 @@ class JobDataProcessRequest(BaseModel):
     intermediate_dir: str = DEFAULT_INTERMEDIATE_DIR
     sql_db_path: str = DEFAULT_SQL_DB_PATH
     neo4j_output_dir: str = DEFAULT_NEO4J_OUTPUT_DIR
+    knowledge_output_dir: str = DEFAULT_KNOWLEDGE_OUTPUT_DIR
     sheet_name: Union[str, int] = 0
     log_every: int = 50
     max_workers: int = 4
     group_sample_size: int = DEFAULT_GROUP_SAMPLE_SIZE
+    embedding_model: str = DEFAULT_HASH_EMBEDDING_MODEL
 
 
 class AIChatRequest(BaseModel):
@@ -519,7 +525,11 @@ def _retrieve_context_chunks(question: str, snapshot: Dict[str, Any]) -> List[Di
     return selected[:AI_MAX_CONTEXT_CHUNKS]
 
 
-def _format_context_for_prompt(snapshot: Dict[str, Any], chunks: List[Dict[str, str]]) -> str:
+def _format_context_for_prompt(
+    snapshot: Dict[str, Any],
+    chunks: List[Dict[str, str]],
+    semantic_hits: List[Dict[str, Any]] | None = None,
+) -> str:
     loaded_files = "、".join(_safe_list(snapshot.get("loaded_files"))) or "无"
     missing_files = "、".join(_safe_list(snapshot.get("missing_files"))) or "无"
     context_lines = [
@@ -533,6 +543,15 @@ def _format_context_for_prompt(snapshot: Dict[str, Any], chunks: List[Dict[str, 
         for chunk in chunks:
             context_lines.append(
                 f"- [{chunk.get('source')}] {chunk.get('title')}: {chunk.get('text')}"
+            )
+    context_lines.append("语义知识召回：")
+    if not semantic_hits:
+        context_lines.append("- 无可用岗位语义知识片段（请先构建 JSON + embedding 知识库）")
+    else:
+        for hit in semantic_hits[:AI_SEMANTIC_TOP_K]:
+            context_lines.append(
+                f"- [semantic_kb] {hit.get('standard_job_name')} "
+                f"(score={hit.get('score')}): {hit.get('doc_text_excerpt')}"
             )
     return "\n".join(context_lines)
 
@@ -617,6 +636,48 @@ def _build_context_summary_line(snapshot: Dict[str, Any]) -> str:
         summary_parts.append("尚未读取到可用档案，请先完成画像/匹配/路径/报告生成")
 
     return "；".join(summary_parts)
+
+
+def _semantic_knowledge_dir() -> Path:
+    return _project_root() / "outputs" / "knowledge"
+
+
+def _build_ai_semantic_query(question: str, snapshot: Dict[str, Any]) -> str:
+    question_text = _clean_text(question)
+    profile = _safe_dict(snapshot.get("student_profile"))
+    match = _safe_dict(snapshot.get("job_match"))
+    career = _safe_dict(snapshot.get("career_path"))
+    report_data = _safe_dict(snapshot.get("report_data"))
+
+    parts = [f"用户问题：{question_text}"]
+    if _clean_text(career.get("primary_target_job")):
+        parts.append(f"当前目标岗位：{career.get('primary_target_job')}")
+    if _clean_text(profile.get("summary")):
+        parts.append(f"学生画像摘要：{profile.get('summary')}")
+    preferred_directions = _safe_list(profile.get("preferred_directions"))
+    if preferred_directions:
+        parts.append(f"偏好方向：{'、'.join([_clean_text(item) for item in preferred_directions[:5] if _clean_text(item)])}")
+    if _clean_text(match.get("analysis_summary")):
+        parts.append(f"匹配分析：{match.get('analysis_summary')}")
+    if _clean_text(match.get("recommendation")):
+        parts.append(f"匹配建议：{match.get('recommendation')}")
+    if _clean_text(report_data.get("report_summary")):
+        parts.append(f"报告摘要：{report_data.get('report_summary')}")
+    return "\n".join([item for item in parts if _clean_text(item)])
+
+
+def _retrieve_semantic_hits(question: str, snapshot: Dict[str, Any], top_k: int = AI_SEMANTIC_TOP_K) -> List[Dict[str, Any]]:
+    query_text = _build_ai_semantic_query(question, snapshot)
+    if not _clean_text(query_text):
+        return []
+    try:
+        retriever = SemanticJobKnowledgeRetriever(_semantic_knowledge_dir())
+        return retriever.search(query_text=query_text, top_k=top_k, min_score=0.0)
+    except FileNotFoundError:
+        return []
+    except Exception as exc:
+        logger.warning(f"semantic retrieval unavailable for ai assistant: {exc}")
+        return []
 
 
 def _invoke_ai_chat_completion(
@@ -730,8 +791,14 @@ def _build_local_fallback_answer(
     snapshot: Dict[str, Any],
     chunks: List[Dict[str, str]],
     web_search_enabled: bool,
+    semantic_hits: List[Dict[str, Any]] | None = None,
 ) -> str:
     if not chunks:
+        if semantic_hits:
+            lines = ["📁 本地分析", "- 当前尚未加载完整档案，但已召回岗位语义知识片段："]
+            for hit in semantic_hits[:AI_SEMANTIC_TOP_K]:
+                lines.append(f"  - {hit.get('standard_job_name')}：{hit.get('doc_text_excerpt')}")
+            return "\n".join(lines)
         return "📁 本地分析\n当前没有可用档案内容，请先完成学生画像、岗位匹配、职业路径和报告生成。"
 
     normalized_question = _clean_text(question)
@@ -764,6 +831,13 @@ def _build_local_fallback_answer(
     lines.append("- 结合当前问题召回到的关键档案片段：")
     for chunk in chunks[:4]:
         lines.append(f"  - [{chunk.get('source')}] {chunk.get('title')}：{chunk.get('text')}")
+
+    if semantic_hits:
+        lines.append("- 结合岗位语义知识库召回到的相关岗位片段：")
+        for hit in semantic_hits[:AI_SEMANTIC_TOP_K]:
+            lines.append(
+                f"  - {hit.get('standard_job_name')}（相似度 {hit.get('score')}）：{hit.get('doc_text_excerpt')}"
+            )
 
     if (not web_search_enabled) and _looks_like_realtime_question(normalized_question):
         lines.append("- 未开启联网搜索，我只能基于您当前的档案为您提供建议。")
@@ -949,10 +1023,12 @@ async def process_job_data(req: JobDataProcessRequest):
             intermediate_dir=_resolve_project_path(req.intermediate_dir),
             sql_db_path=_resolve_project_path(req.sql_db_path),
             neo4j_output_dir=_resolve_project_path(req.neo4j_output_dir),
+            knowledge_output_dir=_resolve_project_path(req.knowledge_output_dir),
             sheet_name=req.sheet_name,
             log_every=req.log_every,
             max_workers=req.max_workers,
             group_sample_size=req.group_sample_size,
+            embedding_model_name=req.embedding_model,
         )
         return {"success": True, "message": "岗位底库数据处理完成", "data": result}
     except Exception as e:
@@ -1232,7 +1308,8 @@ async def handle_ai_chat(req: AIChatRequest):
 
     snapshot = _build_ai_context_snapshot()
     context_chunks = _retrieve_context_chunks(user_message, snapshot)
-    context_markdown = _format_context_for_prompt(snapshot, context_chunks)
+    semantic_hits = _retrieve_semantic_hits(user_message, snapshot)
+    context_markdown = _format_context_for_prompt(snapshot, context_chunks, semantic_hits)
 
     memory_store = _load_ai_memory_store()
     conversation_id = _ensure_conversation_id(memory_store, req.conversation_id)
@@ -1254,6 +1331,7 @@ async def handle_ai_chat(req: AIChatRequest):
             snapshot=snapshot,
             chunks=context_chunks,
             web_search_enabled=bool(req.web_search_enabled),
+            semantic_hits=semantic_hits,
         )
 
     _append_conversation_message(memory_store, conversation_id, "user", user_message)
@@ -1267,7 +1345,12 @@ async def handle_ai_chat(req: AIChatRequest):
             "answer": answer,
             "source": answer_source,
             "context_summary": _build_context_summary_line(snapshot),
-            "used_context_sources": list({chunk.get("source") for chunk in context_chunks if chunk.get("source")}),
+            "used_context_sources": list(
+                {
+                    *{chunk.get("source") for chunk in context_chunks if chunk.get("source")},
+                    *({"semantic_kb"} if semantic_hits else set()),
+                }
+            ),
             "loaded_files": _safe_list(snapshot.get("loaded_files")),
             "missing_files": _safe_list(snapshot.get("missing_files")),
         },

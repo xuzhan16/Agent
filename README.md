@@ -174,7 +174,7 @@ python -m uvicorn api_server:app --reload --host 127.0.0.1 --port 8000
 ### 7.3 启动前端
 
 ```powershell
-Set-Location E:\Agent\frontend
+cd E:\Agent\frontend
 npm run dev
 ```
 

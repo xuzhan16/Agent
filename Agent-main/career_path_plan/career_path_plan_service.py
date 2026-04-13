@@ -36,6 +36,7 @@ from .career_path_plan_builder import (
 from .career_path_plan_selector import select_career_path_plan
 from llm_interface_layer.llm_service import call_llm
 from llm_interface_layer.state_manager import StateManager
+from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
 
 
 LOGGER = logging.getLogger(__name__)
@@ -43,6 +44,7 @@ DEFAULT_STATE_PATH = Path("outputs/state/student.json")
 DEFAULT_BUILDER_OUTPUT_PATH = Path("outputs/state/career_path_plan_input_payload.json")
 DEFAULT_SELECTOR_OUTPUT_PATH = Path("outputs/state/career_path_plan_selection_result.json")
 DEFAULT_SERVICE_OUTPUT_PATH = Path("outputs/state/career_path_plan_service_result.json")
+DEFAULT_SEMANTIC_TOP_K = 3
 
 
 @dataclass
@@ -311,6 +313,73 @@ def build_default_fallback_strategy(
     return "若当前主目标岗位短期不可达，建议先选择要求更贴近现有能力的同方向初级岗位作为过渡，并持续补齐核心短板。"
 
 
+def build_semantic_query_for_career_plan(
+    student_profile_result: Dict[str, Any],
+    job_profile_result: Dict[str, Any],
+    job_match_result: Dict[str, Any],
+) -> str:
+    """构造职业路径规划阶段的语义检索查询。"""
+    student_profile = safe_dict(student_profile_result)
+    job_profile = safe_dict(job_profile_result)
+    job_match = safe_dict(job_match_result)
+    profile_payload = safe_dict(student_profile.get("profile_input_payload"))
+    normalized_profile = safe_dict(profile_payload.get("normalized_profile"))
+
+    skill_candidates = [
+        clean_text(item)
+        for item in safe_list(job_profile.get("hard_skills"))
+        + safe_list(normalized_profile.get("hard_skills"))
+        + safe_list(normalized_profile.get("tool_skills"))
+        if clean_text(item)
+    ]
+    improvement_suggestions = [
+        clean_text(item)
+        for item in safe_list(job_match.get("improvement_suggestions"))
+        if clean_text(item)
+    ]
+
+    query_parts = [
+        f"目标岗位：{clean_text(job_profile.get('standard_job_name'))}",
+        f"岗位类别：{clean_text(job_profile.get('job_category'))}",
+        f"岗位层级：{clean_text(job_profile.get('job_level'))}",
+        f"学生画像摘要：{clean_text(student_profile.get('summary'))}",
+        f"匹配分析摘要：{clean_text(job_match.get('analysis_summary'))}",
+        f"匹配建议：{clean_text(job_match.get('recommendation'))}",
+    ]
+    if skill_candidates:
+        query_parts.append(f"相关技能：{'、'.join(dedup_keep_order(skill_candidates)[:10])}")
+    if improvement_suggestions:
+        query_parts.append(f"待补强项：{'；'.join(dedup_keep_order(improvement_suggestions)[:5])}")
+    return "\n".join(part for part in query_parts if clean_text(part))
+
+
+def build_semantic_context_for_career_plan(
+    student_profile_result: Dict[str, Any],
+    job_profile_result: Dict[str, Any],
+    job_match_result: Dict[str, Any],
+    top_k: int = DEFAULT_SEMANTIC_TOP_K,
+) -> Dict[str, Any]:
+    """基于岗位知识语义库，为 career_path_plan 构造 semantic_context。"""
+    query_text = build_semantic_query_for_career_plan(
+        student_profile_result=student_profile_result,
+        job_profile_result=job_profile_result,
+        job_match_result=job_match_result,
+    )
+    if not clean_text(query_text):
+        return {}
+
+    project_root = Path(__file__).resolve().parent.parent
+    retriever = SemanticJobKnowledgeRetriever.from_project_root(project_root)
+    semantic_context = retriever.build_semantic_context(
+        query_text=query_text,
+        top_k=top_k,
+        min_score=0.0,
+    )
+    if not safe_list(semantic_context.get("hits")):
+        return {}
+    return semantic_context
+
+
 def normalize_llm_career_path_plan_result(
     llm_result: Dict[str, Any],
     selector_result: Dict[str, Any],
@@ -567,9 +636,25 @@ class CareerPathPlanService:
         """执行完整 career_path_plan 服务流程并写回 student.json。"""
         setup_logging()
         service_warnings = []
+        merged_context_data = deepcopy(context_data) if isinstance(context_data, dict) else {}
 
         if student_state is None:
             student_state = self.state_manager.load_state(state_path)
+
+        if not safe_dict(merged_context_data.get("semantic_context")):
+            try:
+                semantic_context = build_semantic_context_for_career_plan(
+                    student_profile_result=student_profile_result,
+                    job_profile_result=job_profile_result,
+                    job_match_result=job_match_result,
+                )
+                if semantic_context:
+                    merged_context_data["semantic_context"] = semantic_context
+            except FileNotFoundError:
+                LOGGER.info("semantic knowledge base not found, skip semantic retrieval for career_path_plan")
+            except Exception as exc:
+                LOGGER.warning("semantic retrieval for career_path_plan failed: %s", exc)
+                service_warnings.append(f"语义知识检索失败: {exc}")
 
         LOGGER.info("Step 1/4: build career_plan_input_payload")
         try:
@@ -577,7 +662,7 @@ class CareerPathPlanService:
                 student_profile_result=student_profile_result,
                 job_profile_result=job_profile_result,
                 job_match_result=job_match_result,
-                context_data=context_data,
+                context_data=merged_context_data,
                 output_path=builder_output_path,
             )
         except Exception as exc:
@@ -628,7 +713,7 @@ class CareerPathPlanService:
                 career_plan_input_payload=career_plan_input_payload,
                 selector_result=selector_result,
                 student_state=student_state,
-                context_data=context_data,
+                context_data=merged_context_data,
                 extra_context=extra_context,
             )
         except Exception as exc:

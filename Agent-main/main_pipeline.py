@@ -79,6 +79,16 @@ def _parse_json_text_list(value: Any) -> List[str]:
     return _dedup_keep_order(text.split(","))
 
 
+def _safe_float(value: Any) -> float | None:
+    text = _clean_text(value)
+    if not text:
+        return None
+    try:
+        return float(text)
+    except (TypeError, ValueError):
+        return None
+
+
 def _resolve_effective_target_job(
     state_manager: StateManager,
     state_path: str | Path,
@@ -218,7 +228,29 @@ def _build_job_profile_dataframe(
     return pd.DataFrame(normalized_rows)
 
 
-def _query_job_graph_context(initial_target_job: str) -> Dict[str, List[str]]:
+def _query_job_graph_context(initial_target_job: str) -> Dict[str, Any]:
+    core_rows = query_neo4j(
+        uri=NEO4J_URI,
+        user=NEO4J_USER,
+        password=NEO4J_PASSWORD,
+        query="""
+        MATCH (j:Job {name: $job})
+        OPTIONAL MATCH (j)-[:REQUIRES_DEGREE]->(d:Degree)
+        OPTIONAL MATCH (j)-[:PREFERS_MAJOR]->(m:Major)
+        RETURN
+            j.name AS name,
+            j.job_category AS job_category,
+            j.job_level AS job_level,
+            j.degree_requirement AS degree_requirement,
+            j.major_requirement AS major_requirement,
+            j.experience_requirement AS experience_requirement,
+            j.raw_requirement_summary AS raw_requirement_summary,
+            collect(DISTINCT d.name) AS degree_requirements,
+            collect(DISTINCT m.name) AS major_requirements
+        LIMIT 1
+        """,
+        parameters={"job": initial_target_job},
+    )
     required_skills = [
         item.get("skill")
         for item in query_neo4j(
@@ -261,10 +293,33 @@ def _query_job_graph_context(initial_target_job: str) -> Dict[str, List[str]]:
             parameters={"job": initial_target_job},
         )
     ]
+    core_row = core_rows[0] if core_rows else {}
+    job_core = {
+        "name": _clean_text(core_row.get("name") or initial_target_job),
+        "job_category": _clean_text(core_row.get("job_category")),
+        "job_level": _clean_text(core_row.get("job_level")),
+        "degree_requirement": _clean_text(core_row.get("degree_requirement")),
+        "major_requirement": _clean_text(core_row.get("major_requirement")),
+        "experience_requirement": _clean_text(core_row.get("experience_requirement")),
+        "raw_requirement_summary": _clean_text(core_row.get("raw_requirement_summary")),
+    }
+    degree_requirements = _dedup_keep_order(
+        list(core_row.get("degree_requirements") or [])
+        + [job_core.get("degree_requirement")]
+    )
+    major_requirements = _dedup_keep_order(
+        list(core_row.get("major_requirements") or [])
+        + _parse_json_text_list(job_core.get("major_requirement"))
+    )
+    related_jobs = _dedup_keep_order(promote_paths + transfer_paths)
     return {
+        "job_core": job_core,
         "required_skills": _dedup_keep_order(required_skills),
+        "degree_requirements": degree_requirements,
+        "major_requirements": major_requirements,
         "transfer_paths": _dedup_keep_order(transfer_paths),
         "promote_paths": _dedup_keep_order(promote_paths),
+        "related_jobs": related_jobs,
     }
 
 
@@ -292,14 +347,80 @@ def _query_job_path_knowledge(initial_target_job: str) -> Dict[str, List[str]]:
 
 
 def _build_compact_sql_context(sql_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
-    cities = _dedup_keep_order(row.get("city") for row in sql_rows)[:8]
-    industries = _dedup_keep_order(row.get("industry") for row in sql_rows)[:8]
-    company_types = _dedup_keep_order(row.get("company_type") for row in sql_rows)[:6]
+    def _build_distribution(key: str, limit: int = 8) -> List[Dict[str, Any]]:
+        counts: Dict[str, int] = {}
+        total = 0
+        for row in sql_rows:
+            name = _clean_text(row.get(key))
+            if not name:
+                continue
+            counts[name] = counts.get(name, 0) + 1
+            total += 1
+        ranked = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+        return [
+            {
+                "name": name,
+                "count": count,
+                "ratio": round(count / total, 4) if total else 0.0,
+            }
+            for name, count in ranked[:limit]
+        ]
+
+    salary_mins = []
+    salary_maxs = []
+    salary_mids = []
+    representative_samples = []
+    for row in sql_rows[:5]:
+        salary_min = row.get("salary_min_month")
+        salary_max = row.get("salary_max_month")
+        salary_text = ""
+        if salary_min or salary_max:
+            salary_text = f"{salary_min or '?'}-{salary_max or '?'}"
+        representative_samples.append(
+            {
+                "job_name": _clean_text(row.get("job_name")),
+                "city": _clean_text(row.get("city")),
+                "company_name": _clean_text(row.get("company_name")),
+                "salary_raw": salary_text,
+                "update_date": _clean_text(row.get("update_date")),
+            }
+        )
+        salary_min_float = _safe_float(salary_min)
+        salary_max_float = _safe_float(salary_max)
+        if salary_min_float is not None:
+            salary_mins.append(salary_min_float)
+        if salary_max_float is not None:
+            salary_maxs.append(salary_max_float)
+        if salary_min_float is not None and salary_max_float is not None:
+            salary_mids.append((salary_min_float + salary_max_float) / 2)
+
+    salary_stats: Dict[str, Any] = {}
+    if salary_mins or salary_maxs:
+        salary_stats = {
+            "salary_min_month_avg": round(sum(salary_mins) / len(salary_mins), 2) if salary_mins else 0.0,
+            "salary_max_month_avg": round(sum(salary_maxs) / len(salary_maxs), 2) if salary_maxs else 0.0,
+            "salary_mid_month_avg": round(sum(salary_mids) / len(salary_mids), 2) if salary_mids else 0.0,
+            "valid_salary_count": max(len(salary_mins), len(salary_maxs)),
+        }
+
+    city_distribution = _build_distribution("city")
+    industry_distribution = _build_distribution("industry")
+    company_type_distribution = _build_distribution("company_type", limit=6)
+    company_size_distribution = _build_distribution("company_size", limit=6)
+    company_samples = _dedup_keep_order(row.get("company_name") for row in sql_rows)[:8]
     return {
         "job_count": len(sql_rows),
-        "top_cities": cities,
-        "top_industries": industries,
-        "top_company_types": company_types,
+        "salary_stats": salary_stats,
+        "city_distribution": city_distribution,
+        "industry_distribution": industry_distribution,
+        "company_type_distribution": company_type_distribution,
+        "company_size_distribution": company_size_distribution,
+        "top_cities": [item["name"] for item in city_distribution[:8]],
+        "top_industries": [item["name"] for item in industry_distribution[:8]],
+        "top_company_types": [item["name"] for item in company_type_distribution[:6]],
+        "top_company_sizes": [item["name"] for item in company_size_distribution[:6]],
+        "company_samples": company_samples,
+        "representative_samples": representative_samples,
     }
 
 
@@ -402,32 +523,39 @@ def run_pipeline(
 
         _mark_step(3, "岗位画像")
         logger.info("启动第 3 步: job_profile，拉取后端数据库知识")
-        sql_rows = _query_job_profile_rows(effective_target_job) if effective_target_job else []
         graph_context = _query_job_graph_context(effective_target_job) if effective_target_job else {
+            "job_core": {},
             "required_skills": [],
+            "degree_requirements": [],
+            "major_requirements": [],
             "transfer_paths": [],
             "promote_paths": [],
+            "related_jobs": [],
         }
+        sql_rows = _query_job_profile_rows(effective_target_job) if effective_target_job else []
         offline_path_knowledge = _query_job_path_knowledge(effective_target_job) if effective_target_job else {
             "vertical_paths": [],
             "transfer_paths": [],
         }
         graph_context = {
+            "job_core": graph_context.get("job_core", {}),
             "required_skills": _dedup_keep_order(graph_context.get("required_skills", [])),
-            "promote_paths": _dedup_keep_order(
-                graph_context.get("promote_paths", []) + offline_path_knowledge.get("vertical_paths", [])
+            "degree_requirements": _dedup_keep_order(graph_context.get("degree_requirements", [])),
+            "major_requirements": _dedup_keep_order(graph_context.get("major_requirements", [])),
+            "promote_paths": _dedup_keep_order(graph_context.get("promote_paths", [])),
+            "transfer_paths": _dedup_keep_order(graph_context.get("transfer_paths", [])),
+            "related_jobs": _dedup_keep_order(graph_context.get("related_jobs", [])),
+            "offline_profile_vertical_paths": _dedup_keep_order(
+                offline_path_knowledge.get("vertical_paths", [])
             ),
-            "transfer_paths": _dedup_keep_order(
-                graph_context.get("transfer_paths", []) + offline_path_knowledge.get("transfer_paths", [])
-            ),
-            "vertical_paths": _dedup_keep_order(
-                graph_context.get("promote_paths", []) + offline_path_knowledge.get("vertical_paths", [])
+            "offline_profile_transfer_paths": _dedup_keep_order(
+                offline_path_knowledge.get("transfer_paths", [])
             ),
         }
         job_profile_df = _build_job_profile_dataframe(sql_rows, effective_target_job)
         job_profile_context = {
-            "sql_context": _build_compact_sql_context(sql_rows),
             "graph_context": graph_context,
+            "sql_context": _build_compact_sql_context(sql_rows),
         }
         job_profile_result = run_job_profile_service(
             df=job_profile_df,
@@ -446,6 +574,7 @@ def run_pipeline(
         logger.info("启动第 4 步: job_match")
         job_match_result = run_job_match_service_from_state(
             state_path=state_path,
+            context_data=job_profile_context,
         )
         logger.info(
             "job_match 完成，overall_match_score=%s",
@@ -457,10 +586,7 @@ def run_pipeline(
         _mark_step(5, "职业路径规划")
         logger.info("启动第 5 步: career_path_plan，引入图谱晋升换岗数据")
         plan_context = {
-            "graph_context": {
-                "transfer_paths": graph_context.get("transfer_paths", []),
-                "promote_paths": graph_context.get("promote_paths", []),
-            },
+            "graph_context": graph_context,
             "sql_context": job_profile_context.get("sql_context", {}),
         }
         career_path_plan_result = run_career_path_plan_service_from_state(
@@ -478,6 +604,7 @@ def run_pipeline(
         logger.info("启动第 6 步: career_report")
         career_report_result = run_career_report_service_from_state(
             state_path=state_path,
+            context_data=plan_context,
         )
         _export_report_markdown(career_report_result, state_path)
 

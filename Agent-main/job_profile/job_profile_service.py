@@ -33,10 +33,12 @@ from .job_profile_aggregator import aggregate_job_profile_group, build_demo_data
 from .job_profile_builder import build_job_profile_input_payload
 from llm_interface_layer.llm_service import call_llm
 from llm_interface_layer.state_manager import StateManager
+from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
 
 LOGGER = logging.getLogger(__name__)
 DEFAULT_OUTPUT_PATH = Path("outputs/state/job_profile_service_result.json")
 DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_SEMANTIC_TOP_K = 3
 
 @dataclass
 class JobProfileLLMSupplement:
@@ -159,15 +161,160 @@ def extract_path_knowledge(
     vertical_paths = dedup_keep_order(
         _normalize_path_strings(normalize_text_list(graph_context.get("vertical_paths")), source_job)
         + _normalize_path_strings(normalize_text_list(graph_context.get("promote_paths")), source_job)
+        + _normalize_path_strings(
+            normalize_text_list(graph_context.get("offline_profile_vertical_paths")),
+            source_job,
+        )
     )
     transfer_paths = dedup_keep_order(
         _normalize_path_strings(normalize_text_list(graph_context.get("transfer_paths")), source_job)
         + _normalize_path_strings(normalize_text_list(graph_context.get("lateral_paths")), source_job)
+        + _normalize_path_strings(
+            normalize_text_list(graph_context.get("offline_profile_transfer_paths")),
+            source_job,
+        )
     )
     return {
         "vertical_paths": vertical_paths,
         "transfer_paths": transfer_paths,
     }
+
+
+def extract_graph_job_knowledge(
+    context_data: Optional[Dict[str, Any]],
+    source_job_name: str = "",
+) -> Dict[str, Any]:
+    """从图谱上下文中提取岗位骨架知识。"""
+    graph_context = safe_dict(safe_dict(context_data).get("graph_context"))
+    job_core = safe_dict(graph_context.get("job_core"))
+    standard_job_name = clean_text(job_core.get("name") or source_job_name)
+    return {
+        "standard_job_name": standard_job_name,
+        "job_category": clean_text(job_core.get("job_category")),
+        "job_level": clean_text(job_core.get("job_level")),
+        "degree_requirement": clean_text(job_core.get("degree_requirement")),
+        "major_requirements": normalize_text_list(
+            graph_context.get("major_requirements") or job_core.get("major_requirement")
+        ),
+        "experience_requirements": normalize_text_list(job_core.get("experience_requirement")),
+        "required_skills": normalize_text_list(graph_context.get("required_skills")),
+        "related_jobs": normalize_text_list(graph_context.get("related_jobs")),
+        "raw_requirement_summary": clean_text(job_core.get("raw_requirement_summary")),
+    }
+
+
+def extract_sql_fact_context(context_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """从 SQL 上下文中提取岗位市场事实。"""
+    sql_context = safe_dict(safe_dict(context_data).get("sql_context"))
+    return {
+        "job_count": sql_context.get("job_count", 0),
+        "salary_stats": deepcopy(safe_dict(sql_context.get("salary_stats"))),
+        "city_distribution": deepcopy(safe_list(sql_context.get("city_distribution"))),
+        "industry_distribution": deepcopy(safe_list(sql_context.get("industry_distribution"))),
+        "company_type_distribution": deepcopy(safe_list(sql_context.get("company_type_distribution"))),
+        "company_size_distribution": deepcopy(safe_list(sql_context.get("company_size_distribution"))),
+        "company_samples": deepcopy(safe_list(sql_context.get("company_samples"))),
+        "representative_samples": deepcopy(safe_list(sql_context.get("representative_samples"))),
+    }
+
+
+def extract_semantic_context(context_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """从 context_data 中提取岗位语义知识快照。"""
+    semantic_context = safe_dict(safe_dict(context_data).get("semantic_context"))
+    hits = []
+    for item in safe_list(semantic_context.get("hits"))[:DEFAULT_SEMANTIC_TOP_K]:
+        item_dict = safe_dict(item)
+        hits.append(
+            {
+                "standard_job_name": clean_text(item_dict.get("standard_job_name")),
+                "job_category": clean_text(item_dict.get("job_category")),
+                "job_level": clean_text(item_dict.get("job_level")),
+                "score": item_dict.get("score", 0.0),
+                "doc_text_excerpt": clean_text(item_dict.get("doc_text_excerpt")),
+                "hard_skills": deepcopy(safe_list(item_dict.get("hard_skills"))[:8]),
+                "vertical_paths": deepcopy(safe_list(item_dict.get("vertical_paths"))[:4]),
+                "transfer_paths": deepcopy(safe_list(item_dict.get("transfer_paths"))[:4]),
+            }
+        )
+    return {
+        "query": clean_text(semantic_context.get("query")),
+        "top_k": len(hits),
+        "hits": hits,
+    }
+
+
+def build_semantic_query_for_job_profile(
+    builder_payload: Dict[str, Any],
+    aggregation_result: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
+) -> str:
+    """构造 job_profile 阶段的岗位语义检索 query。"""
+    builder_payload = safe_dict(builder_payload)
+    aggregation_result = safe_dict(aggregation_result)
+    normalized_req = safe_dict(builder_payload.get("normalized_requirements"))
+    graph_job_knowledge = extract_graph_job_knowledge(
+        context_data,
+        source_job_name=clean_text(builder_payload.get("standard_job_name")),
+    )
+
+    hard_skills = dedup_keep_order(
+        normalize_text_list(graph_job_knowledge.get("required_skills"))
+        + normalize_text_list(normalized_req.get("hard_skill_tags"))
+    )
+    degree_requirement = clean_text(
+        graph_job_knowledge.get("degree_requirement")
+        or " / ".join(normalize_text_list(normalized_req.get("degree_tags")))
+    )
+    major_requirement = dedup_keep_order(
+        normalize_text_list(graph_job_knowledge.get("major_requirements"))
+        + normalize_text_list(normalized_req.get("major_tags"))
+    )
+    query_parts = [
+        f"标准岗位：{clean_text(graph_job_knowledge.get('standard_job_name') or builder_payload.get('standard_job_name'))}",
+        f"岗位类别：{clean_text(graph_job_knowledge.get('job_category'))}",
+        f"岗位层级：{clean_text(graph_job_knowledge.get('job_level'))}",
+        f"学历要求：{degree_requirement}",
+        f"专业要求：{'、'.join(major_requirement[:6]) if major_requirement else ''}",
+        f"核心技能：{'、'.join(hard_skills[:10]) if hard_skills else ''}",
+        f"岗位摘要：{clean_text(graph_job_knowledge.get('raw_requirement_summary'))}",
+    ]
+    if safe_list(aggregation_result.get("skill_frequency")):
+        query_parts.append(
+            "高频技能："
+            + "、".join(
+                clean_text(safe_dict(item).get("name"))
+                for item in safe_list(aggregation_result.get("skill_frequency"))[:6]
+                if clean_text(safe_dict(item).get("name"))
+            )
+        )
+    return "\n".join(part for part in query_parts if clean_text(part))
+
+
+def build_semantic_context_for_job_profile(
+    builder_payload: Dict[str, Any],
+    aggregation_result: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
+    top_k: int = DEFAULT_SEMANTIC_TOP_K,
+) -> Dict[str, Any]:
+    """基于岗位知识语义库，为 job_profile 构造 semantic_context。"""
+    query_text = build_semantic_query_for_job_profile(
+        builder_payload=builder_payload,
+        aggregation_result=aggregation_result,
+        context_data=context_data,
+    )
+    if not clean_text(query_text):
+        return {}
+
+    project_root = Path(__file__).resolve().parent.parent
+    retriever = SemanticJobKnowledgeRetriever.from_project_root(project_root)
+    semantic_context = retriever.build_semantic_context(
+        query_text=query_text,
+        top_k=top_k,
+        min_score=0.0,
+    )
+    if not safe_list(semantic_context.get("hits")):
+        return {}
+    return semantic_context
 
 def save_json(data: Dict[str, Any], output_path: Optional[str | Path]) -> None:
     """按需保存 JSON。"""
@@ -182,8 +329,13 @@ def build_degree_requirement_text(
     builder_payload: Dict[str, Any],
     aggregation_result: Dict[str, Any],
     llm_result: Dict[str, Any],
+    graph_job_knowledge: Optional[Dict[str, Any]] = None,
 ) -> str:
     """融合规则、聚合和 LLM 的学历要求字段。"""
+    graph_degree = clean_text(safe_dict(graph_job_knowledge).get("degree_requirement"))
+    if graph_degree:
+        return graph_degree
+
     llm_degree = clean_text(llm_result.get("required_degree") or llm_result.get("degree_requirement"))
     if llm_degree:
         return llm_degree
@@ -210,6 +362,8 @@ def normalize_llm_job_profile_result(
     normalized_req = safe_dict(builder_payload.get("normalized_requirements"))
     standard_job_name = clean_text(builder_payload.get("standard_job_name"))
     path_knowledge = extract_path_knowledge(context_data, source_job_name=standard_job_name)
+    graph_job_knowledge = extract_graph_job_knowledge(context_data, source_job_name=standard_job_name)
+    semantic_context = extract_semantic_context(context_data)
 
     soft_skills = dedup_keep_order(
         [clean_text(item) for item in safe_list(source.get("soft_skills")) if clean_text(item)]
@@ -236,10 +390,22 @@ def normalize_llm_job_profile_result(
         ]
 
     summary = clean_text(source.get("summary") or source.get("job_summary"))
+    if not summary and clean_text(graph_job_knowledge.get("raw_requirement_summary")):
+        summary = clean_text(graph_job_knowledge.get("raw_requirement_summary"))
+    if not summary and safe_list(semantic_context.get("hits")):
+        top_hit = safe_dict(safe_list(semantic_context.get("hits"))[0])
+        summary = clean_text(top_hit.get("doc_text_excerpt"))
     if not summary and standard_job_name:
         summary = f"{standard_job_name} 岗位通常要求具备相关专业背景、核心技能储备、业务理解能力和一定实践经验。"
 
     suitable_student_profile = clean_text(source.get("suitable_student_profile"))
+    if not suitable_student_profile and safe_list(semantic_context.get("hits")):
+        top_hit = safe_dict(safe_list(semantic_context.get("hits"))[0])
+        semantic_skills = [clean_text(item) for item in safe_list(top_hit.get("hard_skills")) if clean_text(item)]
+        if semantic_skills:
+            suitable_student_profile = (
+                f"适合具备{'、'.join(semantic_skills[:5])}等相关技能基础，且有一定项目或实践经历的学生。"
+            )
     if not suitable_student_profile:
         major_tags = [clean_text(item) for item in safe_list(normalized_req.get("major_tags")) if clean_text(item)]
         hard_skills = [clean_text(item) for item in safe_list(normalized_req.get("hard_skill_tags")) if clean_text(item)]
@@ -270,17 +436,24 @@ def merge_job_profile_results(
     aggregation_result = safe_dict(aggregation_result)
     normalized_req = safe_dict(builder_payload.get("normalized_requirements"))
     explicit_req = safe_dict(builder_payload.get("explicit_requirements"))
+    graph_job_knowledge = extract_graph_job_knowledge(
+        context_data,
+        source_job_name=clean_text(builder_payload.get("standard_job_name")),
+    )
+    sql_fact_context = extract_sql_fact_context(context_data)
     normalized_llm = normalize_llm_job_profile_result(llm_result, builder_payload, context_data=context_data)
 
     merged_hard_skills = dedup_keep_order(
-        [clean_text(item) for item in safe_list(normalized_req.get("hard_skill_tags")) if clean_text(item)]
+        [clean_text(item) for item in safe_list(graph_job_knowledge.get("required_skills")) if clean_text(item)]
+        + [clean_text(item) for item in safe_list(normalized_req.get("hard_skill_tags")) if clean_text(item)]
         + [clean_text(item) for item in safe_list(safe_dict(llm_result).get("required_skills")) if clean_text(item)]
     )
     merged_tools = dedup_keep_order(
         [clean_text(item) for item in safe_list(normalized_req.get("tool_skill_tags")) if clean_text(item)]
     )
     merged_major_req = dedup_keep_order(
-        [clean_text(item) for item in safe_list(normalized_req.get("major_tags")) if clean_text(item)]
+        [clean_text(item) for item in safe_list(graph_job_knowledge.get("major_requirements")) if clean_text(item)]
+        + [clean_text(item) for item in safe_list(normalized_req.get("major_tags")) if clean_text(item)]
         + [clean_text(item) for item in safe_list(safe_dict(llm_result).get("preferred_majors")) if clean_text(item)]
     )
     merged_certificate_req = dedup_keep_order(
@@ -291,7 +464,8 @@ def merge_job_profile_results(
         [clean_text(item) for item in safe_list(normalized_req.get("practice_tags")) if clean_text(item)]
     )
     merged_experience_req = dedup_keep_order(
-        [clean_text(item) for item in safe_list(normalized_req.get("experience_tags")) if clean_text(item)]
+        [clean_text(item) for item in safe_list(graph_job_knowledge.get("experience_requirements")) if clean_text(item)]
+        + [clean_text(item) for item in safe_list(normalized_req.get("experience_tags")) if clean_text(item)]
     )
     merged_soft_skills = dedup_keep_order(
         [clean_text(item) for item in safe_list(normalized_llm.get("soft_skills")) if clean_text(item)]
@@ -301,12 +475,26 @@ def merge_job_profile_results(
         + [clean_text(item) for item in safe_list(aggregation_result.get("aggregation_warnings")) if clean_text(item)]
         + [clean_text(item) for item in safe_list(service_warnings) if clean_text(item)]
     )
+    group_summary = deepcopy(safe_dict(builder_payload.get("group_summary")))
+    if sql_fact_context.get("job_count"):
+        group_summary["job_count"] = sql_fact_context.get("job_count")
+    if graph_job_knowledge.get("related_jobs"):
+        group_summary["graph_related_jobs"] = deepcopy(graph_job_knowledge.get("related_jobs"))
 
     result = JobProfileServiceResult(
-        standard_job_name=clean_text(builder_payload.get("standard_job_name") or aggregation_result.get("standard_job_name")),
-        job_category=clean_text(normalized_llm.get("job_category")),
-        job_level=clean_text(normalized_llm.get("job_level")),
-        degree_requirement=build_degree_requirement_text(builder_payload, aggregation_result, llm_result),
+        standard_job_name=clean_text(
+            graph_job_knowledge.get("standard_job_name")
+            or builder_payload.get("standard_job_name")
+            or aggregation_result.get("standard_job_name")
+        ),
+        job_category=clean_text(graph_job_knowledge.get("job_category") or normalized_llm.get("job_category")),
+        job_level=clean_text(graph_job_knowledge.get("job_level") or normalized_llm.get("job_level")),
+        degree_requirement=build_degree_requirement_text(
+            builder_payload,
+            aggregation_result,
+            llm_result,
+            graph_job_knowledge=graph_job_knowledge,
+        ),
         major_requirement=merged_major_req,
         experience_requirement=merged_experience_req,
         hard_skills=merged_hard_skills,
@@ -330,13 +518,25 @@ def merge_job_profile_results(
         degree_requirement_distribution=deepcopy(
             safe_list(aggregation_result.get("degree_requirement_distribution"))
         ),
-        industry_distribution=deepcopy(safe_list(aggregation_result.get("industry_distribution"))),
-        city_distribution=deepcopy(safe_list(aggregation_result.get("city_distribution"))),
-        salary_stats=deepcopy(safe_dict(aggregation_result.get("salary_stats"))),
-        group_summary=deepcopy(safe_dict(builder_payload.get("group_summary"))),
+        industry_distribution=deepcopy(
+            sql_fact_context.get("industry_distribution")
+            or safe_list(aggregation_result.get("industry_distribution"))
+        ),
+        city_distribution=deepcopy(
+            sql_fact_context.get("city_distribution")
+            or safe_list(aggregation_result.get("city_distribution"))
+        ),
+        salary_stats=deepcopy(
+            sql_fact_context.get("salary_stats")
+            or safe_dict(aggregation_result.get("salary_stats"))
+        ),
+        group_summary=group_summary,
         explicit_requirements=deepcopy(explicit_req),
         normalized_requirements=deepcopy(normalized_req),
-        representative_samples=deepcopy(safe_list(builder_payload.get("representative_samples"))),
+        representative_samples=deepcopy(
+            sql_fact_context.get("representative_samples")
+            or safe_list(builder_payload.get("representative_samples"))
+        ),
         llm_profile_result=deepcopy(safe_dict(normalized_llm.get("raw_llm_result"))),
         build_warnings=merged_warnings,
     )
@@ -350,10 +550,16 @@ def build_job_profile_llm_input(
     """组装 job_profile 大模型输入。"""
     normalized_req = safe_dict(builder_payload.get("normalized_requirements"))
     group_summary = safe_dict(builder_payload.get("group_summary"))
+    graph_job_knowledge = extract_graph_job_knowledge(
+        context_data,
+        source_job_name=clean_text(builder_payload.get("standard_job_name")),
+    )
+    sql_fact_context = extract_sql_fact_context(context_data)
     path_knowledge = extract_path_knowledge(
         context_data,
         source_job_name=clean_text(builder_payload.get("standard_job_name")),
     )
+    semantic_context = extract_semantic_context(context_data)
 
     representative_samples = []
     for item in safe_list(builder_payload.get("representative_samples"))[:3]:
@@ -391,17 +597,42 @@ def build_job_profile_llm_input(
             "city_distribution": deepcopy(safe_list(aggregation_result.get("city_distribution"))[:5]),
             "salary_stats": deepcopy(safe_dict(aggregation_result.get("salary_stats"))),
         },
+        "graph_knowledge_snapshot": {
+            "standard_job_name": clean_text(graph_job_knowledge.get("standard_job_name")),
+            "job_category": clean_text(graph_job_knowledge.get("job_category")),
+            "job_level": clean_text(graph_job_knowledge.get("job_level")),
+            "degree_requirement": clean_text(graph_job_knowledge.get("degree_requirement")),
+            "major_requirements": deepcopy(safe_list(graph_job_knowledge.get("major_requirements"))[:8]),
+            "required_skills": deepcopy(safe_list(graph_job_knowledge.get("required_skills"))[:12]),
+            "related_jobs": deepcopy(safe_list(graph_job_knowledge.get("related_jobs"))[:6]),
+            "raw_requirement_summary": clean_text(graph_job_knowledge.get("raw_requirement_summary")),
+        },
+        "sql_fact_snapshot": {
+            "job_count": sql_fact_context.get("job_count", 0),
+            "salary_stats": deepcopy(safe_dict(sql_fact_context.get("salary_stats"))),
+            "city_distribution": deepcopy(safe_list(sql_fact_context.get("city_distribution"))[:5]),
+            "industry_distribution": deepcopy(safe_list(sql_fact_context.get("industry_distribution"))[:5]),
+            "company_type_distribution": deepcopy(
+                safe_list(sql_fact_context.get("company_type_distribution"))[:5]
+            ),
+            "company_size_distribution": deepcopy(
+                safe_list(sql_fact_context.get("company_size_distribution"))[:5]
+            ),
+            "company_samples": deepcopy(safe_list(sql_fact_context.get("company_samples"))[:6]),
+            "representative_samples": deepcopy(safe_list(sql_fact_context.get("representative_samples"))[:3]),
+        },
         "path_knowledge_snapshot": {
             "vertical_paths": deepcopy(path_knowledge.get("vertical_paths", [])[:5]),
             "transfer_paths": deepcopy(path_knowledge.get("transfer_paths", [])[:5]),
             "instruction": "以上路径若已存在，视为离线沉淀的岗位知识，优先复用；仅在明显缺失时补充新的常见路径建议。",
         },
+        "semantic_knowledge_snapshot": deepcopy(semantic_context),
         "generation_requirements": {
-            "job_category": "归纳该岗位所属大类，例如数据类、算法类、开发类、产品类。",
-            "job_level": "根据岗位要求和经验分布推断适合的岗位层级，例如实习/初级/中级/高级。",
+            "job_category": "优先复用 graph_knowledge_snapshot 中的岗位类别，仅在图谱字段缺失时做归纳补全。",
+            "job_level": "优先复用 graph_knowledge_snapshot 中的岗位层级，仅在图谱字段缺失时做补充推断。",
             "soft_skills": "根据岗位描述和要求句归纳 3-8 个软技能标签。",
             "suitable_student_profile": "描述适合投递该岗位的学生画像，要求具体可执行。",
-            "summary": "输出一段简洁岗位画像摘要。",
+            "summary": "结合图谱岗位骨架、SQL 市场事实和 semantic_knowledge_snapshot，输出一段简洁岗位画像摘要。",
             "vertical_paths": "若已有离线路径知识则优先沿用；仅在缺失时补充该岗位常见纵向晋升路径。",
             "transfer_paths": "若已有离线路径知识则优先沿用；仅在缺失时补充该岗位常见横向转岗路径。",
         },
@@ -501,6 +732,7 @@ class JobProfileService:
         setup_logging()
         state_path = Path(state_path)
         service_warnings = []
+        merged_context_data = deepcopy(context_data) if isinstance(context_data, dict) else {}
         student_state = self.state_manager.load_state(state_path)
 
         LOGGER.info("Step 1/4: build job profile payload for %s", standard_job_name)
@@ -539,13 +771,28 @@ class JobProfileService:
             }
             service_warnings.append(f"aggregator 执行失败: {exc}")
 
+        if not safe_dict(merged_context_data.get("semantic_context")):
+            try:
+                semantic_context = build_semantic_context_for_job_profile(
+                    builder_payload=builder_payload,
+                    aggregation_result=aggregation_result,
+                    context_data=merged_context_data,
+                )
+                if semantic_context:
+                    merged_context_data["semantic_context"] = semantic_context
+            except FileNotFoundError:
+                LOGGER.info("semantic knowledge base not found, skip semantic retrieval for job_profile")
+            except Exception as exc:
+                LOGGER.warning("semantic retrieval for job_profile failed: %s", exc)
+                service_warnings.append(f"语义知识检索失败: {exc}")
+
         LOGGER.info("Step 3/4: call LLM job_profile for %s", standard_job_name)
         try:
             llm_result = self.call_job_profile_llm(
                 builder_payload=builder_payload,
                 aggregation_result=aggregation_result,
                 student_state=student_state,
-                context_data=context_data,
+                context_data=merged_context_data,
                 extra_context=extra_context,
             )
         except Exception as exc:
@@ -558,7 +805,7 @@ class JobProfileService:
             builder_payload=builder_payload,
             aggregation_result=aggregation_result,
             llm_result=llm_result,
-            context_data=context_data,
+            context_data=merged_context_data,
             service_warnings=service_warnings,
         )
 

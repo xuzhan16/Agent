@@ -428,6 +428,49 @@ def extract_graph_path_context(context_data: Optional[Dict[str, Any]]) -> Dict[s
         "transfer_paths": normalize_text_list(
             graph_context.get("transfer_paths") or graph_context.get("lateral_paths")
         ),
+        "related_jobs": normalize_text_list(graph_context.get("related_jobs")),
+    }
+
+
+def extract_sql_market_context(context_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """从上游 context_data 中提取 SQL 市场事实补充。"""
+    sql_context = safe_dict(safe_dict(context_data).get("sql_context"))
+    return {
+        "job_count": sql_context.get("job_count", 0),
+        "salary_stats": deepcopy(safe_dict(sql_context.get("salary_stats"))),
+        "top_cities": normalize_text_list(sql_context.get("top_cities")),
+        "top_industries": normalize_text_list(sql_context.get("top_industries")),
+        "top_company_types": normalize_text_list(sql_context.get("top_company_types")),
+        "top_company_sizes": normalize_text_list(sql_context.get("top_company_sizes")),
+        "company_samples": deepcopy(parse_list_like(sql_context.get("company_samples"))[:6]),
+        "representative_samples": deepcopy(normalize_dict_list(sql_context.get("representative_samples"))[:5]),
+    }
+
+
+def extract_semantic_context(context_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """从上游 context_data 中提取语义检索结果。"""
+    semantic_context = safe_dict(safe_dict(context_data).get("semantic_context"))
+    hits = []
+    for item in parse_list_like(semantic_context.get("hits"))[:5]:
+        item_dict = safe_dict(item)
+        if not item_dict:
+            continue
+        hits.append(
+            {
+                "standard_job_name": clean_text(item_dict.get("standard_job_name")),
+                "job_category": clean_text(item_dict.get("job_category")),
+                "job_level": clean_text(item_dict.get("job_level")),
+                "score": item_dict.get("score"),
+                "doc_text_excerpt": clean_text(item_dict.get("doc_text_excerpt")),
+                "hard_skills": normalize_text_list(item_dict.get("hard_skills")),
+                "vertical_paths": normalize_text_list(item_dict.get("vertical_paths")),
+                "transfer_paths": normalize_text_list(item_dict.get("transfer_paths")),
+            }
+        )
+    return {
+        "query": clean_text(semantic_context.get("query")),
+        "top_k": int(semantic_context.get("top_k") or len(hits) or 0),
+        "hits": hits,
     }
 
 
@@ -478,6 +521,9 @@ def build_candidate_goal_jobs(
         candidates.append(target_job)
 
     graph_paths = extract_graph_path_context(context_data)
+    for related_job in normalize_text_list(graph_paths.get("related_jobs")):
+        candidates.append(related_job)
+
     for path_text in normalize_path_strings(graph_paths.get("transfer_paths", []), target_job):
         path_option = parse_path_text(path_text, path_type="transfer", source="graph_context.transfer_paths")
         to_job = clean_text(path_option.get("to_job"))
@@ -853,8 +899,12 @@ def build_planner_context(
     direct_path_options: List[Dict[str, Any]],
     transition_path_options: List[Dict[str, Any]],
     gap_analysis: List[Dict[str, Any]],
+    context_data: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """组装给后续 LLM 的规划上下文说明。"""
+    graph_paths = extract_graph_path_context(context_data)
+    sql_market_context = extract_sql_market_context(context_data)
+    semantic_context = extract_semantic_context(context_data)
     return {
         "student_summary": clean_text(student_snapshot.get("summary")),
         "job_summary": clean_text(target_job_snapshot.get("summary")),
@@ -869,6 +919,25 @@ def build_planner_context(
         "transition_path_count": len(transition_path_options),
         "high_priority_gap_count": sum(1 for gap in gap_analysis if safe_dict(gap).get("priority") == "high"),
         "path_source_summary": summarize_path_sources(direct_path_options, transition_path_options),
+        "graph_fact_snapshot": {
+            "related_jobs": deepcopy(graph_paths.get("related_jobs", [])[:6]),
+            "promote_path_count": len(graph_paths.get("promote_paths", [])),
+            "transfer_path_count": len(graph_paths.get("transfer_paths", [])),
+        },
+        "market_fact_snapshot": {
+            "job_count": sql_market_context.get("job_count", 0),
+            "salary_stats": deepcopy(sql_market_context.get("salary_stats")),
+            "top_cities": deepcopy(sql_market_context.get("top_cities", [])[:5]),
+            "top_industries": deepcopy(sql_market_context.get("top_industries", [])[:5]),
+            "top_company_types": deepcopy(sql_market_context.get("top_company_types", [])[:5]),
+            "top_company_sizes": deepcopy(sql_market_context.get("top_company_sizes", [])[:5]),
+            "company_samples": deepcopy(sql_market_context.get("company_samples", [])[:5]),
+        },
+        "semantic_fact_snapshot": {
+            "query": clean_text(semantic_context.get("query")),
+            "top_k": semantic_context.get("top_k", 0),
+            "hits": deepcopy(semantic_context.get("hits", [])[:3]),
+        },
         "expected_output_hint": {
             "primary_target_job": "首选目标岗位",
             "alternative_target_jobs": "备选岗位列表",
@@ -952,6 +1021,7 @@ def build_career_plan_input_payload(
         direct_path_options=direct_path_options,
         transition_path_options=transition_path_options,
         gap_analysis=gap_analysis,
+        context_data=context_data,
     )
     build_warning_list = build_warnings(
         student_snapshot=student_snapshot,

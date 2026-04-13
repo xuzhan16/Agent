@@ -34,6 +34,7 @@ from .job_match_builder import (
 from .job_match_scorer import score_match_input_payload
 from llm_interface_layer.llm_service import call_llm
 from llm_interface_layer.state_manager import StateManager
+from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
 
 
 LOGGER = logging.getLogger(__name__)
@@ -41,6 +42,7 @@ DEFAULT_STATE_PATH = Path("outputs/state/student.json")
 DEFAULT_BUILDER_OUTPUT_PATH = Path("outputs/state/job_match_input_payload.json")
 DEFAULT_SCORER_OUTPUT_PATH = Path("outputs/state/job_match_score_result.json")
 DEFAULT_SERVICE_OUTPUT_PATH = Path("outputs/state/job_match_service_result.json")
+DEFAULT_SEMANTIC_TOP_K = 3
 
 
 @dataclass
@@ -175,6 +177,7 @@ def build_default_recommendation(rule_score_result: Dict[str, Any]) -> str:
 def build_default_analysis_summary(
     rule_score_result: Dict[str, Any],
     match_input_payload: Dict[str, Any],
+    semantic_context: Optional[Dict[str, Any]] = None,
 ) -> str:
     """生成兜底分析摘要。"""
     job_profile = safe_dict(match_input_payload.get("job_profile"))
@@ -182,9 +185,16 @@ def build_default_analysis_summary(
     job_name = clean_text(job_profile.get("standard_job_name")) or "目标岗位"
     student_major = clean_text(student_profile.get("major")) or "当前专业"
     rule_summary = clean_text(rule_score_result.get("rule_summary"))
+    semantic_hits = safe_list(safe_dict(semantic_context).get("hits"))
+    semantic_hint = ""
+    if semantic_hits:
+        top_hit = safe_dict(semantic_hits[0])
+        semantic_job_name = clean_text(top_hit.get("standard_job_name"))
+        if semantic_job_name and semantic_job_name != job_name:
+            semantic_hint = f" 语义检索显示其与{semantic_job_name}等相近岗位画像也存在较强关联。"
     if rule_summary:
-        return f"针对{job_name}，候选人{student_major}背景与岗位要求的规则评估结果如下：{rule_summary}"
-    return f"针对{job_name}，候选人{student_major}背景具备一定基础，但仍需结合技能、实践和职业方向进一步分析匹配度。"
+        return f"针对{job_name}，候选人{student_major}背景与岗位要求的规则评估结果如下：{rule_summary}{semantic_hint}"
+    return f"针对{job_name}，候选人{student_major}背景具备一定基础，但仍需结合技能、实践和职业方向进一步分析匹配度。{semantic_hint}".strip()
 
 
 def build_default_improvement_suggestions(
@@ -223,10 +233,107 @@ def build_default_improvement_suggestions(
     return dedup_keep_order(generated)[:8]
 
 
+def extract_semantic_context(context_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """从 context_data 中提取语义知识快照。"""
+    semantic_context = safe_dict(safe_dict(context_data).get("semantic_context"))
+    hits = []
+    for item in safe_list(semantic_context.get("hits"))[:DEFAULT_SEMANTIC_TOP_K]:
+        item_dict = safe_dict(item)
+        hits.append(
+            {
+                "standard_job_name": clean_text(item_dict.get("standard_job_name")),
+                "job_category": clean_text(item_dict.get("job_category")),
+                "job_level": clean_text(item_dict.get("job_level")),
+                "score": item_dict.get("score", 0.0),
+                "doc_text_excerpt": clean_text(item_dict.get("doc_text_excerpt")),
+                "hard_skills": deepcopy(safe_list(item_dict.get("hard_skills"))[:8]),
+                "vertical_paths": deepcopy(safe_list(item_dict.get("vertical_paths"))[:4]),
+                "transfer_paths": deepcopy(safe_list(item_dict.get("transfer_paths"))[:4]),
+            }
+        )
+    return {
+        "query": clean_text(semantic_context.get("query")),
+        "top_k": len(hits),
+        "hits": hits,
+    }
+
+
+def build_semantic_query_for_job_match(
+    match_input_payload: Dict[str, Any],
+    rule_score_result: Dict[str, Any],
+) -> str:
+    """构造 job_match 阶段的岗位语义检索 query。"""
+    payload = safe_dict(match_input_payload)
+    rule_result = safe_dict(rule_score_result)
+    student_profile = safe_dict(payload.get("student_profile"))
+    job_profile = safe_dict(payload.get("job_profile"))
+    missing_items = [safe_dict(item) for item in safe_list(rule_result.get("missing_items"))]
+
+    student_skill_terms = dedup_keep_order(
+        [
+            clean_text(item)
+            for item in safe_list(student_profile.get("hard_skills"))
+            + safe_list(student_profile.get("tool_skills"))
+            if clean_text(item)
+        ]
+    )
+    target_skill_terms = dedup_keep_order(
+        [
+            clean_text(item)
+            for item in safe_list(job_profile.get("hard_skills"))
+            + safe_list(job_profile.get("tool_skills"))
+            if clean_text(item)
+        ]
+    )
+    gap_terms = dedup_keep_order(
+        clean_text(item.get("required_item"))
+        for item in missing_items
+        if clean_text(item.get("required_item"))
+    )
+    query_parts = [
+        f"目标岗位：{clean_text(job_profile.get('standard_job_name'))}",
+        f"岗位类别：{clean_text(job_profile.get('job_category'))}",
+        f"学生专业：{clean_text(student_profile.get('major'))}",
+        f"学生摘要：{clean_text(student_profile.get('summary'))}",
+        f"岗位摘要：{clean_text(job_profile.get('summary'))}",
+        f"学生技能：{'、'.join(student_skill_terms[:10]) if student_skill_terms else ''}",
+        f"岗位核心技能：{'、'.join(target_skill_terms[:10]) if target_skill_terms else ''}",
+        f"当前缺口项：{'、'.join(gap_terms[:6]) if gap_terms else ''}",
+        f"规则分析摘要：{clean_text(rule_result.get('rule_summary'))}",
+    ]
+    return "\n".join(part for part in query_parts if clean_text(part))
+
+
+def build_semantic_context_for_job_match(
+    match_input_payload: Dict[str, Any],
+    rule_score_result: Dict[str, Any],
+    top_k: int = DEFAULT_SEMANTIC_TOP_K,
+) -> Dict[str, Any]:
+    """基于岗位知识语义库，为 job_match 构造 semantic_context。"""
+    query_text = build_semantic_query_for_job_match(
+        match_input_payload=match_input_payload,
+        rule_score_result=rule_score_result,
+    )
+    if not clean_text(query_text):
+        return {}
+
+    project_root = Path(__file__).resolve().parent.parent
+    retriever = SemanticJobKnowledgeRetriever.from_project_root(project_root)
+    semantic_context = retriever.build_semantic_context(
+        query_text=query_text,
+        top_k=top_k,
+        min_score=0.0,
+    )
+    if not safe_list(semantic_context.get("hits")):
+        return {}
+    return semantic_context
+
+
 def normalize_llm_job_match_result(
     llm_result: Dict[str, Any],
     rule_score_result: Dict[str, Any],
     match_input_payload: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """对 call_llm('job_match', ...) 的返回做默认值补齐和新旧字段兼容。"""
     source = safe_dict(llm_result)
@@ -263,7 +370,11 @@ def normalize_llm_job_match_result(
         improvement_suggestions=build_default_improvement_suggestions(rule_score_result, source),
         recommendation=clean_text(source.get("recommendation")) or build_default_recommendation(rule_score_result),
         analysis_summary=clean_text(source.get("analysis_summary") or source.get("summary"))
-        or build_default_analysis_summary(rule_score_result, match_input_payload),
+        or build_default_analysis_summary(
+            rule_score_result,
+            match_input_payload,
+            semantic_context=extract_semantic_context(context_data),
+        ),
     )
     return asdict(supplement) | {"raw_llm_result": source}
 
@@ -271,10 +382,14 @@ def normalize_llm_job_match_result(
 def build_job_match_llm_input(
     match_input_payload: Dict[str, Any],
     rule_score_result: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """组装 job_match 大模型输入。"""
     student_profile = safe_dict(match_input_payload.get("student_profile"))
     job_profile = safe_dict(match_input_payload.get("job_profile"))
+    semantic_context = extract_semantic_context(context_data)
+    graph_context = safe_dict(safe_dict(context_data).get("graph_context"))
+    sql_context = safe_dict(safe_dict(context_data).get("sql_context"))
 
     matched_items = []
     for item in safe_list(rule_score_result.get("matched_items"))[:6]:
@@ -328,12 +443,28 @@ def build_job_match_llm_input(
             "missing_items": missing_items,
             "rule_summary": clean_text(rule_score_result.get("rule_summary")),
         },
+        "knowledge_context_snapshot": {
+            "graph_context": {
+                "job_core": deepcopy(safe_dict(graph_context.get("job_core"))),
+                "required_skills": deepcopy(safe_list(graph_context.get("required_skills"))[:10]),
+                "related_jobs": deepcopy(safe_list(graph_context.get("related_jobs"))[:6]),
+                "promote_paths": deepcopy(safe_list(graph_context.get("promote_paths"))[:5]),
+                "transfer_paths": deepcopy(safe_list(graph_context.get("transfer_paths"))[:5]),
+            },
+            "sql_context": {
+                "salary_stats": deepcopy(safe_dict(sql_context.get("salary_stats"))),
+                "top_cities": deepcopy(safe_list(sql_context.get("top_cities"))[:5]),
+                "top_industries": deepcopy(safe_list(sql_context.get("top_industries"))[:5]),
+                "company_samples": deepcopy(safe_list(sql_context.get("company_samples"))[:6]),
+            },
+            "semantic_context": deepcopy(semantic_context),
+        },
         "generation_requirements": {
             "strengths": "结合 matched_items 和岗位画像，总结候选人相对该岗位的核心优势点。",
             "weaknesses": "结合 missing_items 和岗位画像，总结候选人当前最关键的短板。",
-            "improvement_suggestions": "针对短板给出可执行的补强建议，优先覆盖技能、项目、证书和表达优化。",
+            "improvement_suggestions": "针对短板给出可执行的补强建议，优先覆盖技能、项目、证书和表达优化，可参考 semantic_context 中的相似岗位要求做解释增强。",
             "recommendation": "给出是否建议投递该岗位，以及投递优先级建议。",
-            "analysis_summary": "输出一段简洁的人岗匹配分析摘要，适合后续报告模块引用。",
+            "analysis_summary": "输出一段简洁的人岗匹配分析摘要，适合后续报告模块引用，并吸收 semantic_context 的相似岗位解释。",
         },
         "output_schema_hint": asdict(JobMatchLLMSupplement()),
     }
@@ -343,6 +474,7 @@ def merge_job_match_results(
     match_input_payload: Dict[str, Any],
     rule_score_result: Dict[str, Any],
     llm_result: Dict[str, Any],
+    context_data: Optional[Dict[str, Any]] = None,
     service_warnings: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """合并规则评分结果与 LLM 补充结果。"""
@@ -352,6 +484,7 @@ def merge_job_match_results(
         llm_result=llm_result,
         rule_score_result=rule_result,
         match_input_payload=payload,
+        context_data=context_data,
     )
 
     merged_warnings = dedup_keep_order(
@@ -453,6 +586,7 @@ class JobMatchService:
         input_data = build_job_match_llm_input(
             match_input_payload=match_input_payload,
             rule_score_result=rule_score_result,
+            context_data=context_data,
         )
         merged_extra_context = {
             "service_name": "job_match_service",
@@ -490,6 +624,7 @@ class JobMatchService:
         """执行完整 job_match 服务流程并写回 student.json。"""
         setup_logging()
         service_warnings = []
+        merged_context_data = deepcopy(context_data) if isinstance(context_data, dict) else {}
 
         if student_state is None:
             student_state = self.state_manager.load_state(state_path)
@@ -536,13 +671,31 @@ class JobMatchService:
             }
             service_warnings.append(f"scorer 执行失败: {exc}")
 
+        if not safe_dict(merged_context_data.get("semantic_context")):
+            try:
+                semantic_context = build_semantic_context_for_job_match(
+                    match_input_payload=match_input_payload,
+                    rule_score_result=rule_score_result,
+                )
+                if semantic_context:
+                    merged_context_data["semantic_context"] = semantic_context
+            except FileNotFoundError:
+                LOGGER.info("semantic knowledge base not found, skip semantic retrieval for job_match")
+            except Exception as exc:
+                LOGGER.warning("semantic retrieval for job_match failed: %s", exc)
+                service_warnings.append(f"语义知识检索失败: {exc}")
+
+        semantic_snapshot = extract_semantic_context(merged_context_data)
+        if semantic_snapshot:
+            match_input_payload["semantic_fact_snapshot"] = deepcopy(semantic_snapshot)
+
         LOGGER.info("Step 3/4: call LLM job_match")
         try:
             llm_result = self.call_job_match_llm(
                 match_input_payload=match_input_payload,
                 rule_score_result=rule_score_result,
                 student_state=student_state,
-                context_data=context_data,
+                context_data=merged_context_data,
                 extra_context=extra_context,
             )
         except Exception as exc:
@@ -555,6 +708,7 @@ class JobMatchService:
             match_input_payload=match_input_payload,
             rule_score_result=rule_score_result,
             llm_result=llm_result,
+            context_data=merged_context_data,
             service_warnings=service_warnings,
         )
         self.state_manager.update_state(
