@@ -532,7 +532,11 @@ def judge_candidate_pairs(candidate_pairs: pd.DataFrame) -> pd.DataFrame:
                 f"[job_dedup] Pair {idx}/{total_pairs} failed after {elapsed:.2f}s: "
                 f"{pair_label} | error={exc}"
             )
-            raise
+            # 单条岗位对失败时退化为规则判断，不中断整条流水线。
+            decision = parse_llm_judgement(
+                row,
+                {"error": clean_text(str(exc)), "fallback": "rule_only"},
+            )
 
         elapsed = time.time() - start_time
         print(

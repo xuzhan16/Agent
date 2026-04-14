@@ -1,0 +1,9 @@
+﻿degree_id:ID(Degree-ID),name,:LABEL
+degree_c7689824eb4d6ebc,中专,Degree
+degree_7d27be0093106d24,博士,Degree
+degree_2aa9f5258c638616,大专,Degree
+degree_76a51a5c933b258d,大专及以上,Degree
+degree_40b14fc519ebae0a,本科,Degree
+degree_0e5c449d743263d0,本科及以上,Degree
+degree_e6de6983db8790f7,硕士,Degree
+degree_c7ae7b08341ff58b,硕士及以上,Degree

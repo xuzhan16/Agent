@@ -1,0 +1,2219 @@
+{
+  "primary_target_job": "Java 后端开发工程师 / 软件开发实习生",
+  "secondary_target_jobs": [
+    "后端开发",
+    "算法工程",
+    "前端开发"
+  ],
+  "goal_positioning": "以Java 后端开发工程师 / 软件开发实习生作为主目标岗位，但定位为“短期补强后冲刺”，同步保留 1-2 个过渡岗位。",
+  "goal_reason": "将Java 后端开发工程师 / 软件开发实习生作为当前主目标，主要依据是学生具备本科、计算机科学与技术背景，且教育背景完全匹配：本科，计算机科学与技术专业，符合岗位硬性要求。、核心编程语言基础扎实：具备Java技能，是后端开发的核心基础。、具备部分关键技术栈：已掌握Redis、SQL、Python等，与岗位部分要求重合。；当前人岗匹配总分为72.28，等级为C-中等匹配，适合在补齐关键短板后继续推进该方向。",
+  "direct_path": [
+    "Java 后端开发工程师 / 软件开发实习生"
+  ],
+  "transition_path": [
+    "Java 后端开发工程师 / 软件开发实习生"
+  ],
+  "long_term_path": [
+    "Java 后端开发工程师 / 软件开发实习生"
+  ],
+  "path_strategy": "direct_with_transition_backup",
+  "short_term_plan": [
+    "系统学习并实践Spring Boot和MyBatis框架，通过在线课程和官方文档，动手搭建一个CRUD项目。",
+    "深入学习MySQL，包括数据库设计、SQL优化和索引原理，并在个人项目中应用。",
+    "熟练使用Git进行版本控制，掌握Linux常用命令，用于环境部署和问题排查。",
+    "优化现有项目（如在线学习平台）的技术描述，明确写出使用了Spring Boot、MyBatis、MySQL、JWT等技术，并尝试增加项目复杂度。",
+    "积极寻找并争取Java后端开发实习岗位，积累行业项目经验和团队协作流程。",
+    "更新简历，重点突出与Java后端岗位最相关的项目，量化项目成果（如性能提升百分比）。"
+  ],
+  "mid_term_plan": [
+    "在实习或项目中深化对微服务、消息队列、复杂缓存策略等技术的理解与应用。",
+    "根据实习表现和技能掌握情况，争取转正或正式Java后端开发工程师岗位。",
+    "探索并实践全栈开发，巩固前端（Vue）技能，向全栈工程师方向发展。",
+    "参与开源项目或更复杂的个人项目，提升解决高并发、大型系统问题的能力。",
+    "持续学习，关注后端技术栈的新趋势（如云原生、容器化），并考取相关技能证书。",
+    "建立技术博客或个人作品集，系统总结项目经验和技术思考，提升个人品牌。"
+  ],
+  "decision_summary": "张三同学作为哈尔滨工程大学计算机科学与技术专业2025届本科毕业生，教育背景与Java后端开发岗位要求完全匹配，并具备Java基础、部分相关技术栈及多个项目经验，显示出良好的工程实践潜力和学习能力。因此，首选目标岗位定为“Java后端开发工程师/软件开发实习生”。鉴于当前技能图谱存在关键框架（Spring Boot/MyBatis）和工具（Git/Linux）缺口，且缺乏行业实习，整体匹配度为中等水平，故规划以“短期补强后冲刺”为核心策略。短期（3-6个月）计划聚焦于系统学习核心框架、深化数据库知识、掌握开发工具并争取实习机会；中期（6-18个月）目标是在实习中积累经验、争取转正，并探索全栈等备选发展方向，以构建扎实的职业起点。",
+  "risk_and_gap": [
+    "当前整体匹配度中等（72.28分），存在高优先级技能缺口，直接冲刺主目标岗位成功率有限。",
+    "关键框架技能（Spring Boot, MyBatis）和数据库技能（MySQL）缺失，是主要技术短板。",
+    "开发运维工具（Git, Linux）和特定技术点（JWT）掌握不足。",
+    "缺乏正式的行业实习经历，项目复杂度和业务深度有待提升。",
+    "部分项目（如垃圾邮件分类系统）技术栈与核心求职方向关联度不强。"
+  ],
+  "fallback_strategy": "若直接冲刺Java 后端开发工程师 / 软件开发实习生受阻，可先按“Java 后端开发工程师 / 软件开发实习生”进入邻近岗位积累经验，再择机回到主目标路径。",
+  "target_selection_reason": [
+    "虽然总体匹配度达到中等水平，但存在高优先级技能/工具/实践缺口，建议先补强再重点投递。",
+    "Java 后端开发工程师 / 软件开发实习生 是当前目标岗位，继承人岗匹配总分 72.28 的主权重。",
+    "Java 后端开发工程师 / 软件开发实习生 与学生职业方向信号“后端开发”一致。",
+    "学生潜力画像为“中等偏上”，支持继续以 Java 后端开发工程师 / 软件开发实习生 作为冲刺目标。",
+    "后端开发 与学生职业方向信号“后端开发”一致。",
+    "算法工程 与学生职业方向信号“算法工程”一致。",
+    "人岗匹配模块建议：可以投递该岗位，但建议优先补齐关键技能或项目短板后再重点冲刺。"
+  ],
+  "path_selection_reason": [
+    "根据 overall_match_score=72.28，当前路径策略设为 direct_with_transition_backup。",
+    "路径基础分 76.28。",
+    "该路径来自离线岗位画像，可信度较高，加成 +4。",
+    "纵向直接路径更适合作为长期成长主线，加成 +4。",
+    "路径基础分 70.28。",
+    "该路径 priority_hint=high，优先级加成 +5。",
+    "过渡/转岗路径有助于降低起步难度，加成 +2。"
+  ],
+  "selector_metrics": {
+    "overall_match_score": 72.28,
+    "match_level": "C-中等匹配",
+    "blocking_gap": true,
+    "candidate_job_scores": [
+      {
+        "job_name": "Java 后端开发工程师 / 软件开发实习生",
+        "score": 97.53,
+        "reasons": [
+          "Java 后端开发工程师 / 软件开发实习生 是当前目标岗位，继承人岗匹配总分 72.28 的主权重。",
+          "Java 后端开发工程师 / 软件开发实习生 与学生职业方向信号“后端开发”一致。",
+          "学生潜力画像为“中等偏上”，支持继续以 Java 后端开发工程师 / 软件开发实习生 作为冲刺目标。"
+        ]
+      },
+      {
+        "job_name": "后端开发",
+        "score": 74.46,
+        "reasons": [
+          "后端开发 与学生职业方向信号“后端开发”一致。"
+        ]
+      },
+      {
+        "job_name": "算法工程",
+        "score": 74.46,
+        "reasons": [
+          "算法工程 与学生职业方向信号“算法工程”一致。"
+        ]
+      },
+      {
+        "job_name": "前端开发",
+        "score": 74.46,
+        "reasons": [
+          "前端开发 与学生职业方向信号“前端开发”一致。"
+        ]
+      }
+    ],
+    "direct_path_option_count": 5,
+    "transition_path_option_count": 5,
+    "best_direct_source": "job_profile.vertical_paths",
+    "best_transition_source": "job_profile.transfer_paths",
+    "best_direct_source_tier": "offline_profile",
+    "best_transition_source_tier": "offline_profile",
+    "high_priority_gap_count": 6
+  },
+  "selector_result": {
+    "primary_target_job": "Java 后端开发工程师 / 软件开发实习生",
+    "secondary_target_jobs": [
+      "后端开发",
+      "算法工程",
+      "前端开发"
+    ],
+    "goal_positioning": "以Java 后端开发工程师 / 软件开发实习生作为主目标岗位，但定位为“短期补强后冲刺”，同步保留 1-2 个过渡岗位。",
+    "direct_path": [
+      "Java 后端开发工程师 / 软件开发实习生"
+    ],
+    "transition_path": [
+      "Java 后端开发工程师 / 软件开发实习生"
+    ],
+    "long_term_path": [
+      "Java 后端开发工程师 / 软件开发实习生"
+    ],
+    "path_strategy": "direct_with_transition_backup",
+    "target_selection_reason": [
+      "虽然总体匹配度达到中等水平，但存在高优先级技能/工具/实践缺口，建议先补强再重点投递。",
+      "Java 后端开发工程师 / 软件开发实习生 是当前目标岗位，继承人岗匹配总分 72.28 的主权重。",
+      "Java 后端开发工程师 / 软件开发实习生 与学生职业方向信号“后端开发”一致。",
+      "学生潜力画像为“中等偏上”，支持继续以 Java 后端开发工程师 / 软件开发实习生 作为冲刺目标。",
+      "后端开发 与学生职业方向信号“后端开发”一致。",
+      "算法工程 与学生职业方向信号“算法工程”一致。",
+      "人岗匹配模块建议：可以投递该岗位，但建议优先补齐关键技能或项目短板后再重点冲刺。"
+    ],
+    "path_selection_reason": [
+      "根据 overall_match_score=72.28，当前路径策略设为 direct_with_transition_backup。",
+      "路径基础分 76.28。",
+      "该路径来自离线岗位画像，可信度较高，加成 +4。",
+      "纵向直接路径更适合作为长期成长主线，加成 +4。",
+      "路径基础分 70.28。",
+      "该路径 priority_hint=high，优先级加成 +5。",
+      "过渡/转岗路径有助于降低起步难度，加成 +2。"
+    ],
+    "risk_notes": [
+      "当前整体匹配度中等，虽然可以冲刺主目标岗位，但应同步准备备选岗位并优先补齐关键短板。",
+      "当前存在 6 个高优先级能力缺口，短期计划应优先聚焦技能/工具/项目补强。",
+      "人岗匹配短板提示：关键框架技能缺失：未掌握岗位核心要求的Spring Boot、MyBatis框架。",
+      "人岗匹配短板提示：数据库技能不匹配：未明确掌握MySQL技能。",
+      "人岗匹配短板提示：工具与系统技能不足：未匹配到Git、Linux等开发运维必备工具技能。",
+      "建议转化为近期行动项：技能补强：系统学习Spring Boot和MyBatis框架，可通过在线课程（如慕课网、B站相关教程）和官方文档入手，并动手搭建一个简单的CRUD项目。",
+      "建议转化为近期行动项：深化数据库知识：重点学习MySQL，包括数据库设计、SQL优化、索引原理等，并在项目中实践。",
+      "建议转化为近期行动项：掌握开发工具：熟练使用Git进行版本控制和团队协作，熟悉Linux常用命令进行环境部署和问题排查。"
+    ],
+    "selector_metrics": {
+      "overall_match_score": 72.28,
+      "match_level": "C-中等匹配",
+      "blocking_gap": true,
+      "candidate_job_scores": [
+        {
+          "job_name": "Java 后端开发工程师 / 软件开发实习生",
+          "score": 97.53,
+          "reasons": [
+            "Java 后端开发工程师 / 软件开发实习生 是当前目标岗位，继承人岗匹配总分 72.28 的主权重。",
+            "Java 后端开发工程师 / 软件开发实习生 与学生职业方向信号“后端开发”一致。",
+            "学生潜力画像为“中等偏上”，支持继续以 Java 后端开发工程师 / 软件开发实习生 作为冲刺目标。"
+          ]
+        },
+        {
+          "job_name": "后端开发",
+          "score": 74.46,
+          "reasons": [
+            "后端开发 与学生职业方向信号“后端开发”一致。"
+          ]
+        },
+        {
+          "job_name": "算法工程",
+          "score": 74.46,
+          "reasons": [
+            "算法工程 与学生职业方向信号“算法工程”一致。"
+          ]
+        },
+        {
+          "job_name": "前端开发",
+          "score": 74.46,
+          "reasons": [
+            "前端开发 与学生职业方向信号“前端开发”一致。"
+          ]
+        }
+      ],
+      "direct_path_option_count": 5,
+      "transition_path_option_count": 5,
+      "best_direct_source": "job_profile.vertical_paths",
+      "best_transition_source": "job_profile.transfer_paths",
+      "best_direct_source_tier": "offline_profile",
+      "best_transition_source_tier": "offline_profile",
+      "high_priority_gap_count": 6
+    },
+    "career_plan_input_payload": {
+      "target_job_name": "Java 后端开发工程师 / 软件开发实习生",
+      "student_snapshot": {
+        "name": "张三",
+        "school": "哈尔滨工程大学",
+        "major": "计算机科学与技术",
+        "degree": "本科",
+        "graduation_year": "2025",
+        "hard_skills": [
+          "C++",
+          "Java",
+          "SQL",
+          "Python",
+          "Redis"
+        ],
+        "tool_skills": [
+          "Linux",
+          "Git",
+          "Docker"
+        ],
+        "soft_skills": [
+          "teamwork",
+          "communication",
+          "problem_solving",
+          "project_management"
+        ],
+        "certificates": [
+          "校级一等奖学金（2023）",
+          "优秀学生干部"
+        ],
+        "project_experience": [
+          {
+            "project_name": "在线学习平台系统｜后端开发",
+            "role": "",
+            "start_date": "2024.03",
+            "end_date": "2024.06",
+            "description": "技术栈：Spring Boot / MyBatis / MySQL / Redis / JWT 负责用户、课程、评论等核心模块的接口设计与开发，完成登录鉴权、课程查询与互动功能实现。 使用 JWT 实现身份认证与权限控制，引入 Redis 缓存热门课程数据，提升接口访问效率。 优化数据库表结构与 SQL 查询逻辑，减少重复查询，热门课程接口响应时间降低约 35%。"
+          },
+          {
+            "project_name": "校园二手交易平台｜全栈开发",
+            "role": "",
+            "start_date": "2023.10",
+            "end_date": "2024.01",
+            "description": "技术栈：Vue / Spring Boot / MySQL / Git 负责商品、订单、用户、消息等模块设计与开发，完成商品发布、搜索筛选、订单管理等核心流程。 基于前后端分离方案完成页面交互与接口联调，支持多条件筛选、模糊查询及用户评价功能。 独立完成需求分析、数据库设计、开发测试与答辩展示，项目获课程优秀项目评价。"
+          },
+          {
+            "project_name": "垃圾邮件分类系统｜算法实现",
+            "role": "",
+            "start_date": "2023.05",
+            "end_date": "2023.07",
+            "description": "技术栈：Python / Pandas / TF-IDF / 朴素贝叶斯 完成邮件文本清洗、特征提取与模型训练流程，使用 TF-IDF 建模邮件文本特征。 基于朴素贝叶斯与逻辑回归进行分类实验，准确率达到 92%+，并输出可视化评估结果。 实践与校园经历"
+          },
+          {
+            "project_name": "XX科技有限公司｜软件开发实习生",
+            "role": "",
+            "start_date": "2024.07",
+            "end_date": "2024.09",
+            "description": "参与公司内部管理系统需求开发与缺陷修复，协助完成后端接口开发、数据库维护及接口测试。 配合导师进行模块重构与技术文档编写，了解需求评审、开发、测试到上线的完整流程。"
+          },
+          {
+            "project_name": "计算机学院技术协会｜技术部成员",
+            "role": "",
+            "start_date": "2022.09",
+            "end_date": "2024.06",
+            "description": "参与校内编程分享与技术活动组织，协助新生开展基础编程培训与项目交流。 具备良好的团队协作与沟通能力，能按时推进任务并独立解决常见技术问题。"
+          }
+        ],
+        "internship_experience": [],
+        "occupation_hints": [
+          "后端开发",
+          "算法工程",
+          "前端开发"
+        ],
+        "domain_tags": [
+          "软件研发",
+          "商业分析",
+          "人工智能",
+          "云计算/大数据",
+          "信息技术"
+        ],
+        "complete_score": 85.0,
+        "competitiveness_score": 78.5,
+        "score_level": "B-具备一定竞争力",
+        "strengths": [
+          "基本信息较完整，已包含身份、教育背景和联系方式。",
+          "教育信息完整，学历、学校、专业和毕业年份均已明确。",
+          "技能信息较丰富，已识别 8 项技能/工具。",
+          "已有项目经历 5 段，可作为能力证明材料。",
+          "有竞赛/获奖记录，可增强简历背书。",
+          "求职意向较明确，方向聚焦在 后端开发, 算法工程, 前端开发。",
+          "学历背景具备一定竞争力，当前学历为本科。",
+          "硬技能储备较好，已覆盖 5 项技能。",
+          "工具栈较丰富，已覆盖 3 类工具。",
+          "项目经历数量较充足，对岗位能力证明较有帮助。",
+          "证书/获奖背书较好，可增强简历可信度。",
+          "职业方向较聚焦，当前方向信号为 后端开发, 算法工程, 前端开发。",
+          "教育背景扎实，毕业于哈尔滨工程大学计算机科学与技术专业。",
+          "技术栈较为全面，掌握Java、Spring Boot、MySQL、Redis等后端开发主流技术，并有实际项目应用经验。",
+          "具备多个完整的项目开发经历，包括在线学习平台、校园二手交易平台等，展示了从需求分析到开发测试的全流程能力。",
+          "有算法项目经验（垃圾邮件分类系统），展示了数据处理和建模能力。",
+          "获得校级奖学金和优秀学生干部等荣誉，体现了学习能力和综合素质。",
+          "求职意向明确，聚焦于Java后端开发方向。"
+        ],
+        "weaknesses": [
+          "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+          "实习经验不足，建议优先争取与目标方向一致的实习。",
+          "缺乏正式的、与目标岗位高度相关的实习经历。",
+          "项目经历中，部分项目（如垃圾邮件分类系统）技术栈与核心求职方向（Java后端）的关联度有待加强。",
+          "技术深度和大型项目、高并发场景的处理经验可能不足。"
+        ],
+        "missing_dimensions": [
+          "项目经历",
+          "实习经历"
+        ],
+        "summary": "该生为哈尔滨工程大学计算机科学与技术专业2025届本科毕业生，求职目标明确为Java后端开发。具备扎实的计算机专业基础和较为全面的技术栈（Java/Spring Boot/MySQL/Redis等），并通过多个课程项目实践了后端及全栈开发流程，展示了良好的工程实现和问题解决能力。拥有算法项目经验和校级荣誉。主要短板在于缺乏行业实习经历，项目复杂度和与目标岗位的技术深度匹配度有待提升，整体具备作为软件开发实习生的竞争力。",
+        "potential_profile": {
+          "growth_level": "中等偏上",
+          "preferred_directions": [
+            "后端开发",
+            "算法工程",
+            "前端开发"
+          ],
+          "domain_tags": [
+            "软件研发",
+            "商业分析",
+            "人工智能",
+            "云计算/大数据",
+            "信息技术"
+          ],
+          "basis_score": 78.5,
+          "reason": "根据规则评分、职业方向标签和领域标签生成的兜底潜力画像。"
+        },
+        "ability_evidence": {
+          "project_examples": [
+            {
+              "project_name": "在线学习平台系统｜后端开发",
+              "role": "",
+              "start_date": "2024.03",
+              "end_date": "2024.06",
+              "description": "技术栈：Spring Boot / MyBatis / MySQL / Redis / JWT 负责用户、课程、评论等核心模块的接口设计与开发，完成登录鉴权、课程查询与互动功能实现。 使用 JWT 实现身份认证与权限控制，引入 Redis 缓存热门课程数据，提升接口访问效率。 优化数据库表结构与 SQL 查询逻辑，减少重复查询，热门课程接口响应时间降低约 35%。"
+            },
+            {
+              "project_name": "校园二手交易平台｜全栈开发",
+              "role": "",
+              "start_date": "2023.10",
+              "end_date": "2024.01",
+              "description": "技术栈：Vue / Spring Boot / MySQL / Git 负责商品、订单、用户、消息等模块设计与开发，完成商品发布、搜索筛选、订单管理等核心流程。 基于前后端分离方案完成页面交互与接口联调，支持多条件筛选、模糊查询及用户评价功能。 独立完成需求分析、数据库设计、开发测试与答辩展示，项目获课程优秀项目评价。"
+            },
+            {
+              "project_name": "垃圾邮件分类系统｜算法实现",
+              "role": "",
+              "start_date": "2023.05",
+              "end_date": "2023.07",
+              "description": "技术栈：Python / Pandas / TF-IDF / 朴素贝叶斯 完成邮件文本清洗、特征提取与模型训练流程，使用 TF-IDF 建模邮件文本特征。 基于朴素贝叶斯与逻辑回归进行分类实验，准确率达到 92%+，并输出可视化评估结果。 实践与校园经历"
+            },
+            {
+              "project_name": "XX科技有限公司｜软件开发实习生",
+              "role": "",
+              "start_date": "2024.07",
+              "end_date": "2024.09",
+              "description": "参与公司内部管理系统需求开发与缺陷修复，协助完成后端接口开发、数据库维护及接口测试。 配合导师进行模块重构与技术文档编写，了解需求评审、开发、测试到上线的完整流程。"
+            },
+            {
+              "project_name": "计算机学院技术协会｜技术部成员",
+              "role": "",
+              "start_date": "2022.09",
+              "end_date": "2024.06",
+              "description": "参与校内编程分享与技术活动组织，协助新生开展基础编程培训与项目交流。 具备良好的团队协作与沟通能力，能按时推进任务并独立解决常见技术问题。"
+            }
+          ],
+          "internship_examples": [],
+          "certificate_tags": [
+            "学历:本科",
+            "学校:哈尔滨工程大学",
+            "专业:计算机科学与技术"
+          ],
+          "practice_tags": [
+            "项目:数据处理",
+            "项目:建模算法",
+            "项目:工程开发",
+            "项目:科研实践",
+            "项目:业务协作",
+            "有项目经历",
+            "有竞赛/获奖经历"
+          ],
+          "project_keywords": [
+            "sql",
+            "分析",
+            "模型",
+            "分类",
+            "开发",
+            "接口",
+            "系统",
+            "平台",
+            "后端",
+            "实验",
+            "沟通",
+            "需求",
+            "协作"
+          ],
+          "internship_keywords": [],
+          "score_evidence": {
+            "profile_completeness_score": 85.0,
+            "competitiveness_base_score": 78.5,
+            "score_level": "B-具备一定竞争力"
+          }
+        }
+      },
+      "target_job_snapshot": {
+        "standard_job_name": "Java 后端开发工程师 / 软件开发实习生",
+        "job_category": "后端开发",
+        "job_level": "",
+        "degree_requirement": "本科",
+        "major_requirement": [
+          "计算机科学与技术",
+          "软件工程",
+          "电子信息工程",
+          "网络工程",
+          "信息安全"
+        ],
+        "hard_skills": [
+          "Java",
+          "Spring Boot",
+          "MyBatis",
+          "MySQL",
+          "Redis",
+          "JWT",
+          "Git",
+          "Linux",
+          "SQL",
+          "Python"
+        ],
+        "tools_or_tech_stack": [],
+        "certificate_requirement": [],
+        "practice_requirement": [],
+        "soft_skills": [
+          "团队协作",
+          "沟通能力",
+          "问题解决",
+          "学习能力",
+          "责任心",
+          "时间管理"
+        ],
+        "suitable_student_profile": "适合相关专业背景，且具备岗位核心技能基础，并有项目或实习实践经历的学生。",
+        "summary": "Java 后端开发工程师/软件开发实习生主要负责后端服务的设计、开发与维护，涉及核心模块接口开发、数据库优化、缓存应用及系统性能提升。适合具备扎实 Java 基础、熟悉主流框架（如 Spring Boot）、有项目实践经验的计算机相关专业本科学生。岗位提供从实习到高级开发的纵向晋升路径，并可横向转向前端、全栈、测试等方向。",
+        "vertical_paths": [
+          "软件开发实习生",
+          "Java 后端开发工程师",
+          "高级 Java 开发工程师",
+          "技术专家/架构师",
+          "技术经理"
+        ],
+        "transfer_paths": [
+          "前端开发工程师",
+          "全栈开发工程师",
+          "测试开发工程师",
+          "运维工程师",
+          "大数据开发工程师"
+        ],
+        "skill_frequency": [],
+        "industry_distribution": [],
+        "city_distribution": [],
+        "salary_stats": {
+          "salary_min_month_avg": null,
+          "salary_min_month_median": null,
+          "salary_min_month_p25": null,
+          "salary_min_month_p75": null,
+          "salary_max_month_avg": null,
+          "salary_max_month_median": null,
+          "salary_max_month_p25": null,
+          "salary_max_month_p75": null,
+          "salary_mid_month_avg": null,
+          "salary_mid_month_median": null,
+          "valid_salary_count": 0
+        }
+      },
+      "match_snapshot": {
+        "basic_requirement_score": 100.0,
+        "vocational_skill_score": 58.0,
+        "professional_quality_score": 60.0,
+        "development_potential_score": 70.77,
+        "overall_match_score": 72.28,
+        "score_level": "C-中等匹配",
+        "matched_items": [
+          {
+            "dimension": "education",
+            "student_item": "本科",
+            "required_item": "本科",
+            "match_type": "学历门槛满足"
+          },
+          {
+            "dimension": "major",
+            "student_item": "计算机科学与技术",
+            "required_item": "计算机科学与技术",
+            "similarity": 1.0
+          },
+          {
+            "dimension": "hard_skills",
+            "student_item": "Java",
+            "required_item": "Java",
+            "similarity": 1.0
+          },
+          {
+            "dimension": "hard_skills",
+            "student_item": "Redis",
+            "required_item": "Redis",
+            "similarity": 1.0
+          },
+          {
+            "dimension": "hard_skills",
+            "student_item": "SQL",
+            "required_item": "SQL",
+            "similarity": 1.0
+          },
+          {
+            "dimension": "hard_skills",
+            "student_item": "Python",
+            "required_item": "Python",
+            "similarity": 1.0
+          },
+          {
+            "dimension": "career_direction",
+            "student_item": "后端开发",
+            "required_item": "后端开发",
+            "similarity": 1.0
+          }
+        ],
+        "missing_items": [
+          {
+            "dimension": "hard_skills",
+            "required_item": "Spring Boot",
+            "reason": "学生侧暂未匹配到岗位要求项：Spring Boot"
+          },
+          {
+            "dimension": "hard_skills",
+            "required_item": "MyBatis",
+            "reason": "学生侧暂未匹配到岗位要求项：MyBatis"
+          },
+          {
+            "dimension": "hard_skills",
+            "required_item": "MySQL",
+            "reason": "学生侧暂未匹配到岗位要求项：MySQL"
+          },
+          {
+            "dimension": "hard_skills",
+            "required_item": "JWT",
+            "reason": "学生侧暂未匹配到岗位要求项：JWT"
+          },
+          {
+            "dimension": "hard_skills",
+            "required_item": "Git",
+            "reason": "学生侧暂未匹配到岗位要求项：Git"
+          },
+          {
+            "dimension": "hard_skills",
+            "required_item": "Linux",
+            "reason": "学生侧暂未匹配到岗位要求项：Linux"
+          },
+          {
+            "dimension": "soft_skills",
+            "required_item": "沟通协作",
+            "reason": "学生侧暂未匹配到岗位要求项：沟通协作"
+          },
+          {
+            "dimension": "soft_skills",
+            "required_item": "问题解决",
+            "reason": "学生侧暂未匹配到岗位要求项：问题解决"
+          },
+          {
+            "dimension": "soft_skills",
+            "required_item": "学习能力",
+            "reason": "学生侧暂未匹配到岗位要求项：学习能力"
+          },
+          {
+            "dimension": "soft_skills",
+            "required_item": "责任心",
+            "reason": "学生侧暂未匹配到岗位要求项：责任心"
+          },
+          {
+            "dimension": "soft_skills",
+            "required_item": "时间管理",
+            "reason": "学生侧暂未匹配到岗位要求项：时间管理"
+          },
+          {
+            "dimension": "career_direction",
+            "required_item": "Java 后端开发工程师 / 软件开发实习生",
+            "reason": "学生侧暂未匹配到岗位要求项：Java 后端开发工程师 / 软件开发实习生"
+          }
+        ],
+        "strengths": [
+          "教育背景完全匹配：本科，计算机科学与技术专业，符合岗位硬性要求。",
+          "核心编程语言基础扎实：具备Java技能，是后端开发的核心基础。",
+          "具备部分关键技术栈：已掌握Redis、SQL、Python等，与岗位部分要求重合。",
+          "项目经验丰富：拥有多个后端及全栈开发项目经验，展示了工程实现和问题解决能力。",
+          "软技能基础良好：具备团队协作、沟通、问题解决和项目管理能力，与岗位软技能要求部分匹配。",
+          "学习意愿与潜力：求职目标明确，有算法项目经验，显示出较强的学习能力和技术广度。"
+        ],
+        "weaknesses": [
+          "关键框架技能缺失：未掌握岗位核心要求的Spring Boot、MyBatis框架。",
+          "数据库技能不匹配：未明确掌握MySQL技能。",
+          "工具与系统技能不足：未匹配到Git、Linux等开发运维必备工具技能。",
+          "特定技术点缺失：缺少JWT（身份认证）相关经验。",
+          "行业实践经验缺乏：无正式的后端开发实习经历，项目复杂度和业务场景深度可能不足。"
+        ],
+        "improvement_suggestions": [
+          "技能补强：系统学习Spring Boot和MyBatis框架，可通过在线课程（如慕课网、B站相关教程）和官方文档入手，并动手搭建一个简单的CRUD项目。",
+          "深化数据库知识：重点学习MySQL，包括数据库设计、SQL优化、索引原理等，并在项目中实践。",
+          "掌握开发工具：熟练使用Git进行版本控制和团队协作，熟悉Linux常用命令进行环境部署和问题排查。",
+          "项目经验聚焦与深化：将现有项目（如在线学习平台）的技术描述与岗位要求对齐，明确写出使用了Spring Boot、MyBatis、MySQL、JWT等技术。尝试增加项目复杂度，如引入微服务、消息队列或更复杂的缓存策略。",
+          "争取实习机会：积极寻找Java后端开发实习岗位，积累真实的行业项目经验和团队协作流程。",
+          "简历表达优化：在简历中突出与Java后端岗位最相关的项目（如在线学习平台、二手交易平台），将技术栈描述得与招聘要求更吻合，并量化项目成果（如性能提升百分比）。"
+        ],
+        "recommendation": "可以投递该岗位，但建议优先补齐关键技能或项目短板后再重点冲刺。",
+        "analysis_summary": "该候选人为计算机专业本科应届生，教育背景完全符合岗位要求，并具备Java基础和部分相关技术栈及项目经验，显示出良好的学习潜力和工程实践基础。然而，其技能图谱存在关键缺口，特别是缺乏Spring Boot、MyBatis等核心框架的明确掌握，以及行业实习经验的缺失，导致与目标岗位的技术深度匹配度不足。建议在投递前优先补强核心框架技能并优化项目描述，整体匹配度为中等水平，可作为重点提升后投递的备选目标。",
+        "dimension_details": {
+          "basic_requirement": {
+            "score": 100.0,
+            "matched_items": [
+              {
+                "dimension": "education",
+                "student_item": "本科",
+                "required_item": "本科",
+                "match_type": "学历门槛满足"
+              },
+              {
+                "dimension": "major",
+                "student_item": "计算机科学与技术",
+                "required_item": "计算机科学与技术",
+                "similarity": 1.0
+              }
+            ],
+            "missing_items": [],
+            "score_reasons": [
+              "学生学历 本科 满足岗位学历要求 本科。",
+              "专业匹配得分 100.00，证书匹配得分 100.00。"
+            ],
+            "detail": {
+              "degree_score": 100.0,
+              "major_score": 100.0,
+              "certificate_score": 100.0,
+              "degree_detail": {
+                "student_degree": "本科",
+                "job_degree_requirement": "本科",
+                "student_degree_rank": 3,
+                "job_degree_rank_requirement": 3
+              }
+            }
+          },
+          "vocational_skill": {
+            "score": 58.0,
+            "matched_items": [
+              {
+                "dimension": "hard_skills",
+                "student_item": "Java",
+                "required_item": "Java",
+                "similarity": 1.0
+              },
+              {
+                "dimension": "hard_skills",
+                "student_item": "Redis",
+                "required_item": "Redis",
+                "similarity": 1.0
+              },
+              {
+                "dimension": "hard_skills",
+                "student_item": "SQL",
+                "required_item": "SQL",
+                "similarity": 1.0
+              },
+              {
+                "dimension": "hard_skills",
+                "student_item": "Python",
+                "required_item": "Python",
+                "similarity": 1.0
+              }
+            ],
+            "missing_items": [
+              {
+                "dimension": "hard_skills",
+                "required_item": "Spring Boot",
+                "reason": "学生侧暂未匹配到岗位要求项：Spring Boot"
+              },
+              {
+                "dimension": "hard_skills",
+                "required_item": "MyBatis",
+                "reason": "学生侧暂未匹配到岗位要求项：MyBatis"
+              },
+              {
+                "dimension": "hard_skills",
+                "required_item": "MySQL",
+                "reason": "学生侧暂未匹配到岗位要求项：MySQL"
+              },
+              {
+                "dimension": "hard_skills",
+                "required_item": "JWT",
+                "reason": "学生侧暂未匹配到岗位要求项：JWT"
+              },
+              {
+                "dimension": "hard_skills",
+                "required_item": "Git",
+                "reason": "学生侧暂未匹配到岗位要求项：Git"
+              },
+              {
+                "dimension": "hard_skills",
+                "required_item": "Linux",
+                "reason": "学生侧暂未匹配到岗位要求项：Linux"
+              }
+            ],
+            "score_reasons": [
+              "硬技能覆盖得分 40.00，工具技能覆盖得分 100.00。",
+              "学生硬技能与岗位要求重合度偏低，需要优先补齐核心技能。"
+            ],
+            "detail": {
+              "hard_skill_score": 40.0,
+              "tool_skill_score": 100.0
+            }
+          },
+          "professional_quality": {
+            "score": 60.0,
+            "matched_items": [],
+            "missing_items": [
+              {
+                "dimension": "soft_skills",
+                "required_item": "沟通协作",
+                "reason": "学生侧暂未匹配到岗位要求项：沟通协作"
+              },
+              {
+                "dimension": "soft_skills",
+                "required_item": "问题解决",
+                "reason": "学生侧暂未匹配到岗位要求项：问题解决"
+              },
+              {
+                "dimension": "soft_skills",
+                "required_item": "学习能力",
+                "reason": "学生侧暂未匹配到岗位要求项：学习能力"
+              },
+              {
+                "dimension": "soft_skills",
+                "required_item": "责任心",
+                "reason": "学生侧暂未匹配到岗位要求项：责任心"
+              },
+              {
+                "dimension": "soft_skills",
+                "required_item": "时间管理",
+                "reason": "学生侧暂未匹配到岗位要求项：时间管理"
+              }
+            ],
+            "score_reasons": [
+              "岗位未提供明确实践/经验要求，该项默认满分。",
+              "软技能覆盖得分 0.00，实践经历/经验要求得分 100.00。"
+            ],
+            "detail": {
+              "practice_score": 100.0,
+              "soft_skill_score": 0.0,
+              "practice_detail": {
+                "requirement_count": 0,
+                "project_count": 5,
+                "internship_count": 0
+              }
+            }
+          },
+          "development_potential": {
+            "score": 70.77,
+            "matched_items": [
+              {
+                "dimension": "career_direction",
+                "student_item": "后端开发",
+                "required_item": "后端开发",
+                "similarity": 1.0
+              }
+            ],
+            "missing_items": [
+              {
+                "dimension": "career_direction",
+                "required_item": "Java 后端开发工程师 / 软件开发实习生",
+                "reason": "学生侧暂未匹配到岗位要求项：Java 后端开发工程师 / 软件开发实习生"
+              }
+            ],
+            "score_reasons": [
+              "职业方向一致性得分 50.00。",
+              "学生完整度/竞争力形成的发展基础得分 80.77。",
+              "岗位层级适配得分 100.00。岗位层级未明确，层级适配项默认满分。"
+            ],
+            "detail": {
+              "direction_alignment_score": 50.0,
+              "readiness_score": 80.77,
+              "level_fit_score": 100.0,
+              "complete_score": 85.0,
+              "competitiveness_score": 78.5,
+              "student_level_rank": 2,
+              "job_level_rank": 0,
+              "direction_detail": {
+                "student_direction_tags": [
+                  "后端开发",
+                  "算法工程",
+                  "前端开发",
+                  "软件研发",
+                  "商业分析",
+                  "人工智能",
+                  "云计算/大数据",
+                  "信息技术"
+                ],
+                "job_direction_tags": [
+                  "Java 后端开发工程师 / 软件开发实习生",
+                  "后端开发"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "candidate_goal_jobs": [
+        "Java 后端开发工程师 / 软件开发实习生",
+        "后端开发",
+        "算法工程",
+        "前端开发"
+      ],
+      "direct_path_options": [
+        {
+          "path_type": "direct_vertical",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "软件开发实习生",
+          "source": "job_profile.vertical_paths",
+          "path_score_hint": 76.28,
+          "priority_hint": "medium",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        },
+        {
+          "path_type": "direct_vertical",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "Java 后端开发工程师",
+          "source": "job_profile.vertical_paths",
+          "path_score_hint": 76.28,
+          "priority_hint": "medium",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        },
+        {
+          "path_type": "direct_vertical",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "高级 Java 开发工程师",
+          "source": "job_profile.vertical_paths",
+          "path_score_hint": 76.28,
+          "priority_hint": "medium",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        },
+        {
+          "path_type": "direct_vertical",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "技术专家/架构师",
+          "source": "job_profile.vertical_paths",
+          "path_score_hint": 76.28,
+          "priority_hint": "medium",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        },
+        {
+          "path_type": "direct_vertical",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "技术经理",
+          "source": "job_profile.vertical_paths",
+          "path_score_hint": 76.28,
+          "priority_hint": "medium",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        }
+      ],
+      "transition_path_options": [
+        {
+          "path_type": "transfer",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "前端开发工程师",
+          "source": "job_profile.transfer_paths",
+          "path_score_hint": 70.28,
+          "priority_hint": "high",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        },
+        {
+          "path_type": "transfer",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "全栈开发工程师",
+          "source": "job_profile.transfer_paths",
+          "path_score_hint": 70.28,
+          "priority_hint": "high",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        },
+        {
+          "path_type": "transfer",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "测试开发工程师",
+          "source": "job_profile.transfer_paths",
+          "path_score_hint": 70.28,
+          "priority_hint": "high",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        },
+        {
+          "path_type": "transfer",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "运维工程师",
+          "source": "job_profile.transfer_paths",
+          "path_score_hint": 70.28,
+          "priority_hint": "high",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        },
+        {
+          "path_type": "transfer",
+          "from_job": "",
+          "to_job": "",
+          "path_text": "大数据开发工程师",
+          "source": "job_profile.transfer_paths",
+          "path_score_hint": 70.28,
+          "priority_hint": "high",
+          "source_tier": "offline_profile",
+          "is_fallback": false
+        }
+      ],
+      "gap_analysis": [
+        {
+          "gap_type": "hard_skills",
+          "gap_item": "Spring Boot",
+          "current_status": "学生侧暂未匹配到岗位要求项：Spring Boot",
+          "action_hint": "技能补强：系统学习Spring Boot和MyBatis框架，可通过在线课程（如慕课网、B站相关教程）和官方文档入手，并动手搭建一个简单的CRUD项目。",
+          "priority": "high",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "hard_skills",
+          "gap_item": "MyBatis",
+          "current_status": "学生侧暂未匹配到岗位要求项：MyBatis",
+          "action_hint": "技能补强：系统学习Spring Boot和MyBatis框架，可通过在线课程（如慕课网、B站相关教程）和官方文档入手，并动手搭建一个简单的CRUD项目。",
+          "priority": "high",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "hard_skills",
+          "gap_item": "MySQL",
+          "current_status": "学生侧暂未匹配到岗位要求项：MySQL",
+          "action_hint": "深化数据库知识：重点学习MySQL，包括数据库设计、SQL优化、索引原理等，并在项目中实践。",
+          "priority": "high",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "hard_skills",
+          "gap_item": "JWT",
+          "current_status": "学生侧暂未匹配到岗位要求项：JWT",
+          "action_hint": "项目经验聚焦与深化：将现有项目（如在线学习平台）的技术描述与岗位要求对齐，明确写出使用了Spring Boot、MyBatis、MySQL、JWT等技术。尝试增加项目复杂度，如引入微服务、消息队列或更复杂的缓存策略。",
+          "priority": "high",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "hard_skills",
+          "gap_item": "Git",
+          "current_status": "学生侧暂未匹配到岗位要求项：Git",
+          "action_hint": "掌握开发工具：熟练使用Git进行版本控制和团队协作，熟悉Linux常用命令进行环境部署和问题排查。",
+          "priority": "high",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "hard_skills",
+          "gap_item": "Linux",
+          "current_status": "学生侧暂未匹配到岗位要求项：Linux",
+          "action_hint": "掌握开发工具：熟练使用Git进行版本控制和团队协作，熟悉Linux常用命令进行环境部署和问题排查。",
+          "priority": "high",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "soft_skills",
+          "gap_item": "沟通协作",
+          "current_status": "学生侧暂未匹配到岗位要求项：沟通协作",
+          "action_hint": "在项目和实习经历中补充 沟通协作 的行为证据与协作成果。",
+          "priority": "medium",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "soft_skills",
+          "gap_item": "问题解决",
+          "current_status": "学生侧暂未匹配到岗位要求项：问题解决",
+          "action_hint": "在项目和实习经历中补充 问题解决 的行为证据与协作成果。",
+          "priority": "medium",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "soft_skills",
+          "gap_item": "学习能力",
+          "current_status": "学生侧暂未匹配到岗位要求项：学习能力",
+          "action_hint": "在项目和实习经历中补充 学习能力 的行为证据与协作成果。",
+          "priority": "medium",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "soft_skills",
+          "gap_item": "责任心",
+          "current_status": "学生侧暂未匹配到岗位要求项：责任心",
+          "action_hint": "在项目和实习经历中补充 责任心 的行为证据与协作成果。",
+          "priority": "medium",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "soft_skills",
+          "gap_item": "时间管理",
+          "current_status": "学生侧暂未匹配到岗位要求项：时间管理",
+          "action_hint": "在项目和实习经历中补充 时间管理 的行为证据与协作成果。",
+          "priority": "medium",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "career_direction",
+          "gap_item": "Java 后端开发工程师 / 软件开发实习生",
+          "current_status": "学生侧暂未匹配到岗位要求项：Java 后端开发工程师 / 软件开发实习生",
+          "action_hint": "结合岗位要求补充可量化的学习成果、项目经验和简历表达证据。",
+          "priority": "medium",
+          "source": "job_match.missing_items"
+        },
+        {
+          "gap_type": "student_weakness",
+          "gap_item": "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+          "current_status": "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+          "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+          "priority": "medium",
+          "source": "student_profile.weaknesses"
+        },
+        {
+          "gap_type": "student_weakness",
+          "gap_item": "实习经验不足，建议优先争取与目标方向一致的实习。",
+          "current_status": "实习经验不足，建议优先争取与目标方向一致的实习。",
+          "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+          "priority": "medium",
+          "source": "student_profile.weaknesses"
+        },
+        {
+          "gap_type": "student_weakness",
+          "gap_item": "缺乏正式的、与目标岗位高度相关的实习经历。",
+          "current_status": "缺乏正式的、与目标岗位高度相关的实习经历。",
+          "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+          "priority": "medium",
+          "source": "student_profile.weaknesses"
+        },
+        {
+          "gap_type": "student_weakness",
+          "gap_item": "项目经历中，部分项目（如垃圾邮件分类系统）技术栈与核心求职方向（Java后端）的关联度有待加强。",
+          "current_status": "项目经历中，部分项目（如垃圾邮件分类系统）技术栈与核心求职方向（Java后端）的关联度有待加强。",
+          "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+          "priority": "medium",
+          "source": "student_profile.weaknesses"
+        },
+        {
+          "gap_type": "student_weakness",
+          "gap_item": "技术深度和大型项目、高并发场景的处理经验可能不足。",
+          "current_status": "技术深度和大型项目、高并发场景的处理经验可能不足。",
+          "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+          "priority": "medium",
+          "source": "student_profile.weaknesses"
+        },
+        {
+          "gap_type": "missing_dimension",
+          "gap_item": "项目经历",
+          "current_status": "学生画像仍缺少项目经历相关证据",
+          "action_hint": "优先补充该维度的信息、经历或作品材料，以便提升后续匹配和报告质量。",
+          "priority": "medium",
+          "source": "student_profile.missing_dimensions"
+        },
+        {
+          "gap_type": "missing_dimension",
+          "gap_item": "实习经历",
+          "current_status": "学生画像仍缺少实习经历相关证据",
+          "action_hint": "优先补充该维度的信息、经历或作品材料，以便提升后续匹配和报告质量。",
+          "priority": "medium",
+          "source": "student_profile.missing_dimensions"
+        }
+      ],
+      "planning_constraints": {
+        "current_degree": "本科",
+        "current_major": "计算机科学与技术",
+        "graduation_year": "2025",
+        "target_job_name": "Java 后端开发工程师 / 软件开发实习生",
+        "target_job_level": "",
+        "target_degree_requirement": "本科",
+        "overall_match_score": 72.28,
+        "direct_path_feasible": false,
+        "transition_first_recommended": false,
+        "short_term_focus": "优先补齐高优先级技能/工具/项目缺口，并准备 1-2 个能直接支撑目标岗位的作品或案例。",
+        "mid_term_focus": "结合岗位纵向路径和横向转岗路径，形成主目标岗位 + 备选过渡岗位组合，并持续补充行业项目经验。"
+      },
+      "planner_context": {
+        "student_summary": "该生为哈尔滨工程大学计算机科学与技术专业2025届本科毕业生，求职目标明确为Java后端开发。具备扎实的计算机专业基础和较为全面的技术栈（Java/Spring Boot/MySQL/Redis等），并通过多个课程项目实践了后端及全栈开发流程，展示了良好的工程实现和问题解决能力。拥有算法项目经验和校级荣誉。主要短板在于缺乏行业实习经历，项目复杂度和与目标岗位的技术深度匹配度有待提升，整体具备作为软件开发实习生的竞争力。",
+        "job_summary": "Java 后端开发工程师/软件开发实习生主要负责后端服务的设计、开发与维护，涉及核心模块接口开发、数据库优化、缓存应用及系统性能提升。适合具备扎实 Java 基础、熟悉主流框架（如 Spring Boot）、有项目实践经验的计算机相关专业本科学生。岗位提供从实习到高级开发的纵向晋升路径，并可横向转向前端、全栈、测试等方向。",
+        "match_summary": "该候选人为计算机专业本科应届生，教育背景完全符合岗位要求，并具备Java基础和部分相关技术栈及项目经验，显示出良好的学习潜力和工程实践基础。然而，其技能图谱存在关键缺口，特别是缺乏Spring Boot、MyBatis等核心框架的明确掌握，以及行业实习经验的缺失，导致与目标岗位的技术深度匹配度不足。建议在投递前优先补强核心框架技能并优化项目描述，整体匹配度为中等水平，可作为重点提升后投递的备选目标。",
+        "recommendation": "可以投递该岗位，但建议优先补齐关键技能或项目短板后再重点冲刺。",
+        "student_strengths": [
+          "基本信息较完整，已包含身份、教育背景和联系方式。",
+          "教育信息完整，学历、学校、专业和毕业年份均已明确。",
+          "技能信息较丰富，已识别 8 项技能/工具。",
+          "已有项目经历 5 段，可作为能力证明材料。",
+          "有竞赛/获奖记录，可增强简历背书。",
+          "求职意向较明确，方向聚焦在 后端开发, 算法工程, 前端开发。",
+          "学历背景具备一定竞争力，当前学历为本科。",
+          "硬技能储备较好，已覆盖 5 项技能。",
+          "工具栈较丰富，已覆盖 3 类工具。",
+          "项目经历数量较充足，对岗位能力证明较有帮助。",
+          "证书/获奖背书较好，可增强简历可信度。",
+          "职业方向较聚焦，当前方向信号为 后端开发, 算法工程, 前端开发。",
+          "教育背景扎实，毕业于哈尔滨工程大学计算机科学与技术专业。",
+          "技术栈较为全面，掌握Java、Spring Boot、MySQL、Redis等后端开发主流技术，并有实际项目应用经验。",
+          "具备多个完整的项目开发经历，包括在线学习平台、校园二手交易平台等，展示了从需求分析到开发测试的全流程能力。",
+          "有算法项目经验（垃圾邮件分类系统），展示了数据处理和建模能力。",
+          "获得校级奖学金和优秀学生干部等荣誉，体现了学习能力和综合素质。",
+          "求职意向明确，聚焦于Java后端开发方向。"
+        ],
+        "student_weaknesses": [
+          "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+          "实习经验不足，建议优先争取与目标方向一致的实习。",
+          "缺乏正式的、与目标岗位高度相关的实习经历。",
+          "项目经历中，部分项目（如垃圾邮件分类系统）技术栈与核心求职方向（Java后端）的关联度有待加强。",
+          "技术深度和大型项目、高并发场景的处理经验可能不足。"
+        ],
+        "match_strengths": [
+          "教育背景完全匹配：本科，计算机科学与技术专业，符合岗位硬性要求。",
+          "核心编程语言基础扎实：具备Java技能，是后端开发的核心基础。",
+          "具备部分关键技术栈：已掌握Redis、SQL、Python等，与岗位部分要求重合。",
+          "项目经验丰富：拥有多个后端及全栈开发项目经验，展示了工程实现和问题解决能力。",
+          "软技能基础良好：具备团队协作、沟通、问题解决和项目管理能力，与岗位软技能要求部分匹配。",
+          "学习意愿与潜力：求职目标明确，有算法项目经验，显示出较强的学习能力和技术广度。"
+        ],
+        "match_weaknesses": [
+          "关键框架技能缺失：未掌握岗位核心要求的Spring Boot、MyBatis框架。",
+          "数据库技能不匹配：未明确掌握MySQL技能。",
+          "工具与系统技能不足：未匹配到Git、Linux等开发运维必备工具技能。",
+          "特定技术点缺失：缺少JWT（身份认证）相关经验。",
+          "行业实践经验缺乏：无正式的后端开发实习经历，项目复杂度和业务场景深度可能不足。"
+        ],
+        "improvement_suggestions": [
+          "技能补强：系统学习Spring Boot和MyBatis框架，可通过在线课程（如慕课网、B站相关教程）和官方文档入手，并动手搭建一个简单的CRUD项目。",
+          "深化数据库知识：重点学习MySQL，包括数据库设计、SQL优化、索引原理等，并在项目中实践。",
+          "掌握开发工具：熟练使用Git进行版本控制和团队协作，熟悉Linux常用命令进行环境部署和问题排查。",
+          "项目经验聚焦与深化：将现有项目（如在线学习平台）的技术描述与岗位要求对齐，明确写出使用了Spring Boot、MyBatis、MySQL、JWT等技术。尝试增加项目复杂度，如引入微服务、消息队列或更复杂的缓存策略。",
+          "争取实习机会：积极寻找Java后端开发实习岗位，积累真实的行业项目经验和团队协作流程。",
+          "简历表达优化：在简历中突出与Java后端岗位最相关的项目（如在线学习平台、二手交易平台），将技术栈描述得与招聘要求更吻合，并量化项目成果（如性能提升百分比）。"
+        ],
+        "direct_path_count": 5,
+        "transition_path_count": 5,
+        "high_priority_gap_count": 6,
+        "path_source_summary": {
+          "job_profile.vertical_paths": 5,
+          "job_profile.transfer_paths": 5
+        },
+        "graph_fact_snapshot": {
+          "related_jobs": [],
+          "promote_path_count": 0,
+          "transfer_path_count": 0
+        },
+        "market_fact_snapshot": {
+          "job_count": 0,
+          "salary_stats": {},
+          "top_cities": [],
+          "top_industries": [],
+          "top_company_types": [],
+          "top_company_sizes": [],
+          "company_samples": []
+        },
+        "semantic_fact_snapshot": {
+          "query": "",
+          "top_k": 0,
+          "hits": []
+        },
+        "expected_output_hint": {
+          "primary_target_job": "首选目标岗位",
+          "alternative_target_jobs": "备选岗位列表",
+          "direct_path": "直接达成路径",
+          "transition_path": "过渡路径",
+          "short_term_plan": "短期3-6个月计划",
+          "mid_term_plan": "中期6-18个月计划",
+          "risk_notes": "路径风险和注意事项"
+        }
+      },
+      "build_warnings": []
+    }
+  },
+  "career_plan_input_payload": {
+    "target_job_name": "Java 后端开发工程师 / 软件开发实习生",
+    "student_snapshot": {
+      "name": "张三",
+      "school": "哈尔滨工程大学",
+      "major": "计算机科学与技术",
+      "degree": "本科",
+      "graduation_year": "2025",
+      "hard_skills": [
+        "C++",
+        "Java",
+        "SQL",
+        "Python",
+        "Redis"
+      ],
+      "tool_skills": [
+        "Linux",
+        "Git",
+        "Docker"
+      ],
+      "soft_skills": [
+        "teamwork",
+        "communication",
+        "problem_solving",
+        "project_management"
+      ],
+      "certificates": [
+        "校级一等奖学金（2023）",
+        "优秀学生干部"
+      ],
+      "project_experience": [
+        {
+          "project_name": "在线学习平台系统｜后端开发",
+          "role": "",
+          "start_date": "2024.03",
+          "end_date": "2024.06",
+          "description": "技术栈：Spring Boot / MyBatis / MySQL / Redis / JWT 负责用户、课程、评论等核心模块的接口设计与开发，完成登录鉴权、课程查询与互动功能实现。 使用 JWT 实现身份认证与权限控制，引入 Redis 缓存热门课程数据，提升接口访问效率。 优化数据库表结构与 SQL 查询逻辑，减少重复查询，热门课程接口响应时间降低约 35%。"
+        },
+        {
+          "project_name": "校园二手交易平台｜全栈开发",
+          "role": "",
+          "start_date": "2023.10",
+          "end_date": "2024.01",
+          "description": "技术栈：Vue / Spring Boot / MySQL / Git 负责商品、订单、用户、消息等模块设计与开发，完成商品发布、搜索筛选、订单管理等核心流程。 基于前后端分离方案完成页面交互与接口联调，支持多条件筛选、模糊查询及用户评价功能。 独立完成需求分析、数据库设计、开发测试与答辩展示，项目获课程优秀项目评价。"
+        },
+        {
+          "project_name": "垃圾邮件分类系统｜算法实现",
+          "role": "",
+          "start_date": "2023.05",
+          "end_date": "2023.07",
+          "description": "技术栈：Python / Pandas / TF-IDF / 朴素贝叶斯 完成邮件文本清洗、特征提取与模型训练流程，使用 TF-IDF 建模邮件文本特征。 基于朴素贝叶斯与逻辑回归进行分类实验，准确率达到 92%+，并输出可视化评估结果。 实践与校园经历"
+        },
+        {
+          "project_name": "XX科技有限公司｜软件开发实习生",
+          "role": "",
+          "start_date": "2024.07",
+          "end_date": "2024.09",
+          "description": "参与公司内部管理系统需求开发与缺陷修复，协助完成后端接口开发、数据库维护及接口测试。 配合导师进行模块重构与技术文档编写，了解需求评审、开发、测试到上线的完整流程。"
+        },
+        {
+          "project_name": "计算机学院技术协会｜技术部成员",
+          "role": "",
+          "start_date": "2022.09",
+          "end_date": "2024.06",
+          "description": "参与校内编程分享与技术活动组织，协助新生开展基础编程培训与项目交流。 具备良好的团队协作与沟通能力，能按时推进任务并独立解决常见技术问题。"
+        }
+      ],
+      "internship_experience": [],
+      "occupation_hints": [
+        "后端开发",
+        "算法工程",
+        "前端开发"
+      ],
+      "domain_tags": [
+        "软件研发",
+        "商业分析",
+        "人工智能",
+        "云计算/大数据",
+        "信息技术"
+      ],
+      "complete_score": 85.0,
+      "competitiveness_score": 78.5,
+      "score_level": "B-具备一定竞争力",
+      "strengths": [
+        "基本信息较完整，已包含身份、教育背景和联系方式。",
+        "教育信息完整，学历、学校、专业和毕业年份均已明确。",
+        "技能信息较丰富，已识别 8 项技能/工具。",
+        "已有项目经历 5 段，可作为能力证明材料。",
+        "有竞赛/获奖记录，可增强简历背书。",
+        "求职意向较明确，方向聚焦在 后端开发, 算法工程, 前端开发。",
+        "学历背景具备一定竞争力，当前学历为本科。",
+        "硬技能储备较好，已覆盖 5 项技能。",
+        "工具栈较丰富，已覆盖 3 类工具。",
+        "项目经历数量较充足，对岗位能力证明较有帮助。",
+        "证书/获奖背书较好，可增强简历可信度。",
+        "职业方向较聚焦，当前方向信号为 后端开发, 算法工程, 前端开发。",
+        "教育背景扎实，毕业于哈尔滨工程大学计算机科学与技术专业。",
+        "技术栈较为全面，掌握Java、Spring Boot、MySQL、Redis等后端开发主流技术，并有实际项目应用经验。",
+        "具备多个完整的项目开发经历，包括在线学习平台、校园二手交易平台等，展示了从需求分析到开发测试的全流程能力。",
+        "有算法项目经验（垃圾邮件分类系统），展示了数据处理和建模能力。",
+        "获得校级奖学金和优秀学生干部等荣誉，体现了学习能力和综合素质。",
+        "求职意向明确，聚焦于Java后端开发方向。"
+      ],
+      "weaknesses": [
+        "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+        "实习经验不足，建议优先争取与目标方向一致的实习。",
+        "缺乏正式的、与目标岗位高度相关的实习经历。",
+        "项目经历中，部分项目（如垃圾邮件分类系统）技术栈与核心求职方向（Java后端）的关联度有待加强。",
+        "技术深度和大型项目、高并发场景的处理经验可能不足。"
+      ],
+      "missing_dimensions": [
+        "项目经历",
+        "实习经历"
+      ],
+      "summary": "该生为哈尔滨工程大学计算机科学与技术专业2025届本科毕业生，求职目标明确为Java后端开发。具备扎实的计算机专业基础和较为全面的技术栈（Java/Spring Boot/MySQL/Redis等），并通过多个课程项目实践了后端及全栈开发流程，展示了良好的工程实现和问题解决能力。拥有算法项目经验和校级荣誉。主要短板在于缺乏行业实习经历，项目复杂度和与目标岗位的技术深度匹配度有待提升，整体具备作为软件开发实习生的竞争力。",
+      "potential_profile": {
+        "growth_level": "中等偏上",
+        "preferred_directions": [
+          "后端开发",
+          "算法工程",
+          "前端开发"
+        ],
+        "domain_tags": [
+          "软件研发",
+          "商业分析",
+          "人工智能",
+          "云计算/大数据",
+          "信息技术"
+        ],
+        "basis_score": 78.5,
+        "reason": "根据规则评分、职业方向标签和领域标签生成的兜底潜力画像。"
+      },
+      "ability_evidence": {
+        "project_examples": [
+          {
+            "project_name": "在线学习平台系统｜后端开发",
+            "role": "",
+            "start_date": "2024.03",
+            "end_date": "2024.06",
+            "description": "技术栈：Spring Boot / MyBatis / MySQL / Redis / JWT 负责用户、课程、评论等核心模块的接口设计与开发，完成登录鉴权、课程查询与互动功能实现。 使用 JWT 实现身份认证与权限控制，引入 Redis 缓存热门课程数据，提升接口访问效率。 优化数据库表结构与 SQL 查询逻辑，减少重复查询，热门课程接口响应时间降低约 35%。"
+          },
+          {
+            "project_name": "校园二手交易平台｜全栈开发",
+            "role": "",
+            "start_date": "2023.10",
+            "end_date": "2024.01",
+            "description": "技术栈：Vue / Spring Boot / MySQL / Git 负责商品、订单、用户、消息等模块设计与开发，完成商品发布、搜索筛选、订单管理等核心流程。 基于前后端分离方案完成页面交互与接口联调，支持多条件筛选、模糊查询及用户评价功能。 独立完成需求分析、数据库设计、开发测试与答辩展示，项目获课程优秀项目评价。"
+          },
+          {
+            "project_name": "垃圾邮件分类系统｜算法实现",
+            "role": "",
+            "start_date": "2023.05",
+            "end_date": "2023.07",
+            "description": "技术栈：Python / Pandas / TF-IDF / 朴素贝叶斯 完成邮件文本清洗、特征提取与模型训练流程，使用 TF-IDF 建模邮件文本特征。 基于朴素贝叶斯与逻辑回归进行分类实验，准确率达到 92%+，并输出可视化评估结果。 实践与校园经历"
+          },
+          {
+            "project_name": "XX科技有限公司｜软件开发实习生",
+            "role": "",
+            "start_date": "2024.07",
+            "end_date": "2024.09",
+            "description": "参与公司内部管理系统需求开发与缺陷修复，协助完成后端接口开发、数据库维护及接口测试。 配合导师进行模块重构与技术文档编写，了解需求评审、开发、测试到上线的完整流程。"
+          },
+          {
+            "project_name": "计算机学院技术协会｜技术部成员",
+            "role": "",
+            "start_date": "2022.09",
+            "end_date": "2024.06",
+            "description": "参与校内编程分享与技术活动组织，协助新生开展基础编程培训与项目交流。 具备良好的团队协作与沟通能力，能按时推进任务并独立解决常见技术问题。"
+          }
+        ],
+        "internship_examples": [],
+        "certificate_tags": [
+          "学历:本科",
+          "学校:哈尔滨工程大学",
+          "专业:计算机科学与技术"
+        ],
+        "practice_tags": [
+          "项目:数据处理",
+          "项目:建模算法",
+          "项目:工程开发",
+          "项目:科研实践",
+          "项目:业务协作",
+          "有项目经历",
+          "有竞赛/获奖经历"
+        ],
+        "project_keywords": [
+          "sql",
+          "分析",
+          "模型",
+          "分类",
+          "开发",
+          "接口",
+          "系统",
+          "平台",
+          "后端",
+          "实验",
+          "沟通",
+          "需求",
+          "协作"
+        ],
+        "internship_keywords": [],
+        "score_evidence": {
+          "profile_completeness_score": 85.0,
+          "competitiveness_base_score": 78.5,
+          "score_level": "B-具备一定竞争力"
+        }
+      }
+    },
+    "target_job_snapshot": {
+      "standard_job_name": "Java 后端开发工程师 / 软件开发实习生",
+      "job_category": "后端开发",
+      "job_level": "",
+      "degree_requirement": "本科",
+      "major_requirement": [
+        "计算机科学与技术",
+        "软件工程",
+        "电子信息工程",
+        "网络工程",
+        "信息安全"
+      ],
+      "hard_skills": [
+        "Java",
+        "Spring Boot",
+        "MyBatis",
+        "MySQL",
+        "Redis",
+        "JWT",
+        "Git",
+        "Linux",
+        "SQL",
+        "Python"
+      ],
+      "tools_or_tech_stack": [],
+      "certificate_requirement": [],
+      "practice_requirement": [],
+      "soft_skills": [
+        "团队协作",
+        "沟通能力",
+        "问题解决",
+        "学习能力",
+        "责任心",
+        "时间管理"
+      ],
+      "suitable_student_profile": "适合相关专业背景，且具备岗位核心技能基础，并有项目或实习实践经历的学生。",
+      "summary": "Java 后端开发工程师/软件开发实习生主要负责后端服务的设计、开发与维护，涉及核心模块接口开发、数据库优化、缓存应用及系统性能提升。适合具备扎实 Java 基础、熟悉主流框架（如 Spring Boot）、有项目实践经验的计算机相关专业本科学生。岗位提供从实习到高级开发的纵向晋升路径，并可横向转向前端、全栈、测试等方向。",
+      "vertical_paths": [
+        "软件开发实习生",
+        "Java 后端开发工程师",
+        "高级 Java 开发工程师",
+        "技术专家/架构师",
+        "技术经理"
+      ],
+      "transfer_paths": [
+        "前端开发工程师",
+        "全栈开发工程师",
+        "测试开发工程师",
+        "运维工程师",
+        "大数据开发工程师"
+      ],
+      "skill_frequency": [],
+      "industry_distribution": [],
+      "city_distribution": [],
+      "salary_stats": {
+        "salary_min_month_avg": null,
+        "salary_min_month_median": null,
+        "salary_min_month_p25": null,
+        "salary_min_month_p75": null,
+        "salary_max_month_avg": null,
+        "salary_max_month_median": null,
+        "salary_max_month_p25": null,
+        "salary_max_month_p75": null,
+        "salary_mid_month_avg": null,
+        "salary_mid_month_median": null,
+        "valid_salary_count": 0
+      }
+    },
+    "match_snapshot": {
+      "basic_requirement_score": 100.0,
+      "vocational_skill_score": 58.0,
+      "professional_quality_score": 60.0,
+      "development_potential_score": 70.77,
+      "overall_match_score": 72.28,
+      "score_level": "C-中等匹配",
+      "matched_items": [
+        {
+          "dimension": "education",
+          "student_item": "本科",
+          "required_item": "本科",
+          "match_type": "学历门槛满足"
+        },
+        {
+          "dimension": "major",
+          "student_item": "计算机科学与技术",
+          "required_item": "计算机科学与技术",
+          "similarity": 1.0
+        },
+        {
+          "dimension": "hard_skills",
+          "student_item": "Java",
+          "required_item": "Java",
+          "similarity": 1.0
+        },
+        {
+          "dimension": "hard_skills",
+          "student_item": "Redis",
+          "required_item": "Redis",
+          "similarity": 1.0
+        },
+        {
+          "dimension": "hard_skills",
+          "student_item": "SQL",
+          "required_item": "SQL",
+          "similarity": 1.0
+        },
+        {
+          "dimension": "hard_skills",
+          "student_item": "Python",
+          "required_item": "Python",
+          "similarity": 1.0
+        },
+        {
+          "dimension": "career_direction",
+          "student_item": "后端开发",
+          "required_item": "后端开发",
+          "similarity": 1.0
+        }
+      ],
+      "missing_items": [
+        {
+          "dimension": "hard_skills",
+          "required_item": "Spring Boot",
+          "reason": "学生侧暂未匹配到岗位要求项：Spring Boot"
+        },
+        {
+          "dimension": "hard_skills",
+          "required_item": "MyBatis",
+          "reason": "学生侧暂未匹配到岗位要求项：MyBatis"
+        },
+        {
+          "dimension": "hard_skills",
+          "required_item": "MySQL",
+          "reason": "学生侧暂未匹配到岗位要求项：MySQL"
+        },
+        {
+          "dimension": "hard_skills",
+          "required_item": "JWT",
+          "reason": "学生侧暂未匹配到岗位要求项：JWT"
+        },
+        {
+          "dimension": "hard_skills",
+          "required_item": "Git",
+          "reason": "学生侧暂未匹配到岗位要求项：Git"
+        },
+        {
+          "dimension": "hard_skills",
+          "required_item": "Linux",
+          "reason": "学生侧暂未匹配到岗位要求项：Linux"
+        },
+        {
+          "dimension": "soft_skills",
+          "required_item": "沟通协作",
+          "reason": "学生侧暂未匹配到岗位要求项：沟通协作"
+        },
+        {
+          "dimension": "soft_skills",
+          "required_item": "问题解决",
+          "reason": "学生侧暂未匹配到岗位要求项：问题解决"
+        },
+        {
+          "dimension": "soft_skills",
+          "required_item": "学习能力",
+          "reason": "学生侧暂未匹配到岗位要求项：学习能力"
+        },
+        {
+          "dimension": "soft_skills",
+          "required_item": "责任心",
+          "reason": "学生侧暂未匹配到岗位要求项：责任心"
+        },
+        {
+          "dimension": "soft_skills",
+          "required_item": "时间管理",
+          "reason": "学生侧暂未匹配到岗位要求项：时间管理"
+        },
+        {
+          "dimension": "career_direction",
+          "required_item": "Java 后端开发工程师 / 软件开发实习生",
+          "reason": "学生侧暂未匹配到岗位要求项：Java 后端开发工程师 / 软件开发实习生"
+        }
+      ],
+      "strengths": [
+        "教育背景完全匹配：本科，计算机科学与技术专业，符合岗位硬性要求。",
+        "核心编程语言基础扎实：具备Java技能，是后端开发的核心基础。",
+        "具备部分关键技术栈：已掌握Redis、SQL、Python等，与岗位部分要求重合。",
+        "项目经验丰富：拥有多个后端及全栈开发项目经验，展示了工程实现和问题解决能力。",
+        "软技能基础良好：具备团队协作、沟通、问题解决和项目管理能力，与岗位软技能要求部分匹配。",
+        "学习意愿与潜力：求职目标明确，有算法项目经验，显示出较强的学习能力和技术广度。"
+      ],
+      "weaknesses": [
+        "关键框架技能缺失：未掌握岗位核心要求的Spring Boot、MyBatis框架。",
+        "数据库技能不匹配：未明确掌握MySQL技能。",
+        "工具与系统技能不足：未匹配到Git、Linux等开发运维必备工具技能。",
+        "特定技术点缺失：缺少JWT（身份认证）相关经验。",
+        "行业实践经验缺乏：无正式的后端开发实习经历，项目复杂度和业务场景深度可能不足。"
+      ],
+      "improvement_suggestions": [
+        "技能补强：系统学习Spring Boot和MyBatis框架，可通过在线课程（如慕课网、B站相关教程）和官方文档入手，并动手搭建一个简单的CRUD项目。",
+        "深化数据库知识：重点学习MySQL，包括数据库设计、SQL优化、索引原理等，并在项目中实践。",
+        "掌握开发工具：熟练使用Git进行版本控制和团队协作，熟悉Linux常用命令进行环境部署和问题排查。",
+        "项目经验聚焦与深化：将现有项目（如在线学习平台）的技术描述与岗位要求对齐，明确写出使用了Spring Boot、MyBatis、MySQL、JWT等技术。尝试增加项目复杂度，如引入微服务、消息队列或更复杂的缓存策略。",
+        "争取实习机会：积极寻找Java后端开发实习岗位，积累真实的行业项目经验和团队协作流程。",
+        "简历表达优化：在简历中突出与Java后端岗位最相关的项目（如在线学习平台、二手交易平台），将技术栈描述得与招聘要求更吻合，并量化项目成果（如性能提升百分比）。"
+      ],
+      "recommendation": "可以投递该岗位，但建议优先补齐关键技能或项目短板后再重点冲刺。",
+      "analysis_summary": "该候选人为计算机专业本科应届生，教育背景完全符合岗位要求，并具备Java基础和部分相关技术栈及项目经验，显示出良好的学习潜力和工程实践基础。然而，其技能图谱存在关键缺口，特别是缺乏Spring Boot、MyBatis等核心框架的明确掌握，以及行业实习经验的缺失，导致与目标岗位的技术深度匹配度不足。建议在投递前优先补强核心框架技能并优化项目描述，整体匹配度为中等水平，可作为重点提升后投递的备选目标。",
+      "dimension_details": {
+        "basic_requirement": {
+          "score": 100.0,
+          "matched_items": [
+            {
+              "dimension": "education",
+              "student_item": "本科",
+              "required_item": "本科",
+              "match_type": "学历门槛满足"
+            },
+            {
+              "dimension": "major",
+              "student_item": "计算机科学与技术",
+              "required_item": "计算机科学与技术",
+              "similarity": 1.0
+            }
+          ],
+          "missing_items": [],
+          "score_reasons": [
+            "学生学历 本科 满足岗位学历要求 本科。",
+            "专业匹配得分 100.00，证书匹配得分 100.00。"
+          ],
+          "detail": {
+            "degree_score": 100.0,
+            "major_score": 100.0,
+            "certificate_score": 100.0,
+            "degree_detail": {
+              "student_degree": "本科",
+              "job_degree_requirement": "本科",
+              "student_degree_rank": 3,
+              "job_degree_rank_requirement": 3
+            }
+          }
+        },
+        "vocational_skill": {
+          "score": 58.0,
+          "matched_items": [
+            {
+              "dimension": "hard_skills",
+              "student_item": "Java",
+              "required_item": "Java",
+              "similarity": 1.0
+            },
+            {
+              "dimension": "hard_skills",
+              "student_item": "Redis",
+              "required_item": "Redis",
+              "similarity": 1.0
+            },
+            {
+              "dimension": "hard_skills",
+              "student_item": "SQL",
+              "required_item": "SQL",
+              "similarity": 1.0
+            },
+            {
+              "dimension": "hard_skills",
+              "student_item": "Python",
+              "required_item": "Python",
+              "similarity": 1.0
+            }
+          ],
+          "missing_items": [
+            {
+              "dimension": "hard_skills",
+              "required_item": "Spring Boot",
+              "reason": "学生侧暂未匹配到岗位要求项：Spring Boot"
+            },
+            {
+              "dimension": "hard_skills",
+              "required_item": "MyBatis",
+              "reason": "学生侧暂未匹配到岗位要求项：MyBatis"
+            },
+            {
+              "dimension": "hard_skills",
+              "required_item": "MySQL",
+              "reason": "学生侧暂未匹配到岗位要求项：MySQL"
+            },
+            {
+              "dimension": "hard_skills",
+              "required_item": "JWT",
+              "reason": "学生侧暂未匹配到岗位要求项：JWT"
+            },
+            {
+              "dimension": "hard_skills",
+              "required_item": "Git",
+              "reason": "学生侧暂未匹配到岗位要求项：Git"
+            },
+            {
+              "dimension": "hard_skills",
+              "required_item": "Linux",
+              "reason": "学生侧暂未匹配到岗位要求项：Linux"
+            }
+          ],
+          "score_reasons": [
+            "硬技能覆盖得分 40.00，工具技能覆盖得分 100.00。",
+            "学生硬技能与岗位要求重合度偏低，需要优先补齐核心技能。"
+          ],
+          "detail": {
+            "hard_skill_score": 40.0,
+            "tool_skill_score": 100.0
+          }
+        },
+        "professional_quality": {
+          "score": 60.0,
+          "matched_items": [],
+          "missing_items": [
+            {
+              "dimension": "soft_skills",
+              "required_item": "沟通协作",
+              "reason": "学生侧暂未匹配到岗位要求项：沟通协作"
+            },
+            {
+              "dimension": "soft_skills",
+              "required_item": "问题解决",
+              "reason": "学生侧暂未匹配到岗位要求项：问题解决"
+            },
+            {
+              "dimension": "soft_skills",
+              "required_item": "学习能力",
+              "reason": "学生侧暂未匹配到岗位要求项：学习能力"
+            },
+            {
+              "dimension": "soft_skills",
+              "required_item": "责任心",
+              "reason": "学生侧暂未匹配到岗位要求项：责任心"
+            },
+            {
+              "dimension": "soft_skills",
+              "required_item": "时间管理",
+              "reason": "学生侧暂未匹配到岗位要求项：时间管理"
+            }
+          ],
+          "score_reasons": [
+            "岗位未提供明确实践/经验要求，该项默认满分。",
+            "软技能覆盖得分 0.00，实践经历/经验要求得分 100.00。"
+          ],
+          "detail": {
+            "practice_score": 100.0,
+            "soft_skill_score": 0.0,
+            "practice_detail": {
+              "requirement_count": 0,
+              "project_count": 5,
+              "internship_count": 0
+            }
+          }
+        },
+        "development_potential": {
+          "score": 70.77,
+          "matched_items": [
+            {
+              "dimension": "career_direction",
+              "student_item": "后端开发",
+              "required_item": "后端开发",
+              "similarity": 1.0
+            }
+          ],
+          "missing_items": [
+            {
+              "dimension": "career_direction",
+              "required_item": "Java 后端开发工程师 / 软件开发实习生",
+              "reason": "学生侧暂未匹配到岗位要求项：Java 后端开发工程师 / 软件开发实习生"
+            }
+          ],
+          "score_reasons": [
+            "职业方向一致性得分 50.00。",
+            "学生完整度/竞争力形成的发展基础得分 80.77。",
+            "岗位层级适配得分 100.00。岗位层级未明确，层级适配项默认满分。"
+          ],
+          "detail": {
+            "direction_alignment_score": 50.0,
+            "readiness_score": 80.77,
+            "level_fit_score": 100.0,
+            "complete_score": 85.0,
+            "competitiveness_score": 78.5,
+            "student_level_rank": 2,
+            "job_level_rank": 0,
+            "direction_detail": {
+              "student_direction_tags": [
+                "后端开发",
+                "算法工程",
+                "前端开发",
+                "软件研发",
+                "商业分析",
+                "人工智能",
+                "云计算/大数据",
+                "信息技术"
+              ],
+              "job_direction_tags": [
+                "Java 后端开发工程师 / 软件开发实习生",
+                "后端开发"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "candidate_goal_jobs": [
+      "Java 后端开发工程师 / 软件开发实习生",
+      "后端开发",
+      "算法工程",
+      "前端开发"
+    ],
+    "direct_path_options": [
+      {
+        "path_type": "direct_vertical",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "软件开发实习生",
+        "source": "job_profile.vertical_paths",
+        "path_score_hint": 76.28,
+        "priority_hint": "medium",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      },
+      {
+        "path_type": "direct_vertical",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "Java 后端开发工程师",
+        "source": "job_profile.vertical_paths",
+        "path_score_hint": 76.28,
+        "priority_hint": "medium",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      },
+      {
+        "path_type": "direct_vertical",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "高级 Java 开发工程师",
+        "source": "job_profile.vertical_paths",
+        "path_score_hint": 76.28,
+        "priority_hint": "medium",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      },
+      {
+        "path_type": "direct_vertical",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "技术专家/架构师",
+        "source": "job_profile.vertical_paths",
+        "path_score_hint": 76.28,
+        "priority_hint": "medium",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      },
+      {
+        "path_type": "direct_vertical",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "技术经理",
+        "source": "job_profile.vertical_paths",
+        "path_score_hint": 76.28,
+        "priority_hint": "medium",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      }
+    ],
+    "transition_path_options": [
+      {
+        "path_type": "transfer",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "前端开发工程师",
+        "source": "job_profile.transfer_paths",
+        "path_score_hint": 70.28,
+        "priority_hint": "high",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      },
+      {
+        "path_type": "transfer",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "全栈开发工程师",
+        "source": "job_profile.transfer_paths",
+        "path_score_hint": 70.28,
+        "priority_hint": "high",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      },
+      {
+        "path_type": "transfer",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "测试开发工程师",
+        "source": "job_profile.transfer_paths",
+        "path_score_hint": 70.28,
+        "priority_hint": "high",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      },
+      {
+        "path_type": "transfer",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "运维工程师",
+        "source": "job_profile.transfer_paths",
+        "path_score_hint": 70.28,
+        "priority_hint": "high",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      },
+      {
+        "path_type": "transfer",
+        "from_job": "",
+        "to_job": "",
+        "path_text": "大数据开发工程师",
+        "source": "job_profile.transfer_paths",
+        "path_score_hint": 70.28,
+        "priority_hint": "high",
+        "source_tier": "offline_profile",
+        "is_fallback": false
+      }
+    ],
+    "gap_analysis": [
+      {
+        "gap_type": "hard_skills",
+        "gap_item": "Spring Boot",
+        "current_status": "学生侧暂未匹配到岗位要求项：Spring Boot",
+        "action_hint": "技能补强：系统学习Spring Boot和MyBatis框架，可通过在线课程（如慕课网、B站相关教程）和官方文档入手，并动手搭建一个简单的CRUD项目。",
+        "priority": "high",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "hard_skills",
+        "gap_item": "MyBatis",
+        "current_status": "学生侧暂未匹配到岗位要求项：MyBatis",
+        "action_hint": "技能补强：系统学习Spring Boot和MyBatis框架，可通过在线课程（如慕课网、B站相关教程）和官方文档入手，并动手搭建一个简单的CRUD项目。",
+        "priority": "high",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "hard_skills",
+        "gap_item": "MySQL",
+        "current_status": "学生侧暂未匹配到岗位要求项：MySQL",
+        "action_hint": "深化数据库知识：重点学习MySQL，包括数据库设计、SQL优化、索引原理等，并在项目中实践。",
+        "priority": "high",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "hard_skills",
+        "gap_item": "JWT",
+        "current_status": "学生侧暂未匹配到岗位要求项：JWT",
+        "action_hint": "项目经验聚焦与深化：将现有项目（如在线学习平台）的技术描述与岗位要求对齐，明确写出使用了Spring Boot、MyBatis、MySQL、JWT等技术。尝试增加项目复杂度，如引入微服务、消息队列或更复杂的缓存策略。",
+        "priority": "high",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "hard_skills",
+        "gap_item": "Git",
+        "current_status": "学生侧暂未匹配到岗位要求项：Git",
+        "action_hint": "掌握开发工具：熟练使用Git进行版本控制和团队协作，熟悉Linux常用命令进行环境部署和问题排查。",
+        "priority": "high",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "hard_skills",
+        "gap_item": "Linux",
+        "current_status": "学生侧暂未匹配到岗位要求项：Linux",
+        "action_hint": "掌握开发工具：熟练使用Git进行版本控制和团队协作，熟悉Linux常用命令进行环境部署和问题排查。",
+        "priority": "high",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "soft_skills",
+        "gap_item": "沟通协作",
+        "current_status": "学生侧暂未匹配到岗位要求项：沟通协作",
+        "action_hint": "在项目和实习经历中补充 沟通协作 的行为证据与协作成果。",
+        "priority": "medium",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "soft_skills",
+        "gap_item": "问题解决",
+        "current_status": "学生侧暂未匹配到岗位要求项：问题解决",
+        "action_hint": "在项目和实习经历中补充 问题解决 的行为证据与协作成果。",
+        "priority": "medium",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "soft_skills",
+        "gap_item": "学习能力",
+        "current_status": "学生侧暂未匹配到岗位要求项：学习能力",
+        "action_hint": "在项目和实习经历中补充 学习能力 的行为证据与协作成果。",
+        "priority": "medium",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "soft_skills",
+        "gap_item": "责任心",
+        "current_status": "学生侧暂未匹配到岗位要求项：责任心",
+        "action_hint": "在项目和实习经历中补充 责任心 的行为证据与协作成果。",
+        "priority": "medium",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "soft_skills",
+        "gap_item": "时间管理",
+        "current_status": "学生侧暂未匹配到岗位要求项：时间管理",
+        "action_hint": "在项目和实习经历中补充 时间管理 的行为证据与协作成果。",
+        "priority": "medium",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "career_direction",
+        "gap_item": "Java 后端开发工程师 / 软件开发实习生",
+        "current_status": "学生侧暂未匹配到岗位要求项：Java 后端开发工程师 / 软件开发实习生",
+        "action_hint": "结合岗位要求补充可量化的学习成果、项目经验和简历表达证据。",
+        "priority": "medium",
+        "source": "job_match.missing_items"
+      },
+      {
+        "gap_type": "student_weakness",
+        "gap_item": "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+        "current_status": "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+        "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+        "priority": "medium",
+        "source": "student_profile.weaknesses"
+      },
+      {
+        "gap_type": "student_weakness",
+        "gap_item": "实习经验不足，建议优先争取与目标方向一致的实习。",
+        "current_status": "实习经验不足，建议优先争取与目标方向一致的实习。",
+        "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+        "priority": "medium",
+        "source": "student_profile.weaknesses"
+      },
+      {
+        "gap_type": "student_weakness",
+        "gap_item": "缺乏正式的、与目标岗位高度相关的实习经历。",
+        "current_status": "缺乏正式的、与目标岗位高度相关的实习经历。",
+        "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+        "priority": "medium",
+        "source": "student_profile.weaknesses"
+      },
+      {
+        "gap_type": "student_weakness",
+        "gap_item": "项目经历中，部分项目（如垃圾邮件分类系统）技术栈与核心求职方向（Java后端）的关联度有待加强。",
+        "current_status": "项目经历中，部分项目（如垃圾邮件分类系统）技术栈与核心求职方向（Java后端）的关联度有待加强。",
+        "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+        "priority": "medium",
+        "source": "student_profile.weaknesses"
+      },
+      {
+        "gap_type": "student_weakness",
+        "gap_item": "技术深度和大型项目、高并发场景的处理经验可能不足。",
+        "current_status": "技术深度和大型项目、高并发场景的处理经验可能不足。",
+        "action_hint": "将该短板拆成可执行训练任务，并补充可量化成果或项目证明。",
+        "priority": "medium",
+        "source": "student_profile.weaknesses"
+      },
+      {
+        "gap_type": "missing_dimension",
+        "gap_item": "项目经历",
+        "current_status": "学生画像仍缺少项目经历相关证据",
+        "action_hint": "优先补充该维度的信息、经历或作品材料，以便提升后续匹配和报告质量。",
+        "priority": "medium",
+        "source": "student_profile.missing_dimensions"
+      },
+      {
+        "gap_type": "missing_dimension",
+        "gap_item": "实习经历",
+        "current_status": "学生画像仍缺少实习经历相关证据",
+        "action_hint": "优先补充该维度的信息、经历或作品材料，以便提升后续匹配和报告质量。",
+        "priority": "medium",
+        "source": "student_profile.missing_dimensions"
+      }
+    ],
+    "planning_constraints": {
+      "current_degree": "本科",
+      "current_major": "计算机科学与技术",
+      "graduation_year": "2025",
+      "target_job_name": "Java 后端开发工程师 / 软件开发实习生",
+      "target_job_level": "",
+      "target_degree_requirement": "本科",
+      "overall_match_score": 72.28,
+      "direct_path_feasible": false,
+      "transition_first_recommended": false,
+      "short_term_focus": "优先补齐高优先级技能/工具/项目缺口，并准备 1-2 个能直接支撑目标岗位的作品或案例。",
+      "mid_term_focus": "结合岗位纵向路径和横向转岗路径，形成主目标岗位 + 备选过渡岗位组合，并持续补充行业项目经验。"
+    },
+    "planner_context": {
+      "student_summary": "该生为哈尔滨工程大学计算机科学与技术专业2025届本科毕业生，求职目标明确为Java后端开发。具备扎实的计算机专业基础和较为全面的技术栈（Java/Spring Boot/MySQL/Redis等），并通过多个课程项目实践了后端及全栈开发流程，展示了良好的工程实现和问题解决能力。拥有算法项目经验和校级荣誉。主要短板在于缺乏行业实习经历，项目复杂度和与目标岗位的技术深度匹配度有待提升，整体具备作为软件开发实习生的竞争力。",
+      "job_summary": "Java 后端开发工程师/软件开发实习生主要负责后端服务的设计、开发与维护，涉及核心模块接口开发、数据库优化、缓存应用及系统性能提升。适合具备扎实 Java 基础、熟悉主流框架（如 Spring Boot）、有项目实践经验的计算机相关专业本科学生。岗位提供从实习到高级开发的纵向晋升路径，并可横向转向前端、全栈、测试等方向。",
+      "match_summary": "该候选人为计算机专业本科应届生，教育背景完全符合岗位要求，并具备Java基础和部分相关技术栈及项目经验，显示出良好的学习潜力和工程实践基础。然而，其技能图谱存在关键缺口，特别是缺乏Spring Boot、MyBatis等核心框架的明确掌握，以及行业实习经验的缺失，导致与目标岗位的技术深度匹配度不足。建议在投递前优先补强核心框架技能并优化项目描述，整体匹配度为中等水平，可作为重点提升后投递的备选目标。",
+      "recommendation": "可以投递该岗位，但建议优先补齐关键技能或项目短板后再重点冲刺。",
+      "student_strengths": [
+        "基本信息较完整，已包含身份、教育背景和联系方式。",
+        "教育信息完整，学历、学校、专业和毕业年份均已明确。",
+        "技能信息较丰富，已识别 8 项技能/工具。",
+        "已有项目经历 5 段，可作为能力证明材料。",
+        "有竞赛/获奖记录，可增强简历背书。",
+        "求职意向较明确，方向聚焦在 后端开发, 算法工程, 前端开发。",
+        "学历背景具备一定竞争力，当前学历为本科。",
+        "硬技能储备较好，已覆盖 5 项技能。",
+        "工具栈较丰富，已覆盖 3 类工具。",
+        "项目经历数量较充足，对岗位能力证明较有帮助。",
+        "证书/获奖背书较好，可增强简历可信度。",
+        "职业方向较聚焦，当前方向信号为 后端开发, 算法工程, 前端开发。",
+        "教育背景扎实，毕业于哈尔滨工程大学计算机科学与技术专业。",
+        "技术栈较为全面，掌握Java、Spring Boot、MySQL、Redis等后端开发主流技术，并有实际项目应用经验。",
+        "具备多个完整的项目开发经历，包括在线学习平台、校园二手交易平台等，展示了从需求分析到开发测试的全流程能力。",
+        "有算法项目经验（垃圾邮件分类系统），展示了数据处理和建模能力。",
+        "获得校级奖学金和优秀学生干部等荣誉，体现了学习能力和综合素质。",
+        "求职意向明确，聚焦于Java后端开发方向。"
+      ],
+      "student_weaknesses": [
+        "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+        "实习经验不足，建议优先争取与目标方向一致的实习。",
+        "缺乏正式的、与目标岗位高度相关的实习经历。",
+        "项目经历中，部分项目（如垃圾邮件分类系统）技术栈与核心求职方向（Java后端）的关联度有待加强。",
+        "技术深度和大型项目、高并发场景的处理经验可能不足。"
+      ],
+      "match_strengths": [
+        "教育背景完全匹配：本科，计算机科学与技术专业，符合岗位硬性要求。",
+        "核心编程语言基础扎实：具备Java技能，是后端开发的核心基础。",
+        "具备部分关键技术栈：已掌握Redis、SQL、Python等，与岗位部分要求重合。",
+        "项目经验丰富：拥有多个后端及全栈开发项目经验，展示了工程实现和问题解决能力。",
+        "软技能基础良好：具备团队协作、沟通、问题解决和项目管理能力，与岗位软技能要求部分匹配。",
+        "学习意愿与潜力：求职目标明确，有算法项目经验，显示出较强的学习能力和技术广度。"
+      ],
+      "match_weaknesses": [
+        "关键框架技能缺失：未掌握岗位核心要求的Spring Boot、MyBatis框架。",
+        "数据库技能不匹配：未明确掌握MySQL技能。",
+        "工具与系统技能不足：未匹配到Git、Linux等开发运维必备工具技能。",
+        "特定技术点缺失：缺少JWT（身份认证）相关经验。",
+        "行业实践经验缺乏：无正式的后端开发实习经历，项目复杂度和业务场景深度可能不足。"
+      ],
+      "improvement_suggestions": [
+        "技能补强：系统学习Spring Boot和MyBatis框架，可通过在线课程（如慕课网、B站相关教程）和官方文档入手，并动手搭建一个简单的CRUD项目。",
+        "深化数据库知识：重点学习MySQL，包括数据库设计、SQL优化、索引原理等，并在项目中实践。",
+        "掌握开发工具：熟练使用Git进行版本控制和团队协作，熟悉Linux常用命令进行环境部署和问题排查。",
+        "项目经验聚焦与深化：将现有项目（如在线学习平台）的技术描述与岗位要求对齐，明确写出使用了Spring Boot、MyBatis、MySQL、JWT等技术。尝试增加项目复杂度，如引入微服务、消息队列或更复杂的缓存策略。",
+        "争取实习机会：积极寻找Java后端开发实习岗位，积累真实的行业项目经验和团队协作流程。",
+        "简历表达优化：在简历中突出与Java后端岗位最相关的项目（如在线学习平台、二手交易平台），将技术栈描述得与招聘要求更吻合，并量化项目成果（如性能提升百分比）。"
+      ],
+      "direct_path_count": 5,
+      "transition_path_count": 5,
+      "high_priority_gap_count": 6,
+      "path_source_summary": {
+        "job_profile.vertical_paths": 5,
+        "job_profile.transfer_paths": 5
+      },
+      "graph_fact_snapshot": {
+        "related_jobs": [],
+        "promote_path_count": 0,
+        "transfer_path_count": 0
+      },
+      "market_fact_snapshot": {
+        "job_count": 0,
+        "salary_stats": {},
+        "top_cities": [],
+        "top_industries": [],
+        "top_company_types": [],
+        "top_company_sizes": [],
+        "company_samples": []
+      },
+      "semantic_fact_snapshot": {
+        "query": "",
+        "top_k": 0,
+        "hits": []
+      },
+      "expected_output_hint": {
+        "primary_target_job": "首选目标岗位",
+        "alternative_target_jobs": "备选岗位列表",
+        "direct_path": "直接达成路径",
+        "transition_path": "过渡路径",
+        "short_term_plan": "短期3-6个月计划",
+        "mid_term_plan": "中期6-18个月计划",
+        "risk_notes": "路径风险和注意事项"
+      }
+    },
+    "build_warnings": []
+  },
+  "llm_plan_result": {
+    "primary_target_job": "Java 后端开发工程师 / 软件开发实习生",
+    "backup_target_jobs": [
+      "后端开发",
+      "算法工程",
+      "前端开发"
+    ],
+    "direct_path": [
+      "Java 后端开发工程师 / 软件开发实习生"
+    ],
+    "transition_path": [
+      "Java 后端开发工程师 / 软件开发实习生"
+    ],
+    "short_term_plan": [
+      "系统学习并实践Spring Boot和MyBatis框架，通过在线课程和官方文档，动手搭建一个CRUD项目。",
+      "深入学习MySQL，包括数据库设计、SQL优化和索引原理，并在个人项目中应用。",
+      "熟练使用Git进行版本控制，掌握Linux常用命令，用于环境部署和问题排查。",
+      "优化现有项目（如在线学习平台）的技术描述，明确写出使用了Spring Boot、MyBatis、MySQL、JWT等技术，并尝试增加项目复杂度。",
+      "积极寻找并争取Java后端开发实习岗位，积累行业项目经验和团队协作流程。",
+      "更新简历，重点突出与Java后端岗位最相关的项目，量化项目成果（如性能提升百分比）。"
+    ],
+    "mid_term_plan": [
+      "在实习或项目中深化对微服务、消息队列、复杂缓存策略等技术的理解与应用。",
+      "根据实习表现和技能掌握情况，争取转正或正式Java后端开发工程师岗位。",
+      "探索并实践全栈开发，巩固前端（Vue）技能，向全栈工程师方向发展。",
+      "参与开源项目或更复杂的个人项目，提升解决高并发、大型系统问题的能力。",
+      "持续学习，关注后端技术栈的新趋势（如云原生、容器化），并考取相关技能证书。",
+      "建立技术博客或个人作品集，系统总结项目经验和技术思考，提升个人品牌。"
+    ],
+    "risk_notes": [
+      "当前整体匹配度中等（72.28分），存在高优先级技能缺口，直接冲刺主目标岗位成功率有限。",
+      "关键框架技能（Spring Boot, MyBatis）和数据库技能（MySQL）缺失，是主要技术短板。",
+      "开发运维工具（Git, Linux）和特定技术点（JWT）掌握不足。",
+      "缺乏正式的行业实习经历，项目复杂度和业务深度有待提升。",
+      "部分项目（如垃圾邮件分类系统）技术栈与核心求职方向关联度不强。"
+    ],
+    "summary": "张三同学作为哈尔滨工程大学计算机科学与技术专业2025届本科毕业生，教育背景与Java后端开发岗位要求完全匹配，并具备Java基础、部分相关技术栈及多个项目经验，显示出良好的工程实践潜力和学习能力。因此，首选目标岗位定为“Java后端开发工程师/软件开发实习生”。鉴于当前技能图谱存在关键框架（Spring Boot/MyBatis）和工具（Git/Linux）缺口，且缺乏行业实习，整体匹配度为中等水平，故规划以“短期补强后冲刺”为核心策略。短期（3-6个月）计划聚焦于系统学习核心框架、深化数据库知识、掌握开发工具并争取实习机会；中期（6-18个月）目标是在实习中积累经验、争取转正，并探索全栈等备选发展方向，以构建扎实的职业起点。"
+  },
+  "build_warnings": []
+}

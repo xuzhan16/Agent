@@ -12,7 +12,7 @@ main_pipeline.py - 全流程统一调度入口
 设计原则：
 - 尽量复用 service 层已有的“规则先行 + LLM 补充”能力；
 - 避免主流程再次拼接大而全的 prompt；
-- 保持 mock LLM 链路与前端接口可继续使用。
+- 保持真实模型链路与前端接口稳定可用。
 """
 from __future__ import annotations
 
@@ -172,16 +172,16 @@ def _query_job_profile_rows(initial_target_job: str) -> List[Dict[str, Any]]:
             standard_job_name,
             job_name_raw AS job_name,
             city,
-            province,
+            district AS province,
             industry,
             company_name_clean AS company_name,
             company_type,
             company_size,
             salary_month_min AS salary_min_month,
             salary_month_max AS salary_max_month,
-            job_desc,
-            company_desc,
-            update_date
+            job_desc_clean AS job_desc,
+            company_desc_clean AS company_desc,
+            updated_at_std AS update_date
         FROM job_detail
         WHERE standard_job_name = ?
         LIMIT 80

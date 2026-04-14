@@ -1,0 +1,48 @@
+{
+  "profile_completeness_score": 85.0,
+  "competitiveness_base_score": 78.5,
+  "score_level": "B-具备一定竞争力",
+  "completeness_detail": {
+    "basic_info_score": 20.0,
+    "education_score": 15.0,
+    "skill_score": 20.0,
+    "project_score": 15.0,
+    "internship_score": 0.0,
+    "qualification_score": 10.0,
+    "intention_score": 5.0
+  },
+  "competitiveness_detail": {
+    "education_base_score": 15.0,
+    "skill_base_score": 20.0,
+    "tool_base_score": 7.5,
+    "project_base_score": 15.0,
+    "internship_base_score": 0.0,
+    "qualification_base_score": 6.0,
+    "occupation_focus_score": 5.0,
+    "domain_bonus_score": 10.0
+  },
+  "score_reasons": {
+    "strengths": [
+      "基本信息较完整，已包含身份、教育背景和联系方式。",
+      "教育信息完整，学历、学校、专业和毕业年份均已明确。",
+      "技能信息较丰富，已识别 8 项技能/工具。",
+      "已有项目经历 5 段，可作为能力证明材料。",
+      "有竞赛/获奖记录，可增强简历背书。",
+      "求职意向较明确，方向聚焦在 后端开发, 算法工程, 前端开发。",
+      "学历背景具备一定竞争力，当前学历为本科。",
+      "硬技能储备较好，已覆盖 5 项技能。",
+      "工具栈较丰富，已覆盖 3 类工具。",
+      "项目经历数量较充足，对岗位能力证明较有帮助。",
+      "证书/获奖背书较好，可增强简历可信度。",
+      "职业方向较聚焦，当前方向信号为 后端开发, 算法工程, 前端开发。"
+    ],
+    "weaknesses": [
+      "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+      "实习经验不足，建议优先争取与目标方向一致的实习。"
+    ],
+    "suggestions": [
+      "补充 1-2 个可量化成果的课程项目、竞赛项目或个人作品项目。",
+      "尽量争取与目标岗位方向一致的实习、校企实践或真实业务协作经历。"
+    ]
+  }
+}

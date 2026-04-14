@@ -41,6 +41,8 @@ DEFAULT_SQL_DB_PATH = "outputs/sql/jobs.db"
 DEFAULT_NEO4J_OUTPUT_DIR = "outputs/neo4j"
 DEFAULT_KNOWLEDGE_OUTPUT_DIR = "outputs/knowledge"
 DEFAULT_KNOWLEDGE_JSON_NAME = "job_knowledge.jsonl"
+DEFAULT_EXTRACT_MAX_WORKERS = 1
+PROGRESS_BAR_WIDTH = 28
 
 
 def resolve_project_path(path_value: str | Path) -> Path:
@@ -77,6 +79,21 @@ def summarize_graph_tables(graph_tables: Dict[str, Any]) -> Dict[str, int]:
     return summary
 
 
+def render_progress_bar(current: int, total: int, width: int = PROGRESS_BAR_WIDTH) -> str:
+    """渲染简单控制台进度条。"""
+    if total <= 0:
+        return "[----------------------------]   0.00% (0/0)"
+    ratio = max(0.0, min(1.0, float(current) / float(total)))
+    filled = int(round(width * ratio))
+    bar = "#" * filled + "-" * (width - filled)
+    return f"[{bar}] {ratio * 100:6.2f}% ({current}/{total})"
+
+
+def print_pipeline_progress(current: int, total: int, stage_name: str) -> None:
+    """打印流水线阶段进度。"""
+    print(f"[pipeline] {render_progress_bar(current, total)} {stage_name}", flush=True)
+
+
 def run_job_data_pipeline(
     input_path: str | Path,
     intermediate_dir: str | Path = DEFAULT_INTERMEDIATE_DIR,
@@ -85,7 +102,7 @@ def run_job_data_pipeline(
     knowledge_output_dir: str | Path = DEFAULT_KNOWLEDGE_OUTPUT_DIR,
     sheet_name: str | int = 0,
     log_every: int = 50,
-    max_workers: int = 4,
+    max_workers: int = DEFAULT_EXTRACT_MAX_WORKERS,
     group_sample_size: int = DEFAULT_GROUP_SAMPLE_SIZE,
     embedding_model_name: str = DEFAULT_HASH_EMBEDDING_MODEL,
 ) -> Dict[str, Any]:
@@ -107,17 +124,25 @@ def run_job_data_pipeline(
     resolved_knowledge_output_dir.mkdir(parents=True, exist_ok=True)
     knowledge_json_path = resolved_knowledge_output_dir / DEFAULT_KNOWLEDGE_JSON_NAME
 
+    total_stages = 8
+    completed_stages = 0
+    print_pipeline_progress(completed_stages, total_stages, "开始执行岗位底库流水线")
+
     cleaned_df = process_job_excel(
         input_excel_path=str(resolved_input_path),
         output_csv_path=str(output_paths["jobs_cleaned"]),
         sheet_name=sheet_name,
     )
+    completed_stages += 1
+    print_pipeline_progress(completed_stages, total_stages, "已完成：原始 Excel 清洗")
 
     filtered_df, filter_audit_df, filter_stats = process_non_cs_filter(
         df=cleaned_df,
         output_filtered_csv=str(output_paths["jobs_cs_filtered"]),
         output_audit_csv=str(output_paths["job_cs_filter_audit"]),
     )
+    completed_stages += 1
+    print_pipeline_progress(completed_stages, total_stages, "已完成：非计算机岗位过滤")
 
     dedup_df, mapping_df, pair_results_df = process_job_dedup(
         df=filtered_df,
@@ -125,6 +150,8 @@ def run_job_data_pipeline(
         output_mapping_csv=str(output_paths["job_name_mapping"]),
         output_pair_csv=str(output_paths["job_dedup_pairs"]),
     )
+    completed_stages += 1
+    print_pipeline_progress(completed_stages, total_stages, "已完成：岗位去重与标准岗位归一")
 
     extracted_merged_df, extracted_df = process_job_extract(
         df=dedup_df,
@@ -133,27 +160,37 @@ def run_job_data_pipeline(
         max_workers=max_workers,
         group_sample_size=group_sample_size,
     )
+    completed_stages += 1
+    print_pipeline_progress(completed_stages, total_stages, "已完成：岗位画像与路径关系抽取")
 
     knowledge_records = process_export_to_json_kb(
         df=extracted_merged_df,
         output_path=str(knowledge_json_path),
     )
+    completed_stages += 1
+    print_pipeline_progress(completed_stages, total_stages, "已完成：导出岗位知识 JSON")
 
     embedding_summary = process_build_embedding_index(
         input_json_path=str(knowledge_json_path),
         output_dir=str(resolved_knowledge_output_dir),
         embedding_model_name=embedding_model_name,
     )
+    completed_stages += 1
+    print_pipeline_progress(completed_stages, total_stages, "已完成：构建本地 embedding")
 
     process_export_to_sql(
         df=extracted_merged_df,
         db_path=str(resolved_sql_db_path),
     )
+    completed_stages += 1
+    print_pipeline_progress(completed_stages, total_stages, "已完成：导出 SQLite")
 
     graph_tables = process_export_to_neo4j(
         df=extracted_merged_df,
         output_dir=str(resolved_neo4j_output_dir),
     )
+    completed_stages += 1
+    print_pipeline_progress(completed_stages, total_stages, "已完成：导出 Neo4j CSV")
 
     return {
         "input_file": str(resolved_input_path),
@@ -237,8 +274,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--max-workers",
         type=int,
-        default=4,
-        help="岗位抽取阶段的并发线程数",
+        default=DEFAULT_EXTRACT_MAX_WORKERS,
+        help="岗位抽取阶段的并发线程数；超时频繁时建议保持 1",
     )
     parser.add_argument(
         "--group-sample-size",

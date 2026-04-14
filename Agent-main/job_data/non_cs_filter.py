@@ -30,6 +30,8 @@ logger = logging.getLogger(__name__)
 DEFAULT_OUTPUT_FILTERED_CSV = "outputs/intermediate/jobs_cs_filtered.csv"
 DEFAULT_OUTPUT_AUDIT_CSV = "outputs/intermediate/job_cs_filter_audit.csv"
 DEFAULT_DESC_MAX_CHARS = 1400
+PROGRESS_BAR_WIDTH = 28
+PROGRESS_UPDATE_INTERVAL = 50
 
 
 STRONG_CS_TITLE_KEYWORDS = {
@@ -212,6 +214,16 @@ def clean_text(value: object) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def render_progress_bar(current: int, total: int, width: int = PROGRESS_BAR_WIDTH) -> str:
+    """渲染 non_cs_filter 阶段进度条。"""
+    if total <= 0:
+        return "[----------------------------]   0.00% (0/0)"
+    ratio = max(0.0, min(1.0, float(current) / float(total)))
+    filled = int(round(width * ratio))
+    bar = "#" * filled + "-" * (width - filled)
+    return f"[{bar}] {ratio * 100:6.2f}% ({current}/{total})"
+
+
 def get_first_existing_value(record: pd.Series, candidates: Sequence[str]) -> str:
     for field in candidates:
         if field in record.index:
@@ -365,13 +377,21 @@ def fallback_decide_is_cs_related(features: Dict[str, Any]) -> Dict[str, Any]:
 
 def call_non_cs_filter_llm(record: pd.Series) -> Dict[str, Any]:
     payload = build_row_text_payload(record)
-    llm_result = call_llm(
-        "non_cs_filter",
-        input_data=payload,
-        context_data=None,
-        student_state=None,
-        extra_context=None,
-    )
+    try:
+        llm_result = call_llm(
+            "non_cs_filter",
+            input_data=payload,
+            context_data=None,
+            student_state=None,
+            extra_context=None,
+        )
+    except Exception as exc:  # noqa: BLE001 - 本阶段失败需就地降级，避免阻断流水线
+        fallback = fallback_decide_is_cs_related(build_rule_features(record))
+        fallback_reason = clean_text(fallback.get("reason", ""))
+        llm_error = clean_text(str(exc)) or exc.__class__.__name__
+        fallback["reason"] = f"{fallback_reason} | LLM异常: {llm_error}"
+        return fallback
+
     return {
         "decision": bool(llm_result.get("is_cs_related")),
         "source": "llm_keep" if bool(llm_result.get("is_cs_related")) else "llm_drop",
@@ -417,8 +437,9 @@ def process_non_cs_filter(
 
     audit_rows: List[Dict[str, Any]] = []
     llm_reviewed_rows = 0
+    total_rows = int(len(df))
 
-    for _, row in df.iterrows():
+    for row_index, (_, row) in enumerate(df.iterrows(), start=1):
         base_record = row.to_dict()
         rule_result = rule_decide_is_cs_related(row)
         features = rule_result["features"]
@@ -452,6 +473,20 @@ def process_non_cs_filter(
         base_record["cs_filter_non_cs_score"] = float(features["non_cs_score"])
         base_record["cs_filter_is_ambiguous_title"] = bool(features["is_ambiguous_title"])
         audit_rows.append(base_record)
+
+        if total_rows and (
+            row_index == 1
+            or row_index % PROGRESS_UPDATE_INTERVAL == 0
+            or row_index == total_rows
+        ):
+            print(
+                f"\r[non_cs_filter] {render_progress_bar(row_index, total_rows)}",
+                end="",
+                flush=True,
+            )
+
+    if total_rows:
+        print()
 
     audit_df = enrich_filter_columns(pd.DataFrame(audit_rows))
     filtered_df = audit_df[audit_df["is_cs_related"] == True].copy()  # noqa: E712

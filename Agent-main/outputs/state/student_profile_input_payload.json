@@ -1,0 +1,245 @@
+{
+  "basic_info": {
+    "name": "张三",
+    "gender": "",
+    "phone": "138-4587-1234",
+    "email": "zhangsan@example.com",
+    "school": "哈尔滨工程大学",
+    "major": "计算机科学与技术",
+    "degree": "本科",
+    "graduation_year": "2025"
+  },
+  "normalized_education": {
+    "degree": "本科",
+    "school": "哈尔滨工程大学",
+    "major_raw": "计算机科学与技术",
+    "major_std": "计算机科学与技术",
+    "graduation_year": "2025"
+  },
+  "explicit_profile": {
+    "skills": [
+      "C++",
+      "Java",
+      "SQL",
+      "Linux",
+      "Python",
+      "Redis"
+    ],
+    "tools": [
+      "Linux",
+      "Git",
+      "Docker"
+    ],
+    "certificates": [],
+    "project_experience": [
+      {
+        "project_name": "在线学习平台系统｜后端开发",
+        "role": "",
+        "start_date": "2024.03",
+        "end_date": "2024.06",
+        "description": "技术栈：Spring Boot / MyBatis / MySQL / Redis / JWT 负责用户、课程、评论等核心模块的接口设计与开发，完成登录鉴权、课程查询与互动功能实现。 使用 JWT 实现身份认证与权限控制，引入 Redis 缓存热门课程数据，提升接口访问效率。 优化数据库表结构与 SQL 查询逻辑，减少重复查询，热门课程接口响应时间降低约 35%。"
+      },
+      {
+        "project_name": "校园二手交易平台｜全栈开发",
+        "role": "",
+        "start_date": "2023.10",
+        "end_date": "2024.01",
+        "description": "技术栈：Vue / Spring Boot / MySQL / Git 负责商品、订单、用户、消息等模块设计与开发，完成商品发布、搜索筛选、订单管理等核心流程。 基于前后端分离方案完成页面交互与接口联调，支持多条件筛选、模糊查询及用户评价功能。 独立完成需求分析、数据库设计、开发测试与答辩展示，项目获课程优秀项目评价。"
+      },
+      {
+        "project_name": "垃圾邮件分类系统｜算法实现",
+        "role": "",
+        "start_date": "2023.05",
+        "end_date": "2023.07",
+        "description": "技术栈：Python / Pandas / TF-IDF / 朴素贝叶斯 完成邮件文本清洗、特征提取与模型训练流程，使用 TF-IDF 建模邮件文本特征。 基于朴素贝叶斯与逻辑回归进行分类实验，准确率达到 92%+，并输出可视化评估结果。 实践与校园经历"
+      },
+      {
+        "project_name": "XX科技有限公司｜软件开发实习生",
+        "role": "",
+        "start_date": "2024.07",
+        "end_date": "2024.09",
+        "description": "参与公司内部管理系统需求开发与缺陷修复，协助完成后端接口开发、数据库维护及接口测试。 配合导师进行模块重构与技术文档编写，了解需求评审、开发、测试到上线的完整流程。"
+      },
+      {
+        "project_name": "计算机学院技术协会｜技术部成员",
+        "role": "",
+        "start_date": "2022.09",
+        "end_date": "2024.06",
+        "description": "参与校内编程分享与技术活动组织，协助新生开展基础编程培训与项目交流。 具备良好的团队协作与沟通能力，能按时推进任务并独立解决常见技术问题。"
+      }
+    ],
+    "internship_experience": [],
+    "awards": [
+      "校级一等奖学金（2023）",
+      "优秀学生干部"
+    ],
+    "target_job_intention": "Java 后端开发工程师 / 软件开发实习生",
+    "self_evaluation": "张三 计算机科学与技术 · 本科应届生 | 138-4587-1234 | zhangsan@example.com | 北京 | GitHub: github.com/yourname 求职意向：Java 后端开发工程师 / 软件开发实习生 教育背景 哈尔滨工程大学 | 计算机科学与技术（本科） 主修课程：数据结构与算法、操作系统、计算机网络、数据库系统原理、软件工程、编译原理 2021.09 – 2025.06 GPA：3.7/4.0（专业前 15%） 英语：CET-6（520） 技能方向：Java / Python / MySQL / Redis / Linux 专业技能 熟悉 Java、Python、C/C++，具备良好的…"
+  },
+  "normalized_profile": {
+    "major_std": "计算机科学与技术",
+    "hard_skills": [
+      "C++",
+      "Java",
+      "SQL",
+      "Python",
+      "Redis"
+    ],
+    "tool_skills": [
+      "Linux",
+      "Git",
+      "Docker"
+    ],
+    "qualification_tags": [
+      "学历:本科",
+      "学校:哈尔滨工程大学",
+      "专业:计算机科学与技术"
+    ],
+    "experience_tags": [
+      "项目:数据处理",
+      "项目:建模算法",
+      "项目:工程开发",
+      "项目:科研实践",
+      "项目:业务协作",
+      "有项目经历",
+      "有竞赛/获奖经历"
+    ],
+    "occupation_hints": [
+      "后端开发",
+      "算法工程",
+      "前端开发"
+    ],
+    "domain_tags": [
+      "软件研发",
+      "商业分析",
+      "人工智能",
+      "云计算/大数据",
+      "信息技术"
+    ]
+  },
+  "practice_profile": {
+    "project_count": 5,
+    "internship_count": 0,
+    "award_count": 2,
+    "has_project_experience": true,
+    "has_internship_experience": false,
+    "has_competition_or_award": true,
+    "has_target_job_intention": true,
+    "total_practice_items": 7,
+    "project_keywords": [
+      "sql",
+      "分析",
+      "模型",
+      "分类",
+      "开发",
+      "接口",
+      "系统",
+      "平台",
+      "后端",
+      "实验",
+      "沟通",
+      "需求",
+      "协作"
+    ],
+    "internship_keywords": [],
+    "practice_tags": [
+      "项目:数据处理",
+      "项目:建模算法",
+      "项目:工程开发",
+      "项目:科研实践",
+      "项目:业务协作",
+      "有项目经历",
+      "有竞赛/获奖经历"
+    ]
+  },
+  "evidence_summary": {
+    "project_count": 5,
+    "internship_count": 0,
+    "award_count": 2,
+    "skill_count": 6,
+    "certificate_count": 0,
+    "parse_warnings": [
+      "未解析到结构化教育经历",
+      "教育背景正文存在，但未解析到结构化教育经历",
+      "教育背景正文存在，但最终结构化教育经历仍为空"
+    ]
+  },
+  "source_snapshot": {
+    "resume_parse_result": {
+      "basic_info": {
+        "name": "张三",
+        "gender": "",
+        "phone": "138-4587-1234",
+        "email": "zhangsan@example.com",
+        "school": "哈尔滨工程大学",
+        "major": "计算机科学与技术",
+        "degree": "本科",
+        "graduation_year": "2025"
+      },
+      "education_experience": [],
+      "internship_experience": [],
+      "project_experience": [
+        {
+          "project_name": "在线学习平台系统｜后端开发",
+          "role": "",
+          "start_date": "2024.03",
+          "end_date": "2024.06",
+          "description": "技术栈：Spring Boot / MyBatis / MySQL / Redis / JWT 负责用户、课程、评论等核心模块的接口设计与开发，完成登录鉴权、课程查询与互动功能实现。 使用 JWT 实现身份认证与权限控制，引入 Redis 缓存热门课程数据，提升接口访问效率。 优化数据库表结构与 SQL 查询逻辑，减少重复查询，热门课程接口响应时间降低约 35%。"
+        },
+        {
+          "project_name": "校园二手交易平台｜全栈开发",
+          "role": "",
+          "start_date": "2023.10",
+          "end_date": "2024.01",
+          "description": "技术栈：Vue / Spring Boot / MySQL / Git 负责商品、订单、用户、消息等模块设计与开发，完成商品发布、搜索筛选、订单管理等核心流程。 基于前后端分离方案完成页面交互与接口联调，支持多条件筛选、模糊查询及用户评价功能。 独立完成需求分析、数据库设计、开发测试与答辩展示，项目获课程优秀项目评价。"
+        },
+        {
+          "project_name": "垃圾邮件分类系统｜算法实现",
+          "role": "",
+          "start_date": "2023.05",
+          "end_date": "2023.07",
+          "description": "技术栈：Python / Pandas / TF-IDF / 朴素贝叶斯 完成邮件文本清洗、特征提取与模型训练流程，使用 TF-IDF 建模邮件文本特征。 基于朴素贝叶斯与逻辑回归进行分类实验，准确率达到 92%+，并输出可视化评估结果。 实践与校园经历"
+        },
+        {
+          "project_name": "XX科技有限公司｜软件开发实习生",
+          "role": "",
+          "start_date": "2024.07",
+          "end_date": "2024.09",
+          "description": "参与公司内部管理系统需求开发与缺陷修复，协助完成后端接口开发、数据库维护及接口测试。 配合导师进行模块重构与技术文档编写，了解需求评审、开发、测试到上线的完整流程。"
+        },
+        {
+          "project_name": "计算机学院技术协会｜技术部成员",
+          "role": "",
+          "start_date": "2022.09",
+          "end_date": "2024.06",
+          "description": "参与校内编程分享与技术活动组织，协助新生开展基础编程培训与项目交流。 具备良好的团队协作与沟通能力，能按时推进任务并独立解决常见技术问题。"
+        }
+      ],
+      "skills": [
+        "C++",
+        "Java",
+        "Mysql",
+        "SQL",
+        "Linux",
+        "C",
+        "Python",
+        "C/C++",
+        "MySQL",
+        "Redis"
+      ],
+      "certificates": [],
+      "awards": [
+        "校级一等奖学金（2023）",
+        "优秀学生干部"
+      ],
+      "self_evaluation": "张三\n计算机科学与技术 · 本科应届生 | 138-4587-1234 | zhangsan@example.com | 北京 | GitHub: github.com/yourname\n求职意向：Java 后端开发工程师 / 软件开发实习生\n教育背景\n哈尔滨工程大学 | 计算机科学与技术（本科）\n主修课程：数据结构与算法、操作系统、计算机网络、数据库系统原理、软件工程、编译原理\n2021.09 – 2025.06\nGPA：3.7/4.0（专业前 15%） 英语：CET-6（520） 技能方向：Java / Python / MySQL / Redis / Linux\n专业技能\n熟悉 Java、Python、C/C++，具备良好的…",
+      "target_job_intention": "Java 后端开发工程师 / 软件开发实习生",
+      "raw_resume_text": "张三\n计算机科学与技术 · 本科应届生 | 138-4587-1234 | zhangsan@example.com | 北京 | GitHub: github.com/yourname\n求职意向：Java 后端开发工程师 / 软件开发实习生\n教育背景\n哈尔滨工程大学 | 计算机科学与技术（本科）\n主修课程：数据结构与算法、操作系统、计算机网络、数据库系统原理、软件工程、编译原理\n2021.09 – 2025.06\nGPA：3.7/4.0（专业前 15%） 英语：CET-6（520） 技能方向：Java / Python / MySQL / Redis / Linux\n专业技能\n熟悉 Java、Python、C/C++，具备良好的面向对象编程思想与编码规范。\n熟悉 Spring Boot、MyBatis、RESTful API 设计，能够独立完成常见后端模块开发。\n掌握 MySQL、Redis 基础，了解索引、事务、SQL 优化与缓存使用场景。\n扎实掌握数据结构、操作系统、计算机网络、数据库原理等计算机核心基础。\n熟悉 Git、Linux、Docker、Maven、Postman，具备基本部署、调试与协作开发能力。\n项目经历\n在线学习平台系统｜后端开发 2024.03 – 2024.06\n技术栈：Spring Boot / MyBatis / MySQL / Redis / JWT\n负责用户、课程、评论等核心模块的接口设计与开发，完成登录鉴权、课程查询与互动功能实现。\n使用 JWT 实现身份认证与权限控制，引入 Redis 缓存热门课程数据，提升接口访问效率。\n优化数据库表结构与 SQL 查询逻辑，减少重复查询，热门课程接口响应时间降低约 35%。\n校园二手交易平台｜全栈开发 2023.10 – 2024.01\n技术栈：Vue / Spring Boot / MySQL / Git\n负责商品、订单、用户、消息等模块设计与开发，完成商品发布、搜索筛选、订单管理等核心流程。\n基于前后端分离方案完成页面交互与接口联调，支持多条件筛选、模糊查询及用户评价功能。\n独立完成需求分析、数据库设计、开发测试与答辩展示，项目获课程优秀项目评价。\n垃圾邮件分类系统｜算法实现 2023.05 – 2023.07\n技术栈：Python / Pandas / TF-IDF / 朴素贝叶斯\n完成邮件文本清洗、特征提取与模型训练流程，使用 TF-IDF 建模邮件文本特征。\n基于朴素贝叶斯与逻辑回归进行分类实验，准确率达到 92%+，并输出可视化评估结果。\n实践与校园经历\nXX科技有限公司｜软件开发实习生 2024.07 – 2024.09\n参与公司内部管理系统需求开发与缺陷修复，协助完成后端接口开发、数据库维护及接口测试。\n配合导师进行模块重构与技术文档编写，了解需求评审、开发、测试到上线的完整流程。\n计算机学院技术协会｜技术部成员 2022.09 – 2024.06\n参与校内编程分享与技术活动组织，协助新生开展基础编程培训与项目交流。\n具备良好的团队协作与沟通能力，能按时推进任务并独立解决常见技术问题。\n荣誉奖项与自我评价\n荣誉奖项：校级一等奖学金（2023）；优秀学生干部；程序设计竞赛校级奖项。 自我评价：计算机基础扎实，学习能力强，对软件开发有持续热情；具备良好的编码习惯、问题排查能力与团队合作意识。",
+      "parse_warnings": [
+        "未解析到结构化教育经历",
+        "教育背景正文存在，但未解析到结构化教育经历",
+        "教育背景正文存在，但最终结构化教育经历仍为空"
+      ]
+    }
+  }
+}

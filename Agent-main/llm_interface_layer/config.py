@@ -45,6 +45,36 @@ def _resolve_bool_env(env_name: str, default: bool) -> bool:
     return raw_value.lower() not in {"0", "false", "no", "off"}
 
 
+def _resolve_int_env(env_name: str, default: int, minimum: int | None = None) -> int:
+    """解析整型环境变量，异常时回退默认值。"""
+    raw_value = _clean_config_text(os.getenv(env_name))
+    if not raw_value:
+        value = default
+    else:
+        try:
+            value = int(raw_value)
+        except ValueError:
+            value = default
+    if minimum is not None:
+        value = max(minimum, value)
+    return value
+
+
+def _resolve_float_env(env_name: str, default: float, minimum: float | None = None) -> float:
+    """解析浮点环境变量，异常时回退默认值。"""
+    raw_value = _clean_config_text(os.getenv(env_name))
+    if not raw_value:
+        value = default
+    else:
+        try:
+            value = float(raw_value)
+        except ValueError:
+            value = default
+    if minimum is not None:
+        value = max(minimum, value)
+    return value
+
+
 def _resolve_api_base_url() -> str:
     """读取真实大模型 API Base URL。"""
     return (
@@ -78,9 +108,19 @@ class LLMConfig:
     """真实大模型客户端配置。"""
 
     model_name: str = _resolve_model_name()
-    temperature: float = float(os.getenv("LLM_TEMPERATURE", "0.2"))
-    timeout_seconds: int = int(os.getenv("LLM_TIMEOUT_SECONDS", "60"))
-    retry_times: int = int(os.getenv("LLM_RETRY_TIMES", "5"))
+    temperature: float = _resolve_float_env("LLM_TEMPERATURE", 0.2)
+    timeout_seconds: int = _resolve_int_env("LLM_TIMEOUT_SECONDS", 300, minimum=30)
+    retry_times: int = _resolve_int_env("LLM_RETRY_TIMES", 2, minimum=0)
+    retry_wait_seconds: float = _resolve_float_env(
+        "LLM_RETRY_WAIT_SECONDS", 3.0, minimum=0.5
+    )
+    retry_max_wait_seconds: float = _resolve_float_env(
+        "LLM_RETRY_MAX_WAIT_SECONDS", 12.0, minimum=1.0
+    )
+    max_concurrency: int = _resolve_int_env("LLM_MAX_CONCURRENCY", 1, minimum=1)
+    min_request_interval_seconds: float = _resolve_float_env(
+        "LLM_MIN_REQUEST_INTERVAL_SECONDS", 0.8, minimum=0.0
+    )
     api_base_url: str = _resolve_api_base_url()
     api_key: str = _resolve_api_key()
     api_key_env_name: str = os.getenv("LLM_API_KEY_ENV_NAME", "LLM_API_KEY")

@@ -1,0 +1,8 @@
+{
+  "model_name": "local-hash-embedding-v1",
+  "encoder_type": "LocalHashingEncoder",
+  "dimension": 384,
+  "document_count": 49,
+  "metadata_file": "job_knowledge_metadata.json",
+  "embeddings_file": "job_knowledge_embeddings.npy"
+}

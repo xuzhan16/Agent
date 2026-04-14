@@ -8,7 +8,7 @@
 这份 README 只写当前仓库真实可用的运行方式，重点回答三件事：
 
 1. 前端和后端分别怎么启动
-2. 后端怎么切换真实大模型 / 假模型
+2. 后端怎么配置真实大模型
 3. 岗位底库什么时候需要重建，什么时候可以直接复用
 
 ## 1. 项目结构
@@ -20,7 +20,6 @@ E:\Agent
 │  ├─ api_server.py          # 后端 HTTP 入口
 │  ├─ main_pipeline.py       # 6 段主流程编排入口
 │  ├─ job_data_pipeline.py   # 岗位底库一键处理入口
-│  ├─ mock_llm_server.py     # 假大模型服务
 │  ├─ llm_interface_layer/   # 统一大模型接口层
 │  ├─ job_data/              # 岗位数据清洗 / 去重 / 抽取 / 导出
 │  ├─ outputs/
@@ -86,7 +85,6 @@ resume_parse
 
 - 前端：`3000`
 - 后端：`8000`
-- 假模型：`8001`
 - Neo4j Browser：`7474`
 - Neo4j Bolt：`7687`
 
@@ -119,10 +117,7 @@ python -m pip install fastapi "uvicorn[standard]" python-multipart pandas pypdf 
 
 ## 6. 启动方式
 
-你有两种跑法：
-
-- 真实大模型模式：真正消耗 token
-- 假模型模式：用于后端链路联调，不消耗真实 token
+当前仅保留真实大模型模式（会消耗真实 token）。
 
 ---
 
@@ -221,66 +216,6 @@ npm run dev
 - `student_api_state.json`：当前这次前后端联调使用的主状态文件
 - `final_report.md`：最后导出的 Markdown 报告
 - `outputs/cache/llm`：相同 prompt 的本地缓存，用于减少重复 token 消耗
-
----
-
-## 8. 假模型模式
-
-如果你不想消耗真实 token，或者只是想验证“前端 -> 后端 -> 流水线 -> 返回结果”这条链路是否联通，可以使用假模型。
-
-### 8.1 修改模型配置指向 mock 服务
-
-把 `E:\Agent\Agent-main\llm_interface_layer\local_llm_config.py` 改成：
-
-```python
-LOCAL_LLM_API_BASE_URL = "http://127.0.0.1:8001/v1"
-LOCAL_LLM_MODEL = "mock-model"
-LOCAL_LLM_API_KEY = "mock-key"
-```
-
-注意：
-
-- 这里的 `API_KEY` 只要非空即可，因为 `llm_client.py` 仅检查“是否为空”
-- mock 服务不会真正校验这个 key
-
-### 8.2 启动 mock 服务
-
-```powershell
-Set-Location E:\Agent\Agent-main
-python mock_llm_server.py
-```
-
-默认监听：
-
-- [http://127.0.0.1:8001/v1/chat/completions](http://127.0.0.1:8001/v1/chat/completions)
-
-### 8.3 启动后端
-
-```powershell
-Set-Location E:\Agent\Agent-main
-python -m uvicorn api_server:app --reload --host 127.0.0.1 --port 8000
-```
-
-### 8.4 启动前端
-
-```powershell
-Set-Location E:\Agent\frontend
-npm run dev
-```
-
-### 8.5 假模型模式的用途
-
-适合用于：
-
-- 联调接口是否通
-- 验证前端页面是否能承接后端数据
-- 验证 `resume_parse -> student_profile -> job_profile -> job_match -> career_path_plan -> career_report` 是否能完整走通
-
-不适合用于：
-
-- 评估真实报告质量
-- 评估真实匹配精度
-- 评估真实职业规划内容
 
 ---
 
@@ -514,7 +449,6 @@ Set-Location E:\Agent\Agent-main
 - task 级 prompt 压缩
 - task 级输出 token 预算
 - prompt hash 本地缓存
-- mock LLM 联调能力
 
 ## 14. 常见问题
 
@@ -525,7 +459,6 @@ Set-Location E:\Agent\Agent-main
 1. 后端是否已经启动在 `8000`
 2. 模型配置是否正确
 3. 若使用真实模型，API Key 是否有效
-4. 若使用 mock，`mock_llm_server.py` 是否已启动在 `8001`
 
 ### 14.2 PDF 简历解析失败
 
@@ -554,16 +487,6 @@ python -m pip install pypdf
 ## 15. 最短跑通路径
 
 如果你只想最快跑起来，推荐按下面顺序：
-
-### 方案 A：最快联调，不消耗真实 token
-
-1. 配置 `local_llm_config.py` 指向 `http://127.0.0.1:8001/v1`
-2. 启动 `mock_llm_server.py`
-3. 启动 `api_server.py`
-4. 启动前端 `npm run dev`
-5. 上传简历联调
-
-### 方案 B：真实效果演示
 
 1. 配置真实大模型 API
 2. 启动 Neo4j

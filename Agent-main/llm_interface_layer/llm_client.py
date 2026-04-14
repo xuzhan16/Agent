@@ -11,6 +11,8 @@ import hashlib
 import json
 import os
 import re
+import socket
+import threading
 import time
 from pathlib import Path
 from urllib import error, request
@@ -36,6 +38,9 @@ class LLMClient:
 
     def __init__(self, config: LLMConfig = DEFAULT_LLM_CONFIG) -> None:
         self.config = config
+        self._request_semaphore = threading.BoundedSemaphore(self.config.max_concurrency)
+        self._throttle_lock = threading.Lock()
+        self._next_request_time = 0.0
 
     def generate(
         self,
@@ -55,7 +60,7 @@ class LLMClient:
             return cached_text
 
         last_error: Exception | None = None
-        for _ in range(self.config.retry_times + 1):
+        for attempt in range(self.config.retry_times + 1):
             try:
                 raw_text = self._real_generate(normalized_task, system_prompt, user_prompt)
                 self._save_cached_response(cache_key, raw_text)
@@ -65,8 +70,15 @@ class LLMClient:
                 if not self._should_retry(exc):
                     raise
 
-                print(f"LLM请求受限或服务暂不可用，等待 10 秒后重试... ({exc})")
-                time.sleep(10)
+                if attempt >= self.config.retry_times:
+                    break
+
+                wait_seconds = self._compute_retry_wait_seconds(attempt)
+                print(
+                    f"LLM请求受限或服务暂不可用，等待 {wait_seconds:.1f} 秒后重试 "
+                    f"(timeout={self._resolve_request_timeout_seconds(normalized_task)}s)... ({exc})"
+                )
+                time.sleep(wait_seconds)
 
         raise RuntimeError(f"LLM request failed after retries: {last_error}") from last_error
 
@@ -106,19 +118,73 @@ class LLMClient:
             method="POST",
         )
 
+        self._acquire_request_slot()
         try:
-            with request.urlopen(req, timeout=self.config.timeout_seconds) as resp:
-                response_json = json.loads(resp.read().decode("utf-8"))
-        except error.HTTPError as exc:
-            error_body = exc.read().decode("utf-8", errors="ignore")
-            raise RuntimeError(
-                f"LLM HTTPError: status={exc.code}, reason={exc.reason}, body={error_body}"
-            ) from exc
+            try:
+                timeout_seconds = self._resolve_request_timeout_seconds(task_type)
+                with request.urlopen(req, timeout=timeout_seconds) as resp:
+                    response_json = json.loads(resp.read().decode("utf-8"))
+            except error.HTTPError as exc:
+                error_body = exc.read().decode("utf-8", errors="ignore")
+                raise RuntimeError(
+                    f"LLM HTTPError: status={exc.code}, reason={exc.reason}, body={error_body}"
+                ) from exc
+            except (TimeoutError, socket.timeout) as exc:
+                error_text = str(exc).strip() or exc.__class__.__name__
+                raise RuntimeError(f"LLM TimeoutError: {error_text}") from exc
+            except error.URLError as exc:
+                reason = str(getattr(exc, "reason", "")).strip() or str(exc).strip()
+                raise RuntimeError(f"LLM URLError: {reason or exc.__class__.__name__}") from exc
+            except OSError as exc:
+                error_text = str(exc).strip() or exc.__class__.__name__
+                raise RuntimeError(f"LLM OSError: {error_text}") from exc
+        finally:
+            self._release_request_slot()
 
         try:
             return response_json["choices"][0]["message"]["content"]
         except (KeyError, IndexError, TypeError) as exc:
             raise RuntimeError(f"Unexpected LLM response schema: {response_json}") from exc
+
+    def _acquire_request_slot(self) -> None:
+        """串行化高峰请求，避免服务端限流与读超时。"""
+        self._request_semaphore.acquire()
+
+        interval = float(self.config.min_request_interval_seconds)
+        if interval <= 0:
+            return
+
+        with self._throttle_lock:
+            now = time.monotonic()
+            wait_seconds = self._next_request_time - now
+            if wait_seconds > 0:
+                time.sleep(wait_seconds)
+                now = time.monotonic()
+            self._next_request_time = now + interval
+
+    def _release_request_slot(self) -> None:
+        try:
+            self._request_semaphore.release()
+        except ValueError:
+            return
+
+    def _compute_retry_wait_seconds(self, attempt: int) -> float:
+        base_wait = float(self.config.retry_wait_seconds)
+        max_wait = max(base_wait, float(self.config.retry_max_wait_seconds))
+        return min(max_wait, base_wait * (2 ** max(0, attempt)))
+
+    def _resolve_request_timeout_seconds(self, task_type: TaskType) -> int:
+        """按任务复杂度放大读取等待时间，优先“等结果”而非频繁重试。"""
+        base_timeout = int(self.config.timeout_seconds)
+        heavy_tasks = {
+            TaskType.JOB_EXTRACT,
+            TaskType.JOB_DEDUP,
+            TaskType.CAREER_REPORT,
+            TaskType.CAREER_PATH_PLAN,
+        }
+        if task_type in heavy_tasks:
+            return max(base_timeout, int(base_timeout * 1.2))
+        return base_timeout
 
     def _resolve_cache_path(self, cache_key: str) -> Path:
         return Path(self.config.cache_dir) / f"{cache_key}.json"
@@ -201,13 +267,18 @@ class LLMClient:
             if 500 <= status_code < 600:
                 return True
 
-        if isinstance(exc, error.URLError):
+        if isinstance(exc, (TimeoutError, socket.timeout, error.URLError)):
+            return True
+
+        if isinstance(exc, OSError) and getattr(exc, "errno", None) in {104, 110, 10054, 10060}:
             return True
 
         error_text = str(exc).lower()
         transient_markers = (
             "timed out",
             "timeout",
+            "read operation timed out",
+            "read timed out",
             "temporarily unavailable",
             "connection reset",
             "connection aborted",

@@ -1,3 +1,0 @@
-﻿LOCAL_LLM_API_BASE_URL = "http://127.0.0.1:8001/v1"
-LOCAL_LLM_MODEL = "mock-model"
-LOCAL_LLM_API_KEY = "mock-key"
