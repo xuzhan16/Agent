@@ -31,6 +31,7 @@ from .job_match_builder import (
     build_demo_student_profile_result,
     build_match_input_payload,
 )
+from .contest_match_evaluator import build_match_asset_evaluation
 from .job_match_scorer import score_match_input_payload
 from llm_interface_layer.llm_service import call_llm
 from llm_interface_layer.state_manager import StateManager
@@ -77,6 +78,9 @@ class JobMatchServiceResult:
     score_weights: Dict[str, float] = field(default_factory=dict)
     rule_score_result: Dict[str, Any] = field(default_factory=dict)
     match_input_payload: Dict[str, Any] = field(default_factory=dict)
+    target_job_match: Dict[str, Any] = field(default_factory=dict)
+    recommended_job_match: Dict[str, Any] = field(default_factory=dict)
+    recommendation_ranking: List[Dict[str, Any]] = field(default_factory=list)
     llm_match_result: Dict[str, Any] = field(default_factory=dict)
     build_warnings: List[str] = field(default_factory=list)
 
@@ -541,6 +545,33 @@ def merge_job_match_results(
             final_result["score_level"] = "D-勉强匹配"
         else:
             final_result["score_level"] = "E-匹配度较低"
+
+    try:
+        asset_evaluation = build_match_asset_evaluation(
+            match_input_payload=payload,
+            rule_score_result=rule_result,
+            final_overall_match_score=final_result.get("overall_match_score"),
+            top_n=5,
+        )
+        final_result["target_job_match"] = deepcopy(safe_dict(asset_evaluation.get("target_job_match")))
+        final_result["recommended_job_match"] = deepcopy(
+            safe_dict(asset_evaluation.get("recommended_job_match"))
+        )
+        final_result["recommendation_ranking"] = deepcopy(
+            [safe_dict(item) for item in safe_list(asset_evaluation.get("recommendation_ranking"))]
+        )
+        asset_warnings = [
+            clean_text(item)
+            for item in safe_list(asset_evaluation.get("asset_warnings"))
+            if clean_text(item)
+        ]
+        if asset_warnings:
+            final_result["build_warnings"] = dedup_keep_order(final_result.get("build_warnings", []) + asset_warnings)
+    except Exception as exc:
+        LOGGER.warning("job_match asset evaluation failed: %s", exc)
+        final_result["build_warnings"] = dedup_keep_order(
+            final_result.get("build_warnings", []) + [f"人岗匹配后处理资产评测失败: {exc}"]
+        )
     return final_result
 
 

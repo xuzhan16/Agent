@@ -1,0 +1,501 @@
+[
+  {
+    "doc_id": "job_4142cecaac11",
+    "doc_type": "job_profile",
+    "standard_job_name": "cc++",
+    "aliases": [
+      "C/C++",
+      "CC++"
+    ],
+    "job_category": "",
+    "job_level": "",
+    "degree_requirement": "",
+    "major_requirement": "",
+    "certificate_requirement": [],
+    "hard_skills": [],
+    "tools_or_tech_stack": [],
+    "soft_skills": [],
+    "practice_requirement": "",
+    "experience_requirement": "",
+    "raw_requirement_summary": "",
+    "vertical_paths": [],
+    "transfer_paths": [],
+    "path_relation_details": [],
+    "source_count": 2,
+    "confidence": 0.6,
+    "doc_text": "cc++属于未明确分类岗位，岗位层级为未明确层级。"
+  },
+  {
+    "doc_id": "job_93f725a07423",
+    "doc_type": "job_profile",
+    "standard_job_name": "java",
+    "aliases": [
+      "Java"
+    ],
+    "job_category": "",
+    "job_level": "",
+    "degree_requirement": "",
+    "major_requirement": "",
+    "certificate_requirement": [],
+    "hard_skills": [],
+    "tools_or_tech_stack": [],
+    "soft_skills": [],
+    "practice_requirement": "",
+    "experience_requirement": "",
+    "raw_requirement_summary": "",
+    "vertical_paths": [],
+    "transfer_paths": [],
+    "path_relation_details": [],
+    "source_count": 10,
+    "confidence": 0.6,
+    "doc_text": "java属于未明确分类岗位，岗位层级为未明确层级。"
+  },
+  {
+    "doc_id": "job_fd547cd6633e",
+    "doc_type": "job_profile",
+    "standard_job_name": "前端开发工程师",
+    "aliases": [
+      "前端开发",
+      "前端开发工程师"
+    ],
+    "job_category": "技术/研发",
+    "job_level": "",
+    "degree_requirement": "本科及以上",
+    "major_requirement": "信息系统/计算机/通讯等相关专业",
+    "certificate_requirement": [],
+    "hard_skills": [
+      "CSS",
+      "H5",
+      "HTML",
+      "JavaScript",
+      "Web前端开发技术"
+    ],
+    "tools_or_tech_stack": [
+      "CSS",
+      "H5",
+      "HTML",
+      "JavaScript",
+      "Web前端开发技术"
+    ],
+    "soft_skills": [],
+    "practice_requirement": "",
+    "experience_requirement": "无经验22年优秀应届生亦可培养",
+    "raw_requirement_summary": "负责公司项目web前端页面的设计和开发、测试、优化工作；参与前端架构在项目中的落地、实施；配合后端开发工程师实现界面功能、确保交互界面具有良好的用户体验和卓越的性能；持续的优化前端体验和页面响应速度，并保证兼容性和执行效率。",
+    "vertical_paths": [
+      "中级前端开发工程师",
+      "初级前端开发工程师",
+      "前端技术专家",
+      "前端技术总监",
+      "前端架构师",
+      "高级前端开发工程师"
+    ],
+    "transfer_paths": [
+      "UI/UX设计师",
+      "产品经理",
+      "全栈开发工程师",
+      "后端开发工程师",
+      "移动端开发工程师",
+      "项目经理"
+    ],
+    "path_relation_details": [
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "中级前端开发工程师",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "初级前端开发工程师",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "前端技术专家",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "前端技术总监",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "前端架构师",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "高级前端开发工程师",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "UI/UX设计师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "产品经理",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "全栈开发工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "后端开发工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "移动端开发工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "前端开发工程师",
+        "target_job": "项目经理",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      }
+    ],
+    "source_count": 2,
+    "confidence": 1.0,
+    "doc_text": "前端开发工程师属于技术/研发岗位，岗位层级为未明确层级。 常见学历要求为本科及以上，专业要求为信息系统/计算机/通讯等相关专业。 经验要求：无经验22年优秀应届生亦可培养。 核心硬技能包括：CSS、H5、HTML、JavaScript、Web前端开发技术。 常见工具或技术栈包括：CSS、H5、HTML、JavaScript、Web前端开发技术。 岗位摘要：负责公司项目web前端页面的设计和开发、测试、优化工作；参与前端架构在项目中的落地、实施；配合后端开发工程师实现界面功能、确保交互界面具有良好的用户体验和卓越的性能；持续的优化前端体验和页面响应速度，并保证兼容性和执行效率。 常见纵向发展路径：中级前端开发工程师；初级前端开发工程师；前端技术专家；前端技术总监；前端架构师。 常见横向转岗路径：UI/UX设计师；产品经理；全栈开发工程师；后端开发工程师；移动端开发工程师。"
+  },
+  {
+    "doc_id": "job_e8cf9de21712",
+    "doc_type": "job_profile",
+    "standard_job_name": "实施工程师",
+    "aliases": [
+      "实施工程师",
+      "实施工程师师"
+    ],
+    "job_category": "计算机软件/信息技术",
+    "job_level": "",
+    "degree_requirement": "本科及以上",
+    "major_requirement": "地理信息、测绘工程、计算机等相关专业",
+    "certificate_requirement": [],
+    "hard_skills": [
+      "数据入库",
+      "数据处理",
+      "数据建库",
+      "数据核查",
+      "软件测试",
+      "软件系统安装部署",
+      "软件维护与更新"
+    ],
+    "tools_or_tech_stack": [
+      "arcgis",
+      "cass",
+      "mysql",
+      "oracle"
+    ],
+    "soft_skills": [
+      "勤恳好学",
+      "团队协作",
+      "沟通能力",
+      "责任心",
+      "踏实认真"
+    ],
+    "practice_requirement": "可全职实习6个月及以上，接受出差或者项目驻点",
+    "experience_requirement": "",
+    "raw_requirement_summary": "负责软件系统的现场实施、部署、测试、维护、数据建库与处理，以及客户培训和项目辅助工作。要求本科及以上学历，地理信息、测绘工程、计算机等相关专业，熟悉相关软件和数据库，具备良好的沟通、团队协作精神和责任心，能接受实习和出差。",
+    "vertical_paths": [
+      "中级实施工程师",
+      "初级实施工程师",
+      "实施项目经理",
+      "技术总监",
+      "高级实施工程师"
+    ],
+    "transfer_paths": [
+      "GIS工程师",
+      "产品经理",
+      "售前工程师",
+      "售后工程师",
+      "技术支持工程师",
+      "数据工程师",
+      "项目经理"
+    ],
+    "path_relation_details": [
+      {
+        "source_job": "实施工程师",
+        "target_job": "中级实施工程师",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "初级实施工程师",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "实施项目经理",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "技术总监",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "高级实施工程师",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "GIS工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "产品经理",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "售前工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "售后工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "技术支持工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "数据工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "实施工程师",
+        "target_job": "项目经理",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      }
+    ],
+    "source_count": 10,
+    "confidence": 1.0,
+    "doc_text": "实施工程师属于计算机软件/信息技术岗位，岗位层级为未明确层级。 常见学历要求为本科及以上，专业要求为地理信息、测绘工程、计算机等相关专业。 核心硬技能包括：数据入库、数据处理、数据建库、数据核查、软件测试、软件系统安装部署、软件维护与更新。 常见工具或技术栈包括：arcgis、cass、mysql、oracle。 软技能要求包括：勤恳好学、团队协作、沟通能力、责任心、踏实认真。 实践要求：可全职实习6个月及以上，接受出差或者项目驻点。 岗位摘要：负责软件系统的现场实施、部署、测试、维护、数据建库与处理，以及客户培训和项目辅助工作。要求本科及以上学历，地理信息、测绘工程、计算机等相关专业，熟悉相关软件和数据库，具备良好的沟通、团队协作精神和责任心，能接受实习和出差。 常见纵向发展路径：中级实施工程师；初级实施工程师；实施项目经理；技术总监；高级实施工程师。 常见横向转岗路径：GIS工程师；产品经理；售前工程师；售后工程师；技术支持工程师。"
+  },
+  {
+    "doc_id": "job_eae351a44fc6",
+    "doc_type": "job_profile",
+    "standard_job_name": "技术支持工程师",
+    "aliases": [
+      "技术支持工程师",
+      "技术支持工程师师"
+    ],
+    "job_category": "技术/工程/服务",
+    "job_level": "初级/中级工程师",
+    "degree_requirement": "大专及以上",
+    "major_requirement": "机械、电气、自动化、化工、环境工程等相关专业",
+    "certificate_requirement": [],
+    "hard_skills": [
+      "客户问题解决",
+      "技术文档编写与汇总",
+      "故障诊断与维修",
+      "设备安装",
+      "设备调试"
+    ],
+    "tools_or_tech_stack": [
+      "相关工业设备（如净化设备、焊接设备等）"
+    ],
+    "soft_skills": [
+      "团队协作",
+      "学习能力",
+      "客户服务意识",
+      "沟通能力",
+      "问题分析与解决能力"
+    ],
+    "practice_requirement": "具备设备实操或相关技术实习经验者优先",
+    "experience_requirement": "有相关设备安装调试或售后技术支持经验者优先",
+    "raw_requirement_summary": "负责工业设备的安装、调试、售后技术支持、故障维修及客户问题汇总反馈。",
+    "vertical_paths": [
+      "售后服务总监",
+      "技术培训主管",
+      "技术支持经理",
+      "高级技术支持工程师"
+    ],
+    "transfer_paths": [
+      "产品工程师",
+      "售前技术支持工程师",
+      "应用工程师",
+      "现场服务工程师",
+      "质量管理工程师"
+    ],
+    "path_relation_details": [
+      {
+        "source_job": "技术支持工程师",
+        "target_job": "售后服务总监",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "技术支持工程师",
+        "target_job": "技术培训主管",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "技术支持工程师",
+        "target_job": "技术支持经理",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "技术支持工程师",
+        "target_job": "高级技术支持工程师",
+        "relation_type": "PROMOTE_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "技术支持工程师",
+        "target_job": "产品工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "技术支持工程师",
+        "target_job": "售前技术支持工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "技术支持工程师",
+        "target_job": "应用工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "技术支持工程师",
+        "target_job": "现场服务工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      },
+      {
+        "source_job": "技术支持工程师",
+        "target_job": "质量管理工程师",
+        "relation_type": "TRANSFER_TO",
+        "reason": "",
+        "confidence": ""
+      }
+    ],
+    "source_count": 9,
+    "confidence": 1.0,
+    "doc_text": "技术支持工程师属于技术/工程/服务岗位，岗位层级为初级/中级工程师。 常见学历要求为大专及以上，专业要求为机械、电气、自动化、化工、环境工程等相关专业。 经验要求：有相关设备安装调试或售后技术支持经验者优先。 核心硬技能包括：客户问题解决、技术文档编写与汇总、故障诊断与维修、设备安装、设备调试。 常见工具或技术栈包括：相关工业设备（如净化设备、焊接设备等）。 软技能要求包括：团队协作、学习能力、客户服务意识、沟通能力、问题分析与解决能力。 实践要求：具备设备实操或相关技术实习经验者优先。 岗位摘要：负责工业设备的安装、调试、售后技术支持、故障维修及客户问题汇总反馈。 常见纵向发展路径：售后服务总监；技术培训主管；技术支持经理；高级技术支持工程师。 常见横向转岗路径：产品工程师；售前技术支持工程师；应用工程师；现场服务工程师；质量管理工程师。"
+  },
+  {
+    "doc_id": "job_3c4f968cb953",
+    "doc_type": "job_profile",
+    "standard_job_name": "测试工程师",
+    "aliases": [
+      "软件测试",
+      "硬件测试",
+      "测试工程师"
+    ],
+    "job_category": "",
+    "job_level": "",
+    "degree_requirement": "",
+    "major_requirement": "",
+    "certificate_requirement": [],
+    "hard_skills": [],
+    "tools_or_tech_stack": [],
+    "soft_skills": [],
+    "practice_requirement": "",
+    "experience_requirement": "",
+    "raw_requirement_summary": "",
+    "vertical_paths": [],
+    "transfer_paths": [],
+    "path_relation_details": [],
+    "source_count": 20,
+    "confidence": 0.6,
+    "doc_text": "测试工程师属于未明确分类岗位，岗位层级为未明确层级。"
+  },
+  {
+    "doc_id": "job_c022617a8d3f",
+    "doc_type": "job_profile",
+    "standard_job_name": "科研人员",
+    "aliases": [
+      "科研人员"
+    ],
+    "job_category": "",
+    "job_level": "",
+    "degree_requirement": "",
+    "major_requirement": "",
+    "certificate_requirement": [],
+    "hard_skills": [],
+    "tools_or_tech_stack": [],
+    "soft_skills": [],
+    "practice_requirement": "",
+    "experience_requirement": "",
+    "raw_requirement_summary": "",
+    "vertical_paths": [],
+    "transfer_paths": [],
+    "path_relation_details": [],
+    "source_count": 7,
+    "confidence": 0.6,
+    "doc_text": "科研人员属于未明确分类岗位，岗位层级为未明确层级。"
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "core_job_count": 10,
+  "min_sample_count": 5,
+  "include_only_cs_related": true,
+  "max_jobs_per_category": 10,
+  "title_whitelist_keywords": [
+    "开发",
+    "测试",
+    "技术",
+    "实施",
+    "运维",
+    "数据",
+    "算法",
+    "产品",
+    "项目经理",
+    "网络",
+    "安全"
+  ],
+  "blacklist_keywords": [
+    "商务",
+    "销售",
+    "资料",
+    "文员",
+    "科研人员",
+    "翻译",
+    "客服",
+    "档案",
+    "招聘",
+    "法务",
+    "顾问",
+    "推广",
+    "助理",
+    "管培",
+    "储备",
+    "风电"
+  ],
+  "category_bonus": {
+    "开发类": 1.15,
+    "测试类": 1.1,
+    "数据类": 1.08,
+    "运维类": 1.05,
+    "产品类": 1.0,
+    "实施类": 0.95
+  },
+  "completeness_weights": {
+    "degree": 0.18,
+    "major": 0.18,
+    "skills": 0.24,
+    "paths": 0.2,
+    "level": 0.1,
+    "category": 0.1
+  }
+}

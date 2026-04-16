@@ -20,7 +20,13 @@ outputs/cache/
 build/
 dist/
 .DS_Store
+.env
+.env.*
 .env.neo4j
 .infra/neo4j/
+outputs/backups/
+Agent-main/outputs/backups/
+outputs/sql/*.db
+Agent-main/outputs/sql/*.db
 Agent-main/llm_interface_layer/local_llm_config.py
 llm_interface_layer/local_llm_config.py

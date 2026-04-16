@@ -31,6 +31,7 @@ import pandas as pd
 
 from .job_profile_aggregator import aggregate_job_profile_group, build_demo_dataframe as build_aggregator_demo_df
 from .job_profile_builder import build_job_profile_input_payload
+from .core_job_profile_service import build_job_profile_asset_context
 from llm_interface_layer.llm_service import call_llm
 from llm_interface_layer.state_manager import StateManager
 from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
@@ -80,6 +81,8 @@ class JobProfileServiceResult:
     explicit_requirements: Dict[str, Any] = field(default_factory=dict)
     normalized_requirements: Dict[str, Any] = field(default_factory=dict)
     representative_samples: List[Dict[str, Any]] = field(default_factory=list)
+    core_job_profiles: List[Dict[str, Any]] = field(default_factory=list)
+    target_job_profile_assets: Dict[str, Any] = field(default_factory=dict)
     llm_profile_result: Dict[str, Any] = field(default_factory=dict)
     build_warnings: List[str] = field(default_factory=list)
 
@@ -540,7 +543,27 @@ def merge_job_profile_results(
         llm_profile_result=deepcopy(safe_dict(normalized_llm.get("raw_llm_result"))),
         build_warnings=merged_warnings,
     )
-    return asdict(result)
+
+    final_result = asdict(result)
+    try:
+        asset_context = build_job_profile_asset_context(final_result.get("standard_job_name"))
+        final_result["core_job_profiles"] = deepcopy(safe_list(asset_context.get("core_job_profiles")))
+        final_result["target_job_profile_assets"] = deepcopy(
+            safe_dict(asset_context.get("target_job_profile_assets"))
+        )
+        asset_warnings = [
+            clean_text(item)
+            for item in safe_list(asset_context.get("asset_warnings"))
+            if clean_text(item)
+        ]
+        if asset_warnings:
+            final_result["build_warnings"] = dedup_keep_order(final_result.get("build_warnings", []) + asset_warnings)
+    except Exception as exc:
+        LOGGER.warning("job_profile asset context build failed: %s", exc)
+        final_result["build_warnings"] = dedup_keep_order(
+            final_result.get("build_warnings", []) + [f"岗位后处理资产接入失败: {exc}"]
+        )
+    return final_result
 
 def build_job_profile_llm_input(
     builder_payload: Dict[str, Any],

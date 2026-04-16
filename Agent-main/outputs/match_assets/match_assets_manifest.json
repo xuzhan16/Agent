@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-16T15:45:14+08:00",
+  "source_file": "E:\\Agent\\Agent-main\\outputs\\intermediate\\jobs_extracted_full.csv",
+  "output_dir": "E:\\Agent\\Agent-main\\outputs\\match_assets",
+  "sample_count": 2638,
+  "job_count": 49,
+  "core_job_count": 10,
+  "assets": {
+    "job_sample_requirements_csv": "E:\\Agent\\Agent-main\\outputs\\match_assets\\job_sample_requirements.csv",
+    "job_requirement_stats_json": "E:\\Agent\\Agent-main\\outputs\\match_assets\\job_requirement_stats.json",
+    "core_jobs_json": "E:\\Agent\\Agent-main\\outputs\\match_assets\\core_jobs.json",
+    "job_skill_knowledge_assets_json": "E:\\Agent\\Agent-main\\outputs\\match_assets\\job_skill_knowledge_assets.json"
+  }
+}

@@ -1,0 +1,1739 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-16T15:45:14+08:00",
+  "source_file": "E:\\Agent\\Agent-main\\outputs\\intermediate\\jobs_extracted_full.csv",
+  "knowledge_map_file": "E:\\Agent\\Agent-main\\configs\\skill_knowledge_map.json",
+  "jobs": {
+    "APP推广专员": {
+      "standard_job_name": "APP推广专员",
+      "hard_skills": [
+        "地推执行",
+        "客户引导注册",
+        "社区/商圈推广",
+        "门店配送（部分样本）"
+      ],
+      "tools_or_tech_stack": [
+        "地推执行",
+        "客户引导注册",
+        "社区/商圈推广",
+        "门店配送（部分样本）"
+      ],
+      "required_knowledge_points": [
+        "地推执行基础",
+        "客户引导注册基础",
+        "社区/商圈推广基础",
+        "门店配送（部分样本）基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "C/C++嵌入式软件开发工程师": {
+      "standard_job_name": "C/C++嵌入式软件开发工程师",
+      "hard_skills": [
+        "AUTOSAR基础软件平台设计与开发",
+        "C/C++编程",
+        "CAN/LIN/ETH通信协议栈开发",
+        "CPU虚拟化",
+        "信息安全开发",
+        "功能安全开发",
+        "外设虚拟化",
+        "存储协议栈开发",
+        "嵌入式软件开发",
+        "工具链开发",
+        "操作系统开发",
+        "汇编语言"
+      ],
+      "tools_or_tech_stack": [
+        "AUTOSAR基础软件平台设计与开发",
+        "C/C++编程",
+        "CAN/LIN/ETH通信协议栈开发",
+        "CPU虚拟化",
+        "信息安全开发",
+        "功能安全开发",
+        "外设虚拟化",
+        "存储协议栈开发",
+        "嵌入式软件开发",
+        "工具链开发",
+        "操作系统开发",
+        "汇编语言"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理",
+        "C/C++基础",
+        "嵌入式系统基础",
+        "硬件接口基础"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础",
+        "Linux驱动基础",
+        "单片机开发"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "Java开发工程师": {
+      "standard_job_name": "Java开发工程师",
+      "hard_skills": [
+        "Android开发",
+        "C#开发",
+        "COBOL开发",
+        "C语言开发",
+        "IOS开发",
+        "Java开发",
+        "VB.NET开发",
+        "代码编写",
+        "技术攻关",
+        "技术方案设计",
+        "数据库优化",
+        "测试"
+      ],
+      "tools_or_tech_stack": [
+        "Android开发",
+        "C#开发",
+        "COBOL开发",
+        "C语言开发",
+        "IOS开发",
+        "Java开发",
+        "VB.NET开发",
+        "代码编写",
+        "技术攻关",
+        "技术方案设计",
+        "数据库优化",
+        "测试"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理",
+        "Java基础语法",
+        "Spring Boot开发",
+        "SQL查询",
+        "测试用例设计",
+        "功能测试",
+        "缺陷管理",
+        "测试报告编写",
+        "接口测试方法",
+        "接口用例设计",
+        "HTTP协议基础",
+        "JavaScript基础",
+        "DOM交互",
+        "异步编程",
+        "React组件开发",
+        "状态管理",
+        "接口联调",
+        "容器基础"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础",
+        "Git基础",
+        "Linux基础",
+        "Redis基础",
+        "接口测试",
+        "自动化测试",
+        "性能测试",
+        "Postman使用",
+        "自动化测试脚本",
+        "TypeScript基础",
+        "前端工程化",
+        "性能优化",
+        "Docker Compose使用",
+        "容器化发布",
+        "数据库设计",
+        "SQL性能优化",
+        "索引基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "产品专员助理": {
+      "standard_job_name": "产品专员助理",
+      "hard_skills": [
+        "产品生命周期管理",
+        "产品策划",
+        "市场调查",
+        "数据分析",
+        "新品开发",
+        "流行趋势分析",
+        "用户需求分析",
+        "AI",
+        "PS"
+      ],
+      "tools_or_tech_stack": [
+        "产品生命周期管理",
+        "产品策划",
+        "市场调查",
+        "数据分析",
+        "新品开发",
+        "流行趋势分析",
+        "用户需求分析",
+        "AI",
+        "PS"
+      ],
+      "required_knowledge_points": [
+        "数据清洗",
+        "指标分析",
+        "SQL查询",
+        "数据可视化"
+      ],
+      "preferred_knowledge_points": [
+        "A/B测试基础",
+        "业务分析"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "储备经理人": {
+      "standard_job_name": "储备经理人",
+      "hard_skills": [
+        "业务活动策划",
+        "业绩目标管理",
+        "团队发展",
+        "团队管理",
+        "客户洽谈",
+        "客户资源开发",
+        "家庭财务配置优化",
+        "方案定制"
+      ],
+      "tools_or_tech_stack": [
+        "业务活动策划",
+        "业绩目标管理",
+        "团队发展",
+        "团队管理",
+        "客户洽谈",
+        "客户资源开发",
+        "家庭财务配置优化",
+        "方案定制"
+      ],
+      "required_knowledge_points": [
+        "业务活动策划基础",
+        "业绩目标管理基础",
+        "团队发展基础",
+        "团队管理基础",
+        "客户洽谈基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "内容审核专员": {
+      "standard_job_name": "内容审核专员",
+      "hard_skills": [
+        "内容审核",
+        "平台规则理解",
+        "政治敏感信息识别",
+        "违规信息识别"
+      ],
+      "tools_or_tech_stack": [
+        "内容审核",
+        "平台规则理解",
+        "政治敏感信息识别",
+        "违规信息识别"
+      ],
+      "required_knowledge_points": [
+        "内容审核基础",
+        "平台规则理解基础",
+        "政治敏感信息识别基础",
+        "违规信息识别基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "前端开发工程师": {
+      "standard_job_name": "前端开发工程师",
+      "hard_skills": [],
+      "tools_or_tech_stack": [],
+      "required_knowledge_points": [
+        "HTML/CSS基础",
+        "JavaScript基础",
+        "前端框架开发",
+        "接口联调"
+      ],
+      "preferred_knowledge_points": [
+        "性能优化",
+        "工程化构建"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "咨询顾问": {
+      "standard_job_name": "咨询顾问",
+      "hard_skills": [
+        "可行性研究",
+        "客户需求分析",
+        "市场调研",
+        "报告撰写",
+        "政策研究与分析",
+        "数据分析",
+        "绩效评价",
+        "行业研究",
+        "项目管理基础",
+        "项目评估与评审",
+        "Office办公软件（Word, Excel, PowerPoint）",
+        "数据分析工具（如SPSS, Stata）"
+      ],
+      "tools_or_tech_stack": [
+        "可行性研究",
+        "客户需求分析",
+        "市场调研",
+        "报告撰写",
+        "政策研究与分析",
+        "数据分析",
+        "绩效评价",
+        "行业研究",
+        "项目管理基础",
+        "项目评估与评审",
+        "Office办公软件（Word, Excel, PowerPoint）",
+        "数据分析工具（如SPSS, Stata）"
+      ],
+      "required_knowledge_points": [
+        "数据清洗",
+        "指标分析",
+        "SQL查询",
+        "数据可视化",
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "A/B测试基础",
+        "业务分析",
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "售后客服": {
+      "standard_job_name": "售后客服",
+      "hard_skills": [
+        "业务协调",
+        "业务流程讲解",
+        "客户关系管理",
+        "客户沟通与安抚",
+        "客户线索开发转化",
+        "客户维护与激活",
+        "数据填报",
+        "问题解决",
+        "CRM系统",
+        "买家开发App"
+      ],
+      "tools_or_tech_stack": [
+        "业务协调",
+        "业务流程讲解",
+        "客户关系管理",
+        "客户沟通与安抚",
+        "客户线索开发转化",
+        "客户维护与激活",
+        "数据填报",
+        "问题解决",
+        "CRM系统",
+        "买家开发App"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "商务专员": {
+      "standard_job_name": "商务专员",
+      "hard_skills": [
+        "商务谈判",
+        "客户关系管理",
+        "市场分析与判断",
+        "招投标流程管理",
+        "标书编制",
+        "渠道拓展与维护",
+        "网络营销知识",
+        "订单跟进与处理",
+        "Office办公软件"
+      ],
+      "tools_or_tech_stack": [
+        "商务谈判",
+        "客户关系管理",
+        "市场分析与判断",
+        "招投标流程管理",
+        "标书编制",
+        "渠道拓展与维护",
+        "网络营销知识",
+        "订单跟进与处理",
+        "Office办公软件"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "商务拓展经理": {
+      "standard_job_name": "商务拓展经理",
+      "hard_skills": [
+        "供应商沟通协调",
+        "售后协调跟进",
+        "商务信息收集与整理",
+        "商务文件编制",
+        "报表制作",
+        "标书制作协助",
+        "询价与报价",
+        "采购合同执行与跟踪"
+      ],
+      "tools_or_tech_stack": [
+        "供应商沟通协调",
+        "售后协调跟进",
+        "商务信息收集与整理",
+        "商务文件编制",
+        "报表制作",
+        "标书制作协助",
+        "询价与报价",
+        "采购合同执行与跟踪"
+      ],
+      "required_knowledge_points": [
+        "供应商沟通协调基础",
+        "售后协调跟进基础",
+        "商务信息收集与整理基础",
+        "商务文件编制基础",
+        "报表制作基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "培训师": {
+      "standard_job_name": "培训师",
+      "hard_skills": [
+        "培训效果评估",
+        "培训需求分析",
+        "培训项目管理",
+        "新人入职培训",
+        "演讲与表达",
+        "经验萃取与知识管理",
+        "话术设计与优化",
+        "课程设计与开发",
+        "PPT/Keynote",
+        "在线学习平台",
+        "视频会议系统",
+        "课程开发工具"
+      ],
+      "tools_or_tech_stack": [
+        "培训效果评估",
+        "培训需求分析",
+        "培训项目管理",
+        "新人入职培训",
+        "演讲与表达",
+        "经验萃取与知识管理",
+        "话术设计与优化",
+        "课程设计与开发",
+        "PPT/Keynote",
+        "在线学习平台",
+        "视频会议系统",
+        "课程开发工具"
+      ],
+      "required_knowledge_points": [
+        "培训效果评估基础",
+        "培训需求分析基础",
+        "培训项目管理基础",
+        "新人入职培训基础",
+        "演讲与表达基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "大客户代表": {
+      "standard_job_name": "大客户代表",
+      "hard_skills": [
+        "商务谈判",
+        "客户关系维护与开拓",
+        "客户需求分析与整理",
+        "市场与竞品分析",
+        "销售计划制定与实施",
+        "项目运作"
+      ],
+      "tools_or_tech_stack": [
+        "商务谈判",
+        "客户关系维护与开拓",
+        "客户需求分析与整理",
+        "市场与竞品分析",
+        "销售计划制定与实施",
+        "项目运作"
+      ],
+      "required_knowledge_points": [
+        "软件部署",
+        "客户沟通",
+        "需求理解",
+        "问题排查"
+      ],
+      "preferred_knowledge_points": [
+        "数据库基础",
+        "文档编写"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "实施工程师": {
+      "standard_job_name": "实施工程师",
+      "hard_skills": [
+        "产品演示",
+        "客户培训",
+        "数据入库",
+        "数据处理",
+        "数据建库",
+        "数据核查",
+        "文档编写",
+        "软件测试",
+        "软件系统安装部署",
+        "软件维护与更新",
+        "arcgis",
+        "cass"
+      ],
+      "tools_or_tech_stack": [
+        "产品演示",
+        "客户培训",
+        "数据入库",
+        "数据处理",
+        "数据建库",
+        "数据核查",
+        "文档编写",
+        "软件测试",
+        "软件系统安装部署",
+        "软件维护与更新",
+        "arcgis",
+        "cass"
+      ],
+      "required_knowledge_points": [
+        "测试用例设计",
+        "功能测试",
+        "缺陷管理",
+        "测试报告编写",
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理",
+        "SQL查询",
+        "表连接",
+        "数据筛选与聚合",
+        "MySQL基础",
+        "数据表设计",
+        "软件部署",
+        "客户沟通",
+        "需求理解",
+        "问题排查"
+      ],
+      "preferred_knowledge_points": [
+        "接口测试",
+        "自动化测试",
+        "性能测试",
+        "STL使用",
+        "Linux开发基础",
+        "数据库设计",
+        "SQL性能优化",
+        "索引基础",
+        "数据库基础",
+        "文档编写"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "广告销售": {
+      "standard_job_name": "广告销售",
+      "hard_skills": [
+        "商务沟通",
+        "客户关系管理",
+        "客户开发与维护",
+        "市场分析与洞察",
+        "广告产品知识",
+        "销售目标达成",
+        "销售谈判技巧",
+        "CRM系统",
+        "公司内部销售平台",
+        "办公软件（如Office）"
+      ],
+      "tools_or_tech_stack": [
+        "商务沟通",
+        "客户关系管理",
+        "客户开发与维护",
+        "市场分析与洞察",
+        "广告产品知识",
+        "销售目标达成",
+        "销售谈判技巧",
+        "CRM系统",
+        "公司内部销售平台",
+        "办公软件（如Office）"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "律师": {
+      "standard_job_name": "律师",
+      "hard_skills": [
+        "出庭应诉",
+        "案件分析与策略制定",
+        "法律咨询",
+        "法律文书撰写",
+        "涉外法律事务处理",
+        "证据材料整理",
+        "非诉业务处理"
+      ],
+      "tools_or_tech_stack": [
+        "出庭应诉",
+        "案件分析与策略制定",
+        "法律咨询",
+        "法律文书撰写",
+        "涉外法律事务处理",
+        "证据材料整理",
+        "非诉业务处理"
+      ],
+      "required_knowledge_points": [
+        "出庭应诉基础",
+        "案件分析与策略制定基础",
+        "法律咨询基础",
+        "法律文书撰写基础",
+        "涉外法律事务处理基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "律师助理": {
+      "standard_job_name": "律师助理",
+      "hard_skills": [
+        "IPO",
+        "上市公司再融资",
+        "信息检索",
+        "并购重组",
+        "民事诉讼业务知识",
+        "法律逻辑",
+        "私募基金设立及投资"
+      ],
+      "tools_or_tech_stack": [
+        "IPO",
+        "上市公司再融资",
+        "信息检索",
+        "并购重组",
+        "民事诉讼业务知识",
+        "法律逻辑",
+        "私募基金设立及投资"
+      ],
+      "required_knowledge_points": [
+        "IPO基础",
+        "上市公司再融资基础",
+        "信息检索基础",
+        "并购重组基础",
+        "民事诉讼业务知识基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "总经理助理/CEO助理/董事长助理": {
+      "standard_job_name": "总经理助理/CEO助理/董事长助理",
+      "hard_skills": [
+        "业务推进与跟进",
+        "产品演示与讲解",
+        "数据汇报与分析",
+        "文件起草与归档",
+        "日程安排",
+        "跨部门协调"
+      ],
+      "tools_or_tech_stack": [
+        "业务推进与跟进",
+        "产品演示与讲解",
+        "数据汇报与分析",
+        "文件起草与归档",
+        "日程安排",
+        "跨部门协调"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "技术支持工程师": {
+      "standard_job_name": "技术支持工程师",
+      "hard_skills": [
+        "产品功能培训",
+        "产品测试与质量控制",
+        "技术方案制定",
+        "故障诊断与排除",
+        "系统集成",
+        "跨部门协调",
+        "软件配置与部署",
+        "需求分析与对接"
+      ],
+      "tools_or_tech_stack": [
+        "产品功能培训",
+        "产品测试与质量控制",
+        "技术方案制定",
+        "故障诊断与排除",
+        "系统集成",
+        "跨部门协调",
+        "软件配置与部署",
+        "需求分析与对接"
+      ],
+      "required_knowledge_points": [
+        "问题排查",
+        "客户沟通",
+        "产品使用支持"
+      ],
+      "preferred_knowledge_points": [
+        "日志分析",
+        "SQL基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "招聘专员助理": {
+      "standard_job_name": "招聘专员助理",
+      "hard_skills": [
+        "人才搜寻与评估",
+        "候选人管理",
+        "招聘市场调研",
+        "招聘数据分析",
+        "招聘流程优化",
+        "简历筛选",
+        "面试安排与协调",
+        "招聘网站",
+        "数据分析工具",
+        "社交媒体招聘渠道"
+      ],
+      "tools_or_tech_stack": [
+        "人才搜寻与评估",
+        "候选人管理",
+        "招聘市场调研",
+        "招聘数据分析",
+        "招聘流程优化",
+        "简历筛选",
+        "面试安排与协调",
+        "招聘网站",
+        "数据分析工具",
+        "社交媒体招聘渠道"
+      ],
+      "required_knowledge_points": [
+        "数据清洗",
+        "指标分析",
+        "SQL查询",
+        "数据可视化"
+      ],
+      "preferred_knowledge_points": [
+        "A/B测试基础",
+        "业务分析"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "日语翻译": {
+      "standard_job_name": "日语翻译",
+      "hard_skills": [
+        "ID管理",
+        "IT系统监控与异常处理",
+        "技术问题解答",
+        "文档翻译与本地化",
+        "日语听说读写能力"
+      ],
+      "tools_or_tech_stack": [
+        "ID管理",
+        "IT系统监控与异常处理",
+        "技术问题解答",
+        "文档翻译与本地化",
+        "日语听说读写能力"
+      ],
+      "required_knowledge_points": [
+        "ID管理基础",
+        "IT系统监控与异常处理基础",
+        "技术问题解答基础",
+        "文档翻译与本地化基础",
+        "日语听说读写能力基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "档案管理": {
+      "standard_job_name": "档案管理",
+      "hard_skills": [
+        "档案扫描与图像处理",
+        "档案整理与分类",
+        "档案著录与信息录入",
+        "档案装订与保管",
+        "Office办公软件",
+        "计算机"
+      ],
+      "tools_or_tech_stack": [
+        "档案扫描与图像处理",
+        "档案整理与分类",
+        "档案著录与信息录入",
+        "档案装订与保管",
+        "Office办公软件",
+        "计算机"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "法务专员助理": {
+      "standard_job_name": "法务专员助理",
+      "hard_skills": [
+        "劳动人事调解仲裁法",
+        "劳动合同法",
+        "劳动法",
+        "合同审查",
+        "案件跟进",
+        "民事诉讼法",
+        "民商法",
+        "法律咨询解答",
+        "法律基础知识",
+        "法律指引",
+        "法律文书撰写与整理",
+        "诉讼准备"
+      ],
+      "tools_or_tech_stack": [
+        "劳动人事调解仲裁法",
+        "劳动合同法",
+        "劳动法",
+        "合同审查",
+        "案件跟进",
+        "民事诉讼法",
+        "民商法",
+        "法律咨询解答",
+        "法律基础知识",
+        "法律指引",
+        "法律文书撰写与整理",
+        "诉讼准备"
+      ],
+      "required_knowledge_points": [
+        "劳动人事调解仲裁法基础",
+        "劳动合同法基础",
+        "劳动法基础",
+        "合同审查基础",
+        "案件跟进基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "测试工程师": {
+      "standard_job_name": "测试工程师",
+      "hard_skills": [
+        "产品改进建议评估",
+        "仪器仪表使用",
+        "接口知识（RS232/RS422/CAN/LVDS/PCI/PCIE/FPGAMGT）",
+        "板卡测试",
+        "测试大纲撰写",
+        "测试报告编写",
+        "测试数据整理",
+        "测试环境搭建",
+        "测试结果统计分析",
+        "万用表",
+        "信号源",
+        "示波器"
+      ],
+      "tools_or_tech_stack": [
+        "产品改进建议评估",
+        "仪器仪表使用",
+        "接口知识（RS232/RS422/CAN/LVDS/PCI/PCIE/FPGAMGT）",
+        "板卡测试",
+        "测试大纲撰写",
+        "测试报告编写",
+        "测试数据整理",
+        "测试环境搭建",
+        "测试结果统计分析",
+        "万用表",
+        "信号源",
+        "示波器"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "游戏运营": {
+      "standard_job_name": "游戏运营",
+      "hard_skills": [
+        "内容运营",
+        "市场推广",
+        "数据分析",
+        "活动策划与执行",
+        "游戏版本管理",
+        "用户运营",
+        "社区管理",
+        "竞品分析",
+        "需求分析",
+        "项目管理",
+        "Office办公软件",
+        "数据分析工具（如Excel、SQL、Tableau）"
+      ],
+      "tools_or_tech_stack": [
+        "内容运营",
+        "市场推广",
+        "数据分析",
+        "活动策划与执行",
+        "游戏版本管理",
+        "用户运营",
+        "社区管理",
+        "竞品分析",
+        "需求分析",
+        "项目管理",
+        "Office办公软件",
+        "数据分析工具（如Excel、SQL、Tableau）"
+      ],
+      "required_knowledge_points": [
+        "数据清洗",
+        "指标分析",
+        "SQL查询",
+        "数据可视化",
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理",
+        "表连接",
+        "数据筛选与聚合"
+      ],
+      "preferred_knowledge_points": [
+        "A/B测试基础",
+        "业务分析",
+        "STL使用",
+        "Linux开发基础",
+        "数据库设计",
+        "SQL性能优化"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "猎头顾问": {
+      "standard_job_name": "猎头顾问",
+      "hard_skills": [
+        "人才寻访与甄选",
+        "商务谈判",
+        "客户关系管理",
+        "客户需求分析",
+        "招聘流程管理",
+        "行业与市场分析",
+        "销售技巧",
+        "面试与评估",
+        "ATS（申请人跟踪系统）",
+        "CRM（客户关系管理）系统",
+        "办公软件（Word, Excel, PowerPoint）",
+        "招聘网站（如猎聘、智联、LinkedIn）"
+      ],
+      "tools_or_tech_stack": [
+        "人才寻访与甄选",
+        "商务谈判",
+        "客户关系管理",
+        "客户需求分析",
+        "招聘流程管理",
+        "行业与市场分析",
+        "销售技巧",
+        "面试与评估",
+        "ATS（申请人跟踪系统）",
+        "CRM（客户关系管理）系统",
+        "办公软件（Word, Excel, PowerPoint）",
+        "招聘网站（如猎聘、智联、LinkedIn）"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "电话客服": {
+      "standard_job_name": "电话客服",
+      "hard_skills": [
+        "业务知识掌握",
+        "信息收集与录入",
+        "工单处理",
+        "应变能力",
+        "普通话标准",
+        "沟通能力",
+        "话术熟记",
+        "语言表达",
+        "外呼系统",
+        "工单系统"
+      ],
+      "tools_or_tech_stack": [
+        "业务知识掌握",
+        "信息收集与录入",
+        "工单处理",
+        "应变能力",
+        "普通话标准",
+        "沟通能力",
+        "话术熟记",
+        "语言表达",
+        "外呼系统",
+        "工单系统"
+      ],
+      "required_knowledge_points": [
+        "业务知识掌握基础",
+        "信息收集与录入基础",
+        "工单处理基础",
+        "应变能力基础",
+        "普通话标准基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "电话销售": {
+      "standard_job_name": "电话销售",
+      "hard_skills": [
+        "客户关系维护",
+        "客户需求挖掘与分析",
+        "市场分析",
+        "电话沟通技巧",
+        "销售目标达成",
+        "销售话术设计",
+        "CRM客户关系管理系统",
+        "办公软件",
+        "电话系统"
+      ],
+      "tools_or_tech_stack": [
+        "客户关系维护",
+        "客户需求挖掘与分析",
+        "市场分析",
+        "电话沟通技巧",
+        "销售目标达成",
+        "销售话术设计",
+        "CRM客户关系管理系统",
+        "办公软件",
+        "电话系统"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "知识产权专利代理": {
+      "standard_job_name": "知识产权专利代理",
+      "hard_skills": [
+        "专利审查意见答复",
+        "专利无效与诉讼支持",
+        "专利检索与分析",
+        "专利流程管理",
+        "专利申请文件撰写",
+        "技术交底书理解与转化",
+        "知识产权法律知识",
+        "Office办公软件",
+        "专利检索数据库（如CNIPA、EPO、USPTO）",
+        "专利管理软件"
+      ],
+      "tools_or_tech_stack": [
+        "专利审查意见答复",
+        "专利无效与诉讼支持",
+        "专利检索与分析",
+        "专利流程管理",
+        "专利申请文件撰写",
+        "技术交底书理解与转化",
+        "知识产权法律知识",
+        "Office办公软件",
+        "专利检索数据库（如CNIPA、EPO、USPTO）",
+        "专利管理软件"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "硬件测试工程师": {
+      "standard_job_name": "硬件测试工程师",
+      "hard_skills": [
+        "硬件功能测试",
+        "硬件售后维护",
+        "硬件性能测试",
+        "硬件技术支持"
+      ],
+      "tools_or_tech_stack": [
+        "硬件功能测试",
+        "硬件售后维护",
+        "硬件性能测试",
+        "硬件技术支持"
+      ],
+      "required_knowledge_points": [
+        "问题排查",
+        "客户沟通",
+        "产品使用支持"
+      ],
+      "preferred_knowledge_points": [
+        "日志分析",
+        "SQL基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "社区运营": {
+      "standard_job_name": "社区运营",
+      "hard_skills": [
+        "内容管理",
+        "标准化流程执行",
+        "用户问题处理",
+        "运营管理"
+      ],
+      "tools_or_tech_stack": [
+        "内容管理",
+        "标准化流程执行",
+        "用户问题处理",
+        "运营管理"
+      ],
+      "required_knowledge_points": [
+        "内容管理基础",
+        "标准化流程执行基础",
+        "用户问题处理基础",
+        "运营管理基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "科研人员": {
+      "standard_job_name": "科研人员",
+      "hard_skills": [
+        "专利撰写",
+        "人工智能芯片研究",
+        "大数据研究",
+        "科研项目管理",
+        "算法研究",
+        "芯片相关基础软件开发",
+        "英文文献阅读与写作",
+        "高水平论文发表"
+      ],
+      "tools_or_tech_stack": [
+        "专利撰写",
+        "人工智能芯片研究",
+        "大数据研究",
+        "科研项目管理",
+        "算法研究",
+        "芯片相关基础软件开发",
+        "英文文献阅读与写作",
+        "高水平论文发表"
+      ],
+      "required_knowledge_points": [
+        "专利撰写基础",
+        "人工智能芯片研究基础",
+        "大数据研究基础",
+        "科研项目管理基础",
+        "算法研究基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "管培生/储备干部": {
+      "standard_job_name": "管培生/储备干部",
+      "hard_skills": [
+        "业务拓展计划制定",
+        "供应链交付管理",
+        "客户开发",
+        "客户维护",
+        "解决方案制作",
+        "资源协调",
+        "销售目标达成"
+      ],
+      "tools_or_tech_stack": [
+        "业务拓展计划制定",
+        "供应链交付管理",
+        "客户开发",
+        "客户维护",
+        "解决方案制作",
+        "资源协调",
+        "销售目标达成"
+      ],
+      "required_knowledge_points": [
+        "业务拓展计划制定基础",
+        "供应链交付管理基础",
+        "客户开发基础",
+        "客户维护基础",
+        "解决方案制作基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "统计员": {
+      "standard_job_name": "统计员",
+      "hard_skills": [
+        "会议组织安排",
+        "文件处理",
+        "文档排版",
+        "账单处理",
+        "邮件处理与归档",
+        "办公软件"
+      ],
+      "tools_or_tech_stack": [
+        "会议组织安排",
+        "文件处理",
+        "文档排版",
+        "账单处理",
+        "邮件处理与归档",
+        "办公软件"
+      ],
+      "required_knowledge_points": [
+        "会议组织安排基础",
+        "文件处理基础",
+        "文档排版基础",
+        "账单处理基础",
+        "邮件处理与归档基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "网络客服": {
+      "standard_job_name": "网络客服",
+      "hard_skills": [
+        "商家入驻后问题处理",
+        "客户问题处理",
+        "打字速度不低于40字/分钟"
+      ],
+      "tools_or_tech_stack": [
+        "商家入驻后问题处理",
+        "客户问题处理",
+        "打字速度不低于40字/分钟"
+      ],
+      "required_knowledge_points": [
+        "商家入驻后问题处理基础",
+        "客户问题处理基础",
+        "打字速度不低于40字/分钟基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "网络销售": {
+      "standard_job_name": "网络销售",
+      "hard_skills": [
+        "客户服务",
+        "客户沟通",
+        "客户维护",
+        "问题解决",
+        "企业微信"
+      ],
+      "tools_or_tech_stack": [
+        "客户服务",
+        "客户沟通",
+        "客户维护",
+        "问题解决",
+        "企业微信"
+      ],
+      "required_knowledge_points": [
+        "客户服务基础",
+        "客户沟通基础",
+        "客户维护基础",
+        "问题解决基础",
+        "企业微信基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "英语翻译": {
+      "standard_job_name": "英语翻译",
+      "hard_skills": [
+        "业务分类标注",
+        "产品优化建议收集",
+        "产品功能问题识别",
+        "用户反馈监控与分析",
+        "用户需求挖掘",
+        "英文读写能力",
+        "电脑办公软件"
+      ],
+      "tools_or_tech_stack": [
+        "业务分类标注",
+        "产品优化建议收集",
+        "产品功能问题识别",
+        "用户反馈监控与分析",
+        "用户需求挖掘",
+        "英文读写能力",
+        "电脑办公软件"
+      ],
+      "required_knowledge_points": [
+        "业务分类标注基础",
+        "产品优化建议收集基础",
+        "产品功能问题识别基础",
+        "用户反馈监控与分析基础",
+        "用户需求挖掘基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "质检员": {
+      "standard_job_name": "质检员",
+      "hard_skills": [
+        "ISO9000质量体系标准",
+        "不合格物料跟踪处理",
+        "产品质量检验",
+        "机加工和装配工艺",
+        "标准化流程及规定",
+        "生产过程监督",
+        "质量标准与检验规范制定协助",
+        "质量检验规程",
+        "质量记录与信息整理",
+        "测量工具"
+      ],
+      "tools_or_tech_stack": [
+        "ISO9000质量体系标准",
+        "不合格物料跟踪处理",
+        "产品质量检验",
+        "机加工和装配工艺",
+        "标准化流程及规定",
+        "生产过程监督",
+        "质量标准与检验规范制定协助",
+        "质量检验规程",
+        "质量记录与信息整理",
+        "测量工具"
+      ],
+      "required_knowledge_points": [
+        "ISO9000质量体系标准基础",
+        "不合格物料跟踪处理基础",
+        "产品质量检验基础",
+        "机加工和装配工艺基础",
+        "标准化流程及规定基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "质量管理/测试工程师": {
+      "standard_job_name": "质量管理/测试工程师",
+      "hard_skills": [
+        "KPI管控",
+        "培训与指导",
+        "数据分析",
+        "时效管理",
+        "服务质量管理",
+        "标准制定与落地",
+        "流程优化",
+        "质量监控",
+        "问题分析与解决",
+        "信息化监控工具",
+        "数据分析工具",
+        "菜鸟系统"
+      ],
+      "tools_or_tech_stack": [
+        "KPI管控",
+        "培训与指导",
+        "数据分析",
+        "时效管理",
+        "服务质量管理",
+        "标准制定与落地",
+        "流程优化",
+        "质量监控",
+        "问题分析与解决",
+        "信息化监控工具",
+        "数据分析工具",
+        "菜鸟系统"
+      ],
+      "required_knowledge_points": [
+        "数据清洗",
+        "指标分析",
+        "SQL查询",
+        "数据可视化"
+      ],
+      "preferred_knowledge_points": [
+        "A/B测试基础",
+        "业务分析"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "资料管理": {
+      "standard_job_name": "资料管理",
+      "hard_skills": [
+        "数据录入",
+        "档案保管",
+        "档案分类",
+        "档案利用",
+        "档案扫描",
+        "档案排序",
+        "档案数字化",
+        "档案整理",
+        "档案著录",
+        "档案装订",
+        "档案销毁",
+        "资料核对"
+      ],
+      "tools_or_tech_stack": [
+        "数据录入",
+        "档案保管",
+        "档案分类",
+        "档案利用",
+        "档案扫描",
+        "档案排序",
+        "档案数字化",
+        "档案整理",
+        "档案著录",
+        "档案装订",
+        "档案销毁",
+        "资料核对"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "软件测试工程师": {
+      "standard_job_name": "软件测试工程师",
+      "hard_skills": [
+        "功能测试",
+        "接口测试",
+        "数据测试",
+        "测试报告编写",
+        "测试用例设计",
+        "缺陷管理",
+        "JIRA",
+        "JMeter",
+        "MySQL",
+        "Postman",
+        "Selenium",
+        "TestLink"
+      ],
+      "tools_or_tech_stack": [
+        "功能测试",
+        "接口测试",
+        "数据测试",
+        "测试报告编写",
+        "测试用例设计",
+        "缺陷管理",
+        "JIRA",
+        "JMeter",
+        "MySQL",
+        "Postman",
+        "Selenium",
+        "TestLink"
+      ],
+      "required_knowledge_points": [
+        "接口测试方法",
+        "接口用例设计",
+        "HTTP协议基础",
+        "SQL查询",
+        "表连接",
+        "数据筛选与聚合",
+        "MySQL基础",
+        "数据表设计",
+        "测试用例设计",
+        "功能测试",
+        "缺陷管理",
+        "测试报告编写"
+      ],
+      "preferred_knowledge_points": [
+        "Postman使用",
+        "自动化测试脚本",
+        "数据库设计",
+        "SQL性能优化",
+        "索引基础",
+        "接口测试",
+        "自动化测试",
+        "性能测试"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "运营助理/专员": {
+      "standard_job_name": "运营助理/专员",
+      "hard_skills": [
+        "O2O平台运作",
+        "商家沟通与拓展",
+        "店铺问题解决",
+        "数据分析",
+        "运营策略制定"
+      ],
+      "tools_or_tech_stack": [
+        "O2O平台运作",
+        "商家沟通与拓展",
+        "店铺问题解决",
+        "数据分析",
+        "运营策略制定"
+      ],
+      "required_knowledge_points": [
+        "数据清洗",
+        "指标分析",
+        "SQL查询",
+        "数据可视化"
+      ],
+      "preferred_knowledge_points": [
+        "A/B测试基础",
+        "业务分析"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "销售助理": {
+      "standard_job_name": "销售助理",
+      "hard_skills": [
+        "公文写作",
+        "售后服务知识",
+        "客诉处理流程",
+        "数据分析与统计",
+        "数据整理",
+        "网点管理",
+        "订单处理",
+        "费用结算",
+        "办公软件（如Excel等）",
+        "派工平台系统",
+        "计算机操作"
+      ],
+      "tools_or_tech_stack": [
+        "公文写作",
+        "售后服务知识",
+        "客诉处理流程",
+        "数据分析与统计",
+        "数据整理",
+        "网点管理",
+        "订单处理",
+        "费用结算",
+        "办公软件（如Excel等）",
+        "派工平台系统",
+        "计算机操作"
+      ],
+      "required_knowledge_points": [
+        "数据清洗",
+        "指标分析",
+        "SQL查询",
+        "数据可视化",
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "A/B测试基础",
+        "业务分析",
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "销售工程师": {
+      "standard_job_name": "销售工程师",
+      "hard_skills": [
+        "商务谈判",
+        "商机挖掘",
+        "客户关系管理",
+        "客户拜访",
+        "市场开拓",
+        "方案编写与展示",
+        "销售技巧",
+        "项目跟单",
+        "CRM系统",
+        "OA软件",
+        "业务软件",
+        "政务软件"
+      ],
+      "tools_or_tech_stack": [
+        "商务谈判",
+        "商机挖掘",
+        "客户关系管理",
+        "客户拜访",
+        "市场开拓",
+        "方案编写与展示",
+        "销售技巧",
+        "项目跟单",
+        "CRM系统",
+        "OA软件",
+        "业务软件",
+        "政务软件"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "销售运营": {
+      "standard_job_name": "销售运营",
+      "hard_skills": [
+        "基础数据分析",
+        "报表制作",
+        "效果汇总",
+        "数据整理",
+        "活动策划与执行",
+        "Excel",
+        "PPT"
+      ],
+      "tools_or_tech_stack": [
+        "基础数据分析",
+        "报表制作",
+        "效果汇总",
+        "数据整理",
+        "活动策划与执行",
+        "Excel",
+        "PPT"
+      ],
+      "required_knowledge_points": [
+        "数据清洗",
+        "指标分析",
+        "SQL查询",
+        "数据可视化",
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "A/B测试基础",
+        "业务分析",
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "项目专员/助理": {
+      "standard_job_name": "项目专员/助理",
+      "hard_skills": [
+        "启机调试",
+        "客户关系维护",
+        "应用程序开发",
+        "技术呼叫支持",
+        "现场培训支持",
+        "系统升级",
+        "系统故障排查",
+        "系统维护",
+        "销售机会挖掘",
+        "项目管理流程执行",
+        "DeltaV系统",
+        "全球服务中心（GSC）支持系统"
+      ],
+      "tools_or_tech_stack": [
+        "启机调试",
+        "客户关系维护",
+        "应用程序开发",
+        "技术呼叫支持",
+        "现场培训支持",
+        "系统升级",
+        "系统故障排查",
+        "系统维护",
+        "销售机会挖掘",
+        "项目管理流程执行",
+        "DeltaV系统",
+        "全球服务中心（GSC）支持系统"
+      ],
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "项目招投标专员": {
+      "standard_job_name": "项目招投标专员",
+      "hard_skills": [
+        "保证金管理",
+        "商务文件编制",
+        "招投标流程与操作规范",
+        "档案资料管理",
+        "资质文件整理"
+      ],
+      "tools_or_tech_stack": [
+        "保证金管理",
+        "商务文件编制",
+        "招投标流程与操作规范",
+        "档案资料管理",
+        "资质文件整理"
+      ],
+      "required_knowledge_points": [
+        "保证金管理基础",
+        "商务文件编制基础",
+        "招投标流程与操作规范基础",
+        "档案资料管理基础",
+        "资质文件整理基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "项目经理/主管": {
+      "standard_job_name": "项目经理/主管",
+      "hard_skills": [
+        "商务谈判",
+        "团队协调",
+        "客户需求对接",
+        "技术交流",
+        "技术跟踪",
+        "招投标支持",
+        "方案设计",
+        "需求分析"
+      ],
+      "tools_or_tech_stack": [
+        "商务谈判",
+        "团队协调",
+        "客户需求对接",
+        "技术交流",
+        "技术跟踪",
+        "招投标支持",
+        "方案设计",
+        "需求分析"
+      ],
+      "required_knowledge_points": [
+        "商务谈判基础",
+        "团队协调基础",
+        "客户需求对接基础",
+        "技术交流基础",
+        "技术跟踪基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    "风电工程师": {
+      "standard_job_name": "风电工程师",
+      "hard_skills": [
+        "施工安全管控",
+        "施工质量点见证与验收",
+        "电气/机械系统基础",
+        "风机吊装施工",
+        "风电项目现场作业"
+      ],
+      "tools_or_tech_stack": [
+        "施工安全管控",
+        "施工质量点见证与验收",
+        "电气/机械系统基础",
+        "风机吊装施工",
+        "风电项目现场作业"
+      ],
+      "required_knowledge_points": [
+        "施工安全管控基础",
+        "施工质量点见证与验收基础",
+        "电气/机械系统基础基础",
+        "风机吊装施工基础",
+        "风电项目现场作业基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    }
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-16T15:45:14+08:00",
+  "source_file": "E:\\Agent\\Agent-main\\outputs\\intermediate\\jobs_extracted_full.csv",
+  "jobs": [
+    {
+      "display_order": 1,
+      "standard_job_name": "软件测试工程师",
+      "sample_count": 342,
+      "job_category": "计算机软件/信息技术",
+      "job_level_summary": "初级/中级",
+      "selection_score": 422.0,
+      "selection_reason": "样本数 342，代表计算机软件/信息技术方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "计算机科学与技术、电子信息工程、软件工程",
+      "mainstream_cert_summary": "ISTQB、软件评测师、CET-4",
+      "top_skills": [
+        "功能测试",
+        "接口测试",
+        "数据测试",
+        "测试报告编写",
+        "测试用例设计",
+        "缺陷管理",
+        "JIRA",
+        "JMeter"
+      ]
+    },
+    {
+      "display_order": 2,
+      "standard_job_name": "测试工程师",
+      "sample_count": 338,
+      "job_category": "技术/研发",
+      "job_level_summary": "",
+      "selection_score": 410.0,
+      "selection_reason": "样本数 338，代表技术/研发方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "计算机科学与技术、电子信息工程、软件工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "产品改进建议评估",
+        "仪器仪表使用",
+        "接口知识（RS232/RS422/CAN/LVDS/PCI/PCIE/FPGAMGT）",
+        "板卡测试",
+        "测试大纲撰写",
+        "测试报告编写",
+        "测试数据整理",
+        "测试环境搭建"
+      ]
+    },
+    {
+      "display_order": 3,
+      "standard_job_name": "Java开发工程师",
+      "sample_count": 265,
+      "job_category": "技术/研发",
+      "job_level_summary": "",
+      "selection_score": 331.128,
+      "selection_reason": "样本数 265，代表技术/研发方向，画像完整度较高",
+      "mainstream_degree": "大专",
+      "mainstream_majors_summary": "计算机科学与技术、软件工程、电子信息工程",
+      "mainstream_cert_summary": "日语N3、日语N2、CET-4",
+      "top_skills": [
+        "Android开发",
+        "C#开发",
+        "COBOL开发",
+        "C语言开发",
+        "IOS开发",
+        "Java开发",
+        "VB.NET开发",
+        "代码编写"
+      ]
+    },
+    {
+      "display_order": 4,
+      "standard_job_name": "技术支持工程师",
+      "sample_count": 245,
+      "job_category": "技术支持/客户服务",
+      "job_level_summary": "初级/中级",
+      "selection_score": 325.0,
+      "selection_reason": "样本数 245，代表技术支持/客户服务方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "电子信息工程、计算机科学与技术、软件工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "产品功能培训",
+        "产品测试与质量控制",
+        "技术方案制定",
+        "故障诊断与排除",
+        "系统集成",
+        "跨部门协调",
+        "软件配置与部署",
+        "需求分析与对接"
+      ]
+    },
+    {
+      "display_order": 5,
+      "standard_job_name": "C/C++嵌入式软件开发工程师",
+      "sample_count": 238,
+      "job_category": "计算机软件/嵌入式开发",
+      "job_level_summary": "",
+      "selection_score": 310.0,
+      "selection_reason": "样本数 238，代表计算机软件/嵌入式开发方向，画像完整度较高",
+      "mainstream_degree": "硕士",
+      "mainstream_majors_summary": "计算机科学与技术、软件工程、电子信息工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "AUTOSAR基础软件平台设计与开发",
+        "C/C++编程",
+        "CAN/LIN/ETH通信协议栈开发",
+        "CPU虚拟化",
+        "信息安全开发",
+        "功能安全开发",
+        "外设虚拟化",
+        "存储协议栈开发"
+      ]
+    },
+    {
+      "display_order": 6,
+      "standard_job_name": "实施工程师",
+      "sample_count": 234,
+      "job_category": "技术/工程",
+      "job_level_summary": "",
+      "selection_score": 306.0,
+      "selection_reason": "样本数 234，代表技术/工程方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "计算机科学与技术、地理信息科学、电子信息工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "产品演示",
+        "客户培训",
+        "数据入库",
+        "数据处理",
+        "数据建库",
+        "数据核查",
+        "文档编写",
+        "软件测试"
+      ]
+    },
+    {
+      "display_order": 7,
+      "standard_job_name": "前端开发工程师",
+      "sample_count": 230,
+      "job_category": "",
+      "job_level_summary": "",
+      "selection_score": 239.576,
+      "selection_reason": "样本数 230，具备基础画像数据",
+      "mainstream_degree": "未明确",
+      "mainstream_majors_summary": "计算机科学与技术、软件工程、电子信息工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": []
+    },
+    {
+      "display_order": 8,
+      "standard_job_name": "硬件测试工程师",
+      "sample_count": 92,
+      "job_category": "硬件测试",
+      "job_level_summary": "",
+      "selection_score": 164.0,
+      "selection_reason": "样本数 92，代表硬件测试方向，画像完整度较高",
+      "mainstream_degree": "大专",
+      "mainstream_majors_summary": "电子信息工程、计算机科学与技术、物联网工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "硬件功能测试",
+        "硬件售后维护",
+        "硬件性能测试",
+        "硬件技术支持"
+      ]
+    },
+    {
+      "display_order": 9,
+      "standard_job_name": "质量管理/测试工程师",
+      "sample_count": 9,
+      "job_category": "质量管理/测试",
+      "job_level_summary": "初级/专员",
+      "selection_score": 89.0,
+      "selection_reason": "样本数 9，代表质量管理/测试方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "电子信息工程、计算机科学与技术、统计学",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "KPI管控",
+        "培训与指导",
+        "数据分析",
+        "时效管理",
+        "服务质量管理",
+        "标准制定与落地",
+        "流程优化",
+        "质量监控"
+      ]
+    },
+    {
+      "display_order": 10,
+      "standard_job_name": "项目经理/主管",
+      "sample_count": 18,
+      "job_category": "项目管理",
+      "job_level_summary": "主管",
+      "selection_score": 87.6,
+      "selection_reason": "样本数 18，代表项目管理方向，画像完整度较高",
+      "mainstream_degree": "大专",
+      "mainstream_majors_summary": "计算机科学与技术、信息管理与信息系统、电子信息工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "商务谈判",
+        "团队协调",
+        "客户需求对接",
+        "技术交流",
+        "技术跟踪",
+        "招投标支持",
+        "方案设计",
+        "需求分析"
+      ]
+    }
+  ]
+}
