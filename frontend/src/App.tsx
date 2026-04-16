@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
 import ResumeUpload from './pages/ResumeUpload'
 import StudentProfile from './pages/StudentProfile'
+import JobProfile from './pages/JobProfile'
 import JobMatching from './pages/JobMatching'
 import CareerPath from './pages/CareerPath'
 import Report from './pages/Report'
@@ -50,6 +51,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/resume" element={<ResumeUpload />} />
               <Route path="/profile" element={<StudentProfile />} />
+              <Route path="/job-profile" element={<JobProfile />} />
               <Route path="/matching" element={<JobMatching />} />
               <Route path="/career" element={<CareerPath />} />
               <Route path="/report" element={<Report />} />

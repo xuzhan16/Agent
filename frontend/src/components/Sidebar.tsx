@@ -1,5 +1,14 @@
 import { Menu, Layout } from 'antd'
-import { UploadOutlined, UserOutlined, BarChartOutlined, NodeIndexOutlined, FileTextOutlined, HomeOutlined, MessageOutlined } from '@ant-design/icons'
+import {
+  UploadOutlined,
+  UserOutlined,
+  BarChartOutlined,
+  NodeIndexOutlined,
+  FileTextOutlined,
+  HomeOutlined,
+  MessageOutlined,
+  ProfileOutlined,
+} from '@ant-design/icons'
 import { Link, useLocation } from 'react-router-dom'
 
 const { Sider } = Layout
@@ -26,6 +35,11 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
       key: '/profile',
       icon: <UserOutlined />,
       label: <Link to="/profile">学生画像</Link>,
+    },
+    {
+      key: '/job-profile',
+      icon: <ProfileOutlined />,
+      label: <Link to="/job-profile">岗位画像</Link>,
     },
     {
       key: '/matching',

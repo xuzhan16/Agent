@@ -8,7 +8,7 @@ import re
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 from urllib import error as urllib_error
 from urllib import request as urllib_request
 
@@ -273,6 +273,93 @@ def _safe_read_json(path: Path) -> Dict[str, Any]:
         return {}
 
 
+def _match_asset_file_paths() -> Dict[str, Path]:
+    asset_dir = _project_root() / "outputs" / "match_assets"
+    return {
+        "core_jobs": asset_dir / "core_jobs.json",
+        "requirement_stats": asset_dir / "job_requirement_stats.json",
+        "skill_assets": asset_dir / "job_skill_knowledge_assets.json",
+        "manifest": asset_dir / "match_assets_manifest.json",
+    }
+
+
+def _build_job_profile_assets_payload() -> Dict[str, Any]:
+    """读取岗位画像后处理资产，组装成前端可直接消费的全局岗位画像。"""
+    paths = _match_asset_file_paths()
+    core_root = _safe_read_json(paths["core_jobs"])
+    requirement_root = _safe_read_json(paths["requirement_stats"])
+    skill_root = _safe_read_json(paths["skill_assets"])
+    manifest = _safe_read_json(paths["manifest"])
+
+    missing_assets = [
+        name
+        for name, path in paths.items()
+        if name != "manifest" and not path.exists()
+    ]
+    requirement_jobs = _safe_dict(requirement_root.get("jobs"))
+    skill_jobs = _safe_dict(skill_root.get("jobs"))
+
+    core_job_profiles = []
+    for core_job in _safe_list(core_root.get("jobs")):
+        core_job_dict = _safe_dict(core_job)
+        job_name = _clean_text(core_job_dict.get("standard_job_name"))
+        if not job_name:
+            continue
+        stats = _safe_dict(requirement_jobs.get(job_name))
+        skills = _safe_dict(skill_jobs.get(job_name))
+        core_job_profiles.append(
+            {
+                "standard_job_name": job_name,
+                "sample_count": core_job_dict.get("sample_count") or stats.get("sample_count", 0),
+                "job_category": _clean_text(core_job_dict.get("job_category") or stats.get("job_category")),
+                "job_level_summary": _clean_text(
+                    core_job_dict.get("job_level_summary") or stats.get("job_level_summary")
+                ),
+                "display_order": core_job_dict.get("display_order"),
+                "selection_reason": _clean_text(core_job_dict.get("selection_reason")),
+                "mainstream_degree": _clean_text(
+                    core_job_dict.get("mainstream_degree") or stats.get("mainstream_degree")
+                ),
+                "mainstream_majors_summary": core_job_dict.get("mainstream_majors_summary")
+                or _safe_list(stats.get("mainstream_majors")),
+                "mainstream_cert_summary": core_job_dict.get("mainstream_cert_summary")
+                or _safe_list(stats.get("mainstream_certificates")),
+                "top_skills": _safe_list(core_job_dict.get("top_skills")),
+                "degree_distribution": _safe_list(stats.get("degree_distribution")),
+                "major_distribution": _safe_list(stats.get("major_distribution")),
+                "certificate_distribution": _safe_list(stats.get("certificate_distribution")),
+                "no_certificate_requirement_ratio": stats.get("no_certificate_requirement_ratio", 0.0),
+                "degree_gate": _clean_text(stats.get("degree_gate")),
+                "major_gate_set": _safe_list(stats.get("major_gate_set")),
+                "must_have_certificates": _safe_list(stats.get("must_have_certificates")),
+                "preferred_certificates": _safe_list(stats.get("preferred_certificates")),
+                "hard_skills": _safe_list(skills.get("hard_skills")),
+                "tools_or_tech_stack": _safe_list(skills.get("tools_or_tech_stack")),
+                "required_knowledge_points": _safe_list(skills.get("required_knowledge_points")),
+                "preferred_knowledge_points": _safe_list(skills.get("preferred_knowledge_points")),
+                "source_quality": _safe_dict(stats.get("source_quality")),
+            }
+        )
+
+    generated_at = (
+        _clean_text(manifest.get("generated_at"))
+        or _clean_text(core_root.get("generated_at"))
+        or _clean_text(requirement_root.get("generated_at"))
+        or _clean_text(skill_root.get("generated_at"))
+    )
+    summary = {
+        "core_job_count": len(core_job_profiles),
+        "standard_job_count": len(requirement_jobs),
+        "sample_count": manifest.get("sample_count") or 0,
+        "generated_at": generated_at,
+    }
+    return {
+        "summary": summary,
+        "core_job_profiles": core_job_profiles,
+        "missing_assets": missing_assets,
+    }
+
+
 def _truncate_for_ai(value: Any, max_chars: int = AI_CONTEXT_CHUNK_MAX_CHARS) -> str:
     text = _clean_text(value)
     if len(text) <= max_chars:
@@ -528,7 +615,7 @@ def _retrieve_context_chunks(question: str, snapshot: Dict[str, Any]) -> List[Di
 def _format_context_for_prompt(
     snapshot: Dict[str, Any],
     chunks: List[Dict[str, str]],
-    semantic_hits: List[Dict[str, Any]] | None = None,
+    semantic_hits: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     loaded_files = "、".join(_safe_list(snapshot.get("loaded_files"))) or "无"
     missing_files = "、".join(_safe_list(snapshot.get("missing_files"))) or "无"
@@ -791,7 +878,7 @@ def _build_local_fallback_answer(
     snapshot: Dict[str, Any],
     chunks: List[Dict[str, str]],
     web_search_enabled: bool,
-    semantic_hits: List[Dict[str, Any]] | None = None,
+    semantic_hits: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     if not chunks:
         if semantic_hits:
@@ -1105,6 +1192,11 @@ async def match_jobs():
                     "professional_quality_score": match_res.get("professional_quality_score"),
                     "development_potential_score": match_res.get("development_potential_score"),
                 },
+                "target_job_match": _safe_dict(match_res.get("target_job_match")),
+                "recommended_job_match": _safe_dict(match_res.get("recommended_job_match")),
+                "recommendation_ranking": _safe_list(match_res.get("recommendation_ranking")),
+                "core_job_profiles": _safe_list(job_profile_result.get("core_job_profiles")),
+                "target_job_profile_assets": _safe_dict(job_profile_result.get("target_job_profile_assets")),
             }]
 
     if not data:
@@ -1124,6 +1216,32 @@ async def match_jobs():
         "last_updated": _state_last_updated(),
         "data": data,
     }
+
+
+@app.get("/api/job/profile-assets")
+async def job_profile_assets():
+    payload = _build_job_profile_assets_payload()
+    profiles = _safe_list(payload.get("core_job_profiles"))
+    missing_assets = _safe_list(payload.get("missing_assets"))
+    message = "岗位画像资产读取成功"
+    status = "ok"
+    if not profiles:
+        status = "no_data"
+        message = "暂无岗位画像资产，请先生成 outputs/match_assets 后处理产物"
+    elif missing_assets:
+        message = f"岗位画像资产部分缺失：{', '.join(str(item) for item in missing_assets)}"
+
+    return {
+        "success": True,
+        "status": status,
+        "source": "match_assets",
+        "message": message,
+        "data": {
+            "summary": _safe_dict(payload.get("summary")),
+            "core_job_profiles": profiles,
+        },
+    }
+
 
 @app.get("/api/career/path")
 @app.post("/api/career/path")

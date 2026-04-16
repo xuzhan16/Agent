@@ -19,6 +19,11 @@ from .match_asset_loader import MatchAssetLoader, clean_text, safe_dict, safe_li
 RISK_HIGH_MATCH = "high_match"
 RISK_RISK = "risk"
 RISK_NO_MATCH = "no_match"
+RISK_UNKNOWN = "unknown"
+EVALUATION_OK = "ok"
+EVALUATION_INSUFFICIENT_ASSET = "insufficient_asset"
+SCORE_SOURCE_ASSET = "contest_asset"
+SCORE_SOURCE_RULE = "legacy_rule"
 
 
 def safe_float(value: Any, default: float = 0.0) -> float:
@@ -386,6 +391,8 @@ def aggregate_risk_level(
         safe_dict(hard_info_display.get("certificate")).get("risk_level"),
         skill_knowledge_match.get("risk_level"),
     ]
+    if RISK_UNKNOWN in risk_values:
+        return RISK_UNKNOWN
     if RISK_NO_MATCH in risk_values:
         return RISK_NO_MATCH
     return RISK_RISK
@@ -414,6 +421,30 @@ def calculate_asset_match_score(
     return round(max(0.0, min(score, 100.0)), 2)
 
 
+def build_score_explanation(
+    asset_score: float,
+    rule_score: float,
+    contest_evaluation: Dict[str, Any],
+    skill_knowledge_match: Dict[str, Any],
+    asset_found: bool = True,
+) -> str:
+    """Explain why the frontend should prefer the contest asset score for display."""
+    if not asset_found:
+        return "当前岗位未命中后处理资产，无法形成可靠赛题资产分。旧规则分不会被当作赛题通过依据。"
+
+    knowledge_accuracy = safe_float(skill_knowledge_match.get("knowledge_point_accuracy"), default=0.0)
+    hard_text = "通过" if contest_evaluation.get("hard_info_pass") else "未通过"
+    skill_text = "通过" if contest_evaluation.get("skill_accuracy_pass") else "未通过"
+    contest_text = "通过" if contest_evaluation.get("contest_match_success") else "未通过"
+    return (
+        f"主展示分采用赛题资产分 {asset_score:.2f}。"
+        f"旧规则综合分为 {rule_score:.2f}，仅作为兼容参考；"
+        f"硬门槛{hard_text}，技能知识点覆盖率 {knowledge_accuracy:.0%}，"
+        f"赛题评测{contest_text}。"
+        f"技能达标状态：{skill_text}。"
+    )
+
+
 def build_recommendation_reason(
     job_name: str,
     hard_info_evaluation: Dict[str, Any],
@@ -427,6 +458,97 @@ def build_recommendation_reason(
     return f"{job_name} 存在学历、专业或证书硬门槛风险，技能知识点覆盖率为 {accuracy:.0%}。"
 
 
+def build_insufficient_asset_match_result(
+    requested_job_name: str,
+    match_type: str,
+    resolution: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Return a safe non-passing result when a job cannot be mapped to local assets."""
+    message = "当前目标岗位未命中标准岗位资产，无法进行完整学历/专业/证书风险评估。"
+    hard_info_display = {
+        "degree": {
+            "student_value": "",
+            "mainstream_requirement": "",
+            "mainstream_ratio": 0.0,
+            "qualified_ratio": 0.0,
+            "higher_requirement_ratio": 0.0,
+            "risk_level": RISK_UNKNOWN,
+            "message": message,
+        },
+        "major": {
+            "student_value": "",
+            "mainstream_majors": [],
+            "matched_ratio": 0.0,
+            "risk_level": RISK_UNKNOWN,
+            "message": message,
+        },
+        "certificate": {
+            "student_values": [],
+            "must_have_certificates": [],
+            "preferred_certificates": [],
+            "matched_ratio": 0.0,
+            "risk_level": RISK_UNKNOWN,
+            "message": message,
+        },
+    }
+    hard_info_evaluation = {
+        "degree": {"student_value": "", "job_gate": "", "pass": False, "reason": message},
+        "major": {"student_value": "", "job_gate_set": [], "pass": False, "reason": message},
+        "certificate": {
+            "student_values": [],
+            "must_have_certificates": [],
+            "preferred_certificates": [],
+            "pass": False,
+            "reason": message,
+        },
+        "all_pass": False,
+    }
+    skill_knowledge_match = {
+        "required_knowledge_points": [],
+        "preferred_knowledge_points": [],
+        "student_knowledge_points": [],
+        "matched_knowledge_points": [],
+        "missing_knowledge_points": [],
+        "knowledge_point_accuracy": 0.0,
+        "pass": False,
+        "risk_level": RISK_UNKNOWN,
+        "message": message,
+    }
+    contest_evaluation = {
+        "hard_info_pass": False,
+        "skill_accuracy_pass": False,
+        "contest_match_success": False,
+    }
+    return {
+        "job_name": requested_job_name,
+        "asset_job_name": "",
+        "match_type": match_type,
+        "asset_found": False,
+        "evaluation_status": EVALUATION_INSUFFICIENT_ASSET,
+        "message": message,
+        "job_name_resolution": deepcopy(resolution),
+        "sample_count": 0,
+        "overall_match_score": 0.0,
+        "rule_match_score": 0.0,
+        "asset_match_score": 0.0,
+        "display_match_score": 0.0,
+        "score_source": SCORE_SOURCE_ASSET,
+        "score_explanation": build_score_explanation(
+            asset_score=0.0,
+            rule_score=0.0,
+            contest_evaluation=contest_evaluation,
+            skill_knowledge_match=skill_knowledge_match,
+            asset_found=False,
+        ),
+        "requirement_distributions": build_requirement_distributions({}),
+        "hard_info_display": hard_info_display,
+        "hard_info_evaluation": hard_info_evaluation,
+        "skill_knowledge_match": skill_knowledge_match,
+        "contest_evaluation": contest_evaluation,
+        "risk_level": RISK_UNKNOWN,
+    }
+
+
 def evaluate_single_job(
     job_name: Any,
     student_profile: Dict[str, Any],
@@ -435,10 +557,19 @@ def evaluate_single_job(
     overall_match_score: Optional[float] = None,
 ) -> Dict[str, Any]:
     """Evaluate one job against the student using post-processing assets."""
-    standard_job_name = clean_text(job_name)
-    stats = loader.get_requirement_stats(standard_job_name)
-    skill_assets = loader.get_skill_assets(standard_job_name)
+    requested_job_name = clean_text(job_name)
+    resolution = loader.resolve_job_name(requested_job_name)
+    standard_job_name = clean_text(resolution.get("resolved_standard_job_name")) if resolution.get("asset_found") else requested_job_name
+    stats = loader.get_requirement_stats_by_standard_name(standard_job_name)
+    skill_assets = loader.get_skill_assets_by_standard_name(standard_job_name)
     asset_found = bool(stats or skill_assets)
+
+    if not asset_found:
+        return build_insufficient_asset_match_result(
+            requested_job_name=requested_job_name,
+            match_type=match_type,
+            resolution=resolution,
+        )
 
     hard_info_display, hard_info_evaluation = build_hard_info(student_profile, stats)
     skill_knowledge_match = match_knowledge_points(student_profile, skill_assets)
@@ -447,14 +578,29 @@ def evaluate_single_job(
     final_score = safe_float(overall_match_score, default=0.0) if overall_match_score is not None else asset_score
     if final_score <= 0:
         final_score = asset_score
+    rule_score = final_score
+    display_score = asset_score
 
     result = {
-        "job_name": standard_job_name,
+        "job_name": requested_job_name,
+        "asset_job_name": standard_job_name,
         "match_type": match_type,
         "asset_found": asset_found,
+        "evaluation_status": EVALUATION_OK,
+        "job_name_resolution": deepcopy(resolution),
         "sample_count": int(stats.get("sample_count") or 0),
         "overall_match_score": round(float(final_score), 2),
+        "rule_match_score": round(float(rule_score), 2),
         "asset_match_score": asset_score,
+        "display_match_score": display_score,
+        "score_source": SCORE_SOURCE_ASSET,
+        "score_explanation": build_score_explanation(
+            asset_score=asset_score,
+            rule_score=rule_score,
+            contest_evaluation=contest_evaluation,
+            skill_knowledge_match=skill_knowledge_match,
+            asset_found=True,
+        ),
         "requirement_distributions": build_requirement_distributions(stats),
         "hard_info_display": hard_info_display,
         "hard_info_evaluation": hard_info_evaluation,
@@ -488,6 +634,7 @@ def build_recommendation_ranking(
             {
                 "job_name": job_name,
                 "overall_match_score": safe_float(evaluated.get("asset_match_score"), default=0.0),
+                "display_match_score": safe_float(evaluated.get("display_match_score"), default=0.0),
                 "hard_info_pass": bool(safe_dict(evaluated.get("contest_evaluation")).get("hard_info_pass")),
                 "knowledge_point_accuracy": safe_float(
                     safe_dict(evaluated.get("skill_knowledge_match")).get("knowledge_point_accuracy"),

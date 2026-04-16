@@ -88,12 +88,21 @@ def build_target_job_profile_assets(
         return {}
 
     asset_loader = loader or MatchAssetLoader()
-    stats = asset_loader.get_requirement_stats(job_name)
-    skill_assets = asset_loader.get_skill_assets(job_name)
+    resolution = asset_loader.resolve_job_name(job_name)
+    asset_job_name = clean_text(resolution.get("resolved_standard_job_name")) if resolution.get("asset_found") else job_name
+    stats = asset_loader.get_requirement_stats_by_standard_name(asset_job_name)
+    skill_assets = asset_loader.get_skill_assets_by_standard_name(asset_job_name)
     if not stats and not skill_assets:
         return {
-            "standard_job_name": job_name,
+            "requested_job_name": job_name,
+            "standard_job_name": asset_job_name,
+            "resolved_standard_job_name": clean_text(resolution.get("resolved_standard_job_name")) or job_name,
             "asset_found": False,
+            "resolution_method": clean_text(resolution.get("resolution_method")),
+            "resolution_confidence": resolution.get("resolution_confidence", 0.0),
+            "asset_resolution": deepcopy(resolution),
+            "evaluation_status": "insufficient_asset",
+            "message": "当前目标岗位未命中标准岗位画像资产，无法进行完整画像展示。",
             "sample_count": 0,
             "degree_distribution": [],
             "major_distribution": [],
@@ -108,8 +117,14 @@ def build_target_job_profile_assets(
         }
 
     target_assets = {
-        "standard_job_name": job_name,
+        "requested_job_name": job_name,
+        "standard_job_name": asset_job_name,
+        "resolved_standard_job_name": asset_job_name,
         "asset_found": True,
+        "resolution_method": clean_text(resolution.get("resolution_method")),
+        "resolution_confidence": resolution.get("resolution_confidence", 0.0),
+        "asset_resolution": deepcopy(resolution),
+        "evaluation_status": "ok",
         "sample_count": stats.get("sample_count", 0),
         "job_category": clean_text(stats.get("job_category")),
         "job_level_summary": clean_text(stats.get("job_level_summary")),

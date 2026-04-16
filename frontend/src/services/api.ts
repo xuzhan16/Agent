@@ -5,6 +5,7 @@ import {
   JobMatchResult,
   CareerPathResult,
   ApiResponse,
+  JobProfileAssetsData,
   ReportDetail,
   PipelineStatus,
   AIContextSummaryData,
@@ -66,6 +67,11 @@ export const careerApi = {
   // 岗位匹配查询（状态接口，不消费请求体）
   matchJobs: (): Promise<ApiResponse<JobMatchResult[]>> => {
     return api.get('/job/match')
+  },
+
+  // 岗位画像资产查询（全局岗位资产，不依赖学生状态）
+  getJobProfileAssets: (): Promise<ApiResponse<JobProfileAssetsData>> => {
+    return api.get('/job/profile-assets')
   },
 
   // 职业路径查询（状态接口，不消费请求体）

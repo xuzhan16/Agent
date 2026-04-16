@@ -115,15 +115,256 @@ python -m pip install fastapi "uvicorn[standard]" python-multipart pandas pypdf 
 - `neo4j`：连接图数据库，可选但推荐
 - `xlrd` / `openpyxl`：读取岗位 Excel 数据，可选但推荐
 
-## 6. 启动方式
+## 6. 运行前准备：岗位底库与 Neo4j
+
+这一步建议放在“安装依赖之后、启动后端之前”。
+
+原因是：主链路中的 `job_profile`、`career_path_plan` 会尝试读取 SQLite 和 Neo4j 图谱上下文；如果 Neo4j 没有导入数据，后端不会崩溃，但会降级为 SQL / 语义知识库 / fallback 结果，岗位路径和图谱关系会变弱。
+
+### 6.1 岗位底库产物
+
+当前仓库已经带有可复用的岗位底库产物：
+
+- `E:\Agent\Agent-main\outputs\sql\jobs.db`
+- `E:\Agent\Agent-main\outputs\neo4j\*.csv`
+- `E:\Agent\Agent-main\outputs\intermediate\*.csv`
+- `E:\Agent\Agent-main\outputs\match_assets\*.json`
+
+如果你只是本机演示、前后端联调、上传简历跑职业规划，通常不需要重新跑 `job_data_pipeline.py`。
+
+### 6.2 Neo4j 是否必须启动
+
+不是必须，但推荐启动。
+
+当前后端逻辑是：
+
+- SQLite：岗位事实、薪资、公司、城市、行业、样本统计
+- Neo4j：岗位结构、技能关系、学历关系、专业关系、晋升路径、转岗路径
+- JSON + embedding：语义知识检索、相似岗位召回、解释增强
+
+如果 Neo4j 没启动或没导入数据：
+
+- 后端不会直接崩掉
+- `query_neo4j()` 会返回空结果
+- 主链路会继续使用 SQL、后处理资产、语义知识库和 fallback
+- 但不能认为此时已经真正用上了 Neo4j 图数据库
+
+### 6.3 启动并导入 Neo4j
+
+后端目录为：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+```
+
+如果是第一次导入，并且 `.infra/neo4j/data` 目录还是空的，可以运行：
+
+```powershell
+.\scripts\neo4j\import-graph.ps1
+```
+
+脚本会自动：
+
+1. 读取 `outputs/neo4j/*.csv`
+2. 创建 `.env.neo4j`
+3. 创建本地 Neo4j 数据目录
+4. 使用 `neo4j-admin database import` 导入 CSV
+5. 启动 Docker 容器
+6. 使用 `cypher-shell` 做一次验证查询
+
+### 6.4 空库或重新生成 CSV 后必须强制重导
+
+如果你曾经直接执行过：
+
+```powershell
+docker compose --env-file .env.neo4j -f docker-compose.neo4j.yml up -d
+```
+
+Neo4j 可能已经创建了一个空数据库。此时普通导入脚本会看到 `.infra/neo4j/data` 已存在，然后跳过导入，并提示：
+
+```text
+Existing local Neo4j data detected, skip reimport. Use -ForceReimport to rebuild from CSV.
+```
+
+这种情况下必须执行：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+.\scripts\neo4j\import-graph.ps1 -ForceReimport
+```
+
+正常导入时，日志里应该出现：
+
+```text
+[neo4j-setup] Force reimport enabled, clearing existing local Neo4j data
+[neo4j-setup] Importing CSV files into a fresh Neo4j database
+```
+
+如果没有看到 `Importing CSV files into a fresh Neo4j database`，就说明没有真正导入图谱数据。
+
+### 6.5 日常启停 Neo4j
+
+导入完成后，日常只需要启动容器：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+docker compose --env-file .env.neo4j -f docker-compose.neo4j.yml up -d
+```
+
+停止容器：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+docker compose --env-file .env.neo4j -f docker-compose.neo4j.yml down
+```
+
+访问地址：
+
+- Neo4j Browser：[http://localhost:7474](http://localhost:7474)
+- Bolt：`bolt://localhost:7687`
+
+登录账号：
+
+- 用户名：`neo4j`
+- 密码：默认已设置为 `12345678`，也可以读取 `E:\Agent\Agent-main\.env.neo4j` 中的 `NEO4J_PASSWORD`
+
+### 6.6 验证 Neo4j 是否真的有数据
+
+在 Neo4j Browser 中执行：
+
+```cypher
+MATCH (n)
+RETURN labels(n)[0] AS label, count(n) AS cnt
+ORDER BY cnt DESC;
+```
+
+正常应该看到 `Job`、`Skill`、`Degree`、`Major`、`Industry` 等节点。
+
+当前仓库已验证过的一次成功导入结果示例：
+
+```text
+Industry: 816
+Job: 412
+Skill: 400
+Major: 75
+Degree: 8
+```
+
+再执行：
+
+```cypher
+MATCH ()-[r]->()
+RETURN type(r) AS rel_type, count(r) AS cnt
+ORDER BY cnt DESC;
+```
+
+正常应该看到：
+
+- `REQUIRES_SKILL`
+- `REQUIRES_DEGREE`
+- `PREFERS_MAJOR`
+- `BELONGS_TO_INDUSTRY`
+- `PROMOTE_TO`
+- `TRANSFER_TO`
+
+当前仓库已验证过的一次成功导入关系结果示例：
+
+```text
+BELONGS_TO_INDUSTRY: 1486
+REQUIRES_SKILL: 441
+PROMOTE_TO: 298
+TRANSFER_TO: 279
+PREFERS_MAJOR: 105
+REQUIRES_DEGREE: 87
+```
+
+也可以在 PowerShell 中验证：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+
+$envMap = @{}
+Get-Content .env.neo4j | ForEach-Object {
+  $line = $_.Trim()
+  if ($line -and -not $line.StartsWith('#') -and $line.Contains('=')) {
+    $parts = $line.Split('=', 2)
+    $envMap[$parts[0]] = $parts[1]
+  }
+}
+
+$user = $envMap['NEO4J_USERNAME']
+$password = $envMap['NEO4J_PASSWORD']
+
+docker exec agent-neo4j cypher-shell -u $user -p $password `
+  "MATCH (n) RETURN labels(n)[0] AS label, count(n) AS cnt ORDER BY cnt DESC;"
+```
+
+如果节点数为 0，说明当前 Neo4j 是空库，需要重新执行：
+
+```powershell
+.\scripts\neo4j\import-graph.ps1 -ForceReimport
+```
+
+### 6.7 让后端连接 Neo4j
+
+`main_pipeline.py` 默认读取环境变量：
+
+- `NEO4J_URI`
+- `NEO4J_USERNAME`
+- `NEO4J_PASSWORD`
+
+注意：`.env.neo4j` 不会被 `main_pipeline.py` 自动加载。启动后端或命令行跑主链路前，建议在当前 PowerShell 会话中设置：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+
+$envMap = @{}
+Get-Content .env.neo4j | ForEach-Object {
+  $line = $_.Trim()
+  if ($line -and -not $line.StartsWith('#') -and $line.Contains('=')) {
+    $parts = $line.Split('=', 2)
+    $envMap[$parts[0]] = $parts[1]
+  }
+}
+
+$env:NEO4J_URI = "bolt://localhost:7687"
+$env:NEO4J_USERNAME = $envMap['NEO4J_USERNAME']
+$env:NEO4J_PASSWORD = $envMap['NEO4J_PASSWORD']
+```
+
+然后再启动后端或运行主链路。
+
+如果你只想使用当前默认密码，也可以直接写：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+
+$env:NEO4J_URI = "bolt://localhost:7687"
+$env:NEO4J_USERNAME = "neo4j"
+$env:NEO4J_PASSWORD = "12345678"
+```
+
+### 6.8 快速确认后端能查到 Neo4j
+
+```powershell
+Set-Location E:\Agent\Agent-main
+
+conda run -n DL python -c "from db_helper import query_neo4j; import os; print(query_neo4j(os.environ['NEO4J_URI'], os.environ['NEO4J_USERNAME'], os.environ['NEO4J_PASSWORD'], 'MATCH (n) RETURN labels(n)[0] AS label, count(n) AS cnt ORDER BY cnt DESC LIMIT 10'))"
+```
+
+如果返回 `Job`、`Skill` 等计数，说明后端可以真实查询 Neo4j。
+
+如果返回 `[]` 或打印 `Neo4j 查询失败`，说明后端没有真正连上 Neo4j，此时主链路会降级运行。
+
+## 7. 启动方式
 
 当前仅保留真实大模型模式（会消耗真实 token）。
 
 ---
 
-## 7. 真实大模型模式
+## 8. 真实大模型模式
 
-### 7.1 配置模型
+### 8.1 配置模型
 
 当前后端的大模型配置优先级是：
 
@@ -155,7 +396,7 @@ LOCAL_LLM_API_KEY = "your-api-key"
 - 如果你想改用环境变量，请先把 `local_llm_config.py` 里的值清空，否则环境变量不会覆盖它
 - 不要把真实 API Key 提交到 Git 仓库
 
-### 7.2 启动后端
+### 8.2 启动后端
 
 ```powershell
 cd E:\Agent\Agent-main
@@ -166,7 +407,7 @@ python -m uvicorn api_server:app --reload --host 127.0.0.1 --port 8000
 
 - API 文档：[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
-### 7.3 启动前端
+### 8.3 启动前端
 
 ```powershell
 cd E:\Agent\frontend
@@ -182,7 +423,7 @@ npm run dev
 - 前端的 Vite 代理已经配置好，会把 `/api` 请求转发到 `http://localhost:8000`
 - 相关配置在 `E:\Agent\frontend\vite.config.ts`
 
-### 7.4 实际使用步骤
+### 8.4 实际使用步骤
 
 1. 打开前端页面
 2. 上传一份 `txt / docx / pdf` 简历
@@ -203,7 +444,7 @@ npm run dev
 - `outputs/sql/jobs.db`
 - `outputs/neo4j/*.csv`
 
-### 7.5 真实模型模式下的重要产物
+### 8.5 真实模型模式下的重要产物
 
 运行后你会看到这些文件更新：
 
@@ -219,49 +460,7 @@ npm run dev
 
 ---
 
-## 9. Neo4j 是否必须启动
-
-不是必须，但推荐。
-
-当前后端逻辑是：
-
-- SQLite 岗位底库主要用于岗位画像统计
-- Neo4j 主要用于技能要求、转岗路径、晋升路径补充
-
-如果 Neo4j 没启动：
-
-- 后端不会直接崩掉
-- 相关图谱查询会返回空结果
-- 岗位画像和路径规划的信息会更弱一些
-
-## 10. 启动 Neo4j（推荐）
-
-当前仓库里已经有现成的图谱 CSV：
-
-- `E:\Agent\Agent-main\outputs\neo4j`
-
-最简单的导入方式：
-
-```powershell
-Set-Location E:\Agent\Agent-main
-.\scripts\neo4j\import-graph.ps1
-```
-
-脚本会自动：
-
-1. 生成 `.env.neo4j`
-2. 创建本地 Neo4j 数据目录
-3. 导入 `outputs/neo4j/*.csv`
-4. 启动 Docker 中的 Neo4j
-5. 做一次简单校验
-
-更多说明见：
-
-- [neo4j-docker.md](E:/Agent/Agent-main/docs/neo4j-docker.md)
-
----
-
-## 11. 岗位底库是否需要重建
+## 9. 岗位底库是否需要重建
 
 通常不需要。
 
@@ -284,11 +483,11 @@ Set-Location E:\Agent\Agent-main
 
 ---
 
-## 12. 重建岗位底库（可选）
+## 10. 重建岗位底库（可选）
 
 以下命令都在 `E:\Agent\Agent-main` 下执行。
 
-### 12.1 一键重建岗位底库（推荐）
+### 10.1 一键重建岗位底库（推荐）
 
 现在项目已经支持统一入口：
 
@@ -328,7 +527,7 @@ python .\job_data_pipeline.py `
 - 当前岗位晋升路径 / 转岗路径已经前移到离线阶段，主要在 `job_extract.py` 中由大模型分析并沉淀
 - 因此如果你想让新的路径图谱真正生效，至少需要重新跑到 `job_extract.py`
 
-### 12.2 通过后端接口触发（可选）
+### 10.2 通过后端接口触发（可选）
 
 如果你不想在终端里手动执行脚本，也可以在启动后端后，请求：
 
@@ -360,11 +559,11 @@ Invoke-RestMethod `
 
 如果你只是自己本机重建数据，仍然建议优先使用 `job_data_pipeline.py`。
 
-### 12.3 分步重建（高级用法）
+### 10.3 分步重建（高级用法）
 
 如果你需要逐步排查某一层数据问题，再按下面的单脚本顺序执行。
 
-### 12.3.1 数据清洗
+### 10.3.1 数据清洗
 
 ```powershell
 Set-Location E:\Agent\Agent-main
@@ -373,7 +572,7 @@ python .\job_data\data_cleaning.py `
   --output .\outputs\intermediate\jobs_cleaned.csv
 ```
 
-### 12.3.2 岗位去重 / 标准岗位归一
+### 10.3.2 岗位去重 / 标准岗位归一
 
 ```powershell
 python .\job_data\job_dedup.py `
@@ -383,7 +582,7 @@ python .\job_data\job_dedup.py `
   --output-pairs .\outputs\intermediate\job_dedup_pairs.csv
 ```
 
-### 12.3.3 岗位画像抽取与路径关系离线抽取
+### 10.3.3 岗位画像抽取与路径关系离线抽取
 
 这一步会调用大模型。
 
@@ -402,7 +601,7 @@ python .\job_data\job_extract.py `
 - 当前岗位的 `vertical_paths`、`transfer_paths`、`path_relation_details` 主要在这一步离线生成
 - 后面的 SQLite / Neo4j 导出只是把这里已经生成的路径知识写入底库
 
-### 12.3.4 导出到 SQLite
+### 10.3.4 导出到 SQLite
 
 ```powershell
 python .\job_data\export_to_sql.py `
@@ -410,7 +609,7 @@ python .\job_data\export_to_sql.py `
   --db-path .\outputs\sql\jobs.db
 ```
 
-### 12.3.5 导出 Neo4j CSV
+### 10.3.5 导出 Neo4j CSV
 
 ```powershell
 python .\job_data\export_to_neo4j.py `
@@ -418,7 +617,7 @@ python .\job_data\export_to_neo4j.py `
   --output-dir .\outputs\neo4j
 ```
 
-### 12.3.6 重新导入 Neo4j
+### 10.3.6 重新导入 Neo4j
 
 ```powershell
 Set-Location E:\Agent\Agent-main
@@ -427,7 +626,7 @@ Set-Location E:\Agent\Agent-main
 
 ---
 
-## 13. 当前大模型调用方式总结
+## 11. 当前大模型调用方式总结
 
 当前后端统一通过下面这层调用大模型：
 
@@ -450,9 +649,9 @@ Set-Location E:\Agent\Agent-main
 - task 级输出 token 预算
 - prompt hash 本地缓存
 
-## 14. 常见问题
+## 12. 常见问题
 
-### 14.1 前端能打开，但上传简历后一直报错
+### 12.1 前端能打开，但上传简历后一直报错
 
 优先检查：
 
@@ -460,7 +659,7 @@ Set-Location E:\Agent\Agent-main
 2. 模型配置是否正确
 3. 若使用真实模型，API Key 是否有效
 
-### 14.2 PDF 简历解析失败
+### 12.2 PDF 简历解析失败
 
 请安装：
 
@@ -468,7 +667,7 @@ Set-Location E:\Agent\Agent-main
 python -m pip install pypdf
 ```
 
-### 14.3 Neo4j 没启动会不会影响运行
+### 12.3 Neo4j 没启动会不会影响运行
 
 不会完全阻塞运行，但会影响：
 
@@ -476,7 +675,7 @@ python -m pip install pypdf
 - 转岗路径
 - 晋升路径
 
-### 14.4 为什么报告结果会覆盖上一次结果
+### 12.4 为什么报告结果会覆盖上一次结果
 
 因为当前前后端联调用的是单一状态文件：
 
@@ -484,7 +683,7 @@ python -m pip install pypdf
 
 这适合单用户演示，不适合多用户并发部署。
 
-## 15. 最短跑通路径
+## 13. 最短跑通路径
 
 如果你只想最快跑起来，推荐按下面顺序：
 

@@ -101,6 +101,197 @@ export interface JobProfileSummary {
   tools_or_tech_stack?: string[]
 }
 
+export type RiskLevel = 'high_match' | 'risk' | 'no_match' | string
+
+export interface JobNameResolution {
+  requested_job_name?: string
+  resolved_standard_job_name?: string
+  asset_found?: boolean
+  resolution_method?: string
+  resolution_confidence?: number
+  candidate_jobs?: string[]
+  matched_alias?: string
+}
+
+export interface RequirementDistributionItem {
+  rank?: number
+  name?: string
+  count?: number
+  ratio?: number
+}
+
+export interface RequirementDistributions {
+  degree_distribution?: RequirementDistributionItem[]
+  major_distribution?: RequirementDistributionItem[]
+  certificate_distribution?: RequirementDistributionItem[]
+  no_certificate_requirement_ratio?: number
+}
+
+export interface CoreJobProfile extends RequirementDistributions {
+  standard_job_name?: string
+  sample_count?: number
+  job_category?: string
+  job_level_summary?: string
+  display_order?: number
+  selection_reason?: string
+  mainstream_degree?: string
+  mainstream_majors_summary?: string | string[]
+  mainstream_cert_summary?: string | string[]
+  top_skills?: string[]
+  degree_gate?: string
+  major_gate_set?: string[]
+  must_have_certificates?: string[]
+  preferred_certificates?: string[]
+  hard_skills?: string[]
+  tools_or_tech_stack?: string[]
+  required_knowledge_points?: string[]
+  preferred_knowledge_points?: string[]
+  source_quality?: Record<string, number | string>
+}
+
+export interface JobProfileAssetsSummary {
+  core_job_count?: number
+  standard_job_count?: number
+  sample_count?: number
+  generated_at?: string
+}
+
+export interface JobProfileAssetsData {
+  summary?: JobProfileAssetsSummary
+  core_job_profiles?: CoreJobProfile[]
+}
+
+export interface TargetJobProfileAssets extends RequirementDistributions {
+  requested_job_name?: string
+  standard_job_name?: string
+  resolved_standard_job_name?: string
+  asset_found?: boolean
+  resolution_method?: string
+  resolution_confidence?: number
+  asset_resolution?: JobNameResolution
+  evaluation_status?: string
+  message?: string
+  sample_count?: number
+  job_category?: string
+  job_level_summary?: string
+  mainstream_degree?: string
+  mainstream_degree_ratio?: number
+  mainstream_majors?: string[]
+  mainstream_certificates?: string[]
+  degree_gate?: string
+  major_gate_set?: string[]
+  must_have_certificates?: string[]
+  preferred_certificates?: string[]
+  required_knowledge_points?: string[]
+  preferred_knowledge_points?: string[]
+  source_quality?: Record<string, number | string>
+}
+
+export interface HardInfoDisplay {
+  degree?: {
+    student_value?: string
+    mainstream_requirement?: string
+    mainstream_ratio?: number
+    qualified_ratio?: number
+    higher_requirement_ratio?: number
+    risk_level?: RiskLevel
+    message?: string
+  }
+  major?: {
+    student_value?: string
+    mainstream_majors?: string[]
+    matched_ratio?: number
+    risk_level?: RiskLevel
+    message?: string
+  }
+  certificate?: {
+    student_values?: string[]
+    must_have_certificates?: string[]
+    preferred_certificates?: string[]
+    matched_ratio?: number
+    risk_level?: RiskLevel
+    message?: string
+  }
+}
+
+export interface HardInfoEvaluation {
+  degree?: {
+    student_value?: string
+    job_gate?: string
+    pass?: boolean
+    reason?: string
+  }
+  major?: {
+    student_value?: string
+    job_gate_set?: string[]
+    pass?: boolean
+    reason?: string
+  }
+  certificate?: {
+    student_values?: string[]
+    must_have_certificates?: string[]
+    preferred_certificates?: string[]
+    pass?: boolean
+    reason?: string
+  }
+  all_pass?: boolean
+}
+
+export interface SkillKnowledgeMatch {
+  required_knowledge_points?: string[]
+  preferred_knowledge_points?: string[]
+  student_knowledge_points?: string[]
+  matched_knowledge_points?: string[]
+  missing_knowledge_points?: string[]
+  knowledge_point_accuracy?: number
+  pass?: boolean
+  risk_level?: RiskLevel
+}
+
+export interface ContestEvaluation {
+  hard_info_pass?: boolean
+  skill_accuracy_pass?: boolean
+  contest_match_success?: boolean
+}
+
+export interface TargetJobMatch {
+  job_name?: string
+  asset_job_name?: string
+  match_type?: string
+  asset_found?: boolean
+  evaluation_status?: string
+  message?: string
+  job_name_resolution?: JobNameResolution
+  sample_count?: number
+  overall_match_score?: number
+  rule_match_score?: number
+  asset_match_score?: number
+  display_match_score?: number
+  score_source?: string
+  score_explanation?: string
+  requirement_distributions?: RequirementDistributions
+  hard_info_display?: HardInfoDisplay
+  hard_info_evaluation?: HardInfoEvaluation
+  skill_knowledge_match?: SkillKnowledgeMatch
+  contest_evaluation?: ContestEvaluation
+  risk_level?: RiskLevel
+}
+
+export interface RecommendedJobMatch extends TargetJobMatch {
+  recommendation_reason?: string
+}
+
+export interface RecommendationRankingItem {
+  rank?: number
+  job_name?: string
+  overall_match_score?: number
+  display_match_score?: number
+  hard_info_pass?: boolean
+  knowledge_point_accuracy?: number
+  risk_level?: RiskLevel
+  recommendation_reason?: string
+}
+
 // 岗位匹配结果
 export interface JobMatchResult {
   job_name: string
@@ -119,6 +310,19 @@ export interface JobMatchResult {
     vocational_skill_score?: number
     professional_quality_score?: number
     development_potential_score?: number
+  }
+  target_job_match?: TargetJobMatch
+  recommended_job_match?: RecommendedJobMatch
+  recommendation_ranking?: RecommendationRankingItem[]
+  core_job_profiles?: CoreJobProfile[]
+  target_job_profile_assets?: TargetJobProfileAssets
+  match_input_payload?: {
+    job_profile?: {
+      raw_job_profile_result?: {
+        core_job_profiles?: CoreJobProfile[]
+        target_job_profile_assets?: TargetJobProfileAssets
+      }
+    }
   }
 }
 
