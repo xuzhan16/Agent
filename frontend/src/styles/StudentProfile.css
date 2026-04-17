@@ -226,12 +226,25 @@
   padding-top: 20px;
 }
 
+.ability-radar-wrap {
+  width: 100%;
+  height: 360px;
+}
+
+.ability-dimension-summary-row {
+  margin-top: 8px;
+}
+
 .ability-dimension-item {
   height: 100%;
   padding: 12px;
   border: 1px solid #eef1f6;
   border-radius: 10px;
   background: #fafcff;
+}
+
+.ability-dimension-item--compact {
+  min-height: 116px;
 }
 
 .ability-dimension-header {
@@ -242,10 +255,21 @@
   gap: 8px;
 }
 
+.ability-dimension-header--compact {
+  margin-bottom: 6px;
+}
+
 .ability-dimension-title {
   color: #1f2a44;
   font-size: 14px;
   font-weight: 600;
+}
+
+.ability-dimension-score {
+  margin: 0;
+  color: #2f6fff;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .ability-dimension-evidence {
@@ -296,6 +320,10 @@
     gap: 12px;
     padding-left: 12px;
     margin-left: -12px;
+  }
+
+  .ability-radar-wrap {
+    height: 300px;
   }
   
   .timeline-year {

@@ -1,5 +1,14 @@
 import { Card, Row, Col, Progress, Avatar, Tag, Space, Timeline, Alert, Button } from 'antd'
 import { UserOutlined, DatabaseOutlined, CodeOutlined, FileTextOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+  Tooltip,
+} from 'recharts'
 import { useCareerStore } from '../store'
 import { useNavigate } from 'react-router-dom'
 import { careerApi } from '../services/api'
@@ -179,6 +188,11 @@ const StudentProfile = () => {
       evidence,
     }
   })
+
+  const employmentAbilityRadarData = employmentAbilityDimensions.map((item) => ({
+    dimension: item.dimension,
+    score: item.score,
+  }))
 
   return (
     <div className="student-profile-container">
@@ -390,19 +404,45 @@ const StudentProfile = () => {
       <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
         <Col xs={24}>
           <Card title="就业能力画像（核心维度）" className="profile-card ability-dimension-card">
-            <Row gutter={[16, 16]}>
+            <div className="ability-radar-wrap">
+              <ResponsiveContainer width="100%" height={360}>
+                <RadarChart
+                  data={employmentAbilityRadarData}
+                  margin={{ top: 16, right: 28, bottom: 10, left: 28 }}
+                >
+                  <PolarGrid stroke="#d8e3f4" />
+                  <PolarAngleAxis
+                    dataKey="dimension"
+                    tick={{ fill: '#22314d', fontSize: 13, fontWeight: 600 }}
+                  />
+                  <PolarRadiusAxis
+                    angle={90}
+                    domain={[0, 100]}
+                    tickCount={6}
+                    tick={{ fill: '#6b7a96', fontSize: 11 }}
+                  />
+                  <Radar
+                    name="核心维度得分"
+                    dataKey="score"
+                    stroke="#2f6fff"
+                    fill="#2f6fff"
+                    fillOpacity={0.28}
+                    strokeWidth={2}
+                  />
+                  <Tooltip formatter={(value) => [`${value} 分`, '得分']} />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <Row gutter={[16, 16]} className="ability-dimension-summary-row">
               {employmentAbilityDimensions.map((item) => (
                 <Col xs={24} sm={12} lg={8} key={item.dimension}>
-                  <div className="ability-dimension-item">
-                    <div className="ability-dimension-header">
+                  <div className="ability-dimension-item ability-dimension-item--compact">
+                    <div className="ability-dimension-header ability-dimension-header--compact">
                       <span className="ability-dimension-title">{item.dimension}</span>
                       <Tag color={abilityColorByScore(item.score)}>{item.level}</Tag>
                     </div>
-                    <Progress
-                      percent={item.score}
-                      size="small"
-                      strokeColor={abilityColorByScore(item.score)}
-                    />
+                    <p className="ability-dimension-score">{item.score} 分</p>
                     {item.evidence.length > 0 && (
                       <p className="ability-dimension-evidence">{item.evidence.join('；')}</p>
                     )}
