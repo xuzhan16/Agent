@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.17.10",
     "antd": "^5.12.8",
     "axios": "^1.6.2",
     "echarts": "^5.4.3",
@@ -19,11 +21,13 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.1",
     "recharts": "^2.10.3",
+    "three": "^0.160.0",
     "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
+    "@types/three": "^0.183.1",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",

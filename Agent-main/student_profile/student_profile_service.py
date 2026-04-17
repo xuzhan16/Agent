@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import re
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -207,6 +208,103 @@ def _build_missing_dimensions_from_rule_reasons(rule_score_result: Dict[str, Any
     return _dedup_keep_order(dimensions)
 
 
+PROJECT_MISSING_DIMENSION_LABELS = {
+    "项目经历",
+    "项目经验",
+    "项目实践",
+    "缺少项目经历",
+    "缺少项目经验",
+    "项目经历不足",
+    "项目经验不足",
+    "项目实践不足",
+    "projectexperience",
+}
+
+INTERNSHIP_MISSING_DIMENSION_LABELS = {
+    "实习经历",
+    "实习经验",
+    "缺少实习经历",
+    "缺少实习经验",
+    "实习经历不足",
+    "实习经验不足",
+    "internshipexperience",
+}
+
+SKILL_MISSING_DIMENSION_LABELS = {
+    "核心技能",
+    "工具栈",
+    "核心技能工具栈",
+    "缺少核心技能",
+    "缺少工具栈",
+    "缺少核心技能工具栈",
+    "核心技能不足",
+    "工具栈不足",
+    "coreskills",
+    "toolstack",
+}
+
+
+def _to_non_negative_int(value: Any) -> int:
+    try:
+        parsed = int(float(value))
+    except (TypeError, ValueError):
+        return 0
+    return parsed if parsed > 0 else 0
+
+
+def _normalize_dimension_label(value: Any) -> str:
+    text = _clean_text(value).lower()
+    if not text:
+        return ""
+    compact = re.sub(r"[\s，,。；;：:、/\\|（）()【】\[\]{}\-_.]+", "", text)
+    return compact
+
+
+def _filter_missing_dimensions_by_evidence(
+    missing_dimensions: List[str],
+    profile_input_payload: Dict[str, Any],
+) -> List[str]:
+    """根据解析证据过滤明显冲突的缺失维度标签。"""
+    explicit_profile = _safe_dict(profile_input_payload.get("explicit_profile"))
+    normalized_profile = _safe_dict(profile_input_payload.get("normalized_profile"))
+    practice_profile = _safe_dict(profile_input_payload.get("practice_profile"))
+
+    project_count = _to_non_negative_int(practice_profile.get("project_count"))
+    if project_count <= 0:
+        project_count = len(_safe_list(explicit_profile.get("project_experience")))
+
+    internship_count = _to_non_negative_int(practice_profile.get("internship_count"))
+    if internship_count <= 0:
+        internship_count = len(_safe_list(explicit_profile.get("internship_experience")))
+
+    skill_item_count = len(
+        [
+            _clean_text(item)
+            for item in _safe_list(normalized_profile.get("hard_skills"))
+            + _safe_list(normalized_profile.get("tool_skills"))
+            if _clean_text(item)
+        ]
+    )
+
+    filtered_dimensions: List[str] = []
+    for raw_dimension in missing_dimensions:
+        dimension = _clean_text(raw_dimension)
+        if not dimension:
+            continue
+
+        normalized_dimension = _normalize_dimension_label(dimension)
+        if project_count > 0 and normalized_dimension in PROJECT_MISSING_DIMENSION_LABELS:
+            continue
+        if internship_count > 0 and normalized_dimension in INTERNSHIP_MISSING_DIMENSION_LABELS:
+            continue
+        if skill_item_count > 0 and normalized_dimension in SKILL_MISSING_DIMENSION_LABELS:
+            continue
+
+        filtered_dimensions.append(dimension)
+
+    return _dedup_keep_order(filtered_dimensions)
+
+
 def _build_ability_evidence(
     profile_input_payload: Dict[str, Any],
     rule_score_result: Dict[str, Any],
@@ -284,6 +382,10 @@ def normalize_llm_student_profile_result(
             if _clean_text(item)
         ]
         + _build_missing_dimensions_from_rule_reasons(rule_score_result)
+    )
+    missing_dimensions = _filter_missing_dimensions_by_evidence(
+        missing_dimensions=missing_dimensions,
+        profile_input_payload=profile_input_payload,
     )
     summary = _clean_text(llm_result.get("summary"))
     if not summary:

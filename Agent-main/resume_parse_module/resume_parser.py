@@ -22,6 +22,7 @@ import argparse
 import json
 import logging
 import re
+import unicodedata
 import zipfile
 from copy import deepcopy
 from pathlib import Path
@@ -129,6 +130,24 @@ DESCRIPTION_LABELS = (
     "其他能力：",
     "毕业设计",
 )
+
+DEGREE_DURATION_YEARS = {
+    "本科": 4,
+    "硕士": 3,
+    "博士": 4,
+    "专科": 3,
+}
+
+PROJECT_SECTION_HEADING_SET = {
+    "项目经历",
+    "项目经验",
+    "科研项目",
+    "课程项目",
+}
+
+RADICAL_NORMALIZATION_MAP = {
+    "\u2ee9": "黄",
+}
 
 # ---------------------------------------------------------------------------
 # 日志
@@ -274,6 +293,12 @@ def clean_resume_text(text: str) -> str:
         return ""
 
     cleaned = str(text)
+    for source_char, target_char in RADICAL_NORMALIZATION_MAP.items():
+        cleaned = cleaned.replace(source_char, target_char)
+    # 归一化兼容字形（如“项⽬”“⾄今”）并清理控制字符，避免规则匹配失败。
+    cleaned = unicodedata.normalize("NFKC", cleaned)
+    cleaned = cleaned.replace("\x00", "")
+    cleaned = re.sub(r"[\x01-\x08\x0b-\x1f\x7f]", " ", cleaned)
     # NBSP、全角空格 → 普通空格
     cleaned = cleaned.replace("\u00a0", " ").replace("\u3000", " ")
     cleaned = cleaned.replace("\r\n", "\n").replace("\r", "\n")
@@ -416,8 +441,12 @@ def _extract_name(header_lines: List[str]) -> str:
             continue
         if re.search(r"\d|@|大学|学院|公司|项目|经历", candidate):
             continue
-        if re.fullmatch(r"[\u4e00-\u9fa5]{2,4}", candidate):
-            return candidate
+        normalized_candidate = candidate
+        for source_char, target_char in RADICAL_NORMALIZATION_MAP.items():
+            normalized_candidate = normalized_candidate.replace(source_char, target_char)
+        normalized_candidate = re.sub(r"[\u2e80-\u2eff\u2f00-\u2fdf]", "", normalized_candidate)
+        if re.fullmatch(r"[\u3400-\u9fff]{2,4}", normalized_candidate):
+            return normalized_candidate
     return ""
 
 
@@ -473,6 +502,45 @@ def _split_lines_by_date_ranges(section_lines: List[str]) -> List[str]:
     return _dedup_nearby_lines(normalized_lines)
 
 
+def _infer_degree_from_text(text: str) -> str:
+    normalized = str(text or "")
+    if not normalized:
+        return ""
+    if re.search(r"(?:博士|博[一二三四]|博士后)", normalized):
+        return "博士"
+    if re.search(r"(?:硕士|研究生|研[一二三])", normalized):
+        return "硕士"
+    if re.search(r"(?:本科|学士|大[一二三四五])", normalized):
+        return "本科"
+    if re.search(r"(?:专科|大专)", normalized):
+        return "专科"
+    return ""
+
+
+def _infer_graduation_year_from_education(education_experience: List[Dict[str, str]]) -> str:
+    for item in education_experience:
+        end_date = str(item.get("end_date") or "").strip()
+        match = re.match(r"^(\d{4})", end_date)
+        if match:
+            return match.group(1)
+
+    if not education_experience:
+        return ""
+
+    first_item = education_experience[0]
+    start_date = str(first_item.get("start_date") or "").strip()
+    start_match = re.match(r"^(\d{4})[./-]\d{1,2}$", start_date)
+    if not start_match:
+        return ""
+
+    start_year = int(start_match.group(1))
+    degree = str(first_item.get("degree") or "").strip()
+    for degree_name, duration in DEGREE_DURATION_YEARS.items():
+        if degree_name in degree:
+            return str(start_year + duration)
+    return ""
+
+
 def _parse_school_major_degree(text: str) -> Tuple[str, str, str, str]:
     body = str(text or "").strip()
     school = ""
@@ -485,6 +553,8 @@ def _parse_school_major_degree(text: str) -> Tuple[str, str, str, str]:
         school = school_match.group(1).strip()
         body = body[school_match.end():].strip()
 
+    body = re.sub(r"^[（(\[]?\s*(?:985|211|双一流|一本|二本)\s*[）)\]]?", "", body).strip()
+
     after_degree = ""
     for degree_keyword in DEGREE_KEYWORDS:
         if degree_keyword in body:
@@ -495,6 +565,9 @@ def _parse_school_major_degree(text: str) -> Tuple[str, str, str, str]:
             after_degree = split_parts[1] if len(split_parts) > 1 else ""
             body = before_degree
             break
+
+    if not degree:
+        degree = _infer_degree_from_text(f"{text} {body}")
 
     body = re.sub(r"[，,；;。]+", " ", body)
     body = re.sub(r"\s+", " ", body).strip()
@@ -507,6 +580,11 @@ def _parse_school_major_degree(text: str) -> Tuple[str, str, str, str]:
         description = body[split_match.start():].strip()
     else:
         major = body
+
+    major = re.sub(r"^[（(\[]?\s*(?:985|211|双一流|一本|二本)\s*[）)\]]?", "", major).strip()
+    major = re.sub(r"(?:本科|硕士|博士)?在读$", "", major).strip()
+    major = re.sub(r"(?:大[一二三四五六七八九十]|研[一二三]|博[一二三四])$", "", major).strip()
+    major = major.strip(" ，,；;。")
 
     after_degree = re.sub(r"[，,；;。]+", " ", after_degree)
     after_degree = re.sub(r"\s+", " ", after_degree).strip()
@@ -627,6 +705,65 @@ def _parse_internship_entries(section_lines: List[str]) -> List[Dict[str, str]]:
     )
 
 
+def _normalize_project_name(text: str) -> str:
+    name = _clean_description_text(text)
+    if not name:
+        return ""
+    name = re.sub(r"https?://\S+", "", name, flags=re.IGNORECASE).strip()
+    name = re.split(
+        r"(?:开发环境|项目描述|项目介绍|责任描述|职责描述|技术栈)[:：]",
+        name,
+        maxsplit=1,
+    )[0].strip()
+    name = re.sub(r"[\-—–~]+", " ", name)
+    name = re.sub(r"\s+", " ", name).strip(" ：:，,；;。")
+    return name
+
+
+def _extract_project_role(line: str) -> str:
+    role_match = re.search(r"(?:角色|岗位|担任)[:：]\s*([^\n，,；;。]{2,30})", line)
+    if role_match:
+        return role_match.group(1).strip()
+
+    line_without_url = re.sub(r"https?://\S+", "", _clean_description_text(line), flags=re.IGNORECASE).strip()
+    for keyword in POSITION_TITLE_KEYWORDS:
+        if keyword in line_without_url:
+            return line_without_url
+
+    if re.fullmatch(r".{2,24}(?:工程师|实习生|助理|专员|经理)", line_without_url):
+        return line_without_url
+    return ""
+
+
+def _looks_like_project_title(line: str) -> bool:
+    cleaned = _clean_description_text(line)
+    if not cleaned:
+        return False
+    if cleaned in PROJECT_SECTION_HEADING_SET:
+        return False
+    if len(cleaned) > 48:
+        return False
+    if any(punc in cleaned for punc in ("，", ",", "。", ";", "；")):
+        return False
+    if re.search(r"(?:项目描述|项目介绍|职责描述|责任描述|开发环境|技术栈)[:：]", cleaned):
+        return False
+    if cleaned.startswith(("项目描述", "项目介绍", "职责描述", "责任描述", "技术栈", "开发环境")):
+        return False
+    if re.match(r"^(?:https?://|www\.)", cleaned, flags=re.IGNORECASE):
+        return False
+
+    if not re.search(r"(?:~|至今|现在|20\d{2}|项目|平台|系统|智能体|小程序|App|APP)", cleaned):
+        return False
+
+    role_like = any(keyword in cleaned for keyword in POSITION_TITLE_KEYWORDS)
+    if role_like and (
+        "http" in cleaned.lower()
+        or re.fullmatch(r".{2,24}(?:工程师|实习生|助理|专员|经理)", cleaned)
+    ):
+        return False
+    return True
+
+
 def _parse_project_entries(section_lines: List[str]) -> List[Dict[str, str]]:
     entries: List[Dict[str, str]] = []
     current: Optional[Dict[str, str]] = None
@@ -637,10 +774,11 @@ def _parse_project_entries(section_lines: List[str]) -> List[Dict[str, str]]:
             if current:
                 entries.append(current)
             body = _remove_date_range_prefix(line)
-            project_name = re.split(r"(?:开发环境|项目描述|项目介绍|责任描述|职责描述)[:：]", body, maxsplit=1)[0]
+            project_name = _normalize_project_name(body)
             description = ""
-            if project_name != body:
-                description = body[len(project_name):].strip(" ：:，,；;")
+            split_index = re.search(r"(?:开发环境|项目描述|项目介绍|责任描述|职责描述|技术栈)[:：]", body)
+            if split_index:
+                description = body[split_index.start():].strip(" ：:，,；;")
             current = {
                 "project_name": project_name.strip(),
                 "role": "",
@@ -649,11 +787,32 @@ def _parse_project_entries(section_lines: List[str]) -> List[Dict[str, str]]:
                 "description": _clean_description_text(description),
             }
             continue
+
+        if _looks_like_project_title(line):
+            fallback_project_name = _normalize_project_name(line)
+            has_period_hint = bool(re.search(r"(?:~|至今|现在|20\d{2}|\d{4}[./-]\d{1,2})", line))
+            if fallback_project_name and (not current or has_period_hint):
+                if current and (current.get("project_name") or current.get("description")):
+                    entries.append(current)
+                current = {
+                    "project_name": fallback_project_name,
+                    "role": "",
+                    "start_date": "",
+                    "end_date": "",
+                    "description": "",
+                }
+                continue
+
         if current:
             if not current.get("role"):
-                role_match = re.search(r"(?:角色|岗位|担任)[:：]\s*([^\n，,；;。]{2,30})", line)
-                if role_match:
-                    current["role"] = role_match.group(1).strip()
+                role = _extract_project_role(line)
+                if role:
+                    current["role"] = role
+                    remaining = _clean_description_text(
+                        re.sub(r"https?://\S+", "", line, flags=re.IGNORECASE)
+                    )
+                    if remaining and remaining != role:
+                        _append_description(current, remaining)
                     continue
             _append_description(current, line)
 
@@ -723,8 +882,11 @@ def _build_rule_resume_parse_result(resume_text: str) -> Tuple[Dict[str, Any], D
             line
             for line in all_lines
             if DATE_RANGE_PATTERN.search(line)
-            and any(token in line for token in ("大学", "学院", "学校"))
-            and any(keyword in line for keyword in DEGREE_KEYWORDS)
+            and (
+                any(token in line for token in ("大学", "学院", "学校"))
+                or any(keyword in line for keyword in DEGREE_KEYWORDS)
+                or bool(re.search(r"(?:大[一二三四五]|研[一二三]|博[一二三四])", line))
+            )
         ]
     )
     education_experience = _parse_education_entries(education_candidate_lines)
@@ -738,7 +900,9 @@ def _build_rule_resume_parse_result(resume_text: str) -> Tuple[Dict[str, Any], D
     fallback_school = education_experience[0]["school"] if education_experience else ""
     fallback_major = education_experience[0]["major"] if education_experience else ""
     fallback_degree = education_experience[0]["degree"] if education_experience else ""
-    fallback_graduation_year = education_experience[0]["end_date"][:4] if education_experience and education_experience[0]["end_date"] else ""
+    if not fallback_degree:
+        fallback_degree = _infer_degree_from_text(resume_text)
+    fallback_graduation_year = _infer_graduation_year_from_education(education_experience)
 
     rule_result = default_resume_parse_result_dict()
     rule_result["basic_info"] = {
