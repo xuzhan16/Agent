@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 
-DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_STATE_PATH = Path("student_api_state.json")
 DEFAULT_OUTPUT_PATH = Path("outputs/state/career_report_input_payload.json")
 
 
@@ -52,11 +52,17 @@ class StudentReportSnapshot:
 class JobReportSnapshot:
     """岗位画像报告快照。"""
 
+    requested_job_name: str = ""
+    resolved_standard_job_name: str = ""
+    asset_found: bool = False
+    evaluation_status: str = ""
+    sample_count: int = 0
     standard_job_name: str = ""
     job_category: str = ""
     job_level: str = ""
     degree_requirement: str = ""
     major_requirement: List[str] = field(default_factory=list)
+    certificate_requirement: List[str] = field(default_factory=list)
     hard_skills: List[str] = field(default_factory=list)
     tool_skills: List[str] = field(default_factory=list)
     soft_skills: List[str] = field(default_factory=list)
@@ -64,6 +70,8 @@ class JobReportSnapshot:
     salary_summary: Dict[str, Any] = field(default_factory=dict)
     city_distribution: List[Dict[str, Any]] = field(default_factory=list)
     industry_distribution: List[Dict[str, Any]] = field(default_factory=list)
+    target_job_profile_context: Dict[str, Any] = field(default_factory=dict)
+    semantic_reference_context: Dict[str, Any] = field(default_factory=dict)
     summary: str = ""
 
 
@@ -82,6 +90,11 @@ class JobMatchReportSnapshot:
     improvement_suggestions: List[str] = field(default_factory=list)
     recommendation: str = ""
     analysis_summary: str = ""
+    target_job_match: Dict[str, Any] = field(default_factory=dict)
+    recommended_job_match: Dict[str, Any] = field(default_factory=dict)
+    recommendation_ranking: List[Dict[str, Any]] = field(default_factory=list)
+    rule_match_context: Dict[str, Any] = field(default_factory=dict)
+    contest_match_context: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -93,6 +106,9 @@ class CareerPathPlanReportSnapshot:
     phase_plan: Dict[str, Any] = field(default_factory=dict)
     risk_and_gap: List[str] = field(default_factory=list)
     decision_summary: str = ""
+    target_path_data_status: str = ""
+    target_path_data_message: str = ""
+    path_strategy: str = ""
 
 
 @dataclass
@@ -103,6 +119,10 @@ class CareerReportInputPayload:
     job_snapshot: Dict[str, Any] = field(default_factory=dict)
     job_match_snapshot: Dict[str, Any] = field(default_factory=dict)
     career_path_plan_snapshot: Dict[str, Any] = field(default_factory=dict)
+    target_job_profile_context: Dict[str, Any] = field(default_factory=dict)
+    job_match_context: Dict[str, Any] = field(default_factory=dict)
+    path_context: Dict[str, Any] = field(default_factory=dict)
+    semantic_reference_context: Dict[str, Any] = field(default_factory=dict)
     report_meta: Dict[str, Any] = field(default_factory=dict)
     report_generation_context: Dict[str, Any] = field(default_factory=dict)
     build_warnings: List[str] = field(default_factory=list)
@@ -112,9 +132,17 @@ def clean_text(value: Any) -> str:
     """基础文本清洗。"""
     if value is None:
         return ""
+    if isinstance(value, (list, tuple, set, frozenset, dict)) and not value:
+        return ""
+    if type(value).__name__ in {"dict_keys", "dict_values", "dict_items"}:
+        try:
+            if not list(value):
+                return ""
+        except TypeError:
+            return ""
     text = str(value).replace("\u00a0", " ").replace("\u3000", " ").strip()
     text = re.sub(r"\s+", " ", text)
-    if text.lower() in {"", "nan", "none", "null", "n/a", "na", "-"}:
+    if text.lower() in {"", "nan", "none", "null", "n/a", "na", "-", "[]", "{}", "set()", "dict_keys([])", "dict_values([])", "dict_items([])"}:
         return ""
     return text
 
@@ -153,6 +181,14 @@ def parse_list_like(value: Any) -> List[Any]:
     """将 list / JSON 字符串 / 分隔符字符串统一转 list。"""
     if isinstance(value, list):
         return dedup_keep_order(value)
+    if isinstance(value, (tuple, set, frozenset)):
+        return dedup_keep_order(value)
+    if isinstance(value, dict):
+        return dedup_keep_order(value.keys())
+    if type(value).__name__ in {"dict_keys", "dict_values"}:
+        return dedup_keep_order(list(value))
+    if type(value).__name__ == "dict_items":
+        return dedup_keep_order([key for key, _ in list(value)])
 
     text = clean_text(value)
     if not text:
@@ -182,6 +218,47 @@ def normalize_dict_list(value: Any) -> List[Dict[str, Any]]:
         if isinstance(item, dict):
             result.append(deepcopy(item))
     return dedup_keep_order(result)
+
+
+def normalize_distribution(value: Any) -> List[Dict[str, Any]]:
+    """统一岗位要求分布列表，保留 name/count/ratio/rank 等结构化字段。"""
+    result = []
+    for item in parse_list_like(value):
+        item_dict = safe_dict(item)
+        if item_dict:
+            result.append(deepcopy(item_dict))
+    return result
+
+
+def build_asset_job_summary(target_context: Dict[str, Any], fallback_summary: str = "") -> str:
+    """基于目标岗位资产生成不受 semantic_context 污染的岗位摘要。"""
+    context = safe_dict(target_context)
+    asset_found = bool(context.get("asset_found"))
+    requested_job_name = clean_text(context.get("requested_job_name"))
+    resolved_job_name = clean_text(context.get("resolved_standard_job_name") or context.get("standard_job_name"))
+    display_name = resolved_job_name or requested_job_name
+    if asset_found and display_name:
+        sample_count = context.get("sample_count") or 0
+        degree = clean_text(context.get("degree_gate") or context.get("mainstream_degree"))
+        majors = normalize_text_list(context.get("major_gate_set") or context.get("mainstream_majors"))[:5]
+        certificates = normalize_text_list(
+            context.get("must_have_certificates") or context.get("preferred_certificates")
+        )[:5]
+        knowledge_points = normalize_text_list(context.get("required_knowledge_points"))[:8]
+        parts = [f"{display_name}画像基于 {sample_count} 条岗位样本形成"]
+        if degree:
+            parts.append(f"主流学历门槛为{degree}")
+        if majors:
+            parts.append(f"高频专业方向包括{'、'.join(majors)}")
+        if certificates:
+            parts.append(f"常见证书偏好包括{'、'.join(certificates)}")
+        if knowledge_points:
+            parts.append(f"核心知识点包括{'、'.join(knowledge_points)}")
+        return "；".join(parts) + "。"
+
+    if requested_job_name:
+        return f"{requested_job_name}当前未完整命中标准岗位画像资产，以下信息仅基于已有岗位结构、SQL事实与规则抽取结果，可信度有限。"
+    return clean_text(fallback_summary)
 
 
 def load_json_file(file_path: str | Path) -> Dict[str, Any]:
@@ -261,14 +338,74 @@ def normalize_job_profile_result(job_profile_result: Dict[str, Any]) -> Dict[str
     source = safe_dict(job_profile_result)
     normalized_requirements = safe_dict(source.get("normalized_requirements"))
     salary_summary = safe_dict(source.get("salary_summary") or source.get("salary_stats"))
+    target_assets = safe_dict(source.get("target_job_profile_assets"))
+    requested_job_name = clean_text(
+        target_assets.get("requested_job_name")
+        or source.get("requested_job_name")
+        or source.get("standard_job_name")
+    )
+    resolved_job_name = clean_text(
+        target_assets.get("resolved_standard_job_name")
+        or target_assets.get("standard_job_name")
+        or source.get("resolved_standard_job_name")
+        or source.get("standard_job_name")
+    )
+    asset_found = bool(target_assets.get("asset_found"))
+
+    target_context = {
+        "requested_job_name": requested_job_name,
+        "standard_job_name": clean_text(target_assets.get("standard_job_name") or resolved_job_name),
+        "resolved_standard_job_name": resolved_job_name,
+        "asset_found": asset_found,
+        "resolution_method": clean_text(target_assets.get("resolution_method")),
+        "resolution_confidence": target_assets.get("resolution_confidence", 0.0),
+        "asset_resolution": deepcopy(safe_dict(target_assets.get("asset_resolution"))),
+        "evaluation_status": clean_text(target_assets.get("evaluation_status")),
+        "sample_count": target_assets.get("sample_count") or 0,
+        "job_category": clean_text(target_assets.get("job_category") or source.get("job_category")),
+        "job_level_summary": clean_text(target_assets.get("job_level_summary") or source.get("job_level")),
+        "mainstream_degree": clean_text(target_assets.get("mainstream_degree")),
+        "mainstream_degree_ratio": target_assets.get("mainstream_degree_ratio"),
+        "mainstream_majors": normalize_text_list(target_assets.get("mainstream_majors")),
+        "mainstream_certificates": normalize_text_list(target_assets.get("mainstream_certificates")),
+        "degree_gate": clean_text(target_assets.get("degree_gate")),
+        "major_gate_set": normalize_text_list(target_assets.get("major_gate_set")),
+        "must_have_certificates": normalize_text_list(target_assets.get("must_have_certificates")),
+        "preferred_certificates": normalize_text_list(target_assets.get("preferred_certificates")),
+        "degree_distribution": normalize_distribution(target_assets.get("degree_distribution")),
+        "major_distribution": normalize_distribution(target_assets.get("major_distribution")),
+        "certificate_distribution": normalize_distribution(target_assets.get("certificate_distribution")),
+        "no_certificate_requirement_ratio": target_assets.get("no_certificate_requirement_ratio"),
+        "required_knowledge_points": normalize_text_list(target_assets.get("required_knowledge_points")),
+        "preferred_knowledge_points": normalize_text_list(target_assets.get("preferred_knowledge_points")),
+        "source_quality": deepcopy(safe_dict(target_assets.get("source_quality"))),
+        "knowledge_source": clean_text(target_assets.get("knowledge_source")),
+    }
 
     snapshot = JobReportSnapshot(
-        standard_job_name=clean_text(source.get("standard_job_name")),
-        job_category=clean_text(source.get("job_category")),
-        job_level=clean_text(source.get("job_level")),
-        degree_requirement=clean_text(source.get("degree_requirement")),
+        requested_job_name=requested_job_name,
+        resolved_standard_job_name=resolved_job_name,
+        asset_found=asset_found,
+        evaluation_status=clean_text(target_context.get("evaluation_status")),
+        sample_count=int(target_context.get("sample_count") or 0),
+        standard_job_name=requested_job_name or resolved_job_name,
+        job_category=clean_text(target_context.get("job_category") or source.get("job_category")),
+        job_level=clean_text(target_context.get("job_level_summary") or source.get("job_level")),
+        degree_requirement=clean_text(
+            target_context.get("degree_gate")
+            or target_context.get("mainstream_degree")
+            or source.get("degree_requirement")
+        ),
         major_requirement=normalize_text_list(
-            source.get("major_requirement") or normalized_requirements.get("major_tags")
+            target_context.get("major_gate_set")
+            or target_context.get("mainstream_majors")
+            or source.get("major_requirement")
+            or normalized_requirements.get("major_tags")
+        ),
+        certificate_requirement=normalize_text_list(
+            target_context.get("must_have_certificates")
+            or target_context.get("preferred_certificates")
+            or source.get("certificate_requirement")
         ),
         hard_skills=normalize_text_list(
             source.get("hard_skills") or normalized_requirements.get("hard_skill_tags")
@@ -287,7 +424,9 @@ def normalize_job_profile_result(job_profile_result: Dict[str, Any]) -> Dict[str
         salary_summary=deepcopy(salary_summary),
         city_distribution=normalize_dict_list(source.get("city_distribution")),
         industry_distribution=normalize_dict_list(source.get("industry_distribution")),
-        summary=clean_text(source.get("summary")),
+        target_job_profile_context=deepcopy(target_context),
+        semantic_reference_context={},
+        summary=build_asset_job_summary(target_context, fallback_summary=clean_text(source.get("summary"))),
     )
     return asdict(snapshot)
 
@@ -299,10 +438,44 @@ def normalize_job_match_result(job_match_result: Dict[str, Any], target_job_name
     raw_payload = safe_dict(source.get("match_input_payload"))
     job_profile = safe_dict(raw_payload.get("job_profile"))
     dimension_details = safe_dict(source.get("dimension_details") or rule_result.get("dimension_details"))
+    target_job_match = safe_dict(source.get("target_job_match"))
+    recommended_job_match = safe_dict(source.get("recommended_job_match"))
+    recommendation_ranking = normalize_dict_list(source.get("recommendation_ranking"))
+    rule_match_context = {
+        "overall_match_score": safe_float(
+            source.get("overall_match_score") or rule_result.get("overall_match_score"),
+            default=0.0,
+        ),
+        "score_level": clean_text(source.get("score_level") or rule_result.get("score_level")),
+        "dimension_scores": {
+            "basic_requirement_score": safe_float(
+                source.get("basic_requirement_score") or rule_result.get("basic_requirement_score"),
+                default=0.0,
+            ),
+            "vocational_skill_score": safe_float(
+                source.get("vocational_skill_score") or rule_result.get("vocational_skill_score"),
+                default=0.0,
+            ),
+            "professional_quality_score": safe_float(
+                source.get("professional_quality_score") or rule_result.get("professional_quality_score"),
+                default=0.0,
+            ),
+            "development_potential_score": safe_float(
+                source.get("development_potential_score") or rule_result.get("development_potential_score"),
+                default=0.0,
+            ),
+        },
+        "strengths": normalize_text_list(source.get("strengths")),
+        "weaknesses": normalize_text_list(source.get("weaknesses")),
+        "improvement_suggestions": normalize_text_list(source.get("improvement_suggestions")),
+        "recommendation": clean_text(source.get("recommendation")),
+        "analysis_summary": clean_text(source.get("analysis_summary") or source.get("summary")),
+    }
 
     snapshot = JobMatchReportSnapshot(
         target_job_name=clean_text(
             source.get("target_job_name")
+            or target_job_match.get("job_name")
             or job_profile.get("standard_job_name")
             or target_job_name
         ),
@@ -337,6 +510,11 @@ def normalize_job_match_result(job_match_result: Dict[str, Any], target_job_name
         improvement_suggestions=normalize_text_list(source.get("improvement_suggestions")),
         recommendation=clean_text(source.get("recommendation")),
         analysis_summary=clean_text(source.get("analysis_summary") or source.get("summary")),
+        target_job_match=deepcopy(target_job_match),
+        recommended_job_match=deepcopy(recommended_job_match),
+        recommendation_ranking=deepcopy(recommendation_ranking),
+        rule_match_context=deepcopy(rule_match_context),
+        contest_match_context=deepcopy(target_job_match),
     )
     return asdict(snapshot)
 
@@ -345,17 +523,72 @@ def normalize_career_path_plan_result(career_path_plan_result: Dict[str, Any]) -
     """将 career_path_plan_result 归一成报告侧路径规划快照。"""
     source = safe_dict(career_path_plan_result)
     selector_result = safe_dict(source.get("selector_result"))
+    target_path_data_status = clean_text(
+        source.get("target_path_data_status")
+        or selector_result.get("target_path_data_status")
+    )
+    target_path_data_message = clean_text(
+        source.get("target_path_data_message")
+        or selector_result.get("target_path_data_message")
+    )
 
     career_goal = safe_dict(source.get("career_goal"))
     if not career_goal:
         career_goal = {
             "primary_target_job": clean_text(source.get("primary_target_job") or selector_result.get("primary_target_job")),
+            "primary_plan_job": clean_text(source.get("primary_plan_job") or selector_result.get("primary_plan_job") or source.get("primary_target_job") or selector_result.get("primary_target_job")),
+            "user_target_job": clean_text(source.get("user_target_job") or selector_result.get("user_target_job")),
+            "system_recommended_job": clean_text(source.get("system_recommended_job") or selector_result.get("system_recommended_job")),
+            "target_job_role": clean_text(source.get("target_job_role") or selector_result.get("target_job_role")),
+            "recommended_job_role": clean_text(source.get("recommended_job_role") or selector_result.get("recommended_job_role")),
+            "goal_decision_source": clean_text(source.get("goal_decision_source") or selector_result.get("goal_decision_source")),
+            "goal_decision_confidence": clean_text(source.get("goal_decision_confidence") or selector_result.get("goal_decision_confidence")),
+            "goal_decision_reason": normalize_text_list(source.get("goal_decision_reason") or selector_result.get("goal_decision_reason")),
+            "goal_decision_context": deepcopy(
+                safe_dict(source.get("goal_decision_context") or selector_result.get("goal_decision_context"))
+            ),
+            "llm_goal_decision_explanation": deepcopy(safe_dict(source.get("llm_goal_decision_explanation"))),
             "secondary_target_jobs": normalize_text_list(
                 source.get("secondary_target_jobs") or selector_result.get("secondary_target_jobs")
             ),
             "goal_positioning": clean_text(source.get("goal_positioning") or selector_result.get("goal_positioning")),
             "goal_reason": clean_text(source.get("goal_reason")),
         }
+    else:
+        career_goal.setdefault(
+            "primary_plan_job",
+            clean_text(source.get("primary_plan_job") or selector_result.get("primary_plan_job") or career_goal.get("primary_target_job")),
+        )
+        career_goal.setdefault("user_target_job", clean_text(source.get("user_target_job") or selector_result.get("user_target_job")))
+        career_goal.setdefault(
+            "system_recommended_job",
+            clean_text(source.get("system_recommended_job") or selector_result.get("system_recommended_job")),
+        )
+        career_goal.setdefault("target_job_role", clean_text(source.get("target_job_role") or selector_result.get("target_job_role")))
+        career_goal.setdefault(
+            "recommended_job_role",
+            clean_text(source.get("recommended_job_role") or selector_result.get("recommended_job_role")),
+        )
+        career_goal.setdefault(
+            "goal_decision_source",
+            clean_text(source.get("goal_decision_source") or selector_result.get("goal_decision_source")),
+        )
+        career_goal.setdefault(
+            "goal_decision_confidence",
+            clean_text(source.get("goal_decision_confidence") or selector_result.get("goal_decision_confidence")),
+        )
+        career_goal.setdefault(
+            "goal_decision_reason",
+            normalize_text_list(source.get("goal_decision_reason") or selector_result.get("goal_decision_reason")),
+        )
+        career_goal.setdefault(
+            "goal_decision_context",
+            deepcopy(safe_dict(source.get("goal_decision_context") or selector_result.get("goal_decision_context"))),
+        )
+        career_goal.setdefault(
+            "llm_goal_decision_explanation",
+            deepcopy(safe_dict(source.get("llm_goal_decision_explanation"))),
+        )
 
     career_path = safe_dict(source.get("career_path"))
     if not career_path:
@@ -365,6 +598,38 @@ def normalize_career_path_plan_result(career_path_plan_result: Dict[str, Any]) -
             "long_term_path": normalize_text_list(source.get("long_term_path") or selector_result.get("long_term_path")),
             "path_strategy": clean_text(source.get("path_strategy") or selector_result.get("path_strategy")),
         }
+    path_strategy = clean_text(career_path.get("path_strategy") or source.get("path_strategy") or selector_result.get("path_strategy"))
+    if target_path_data_status:
+        career_path["target_path_data_status"] = target_path_data_status
+    if target_path_data_message:
+        career_path["target_path_data_message"] = target_path_data_message
+    if path_strategy:
+        career_path["path_strategy"] = path_strategy
+
+    primary_target_job = clean_text(career_goal.get("primary_target_job"))
+    user_target_job = clean_text(career_goal.get("user_target_job"))
+    no_target_path = target_path_data_status == "missing" or path_strategy == "no_target_path_data"
+    if no_target_path:
+        career_path["direct_path"] = []
+        career_path["transition_path"] = []
+        career_path["long_term_path"] = []
+        career_path["path_strategy"] = "no_target_path_data"
+        target_path_data_status = "missing"
+        if not target_path_data_message:
+            target_path_data_message = "当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。"
+        career_path["target_path_data_status"] = target_path_data_status
+        career_path["target_path_data_message"] = target_path_data_message
+        if primary_target_job:
+            if user_target_job and user_target_job != primary_target_job:
+                career_goal["goal_positioning"] = (
+                    f"系统建议以{primary_target_job}作为短期主路径，同时保留{user_target_job}作为中期补强后的冲刺目标；"
+                    "但当前主路径岗位暂无真实晋升/转岗路径数据，因此报告不生成目标岗位路径。"
+                )
+            else:
+                career_goal["goal_positioning"] = (
+                    f"以{primary_target_job}作为当前求职目标；但本地岗位图谱和离线岗位画像中暂未沉淀该岗位明确晋升/转岗路径，"
+                    "因此报告不生成目标岗位路径。"
+                )
 
     phase_plan = safe_dict(source.get("phase_plan"))
     if not phase_plan:
@@ -372,13 +637,34 @@ def normalize_career_path_plan_result(career_path_plan_result: Dict[str, Any]) -
             "short_term_plan": normalize_text_list(source.get("short_term_plan")),
             "mid_term_plan": normalize_text_list(source.get("mid_term_plan")),
         }
+    if no_target_path:
+        phase_plan["mid_term_plan"] = [
+            item
+            for item in normalize_text_list(phase_plan.get("mid_term_plan"))
+            if "纵向路径" not in item and "横向转岗路径" not in item
+        ]
 
+    decision_summary = clean_text(source.get("decision_summary") or source.get("summary"))
+    if no_target_path and primary_target_job:
+        if user_target_job and user_target_job != primary_target_job:
+            decision_summary = (
+                f"系统建议以{primary_target_job}作为短期主路径，同时保留{user_target_job}作为中期补强后的冲刺目标。"
+                "当前主路径岗位暂无真实晋升/转岗路径数据，因此本报告不生成目标岗位路径，重点从匹配评测、知识点缺口和行动计划角度给出建议。"
+            )
+        else:
+            decision_summary = (
+                f"当前建议以{primary_target_job}作为求职目标，但本地岗位图谱和离线岗位画像中暂未沉淀该岗位明确晋升/转岗路径。"
+                "因此本报告不生成目标岗位路径，仅从岗位匹配、硬门槛评测、技能知识点缺口和行动计划角度给出建议。"
+            )
     snapshot = CareerPathPlanReportSnapshot(
         career_goal=career_goal,
         career_path=career_path,
         phase_plan=phase_plan,
         risk_and_gap=normalize_text_list(source.get("risk_and_gap") or source.get("risk_notes")),
-        decision_summary=clean_text(source.get("decision_summary") or source.get("summary")),
+        decision_summary=decision_summary,
+        target_path_data_status=target_path_data_status,
+        target_path_data_message=target_path_data_message,
+        path_strategy=clean_text(career_path.get("path_strategy")),
     )
     return asdict(snapshot)
 
@@ -408,13 +694,35 @@ def build_report_generation_context(
     career_plan_snapshot: Dict[str, Any],
 ) -> Dict[str, Any]:
     """构造报告生成辅助上下文。"""
+    target_context = safe_dict(job_snapshot.get("target_job_profile_context"))
+    target_match = safe_dict(job_match_snapshot.get("target_job_match"))
+    career_goal = safe_dict(career_plan_snapshot.get("career_goal"))
+    path_status = clean_text(career_plan_snapshot.get("target_path_data_status"))
     return {
         "student_summary": clean_text(student_snapshot.get("summary")),
         "job_summary": clean_text(job_snapshot.get("summary")),
         "match_summary": clean_text(job_match_snapshot.get("analysis_summary")),
         "decision_summary": clean_text(career_plan_snapshot.get("decision_summary")),
-        "goal_reason": clean_text(safe_dict(career_plan_snapshot.get("career_goal")).get("goal_reason")),
+        "goal_reason": clean_text(career_goal.get("goal_reason")),
+        "user_target_job": clean_text(career_goal.get("user_target_job")),
+        "system_recommended_job": clean_text(career_goal.get("system_recommended_job")),
+        "primary_plan_job": clean_text(career_goal.get("primary_plan_job") or career_goal.get("primary_target_job")),
+        "goal_decision_source": clean_text(career_goal.get("goal_decision_source")),
+        "goal_decision_confidence": clean_text(career_goal.get("goal_decision_confidence")),
+        "goal_decision_reason": normalize_text_list(career_goal.get("goal_decision_reason")),
+        "llm_goal_decision_explanation": deepcopy(safe_dict(career_goal.get("llm_goal_decision_explanation"))),
         "recommendation": clean_text(job_match_snapshot.get("recommendation")),
+        "target_job_profile_asset_found": bool(target_context.get("asset_found")),
+        "target_job_profile_name": clean_text(
+            target_context.get("resolved_standard_job_name")
+            or target_context.get("standard_job_name")
+            or job_snapshot.get("standard_job_name")
+        ),
+        "target_job_match_asset_found": bool(target_match.get("asset_found")),
+        "contest_evaluation": deepcopy(safe_dict(target_match.get("contest_evaluation"))),
+        "skill_knowledge_match": deepcopy(safe_dict(target_match.get("skill_knowledge_match"))),
+        "target_path_data_status": path_status,
+        "target_path_data_message": clean_text(career_plan_snapshot.get("target_path_data_message")),
         "expected_sections": [
             "学生基本情况与能力画像",
             "目标岗位画像与职业探索",
@@ -475,6 +783,23 @@ def build_report_input_payload(
         job_snapshot=job_snapshot,
         job_match_snapshot=job_match_snapshot,
         career_path_plan_snapshot=career_plan_snapshot,
+        target_job_profile_context=deepcopy(safe_dict(job_snapshot.get("target_job_profile_context"))),
+        job_match_context={
+            "target_job_match": deepcopy(safe_dict(job_match_snapshot.get("target_job_match"))),
+            "recommended_job_match": deepcopy(safe_dict(job_match_snapshot.get("recommended_job_match"))),
+            "recommendation_ranking": deepcopy(normalize_dict_list(job_match_snapshot.get("recommendation_ranking"))),
+            "rule_match_context": deepcopy(safe_dict(job_match_snapshot.get("rule_match_context"))),
+            "contest_match_context": deepcopy(safe_dict(job_match_snapshot.get("contest_match_context"))),
+        },
+        path_context={
+            "target_path_data_status": clean_text(career_plan_snapshot.get("target_path_data_status")),
+            "target_path_data_message": clean_text(career_plan_snapshot.get("target_path_data_message")),
+            "path_strategy": clean_text(career_plan_snapshot.get("path_strategy")),
+            "direct_path": normalize_text_list(safe_dict(career_plan_snapshot.get("career_path")).get("direct_path")),
+            "transition_path": normalize_text_list(safe_dict(career_plan_snapshot.get("career_path")).get("transition_path")),
+            "long_term_path": normalize_text_list(safe_dict(career_plan_snapshot.get("career_path")).get("long_term_path")),
+        },
+        semantic_reference_context={},
         report_meta=build_report_meta(student_snapshot, job_snapshot, career_plan_snapshot),
         report_generation_context=build_report_generation_context(
             student_snapshot,
@@ -499,7 +824,7 @@ def build_report_input_payload(
 def load_upstream_results_from_state(
     state_path: str | Path = DEFAULT_STATE_PATH,
 ) -> Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
-    """从 student.json 读取 career_report 上游四个模块结果。"""
+    """从 student_api_state.json 读取 career_report 上游四个模块结果。"""
     state_data = load_json_file(state_path)
     return (
         safe_dict(state_data.get("student_profile_result")),
@@ -513,7 +838,7 @@ def build_report_input_payload_from_state(
     state_path: str | Path = DEFAULT_STATE_PATH,
     output_path: Optional[str | Path] = DEFAULT_OUTPUT_PATH,
 ) -> Dict[str, Any]:
-    """从 student.json 读取四个上游结果并构造 report_input_payload。"""
+    """从 student_api_state.json 读取四个上游结果并构造 report_input_payload。"""
     student_profile_result, job_profile_result, job_match_result, career_path_plan_result = load_upstream_results_from_state(
         state_path
     )
@@ -637,7 +962,7 @@ def build_demo_career_path_plan_result() -> Dict[str, Any]:
 def parse_args() -> argparse.Namespace:
     """命令行参数解析。"""
     parser = argparse.ArgumentParser(description="Build career_report input payload")
-    parser.add_argument("--state-path", default="", help="可选：包含四个上游结果的 student.json 路径")
+    parser.add_argument("--state-path", default="", help="可选：包含四个上游结果的 student_api_state.json 路径")
     parser.add_argument("--student-profile-json", default="", help="可选：单独的 student_profile_result JSON")
     parser.add_argument("--job-profile-json", default="", help="可选：单独的 job_profile_result JSON")
     parser.add_argument("--job-match-json", default="", help="可选：单独的 job_match_result JSON")

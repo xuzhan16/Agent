@@ -1,13 +1,221 @@
+import { useEffect } from 'react'
 import { Card, Row, Col, Timeline, Button, Tag, Space, Alert, Collapse, Steps } from 'antd'
-import { NodeIndexOutlined, CheckCircleOutlined, RiseOutlined, BulbOutlined, WarningOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import {
+  ApartmentOutlined,
+  ArrowRightOutlined,
+  BulbOutlined,
+  CheckCircleOutlined,
+  NodeIndexOutlined,
+  RiseOutlined,
+  WarningOutlined,
+} from '@ant-design/icons'
 import { useCareerStore } from '../store'
 import { useNavigate } from 'react-router-dom'
+import { careerApi } from '../services/api'
+import type { CareerPathResult, RepresentativePromotionPath } from '../types'
 import '../styles/CareerPath.css'
+
+const pathEmptyMessage = '当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。'
+
+const safeList = <T,>(value?: T[] | null) => (Array.isArray(value) ? value : [])
+
+const PathTimelineCard = ({
+  title,
+  paths,
+  type,
+}: {
+  title: string
+  paths: string[]
+  type: 'direct' | 'transition'
+}) => (
+  <Card className="path-card target-path-card" title={title}>
+    <Timeline
+      items={paths.map((path, index) => ({
+        dot: type === 'direct'
+          ? <CheckCircleOutlined style={{ fontSize: 16, color: '#52c41a' }} />
+          : <RiseOutlined style={{ fontSize: 16, color: '#1890ff' }} />,
+        children: (
+          <div className="path-item">
+            <p style={{ margin: 0, fontWeight: 600 }}>{path}</p>
+            {index === 0 && (
+              <p style={{ margin: '4px 0 0 0', fontSize: 12, color: '#666' }}>
+                {type === 'direct' ? '路径起点' : '转向起点'}
+              </p>
+            )}
+            {index === paths.length - 1 && (
+              <p style={{ margin: '4px 0 0 0', fontSize: 12, color: '#666' }}>
+                {type === 'direct' ? '晋升目标' : '转向目标'}
+              </p>
+            )}
+          </div>
+        ),
+      }))}
+    />
+  </Card>
+)
+
+const TargetPathSection = ({ careerPath }: { careerPath: CareerPathResult }) => {
+  const directPath = safeList(careerPath.direct_path)
+  const transitionPath = safeList(careerPath.transition_path)
+  const longTermPath = safeList(careerPath.long_term_path)
+  const hasPathData = careerPath.target_path_data_status === 'available'
+    && (directPath.length > 0 || transitionPath.length > 0 || longTermPath.length > 0)
+
+  if (!hasPathData) {
+    return (
+      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+        <Col xs={24}>
+          <Card className="path-card target-path-empty-card" title={<span><NodeIndexOutlined /> 目标岗位职业路径</span>}>
+            <Alert
+              message="当前目标岗位暂无路径数据"
+              description={careerPath.target_path_data_message || pathEmptyMessage}
+              type="info"
+              showIcon
+            />
+            <p className="path-empty-explain">
+              当前岗位在本地岗位图谱和离线岗位画像中暂未发现明确晋升/转岗关系。为保证结果可信，系统不会强行生成不存在的路径。
+            </p>
+          </Card>
+        </Col>
+      </Row>
+    )
+  }
+
+  return (
+    <>
+      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+        <Col xs={24} lg={12}>
+          <PathTimelineCard title="直接路径（真实晋升关系）" paths={directPath} type="direct" />
+        </Col>
+        <Col xs={24} lg={12}>
+          <PathTimelineCard title="转向路径（真实转岗关系）" paths={transitionPath} type="transition" />
+        </Col>
+      </Row>
+
+      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+        <Col xs={24}>
+          <Card className="path-card" title="长期发展路径（来自真实路径组合）">
+            <div className="long-term-timeline">
+              {longTermPath.length > 0 ? (
+                longTermPath.map((path, index) => (
+                  <div key={`${path}-${index}`} style={{ display: 'contents' }}>
+                    <div className="timeline-stage">
+                      <h4>{index === 0 ? '起点' : index === 1 ? '阶段 2' : index === 2 ? '阶段 3' : '长期'}</h4>
+                      <p>{path}</p>
+                    </div>
+                    {index < longTermPath.length - 1 && <div className="timeline-arrow">→</div>}
+                  </div>
+                ))
+              ) : (
+                <p style={{ color: '#999' }}>暂无长期路径数据</p>
+              )}
+            </div>
+          </Card>
+        </Col>
+      </Row>
+    </>
+  )
+}
+
+const RepresentativePromotionSection = ({
+  paths,
+  status,
+  message,
+}: {
+  paths?: RepresentativePromotionPath[]
+  status?: string
+  message?: string
+}) => {
+  const representativePaths = safeList(paths)
+  return (
+    <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+      <Col xs={24}>
+        <Card className="path-card representative-path-card" title={<span><ApartmentOutlined /> 代表性岗位晋升关系</span>}>
+          <Alert
+            className="representative-path-alert"
+            message="全局图谱代表路径"
+            description="以下路径来自本地岗位图谱中的 PROMOTE_TO 关系，用于展示系统已沉淀的真实岗位晋升关系。它们不一定与当前用户目标岗位直接相关。"
+            type="success"
+            showIcon
+          />
+          {status === 'insufficient' && (
+            <Alert
+              className="representative-path-alert"
+              message="代表路径数量不足"
+              description={message || '当前图谱中可用代表晋升路径不足 3 个，建议后续补充岗位关系数据。'}
+              type="warning"
+              showIcon
+            />
+          )}
+          <Row gutter={[16, 16]}>
+            {representativePaths.length > 0 ? (
+              representativePaths.map((item, index) => (
+                <Col xs={24} md={12} xl={8} key={`${item.source_job || index}-${index}`}>
+                  <div className="representative-path-item">
+                    <div className="representative-path-head">
+                      <Tag color="blue">#{index + 1}</Tag>
+                      <Tag color="green">{item.source || 'PROMOTE_TO'}</Tag>
+                    </div>
+                    <h3>{item.source_job || '未命名岗位'}</h3>
+                    <p className="representative-path-count">
+                      晋升关系数量：<b>{item.edge_count ?? safeList(item.promote_targets).length}</b>
+                    </p>
+                    <div className="representative-targets">
+                      {safeList(item.promote_targets).slice(0, 6).map((target) => (
+                        <Tag key={target} color="purple">{target}</Tag>
+                      ))}
+                    </div>
+                    <p className="representative-reason">
+                      {item.selection_reason || '该岗位存在真实 PROMOTE_TO 晋升关系。'}
+                    </p>
+                  </div>
+                </Col>
+              ))
+            ) : (
+              <Col xs={24}>
+                <Alert
+                  message="暂无代表性晋升路径"
+                  description={message || '当前没有读取到可展示的 PROMOTE_TO 晋升关系。'}
+                  type="warning"
+                  showIcon
+                />
+              </Col>
+            )}
+          </Row>
+        </Card>
+      </Col>
+    </Row>
+  )
+}
 
 const CareerPath = () => {
   const studentInfo = useCareerStore((state) => state.studentInfo)
   const careerPath = useCareerStore((state) => state.careerPath)
+  const setCareerPath = useCareerStore((state) => state.setCareerPath)
   const navigate = useNavigate()
+  const representativePathCount = safeList(careerPath?.representative_promotion_paths).length
+  const representativePathStatus = careerPath?.representative_path_status
+
+  useEffect(() => {
+    if (!careerPath || representativePathCount > 0 || representativePathStatus) {
+      return
+    }
+
+    let cancelled = false
+    careerApi.planCareerPath()
+      .then((response) => {
+        if (!cancelled && response.success && response.data) {
+          setCareerPath(response.data)
+        }
+      })
+      .catch((error) => {
+        console.warn('[CareerPath] failed to refresh representative paths:', error)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [careerPath, representativePathCount, representativePathStatus, setCareerPath])
 
   const handleGoToReport = () => {
     navigate('/report')
@@ -43,11 +251,11 @@ const CareerPath = () => {
 
   const careerPathData = {
     primaryTarget: careerPath.primary_target_job,
-    secondaryTargets: careerPath.secondary_target_jobs,
+    secondaryTargets: safeList(careerPath.secondary_target_jobs),
     goal: careerPath.goal_positioning,
-    directPath: careerPath.direct_path,
-    transitionPath: careerPath.transition_path,
-    longTermPath: careerPath.long_term_path,
+    directPath: safeList(careerPath.direct_path),
+    transitionPath: safeList(careerPath.transition_path),
+    longTermPath: safeList(careerPath.long_term_path),
   }
 
   const shortTermPlan = careerPath.short_term_plan?.map((plan, index) => ({
@@ -114,64 +322,13 @@ const CareerPath = () => {
         </Col>
       </Row>
 
-      {/* 职业路径展示 */}
-      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
-        <Col xs={24} lg={12}>
-          <Card className="path-card" title="直接路径 (推荐)">
-            <Timeline
-              items={careerPathData.directPath.map((path, index) => ({
-                dot: <CheckCircleOutlined style={{ fontSize: 16, color: '#52c41a' }} />,
-                children: (
-                  <div className="path-item">
-                    <p style={{ margin: 0, fontWeight: 600 }}>{path}</p>
-                    {index === 0 && <p style={{ margin: '4px 0 0 0', fontSize: 12, color: '#666' }}>当前目标</p>}
-                    {index === careerPathData.directPath.length - 1 && <p style={{ margin: '4px 0 0 0', fontSize: 12, color: '#666' }}>长期目标</p>}
-                  </div>
-                ),
-              }))}
-            />
-          </Card>
-        </Col>
+      <TargetPathSection careerPath={careerPath} />
 
-        <Col xs={24} lg={12}>
-          <Card className="path-card" title="转向路径 (备选)">
-            <Timeline
-              items={careerPathData.transitionPath.map((path, index) => ({
-                dot: <RiseOutlined style={{ fontSize: 16, color: '#1890ff' }} />,
-                children: (
-                  <div className="path-item">
-                    <p style={{ margin: 0, fontWeight: 600 }}>{path}</p>
-                    {index === 0 && <p style={{ margin: '4px 0 0 0', fontSize: 12, color: '#666' }}>快速入职</p>}
-                  </div>
-                ),
-              }))}
-            />
-          </Card>
-        </Col>
-      </Row>
-
-      {/* 长期路径 */}
-      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
-        <Col xs={24}>
-          <Card className="path-card" title="长期发展路径 (5+ 年)">
-            <div className="long-term-timeline">
-              {careerPathData.longTermPath.length > 0 ? (
-                careerPathData.longTermPath.map((path, index) => (
-                  <div key={`${path}-${index}`} style={{ display: 'contents' }}>
-                    <div className="timeline-stage">
-                      <h4>{index === 0 ? '应届→1年' : index === 1 ? '1-3年' : index === 2 ? '3-5年' : '5+年'}</h4>
-                      <p>{path}</p>
-                    </div>
-                    {index < careerPathData.longTermPath.length - 1 && <div className="timeline-arrow">→</div>}
-                  </div>
-                ))
-              ) : (
-                <p style={{ color: '#999' }}>暂无长期路径数据</p>
-              )}
-            </div>
-          </Card>
-        </Col>
-      </Row>
+      <RepresentativePromotionSection
+        paths={careerPath.representative_promotion_paths}
+        status={careerPath.representative_path_status}
+        message={careerPath.representative_path_message}
+      />
 
       {/* 短期计划 */}
       <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
@@ -215,11 +372,15 @@ const CareerPath = () => {
             <Steps
               direction="vertical"
               style={{ marginTop: 16 }}
-              items={longTermPlan.map((plan) => ({
+              items={longTermPlan.length > 0 ? longTermPlan.map((plan) => ({
                 title: plan.title,
                 description: <p style={{ margin: 0, fontSize: 12, color: '#666' }}>{plan.timeline}</p>,
                 status: 'wait',
-              }))}
+              })) : [{
+                title: '当前目标岗位暂无长期路径数据',
+                description: <p style={{ margin: 0, fontSize: 12, color: '#666' }}>系统不会强行生成不存在的晋升路径。</p>,
+                status: 'wait',
+              }]}
             />
           </Card>
         </Col>

@@ -9,7 +9,7 @@ career_report 模块业务服务层。
 3. 调用统一大模型接口 call_llm(task_type="career_report", ...) 做章节润色和最终报告成文；
 4. 合并程序草稿和 LLM 输出；
 5. 执行完整性检查、输出编辑建议；
-6. 写回 student.json 的 career_report_result 字段。
+6. 写回 student_api_state.json 的 career_report_result 字段。
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
 
 
 LOGGER = logging.getLogger(__name__)
-DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_STATE_PATH = Path("student_api_state.json")
 DEFAULT_BUILDER_OUTPUT_PATH = Path("outputs/state/career_report_input_payload.json")
 DEFAULT_FORMATTER_OUTPUT_PATH = Path("outputs/state/career_report_sections_draft.json")
 DEFAULT_SERVICE_OUTPUT_PATH = Path("outputs/state/career_report_service_result.json")
@@ -57,7 +57,7 @@ class CompletenessCheckResult:
 
 @dataclass
 class CareerReportServiceResult:
-    """最终写回 student.json 的 career_report_result 结构。"""
+    """最终写回 student_api_state.json 的 career_report_result 结构。"""
 
     report_title: str = ""
     report_sections: List[Dict[str, Any]] = field(default_factory=list)
@@ -160,6 +160,101 @@ def normalize_section_list(value: Any) -> List[Dict[str, Any]]:
             if clean_text(key)
         ]
     return []
+
+
+def section_map_from_list(sections: List[Dict[str, Any]]) -> Dict[str, str]:
+    """将章节数组转为 title -> content。"""
+    result = {}
+    for section in safe_list(sections):
+        section_dict = safe_dict(section)
+        title = clean_text(section_dict.get("section_title"))
+        content = clean_text(section_dict.get("section_content"))
+        if title:
+            result[title] = content
+    return result
+
+
+def get_path_context(report_input_payload: Dict[str, Any]) -> Dict[str, Any]:
+    """提取报告侧路径上下文。"""
+    payload = safe_dict(report_input_payload)
+    path_context = safe_dict(payload.get("path_context"))
+    plan_snapshot = safe_dict(payload.get("career_path_plan_snapshot"))
+    career_path = safe_dict(plan_snapshot.get("career_path"))
+    return {
+        "target_path_data_status": clean_text(
+            path_context.get("target_path_data_status")
+            or plan_snapshot.get("target_path_data_status")
+            or career_path.get("target_path_data_status")
+        ),
+        "target_path_data_message": clean_text(
+            path_context.get("target_path_data_message")
+            or plan_snapshot.get("target_path_data_message")
+            or career_path.get("target_path_data_message")
+        ),
+        "path_strategy": clean_text(
+            path_context.get("path_strategy")
+            or plan_snapshot.get("path_strategy")
+            or career_path.get("path_strategy")
+        ),
+    }
+
+
+def sanitize_report_text(text: Any) -> str:
+    """最终报告文本清洗，避免 Python 对象字符串和多余空白泄漏。"""
+    cleaned = clean_text(text)
+    replacements = {
+        "dict_keys([])": "暂无明确记录",
+        "dict_values([])": "暂无明确记录",
+        "dict_items([])": "暂无明确记录",
+        "set()": "暂无明确记录",
+    }
+    for old, new in replacements.items():
+        cleaned = cleaned.replace(old, new)
+    while "暂无明确记录、暂无明确记录" in cleaned:
+        cleaned = cleaned.replace("暂无明确记录、暂无明确记录", "暂无明确记录")
+    return cleaned
+
+
+def enforce_fact_safe_sections(
+    report_sections: List[Dict[str, Any]],
+    report_sections_draft: List[Dict[str, Any]],
+    report_input_payload: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    """对事实敏感章节使用程序草稿兜底，防止 LLM 覆盖岗位画像或编造路径。"""
+    draft_map = section_map_from_list(report_sections_draft)
+    path_context = get_path_context(report_input_payload)
+    no_target_path = (
+        path_context.get("target_path_data_status") == "missing"
+        or path_context.get("path_strategy") == "no_target_path_data"
+    )
+    target_context = safe_dict(report_input_payload.get("target_job_profile_context"))
+    job_match_context = safe_dict(report_input_payload.get("job_match_context"))
+    has_target_asset = bool(target_context.get("asset_found"))
+    has_contest_asset = bool(safe_dict(job_match_context.get("target_job_match")).get("asset_found"))
+    force_titles = set()
+    if has_target_asset:
+        force_titles.add("目标岗位画像与职业探索")
+    if has_contest_asset:
+        force_titles.add("人岗匹配分析")
+    if no_target_path:
+        force_titles.update({"职业目标设定与职业路径规划", "分阶段行动计划", "总结与建议"})
+
+    sanitized_sections = []
+    for section in safe_list(report_sections):
+        section_dict = safe_dict(section)
+        title = clean_text(section_dict.get("section_title"))
+        content = sanitize_report_text(section_dict.get("section_content"))
+        if title in force_titles and clean_text(draft_map.get(title)):
+            content = sanitize_report_text(draft_map.get(title))
+        sanitized_sections.append({"section_title": title, "section_content": content})
+
+    existing_titles = {clean_text(item.get("section_title")) for item in sanitized_sections}
+    for title in REPORT_SECTION_TITLES:
+        if title not in existing_titles and clean_text(draft_map.get(title)):
+            sanitized_sections.append(
+                {"section_title": title, "section_content": sanitize_report_text(draft_map.get(title))}
+            )
+    return sanitized_sections
 
 
 def extract_semantic_context(context_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
@@ -267,6 +362,11 @@ def build_career_report_llm_input(
 
     return {
         "report_meta": deepcopy(safe_dict(report_input_payload.get("report_meta"))),
+        "target_job_profile_context": deepcopy(
+            safe_dict(report_input_payload.get("target_job_profile_context"))
+        ),
+        "job_match_context": deepcopy(safe_dict(report_input_payload.get("job_match_context"))),
+        "path_context": deepcopy(safe_dict(report_input_payload.get("path_context"))),
         "upstream_snapshots": {
             "student_snapshot": deepcopy(safe_dict(report_input_payload.get("student_snapshot"))),
             "job_snapshot": deepcopy(safe_dict(report_input_payload.get("job_snapshot"))),
@@ -304,12 +404,24 @@ def build_career_report_llm_input(
             "section_count": len(section_outline),
         },
         "generation_requirements": {
-            "task_goal": "在保留固定章节骨架和事实内容不变的前提下，对各章节进行润色、增强段落衔接，并结合 semantic_context 补充岗位语义解释依据，生成完整自然语言职业发展报告。",
+            "task_goal": "在保留固定章节骨架和事实内容不变的前提下，对各章节进行润色、增强段落衔接，生成可信的职业发展报告。",
             "must_keep_sections": REPORT_SECTION_TITLES,
             "report_title": "输出清晰正式的报告标题。",
             "report_summary": "输出一段可直接放在报告开头的摘要。",
             "report_sections": "返回固定章节顺序的结构化章节数组，字段为 section_title 与 section_content。",
             "report_text_markdown": "输出完整 Markdown 报告文本。",
+            "target_profile_rule": "target_job_profile_context 是目标岗位画像唯一主来源；semantic_context 只能作为相似岗位参考，禁止把相似岗位写成目标岗位画像。",
+            "semantic_boundary": "如果 semantic_context 命中岗位与目标岗位不同，只能写为相似岗位参考，不能写成“目标岗位属于该岗位”。",
+            "path_rule": "当 path_context.target_path_data_status=missing 或 path_strategy=no_target_path_data 时，禁止生成任何目标岗位路径，禁止出现高级XX、XX负责人、当前学生画像 -> 目标岗位等伪路径。",
+            "score_rule": "旧规则综合分和赛题评测结果必须分开解释；不能因为旧规则分高就忽略学历、专业、证书、技能知识点硬性核验。",
+            "asset_rule": "如果岗位评测资产不足，必须提示可信度限制；如果资产存在，必须展示 hard_info_evaluation、skill_knowledge_match、contest_evaluation。",
+            "representative_path_rule": "报告中不展示 representative_promotion_paths，全局代表路径只属于前端职业路径页面。",
+            "goal_decision_rule": (
+                "career_path_plan_snapshot.career_goal 中的 primary_plan_job/primary_target_job 是规则层已经确定的主路径岗位，"
+                "user_target_job 是用户原始目标，system_recommended_job 是系统推荐岗位。"
+                "LLM 只能解释为什么这样安排，不能重新选择岗位或改写分数。"
+                "如果主路径岗位与用户原目标不同，必须说明原目标作为中期冲刺或备选目标被保留。"
+            ),
         },
         "output_schema_hint": {
             "report_title": "",
@@ -448,6 +560,36 @@ def merge_career_report_results(
         report_sections_draft=report_sections_draft,
         report_text_draft=draft_text,
     )
+    normalized_llm["report_sections"] = enforce_fact_safe_sections(
+        report_sections=safe_list(normalized_llm.get("report_sections")),
+        report_sections_draft=report_sections_draft,
+        report_input_payload=payload,
+    )
+    path_context = get_path_context(payload)
+    if (
+        path_context.get("target_path_data_status") == "missing"
+        or path_context.get("path_strategy") == "no_target_path_data"
+    ):
+        plan_snapshot = safe_dict(payload.get("career_path_plan_snapshot"))
+        career_goal = safe_dict(plan_snapshot.get("career_goal"))
+        target_job_name = clean_text(safe_dict(payload.get("report_meta")).get("target_job_name")) or "目标岗位"
+        primary_plan_job = clean_text(career_goal.get("primary_plan_job") or career_goal.get("primary_target_job") or target_job_name)
+        user_target_job = clean_text(career_goal.get("user_target_job"))
+        if user_target_job and primary_plan_job and user_target_job != primary_plan_job:
+            normalized_llm["report_summary"] = (
+                f"系统建议以{primary_plan_job}作为短期主路径，同时保留{user_target_job}作为中期补强后的冲刺目标。"
+                "当前主路径岗位暂无真实晋升/转岗路径数据，因此本报告不生成职业路径，只从岗位匹配、硬门槛评测、技能知识点缺口和行动计划角度给出建议。"
+            )
+        else:
+            normalized_llm["report_summary"] = (
+                f"当前建议以{primary_plan_job}作为求职目标，但本地岗位图谱和离线岗位画像中暂未沉淀该岗位明确晋升/转岗路径。"
+                "因此本报告不生成目标岗位路径，仅从岗位匹配、硬门槛评测、技能知识点缺口和行动计划角度给出建议。"
+            )
+    normalized_llm["report_text_markdown"] = render_report_sections_markdown(
+        report_title=clean_text(normalized_llm.get("report_title")),
+        report_sections=safe_list(normalized_llm.get("report_sections")),
+        report_summary=sanitize_report_text(normalized_llm.get("report_summary")),
+    )
 
     completeness_check = check_report_completeness(normalized_llm["report_sections"])
     edit_suggestions = build_edit_suggestions(
@@ -459,8 +601,8 @@ def merge_career_report_results(
     result = CareerReportServiceResult(
         report_title=clean_text(normalized_llm.get("report_title")),
         report_sections=deepcopy(normalized_llm.get("report_sections")),
-        report_summary=clean_text(normalized_llm.get("report_summary")),
-        report_text_markdown=clean_text(normalized_llm.get("report_text_markdown")),
+        report_summary=sanitize_report_text(normalized_llm.get("report_summary")),
+        report_text_markdown=sanitize_report_text(normalized_llm.get("report_text_markdown")),
         edit_suggestions=dedup_keep_order(
             [clean_text(item) for item in edit_suggestions if clean_text(item)]
             + [clean_text(item) for item in safe_list(service_warnings) if clean_text(item)]
@@ -567,7 +709,7 @@ class CareerReportService:
         service_output_path: Optional[str | Path] = DEFAULT_SERVICE_OUTPUT_PATH,
         extra_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """执行完整 career_report 服务流程并写回 student.json。"""
+        """执行完整 career_report 服务流程并写回 student_api_state.json。"""
         setup_logging()
         service_warnings = []
         merged_context_data = deepcopy(context_data) if isinstance(context_data, dict) else {}
@@ -678,7 +820,7 @@ class CareerReportService:
         service_output_path: Optional[str | Path] = DEFAULT_SERVICE_OUTPUT_PATH,
         extra_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """从 student.json 读取四个上游结果，执行报告生成并写回 state。"""
+        """从 student_api_state.json 读取四个上游结果，执行报告生成并写回 state。"""
         student_state = self.state_manager.load_state(state_path)
         return self.run(
             student_profile_result=safe_dict(student_state.get("student_profile_result")),
@@ -746,7 +888,7 @@ def run_career_report_service_from_state(
 def parse_args() -> argparse.Namespace:
     """命令行参数解析。"""
     parser = argparse.ArgumentParser(description="Run career_report service")
-    parser.add_argument("--state-path", default=str(DEFAULT_STATE_PATH), help="student.json 路径")
+    parser.add_argument("--state-path", default=str(DEFAULT_STATE_PATH), help="student_api_state.json 路径")
     parser.add_argument("--student-profile-json", default="", help="可选：单独的 student_profile_result JSON")
     parser.add_argument("--job-profile-json", default="", help="可选：单独的 job_profile_result JSON")
     parser.add_argument("--job-match-json", default="", help="可选：单独的 job_match_result JSON")

@@ -8,7 +8,7 @@ job_match 模块业务服务层。
 2. 调用 job_match_scorer 生成规则评分结果；
 3. 通过统一大模型接口 call_llm(task_type="job_match", ...) 补充解释性分析；
 4. 合并规则结果与模型结果；
-5. 写回 student.json 的 job_match_result 字段。
+5. 写回 student_api_state.json 的 job_match_result 字段。
 
 边界约束：
 - 不重写 llm_service 和 state_manager；
@@ -39,7 +39,7 @@ from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
 
 
 LOGGER = logging.getLogger(__name__)
-DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_STATE_PATH = Path("student_api_state.json")
 DEFAULT_BUILDER_OUTPUT_PATH = Path("outputs/state/job_match_input_payload.json")
 DEFAULT_SCORER_OUTPUT_PATH = Path("outputs/state/job_match_score_result.json")
 DEFAULT_SERVICE_OUTPUT_PATH = Path("outputs/state/job_match_service_result.json")
@@ -59,7 +59,7 @@ class JobMatchLLMSupplement:
 
 @dataclass
 class JobMatchServiceResult:
-    """最终写回 student.json 的 job_match_result 结构。"""
+    """最终写回 student_api_state.json 的 job_match_result 结构。"""
 
     basic_requirement_score: float = 0.0
     vocational_skill_score: float = 0.0
@@ -652,7 +652,7 @@ class JobMatchService:
         service_output_path: Optional[str | Path] = DEFAULT_SERVICE_OUTPUT_PATH,
         extra_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """执行完整 job_match 服务流程并写回 student.json。"""
+        """执行完整 job_match 服务流程并写回 student_api_state.json。"""
         setup_logging()
         service_warnings = []
         merged_context_data = deepcopy(context_data) if isinstance(context_data, dict) else {}
@@ -766,7 +766,7 @@ class JobMatchService:
         service_output_path: Optional[str | Path] = DEFAULT_SERVICE_OUTPUT_PATH,
         extra_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """从 student.json 读取画像结果，执行人岗匹配并写回 job_match_result。"""
+        """从 student_api_state.json 读取画像结果，执行人岗匹配并写回 job_match_result。"""
         student_state = self.state_manager.load_state(state_path)
         return self.run(
             student_profile_result=safe_dict(student_state.get("student_profile_result")),
@@ -831,7 +831,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--state-path",
         default=str(DEFAULT_STATE_PATH),
-        help="student.json 路径",
+        help="student_api_state.json 路径",
     )
     parser.add_argument(
         "--student-profile-json",

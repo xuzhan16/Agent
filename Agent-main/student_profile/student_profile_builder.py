@@ -4,7 +4,7 @@ student_profile_builder.py
 学生就业能力画像模块的 builder 层。
 
 职责边界：
-1. 只读取 student.json 里已有的 basic_info 和 resume_parse_result；
+1. 只读取 student_api_state.json 里已有的 basic_info 和 resume_parse_result；
 2. 不重写 resume_parse，不调用 LLM；
 3. 使用本地字典/规则完成字段整理和标准化映射；
 4. 构造适合后续传给大模型 student_profile 任务的 profile_input_payload。
@@ -30,7 +30,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 
-DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_STATE_PATH = Path("student_api_state.json")
 
 
 @dataclass
@@ -158,10 +158,10 @@ EXPERIENCE_KEYWORD_RULES: Dict[str, List[str]] = {
 
 
 def load_student_state(state_path: str | Path = DEFAULT_STATE_PATH) -> Dict[str, Any]:
-    """读取 student.json。"""
+    """读取 student_api_state.json。"""
     path = Path(state_path)
     if not path.exists():
-        raise FileNotFoundError(f"student.json not found: {path}")
+        raise FileNotFoundError(f"student_api_state.json not found: {path}")
     with path.open("r", encoding="utf-8") as f:
         data = json.load(f)
     return data if isinstance(data, dict) else {}
@@ -280,7 +280,7 @@ def split_skill_tokens(value: Any) -> List[str]:
 
 def extract_basic_and_resume(student_state: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     """
-    从 student.json 提取 basic_info 和 resume_parse_result。
+    从 student_api_state.json 提取 basic_info 和 resume_parse_result。
 
     兼容两种情况：
     1. 顶层 basic_info 已同步；
@@ -672,7 +672,7 @@ def build_profile_input_payload(
     output_path: Optional[str | Path] = None,
 ) -> Dict[str, Any]:
     """
-    主入口：读取 student.json 并输出 profile_input_payload。
+    主入口：读取 student_api_state.json 并输出 profile_input_payload。
 
     如果传入 output_path，则额外把 payload 保存成 JSON 文件，方便后续调试。
     """
@@ -690,12 +690,12 @@ def build_profile_input_payload(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build student profile input payload from student.json"
+        description="Build student profile input payload from student_api_state.json"
     )
     parser.add_argument(
         "--state-path",
         default=str(DEFAULT_STATE_PATH),
-        help="student.json 文件路径",
+        help="student_api_state.json 文件路径",
     )
     parser.add_argument(
         "--output",

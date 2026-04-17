@@ -1,7 +1,7 @@
 ﻿"""
 state_manager.py
 
-负责 student.json 的初始化、读取、保存、更新。
+负责 student_api_state.json 的初始化、读取、保存、更新。
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from .schemas import TASK_RESULT_FIELD_MAP, TaskType, build_empty_student_state
 
 
 class StateManager:
-    """student.json 状态管理器。"""
+    """student_api_state.json 状态管理器。"""
 
     def __init__(self, config: StateConfig = DEFAULT_STATE_CONFIG) -> None:
         self.config = config
@@ -26,7 +26,7 @@ class StateManager:
         return Path(state_path) if state_path else self.config.default_state_path
 
     def init_state(self, state_path: Optional[str | Path] = None, overwrite: bool = False) -> Dict[str, Any]:
-        """初始化 student.json。"""
+        """初始化 student_api_state.json。"""
         path = self.resolve_state_path(state_path)
         if path.exists() and not overwrite:
             return self.load_state(path)
@@ -36,7 +36,7 @@ class StateManager:
         return state
 
     def load_state(self, state_path: Optional[str | Path] = None) -> Dict[str, Any]:
-        """读取 student.json；若不存在则自动初始化。"""
+        """读取 student_api_state.json；若不存在则自动初始化。"""
         path = self.resolve_state_path(state_path)
         if not path.exists():
             return self.init_state(path, overwrite=True)
@@ -50,7 +50,7 @@ class StateManager:
         return state
 
     def save_state(self, student_state: Dict[str, Any], state_path: Optional[str | Path] = None) -> None:
-        """保存 student.json。"""
+        """保存 student_api_state.json。"""
         path = self.resolve_state_path(state_path)
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("w", encoding=self.config.encoding) as f:
@@ -63,7 +63,7 @@ class StateManager:
         state_path: Optional[str | Path] = None,
         student_state: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """根据 task_type 自动写回 student.json 对应字段。"""
+        """根据 task_type 自动写回 student_api_state.json 对应字段。"""
         normalized_task = TaskType.normalize(task_type)
         target_field = TASK_RESULT_FIELD_MAP[normalized_task]
 

@@ -1251,6 +1251,22 @@ async def career_path():
     all_data = _load_all_data()
     if all_data:
         raw = _safe_dict(all_data.get("career_path_plan_result"))
+        service_raw = _safe_read_json(_project_root() / "outputs" / "state" / "career_path_plan_service_result.json")
+        service_result = _safe_dict(service_raw.get("career_path_plan_result")) or service_raw
+        if not raw:
+            raw = service_result
+        else:
+            # 兼容旧状态文件：代表路径是全局图谱资产，可从最新 service_result 补齐。
+            for key in (
+                "target_path_data_status",
+                "target_path_data_message",
+                "representative_promotion_paths",
+                "representative_path_count",
+                "representative_path_status",
+                "representative_path_message",
+            ):
+                if raw.get(key) in (None, "", []):
+                    raw[key] = service_result.get(key)
 
         def flatten_list(obj_list):
             if not obj_list:
@@ -1285,9 +1301,25 @@ async def career_path():
             "goal_positioning": _clean_text(raw.get("goal_positioning")),
             "goal_reason": _clean_text(raw.get("goal_reason")),
             "path_strategy": _clean_text(raw.get("path_strategy")),
+            "target_path_data_status": _clean_text(raw.get("target_path_data_status")),
+            "target_path_data_message": _clean_text(raw.get("target_path_data_message")),
             "direct_path": flatten_list(raw.get("direct_path", [])),
             "transition_path": flatten_list(raw.get("transition_path", [])),
             "long_term_path": flatten_list(raw.get("long_term_path", [])),
+            "representative_promotion_paths": [
+                {
+                    "source_job": _clean_text(_safe_dict(item).get("source_job")),
+                    "promote_targets": flatten_list(_safe_dict(item).get("promote_targets", [])),
+                    "edge_count": _safe_dict(item).get("edge_count", 0),
+                    "source": _clean_text(_safe_dict(item).get("source")),
+                    "selection_reason": _clean_text(_safe_dict(item).get("selection_reason")),
+                }
+                for item in _safe_list(raw.get("representative_promotion_paths"))
+                if _safe_dict(item)
+            ],
+            "representative_path_count": raw.get("representative_path_count", 0),
+            "representative_path_status": _clean_text(raw.get("representative_path_status")),
+            "representative_path_message": _clean_text(raw.get("representative_path_message")),
             "short_term_plan": flatten_list(raw.get("short_term_plan", [])),
             "mid_term_plan": flatten_list(raw.get("mid_term_plan", [])),
             "risk_and_gap": flatten_list(raw.get("risk_and_gap", raw.get("risk_notes", []))),

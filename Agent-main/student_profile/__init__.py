@@ -1,4 +1,4 @@
-"""学生画像：从状态构造输入、规则打分、LLM 补充与写回 student.json。"""
+"""学生画像：从状态构造输入、规则打分、LLM 补充与写回 student_api_state.json。"""
 
 from .student_profile_builder import build_profile_input_payload_from_state
 from .student_profile_scorer import score_student_profile_payload

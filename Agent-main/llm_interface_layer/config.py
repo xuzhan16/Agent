@@ -133,7 +133,7 @@ class StateConfig:
     """学生主状态文件配置。"""
 
     default_state_path: Path = Path(
-        os.getenv("STUDENT_STATE_PATH", "outputs/state/student.json")
+        os.getenv("STUDENT_STATE_PATH", "student_api_state.json")
     )
     encoding: str = "utf-8"
     indent: int = 2

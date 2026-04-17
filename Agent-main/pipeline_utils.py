@@ -63,7 +63,7 @@ def ensure_stage_result_exists(
     stage_result = safe_dict(student_state.get(result_field))
     if not stage_result:
         raise ValueError(
-            f"{stage_name} 缺少上游状态字段 {result_field}，请先检查前置步骤是否成功写回 student.json"
+            f"{stage_name} 缺少上游状态字段 {result_field}，请先检查前置步骤是否成功写回 student_api_state.json"
         )
     return stage_result
 

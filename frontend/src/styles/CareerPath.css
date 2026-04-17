@@ -39,6 +39,83 @@
   color: #333;
 }
 
+.target-path-card {
+  min-height: 320px;
+}
+
+.target-path-empty-card {
+  border: 1px solid rgba(24, 144, 255, 0.16);
+  background:
+    radial-gradient(circle at top right, rgba(102, 126, 234, 0.12), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.path-empty-explain {
+  margin: 16px 0 0;
+  color: #64748b;
+  line-height: 1.8;
+}
+
+.representative-path-card {
+  background:
+    radial-gradient(circle at 12% 20%, rgba(82, 196, 26, 0.08), transparent 26%),
+    linear-gradient(180deg, #ffffff 0%, #fbfffd 100%);
+}
+
+.representative-path-alert {
+  margin-bottom: 16px;
+  border-radius: 10px;
+}
+
+.representative-path-item {
+  height: 100%;
+  padding: 18px;
+  border: 1px solid rgba(102, 126, 234, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+  transition: all 0.25s ease;
+}
+
+.representative-path-item:hover {
+  border-color: rgba(102, 126, 234, 0.32);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+  transform: translateY(-3px);
+}
+
+.representative-path-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.representative-path-item h3 {
+  margin: 0 0 10px;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.representative-path-count {
+  margin: 0 0 12px;
+  color: #64748b;
+}
+
+.representative-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 34px;
+  margin-bottom: 12px;
+}
+
+.representative-reason {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.7;
+}
+
 .long-term-timeline {
   display: flex;
   align-items: center;

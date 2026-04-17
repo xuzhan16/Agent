@@ -8,7 +8,7 @@ student_profile 模块业务服务层。
 2. 调用 student_profile_scorer 生成规则评分；
 3. 通过统一大模型接口 call_llm("student_profile", ...) 生成补充画像；
 4. 合并规则结果与模型结果；
-5. 写回 student.json 的 student_profile_result 字段。
+5. 写回 student_api_state.json 的 student_profile_result 字段。
 
 边界约束：
 - 不重写 llm_service 和 state_manager；
@@ -33,7 +33,7 @@ from .student_profile_scorer import score_student_profile_payload
 
 
 LOGGER = logging.getLogger(__name__)
-DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_STATE_PATH = Path("student_api_state.json")
 DEFAULT_BUILDER_OUTPUT_PATH = Path("outputs/state/student_profile_input_payload.json")
 DEFAULT_SCORER_OUTPUT_PATH = Path("outputs/state/student_profile_score_result.json")
 DEFAULT_SERVICE_OUTPUT_PATH = Path("outputs/state/student_profile_service_result.json")
@@ -54,7 +54,7 @@ class StudentProfileLLMSupplement:
 
 @dataclass
 class StudentProfileServiceResult:
-    """最终写回 student.json 的 student_profile_result 结构。"""
+    """最终写回 student_api_state.json 的 student_profile_result 结构。"""
 
     skill_profile: Dict[str, Any] = field(default_factory=dict)
     certificate_profile: List[str] = field(default_factory=list)
@@ -545,7 +545,7 @@ class StudentProfileService:
         student_state: Dict[str, Any],
         state_path: str | Path = DEFAULT_STATE_PATH,
     ) -> Dict[str, Any]:
-        """写回 student.json 的 student_profile_result 字段。"""
+        """写回 student_api_state.json 的 student_profile_result 字段。"""
         return self.state_manager.update_state(
             task_type="student_profile",
             task_result=merged_profile_result,
@@ -628,7 +628,7 @@ class StudentProfileService:
             build_warnings.append(f"LLM 调用失败: {exc}")
             llm_result = {}
 
-        LOGGER.info("Step 4/4: merging results and updating student.json")
+        LOGGER.info("Step 4/4: merging results and updating student_api_state.json")
         merged_profile_result = merge_rule_and_llm_result(
             profile_input_payload=profile_input_payload,
             rule_score_result=rule_score_result,
@@ -683,7 +683,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--state-path",
         default=str(DEFAULT_STATE_PATH),
-        help="student.json 文件路径",
+        help="student_api_state.json 文件路径",
     )
     parser.add_argument(
         "--builder-output",

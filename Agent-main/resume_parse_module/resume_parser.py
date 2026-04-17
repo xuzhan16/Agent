@@ -7,7 +7,7 @@ resume_parser.py — 简历解析主流程
     【LLM 输入】组装 resume_text、file_meta、section_hints、output_requirements。
     【模型调用】经 llm_service.call_llm("resume_parse", ...) 走统一网关。
     【结果归一】validate_resume_parse_result 兼容嵌套与扁平两种 JSON，补默认字段。
-    【状态持久化】StateManager 写入 student.json，并同步顶层 basic_info。
+    【状态持久化】StateManager 写入 student_api_state.json，并同步顶层 basic_info。
 
 典型入口：
     - process_resume_file：完整流水线（读文件 → 解析 → 写状态）。
@@ -1188,7 +1188,7 @@ def update_student_state_with_resume_result(
     state_manager: Optional[StateManager] = None,
 ) -> Dict[str, Any]:
     """
-    将简历解析结果写回 student.json。
+    将简历解析结果写回 student_api_state.json。
 
     除了写 resume_parse_result，也同步刷新顶层 basic_info，方便后续链路直接读取。
     """
@@ -1211,7 +1211,7 @@ def process_resume_file(
     extra_context: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
-    主流程：读本地简历 → extract + clean → parse_resume_with_llm → 更新 student.json。
+    主流程：读本地简历 → extract + clean → parse_resume_with_llm → 更新 student_api_state.json。
 
     返回 dict 含 resume_parse_result、student_state（更新后）、file_meta，便于测试与编排。
     """
@@ -1243,7 +1243,7 @@ def process_resume_file(
         state_path=state_path,
         student_state=student_state,
     )
-    LOGGER.info("student.json updated: %s", state_path or "default state path")
+    LOGGER.info("student_api_state.json updated: %s", state_path or "default state path")
 
     return {
         "resume_parse_result": resume_parse_result,
@@ -1261,8 +1261,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--state-path",
-        default="outputs/state/student.json",
-        help="student.json 输出路径",
+        default="student_api_state.json",
+        help="student_api_state.json 输出路径",
     )
     return parser.parse_args()
 

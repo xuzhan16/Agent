@@ -38,7 +38,7 @@ from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
 
 LOGGER = logging.getLogger(__name__)
 DEFAULT_OUTPUT_PATH = Path("outputs/state/job_profile_service_result.json")
-DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_STATE_PATH = Path("student_api_state.json")
 DEFAULT_SEMANTIC_TOP_K = 3
 
 @dataclass
@@ -372,25 +372,8 @@ def normalize_llm_job_profile_result(
         [clean_text(item) for item in safe_list(source.get("soft_skills")) if clean_text(item)]
         + [clean_text(item) for item in safe_list(normalized_req.get("soft_skill_tags")) if clean_text(item)]
     )
-    vertical_paths = dedup_keep_order(
-        path_knowledge.get("vertical_paths", [])
-        + [clean_text(item) for item in safe_list(source.get("vertical_paths")) if clean_text(item)]
-    )
-    transfer_paths = dedup_keep_order(
-        path_knowledge.get("transfer_paths", [])
-        + [clean_text(item) for item in safe_list(source.get("transfer_paths")) if clean_text(item)]
-    )
-
-    if not vertical_paths and standard_job_name:
-        vertical_paths = [
-            f"{standard_job_name} -> 高级{standard_job_name}",
-            f"高级{standard_job_name} -> {standard_job_name}负责人",
-        ]
-    if not transfer_paths and standard_job_name:
-        transfer_paths = [
-            f"{standard_job_name} -> 相近业务岗位",
-            f"{standard_job_name} -> 相近技术岗位",
-        ]
+    vertical_paths = dedup_keep_order(path_knowledge.get("vertical_paths", []))
+    transfer_paths = dedup_keep_order(path_knowledge.get("transfer_paths", []))
 
     summary = clean_text(source.get("summary") or source.get("job_summary"))
     if not summary and clean_text(graph_job_knowledge.get("raw_requirement_summary")):
@@ -656,8 +639,8 @@ def build_job_profile_llm_input(
             "soft_skills": "根据岗位描述和要求句归纳 3-8 个软技能标签。",
             "suitable_student_profile": "描述适合投递该岗位的学生画像，要求具体可执行。",
             "summary": "结合图谱岗位骨架、SQL 市场事实和 semantic_knowledge_snapshot，输出一段简洁岗位画像摘要。",
-            "vertical_paths": "若已有离线路径知识则优先沿用；仅在缺失时补充该岗位常见纵向晋升路径。",
-            "transfer_paths": "若已有离线路径知识则优先沿用；仅在缺失时补充该岗位常见横向转岗路径。",
+            "vertical_paths": "只允许沿用 path_knowledge_snapshot 中已有的真实纵向晋升路径；如果缺失，请返回空数组，不要补造“高级XX/XX负责人”等路径。",
+            "transfer_paths": "只允许沿用 path_knowledge_snapshot 中已有的真实横向转岗路径；如果缺失，请返回空数组，不要补造“相近业务岗位/相近技术岗位”等路径。",
         },
         "output_schema_hint": asdict(JobProfileLLMSupplement()),
     }
@@ -734,7 +717,7 @@ class JobProfileService:
         state_path: str | Path = DEFAULT_STATE_PATH,
         student_state: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """写回 student.json 的 job_profile_result 字段。"""
+        """写回 student_api_state.json 的 job_profile_result 字段。"""
         return self.state_manager.update_state(
             task_type="job_profile",
             task_result=job_profile_result,

@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 
-DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_STATE_PATH = Path("student_api_state.json")
 DEFAULT_OUTPUT_PATH = Path("outputs/state/job_match_input_payload.json")
 
 
@@ -572,7 +572,7 @@ def build_match_input_payload(
 def load_student_and_job_profile_from_state(
     state_path: str | Path = DEFAULT_STATE_PATH,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-    """从 student.json 中读取 student_profile_result 和 job_profile_result。"""
+    """从 student_api_state.json 中读取 student_profile_result 和 job_profile_result。"""
     path = Path(state_path)
     if not path.exists():
         raise FileNotFoundError(f"state file not found: {path}")
@@ -593,7 +593,7 @@ def build_match_input_payload_from_state(
     state_path: str | Path = DEFAULT_STATE_PATH,
     output_path: Optional[str | Path] = DEFAULT_OUTPUT_PATH,
 ) -> Dict[str, Any]:
-    """从 student.json 读取两个画像结果，并构造 match_input_payload。"""
+    """从 student_api_state.json 读取两个画像结果，并构造 match_input_payload。"""
     student_profile_result, job_profile_result = load_student_and_job_profile_from_state(state_path)
     return build_match_input_payload(
         student_profile_result=student_profile_result,
@@ -701,7 +701,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--state-path",
         default="",
-        help="可选：包含 student_profile_result 和 job_profile_result 的 student.json 路径",
+        help="可选：包含 student_profile_result 和 job_profile_result 的 student_api_state.json 路径",
     )
     parser.add_argument(
         "--student-profile-json",

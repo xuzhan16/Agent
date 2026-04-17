@@ -326,6 +326,14 @@ export interface JobMatchResult {
   }
 }
 
+export interface RepresentativePromotionPath {
+  source_job?: string
+  promote_targets?: string[]
+  edge_count?: number
+  source?: string
+  selection_reason?: string
+}
+
 // 职业路径规划结果
 export interface CareerPathResult {
   primary_target_job: string
@@ -336,6 +344,12 @@ export interface CareerPathResult {
   transition_path: string[]
   long_term_path: string[]
   path_strategy: string
+  target_path_data_status?: string
+  target_path_data_message?: string
+  representative_promotion_paths?: RepresentativePromotionPath[]
+  representative_path_count?: number
+  representative_path_status?: string
+  representative_path_message?: string
   short_term_plan: string[]
   mid_term_plan: string[]
   risk_and_gap: string[]

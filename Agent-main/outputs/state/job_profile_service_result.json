@@ -1,0 +1,2283 @@
+{
+  "standard_job_name": "java工程师",
+  "job_category": "",
+  "job_level": "",
+  "degree_requirement": "",
+  "major_requirement": [],
+  "experience_requirement": [],
+  "hard_skills": [],
+  "tools_or_tech_stack": [],
+  "certificate_requirement": [],
+  "practice_requirement": [],
+  "soft_skills": [],
+  "suitable_student_profile": "适合具备硬件功能测试、硬件售后维护、硬件性能测试、硬件技术支持等相关技能基础，且有一定项目或实践经历的学生。",
+  "summary": "硬件测试工程师属于硬件测试岗位，岗位层级为未明确层级。 常见学历要求为大专及以上，专业要求为通讯自动化及相关理工类专业。 经验要求：有岗位工作经验或物联网行业经验优先。 核心硬技能包括：硬件功能测试、硬件售后维护、硬件性能测试、硬件技术支持。 常见工具或技术栈包括：硬件功能测试、硬件售后维护、硬件性能测试、硬件技术支持。 软技能要求包括：动手能力强、学习能力强。 岗位摘要：负责硬件产品的功能、性能测试及售后维护支持，要求大专及以上学历…",
+  "vertical_paths": [],
+  "transfer_paths": [],
+  "skill_frequency": [],
+  "degree_requirement_distribution": [],
+  "industry_distribution": [],
+  "city_distribution": [],
+  "salary_stats": {
+    "salary_min_month_avg": null,
+    "salary_min_month_median": null,
+    "salary_min_month_p25": null,
+    "salary_min_month_p75": null,
+    "salary_max_month_avg": null,
+    "salary_max_month_median": null,
+    "salary_max_month_p25": null,
+    "salary_max_month_p75": null,
+    "salary_mid_month_avg": null,
+    "salary_mid_month_median": null,
+    "valid_salary_count": 0
+  },
+  "group_summary": {
+    "standard_job_name": "java工程师",
+    "job_count": 0,
+    "city_distribution": {},
+    "province_distribution": {},
+    "industry_distribution": {},
+    "company_type_distribution": {},
+    "company_size_distribution": {},
+    "salary_min_month_median": null,
+    "salary_max_month_median": null,
+    "salary_min_month_avg": null,
+    "salary_max_month_avg": null,
+    "latest_update_date": ""
+  },
+  "explicit_requirements": {
+    "degree_requirements": [],
+    "major_requirements": [],
+    "experience_requirements": [],
+    "skill_requirements": [],
+    "tool_requirements": [],
+    "certificate_requirements": [],
+    "practice_requirements": [],
+    "soft_skill_hints": [],
+    "requirement_sentences": []
+  },
+  "normalized_requirements": {
+    "degree_tags": [],
+    "major_tags": [],
+    "hard_skill_tags": [],
+    "tool_skill_tags": [],
+    "certificate_tags": [],
+    "practice_tags": [],
+    "soft_skill_tags": [],
+    "experience_tags": [],
+    "domain_tags": [
+      "软件开发"
+    ]
+  },
+  "representative_samples": [],
+  "core_job_profiles": [
+    {
+      "standard_job_name": "软件测试工程师",
+      "sample_count": 342,
+      "job_category": "计算机软件/信息技术",
+      "job_level_summary": "初级/中级",
+      "display_order": 1,
+      "selection_reason": "样本数 342，代表计算机软件/信息技术方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "计算机科学与技术、电子信息工程、软件工程",
+      "mainstream_cert_summary": "ISTQB、软件评测师、CET-4",
+      "top_skills": [
+        "功能测试",
+        "接口测试",
+        "数据测试",
+        "测试报告编写",
+        "测试用例设计",
+        "缺陷管理",
+        "JIRA",
+        "JMeter"
+      ],
+      "degree_gate": "本科",
+      "major_gate_set": [
+        "计算机科学与技术",
+        "电子信息工程",
+        "软件工程"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [
+        "ISTQB",
+        "软件评测师"
+      ],
+      "source_quality": {
+        "degree_coverage": 1.0,
+        "major_coverage": 1.0,
+        "certificate_coverage": 1.0
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "本科",
+          "count": 288,
+          "ratio": 0.8421
+        },
+        {
+          "rank": 2,
+          "name": "大专",
+          "count": 49,
+          "ratio": 0.1433
+        },
+        {
+          "rank": 3,
+          "name": "高中/中专",
+          "count": 2,
+          "ratio": 0.0058
+        },
+        {
+          "rank": 4,
+          "name": "硕士",
+          "count": 2,
+          "ratio": 0.0058
+        },
+        {
+          "rank": 5,
+          "name": "学历不限",
+          "count": 1,
+          "ratio": 0.0029
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "计算机科学与技术",
+          "count": 294,
+          "ratio": 0.8596
+        },
+        {
+          "rank": 2,
+          "name": "电子信息工程",
+          "count": 230,
+          "ratio": 0.6725
+        },
+        {
+          "rank": 3,
+          "name": "软件工程",
+          "count": 177,
+          "ratio": 0.5175
+        },
+        {
+          "rank": 4,
+          "name": "人工智能",
+          "count": 6,
+          "ratio": 0.0175
+        },
+        {
+          "rank": 5,
+          "name": "物联网工程",
+          "count": 4,
+          "ratio": 0.0117
+        },
+        {
+          "rank": 6,
+          "name": "信息管理与信息系统",
+          "count": 3,
+          "ratio": 0.0088
+        },
+        {
+          "rank": 7,
+          "name": "数据科学与大数据技术",
+          "count": 3,
+          "ratio": 0.0088
+        },
+        {
+          "rank": 8,
+          "name": "网络空间安全",
+          "count": 2,
+          "ratio": 0.0058
+        },
+        {
+          "rank": 9,
+          "name": "数学",
+          "count": 2,
+          "ratio": 0.0058
+        },
+        {
+          "rank": 10,
+          "name": "金融学",
+          "count": 1,
+          "ratio": 0.0029
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "ISTQB",
+          "count": 333,
+          "ratio": 0.9737
+        },
+        {
+          "rank": 2,
+          "name": "软件评测师",
+          "count": 332,
+          "ratio": 0.9708
+        },
+        {
+          "rank": 3,
+          "name": "CET-4",
+          "count": 5,
+          "ratio": 0.0146
+        },
+        {
+          "rank": 4,
+          "name": "有项目经验或相关证书",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 5,
+          "name": "参加过网络工程师认证",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 6,
+          "name": "中任何一个认证",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 7,
+          "name": "有计算机应用证书",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 8,
+          "name": "CCNA",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 9,
+          "name": "HCIE等相关认证",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 10,
+          "name": "HCIA",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 11,
+          "name": "HCIP",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 12,
+          "name": "CET-6",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 13,
+          "name": "中心集检测认证",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 14,
+          "name": "面向社会开展机器人产品CR认证",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 15,
+          "name": "具有中国国家认证认可监督管理委员会批准的产品认证",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 16,
+          "name": "是机器人行业领先的第三方国家级专业检测认证",
+          "count": 1,
+          "ratio": 0.0029
+        },
+        {
+          "rank": 17,
+          "name": "中国科学院沈阳自动化研究所检验检测认证",
+          "count": 1,
+          "ratio": 0.0029
+        }
+      ],
+      "no_certificate_requirement_ratio": 0.0,
+      "required_knowledge_points": [
+        "接口测试方法",
+        "接口用例设计",
+        "HTTP协议基础",
+        "SQL查询",
+        "表连接",
+        "数据筛选与聚合",
+        "MySQL基础",
+        "数据表设计",
+        "测试用例设计",
+        "功能测试",
+        "缺陷管理",
+        "测试报告编写"
+      ],
+      "preferred_knowledge_points": [
+        "Postman使用",
+        "自动化测试脚本",
+        "数据库设计",
+        "SQL性能优化",
+        "索引基础",
+        "接口测试",
+        "自动化测试",
+        "性能测试"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    {
+      "standard_job_name": "测试工程师",
+      "sample_count": 338,
+      "job_category": "技术/研发",
+      "job_level_summary": "",
+      "display_order": 2,
+      "selection_reason": "样本数 338，代表技术/研发方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "计算机科学与技术、电子信息工程、软件工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "产品改进建议评估",
+        "仪器仪表使用",
+        "接口知识（RS232/RS422/CAN/LVDS/PCI/PCIE/FPGAMGT）",
+        "板卡测试",
+        "测试大纲撰写",
+        "测试报告编写",
+        "测试数据整理",
+        "测试环境搭建"
+      ],
+      "degree_gate": "本科",
+      "major_gate_set": [
+        "计算机科学与技术",
+        "电子信息工程"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [],
+      "source_quality": {
+        "degree_coverage": 1.0,
+        "major_coverage": 1.0,
+        "certificate_coverage": 0.0296
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "本科",
+          "count": 295,
+          "ratio": 0.8728
+        },
+        {
+          "rank": 2,
+          "name": "大专",
+          "count": 43,
+          "ratio": 0.1272
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "计算机科学与技术",
+          "count": 292,
+          "ratio": 0.8639
+        },
+        {
+          "rank": 2,
+          "name": "电子信息工程",
+          "count": 243,
+          "ratio": 0.7189
+        },
+        {
+          "rank": 3,
+          "name": "软件工程",
+          "count": 22,
+          "ratio": 0.0651
+        },
+        {
+          "rank": 4,
+          "name": "人工智能",
+          "count": 3,
+          "ratio": 0.0089
+        },
+        {
+          "rank": 5,
+          "name": "信息管理与信息系统",
+          "count": 2,
+          "ratio": 0.0059
+        },
+        {
+          "rank": 6,
+          "name": "数据科学与大数据技术",
+          "count": 1,
+          "ratio": 0.003
+        },
+        {
+          "rank": 7,
+          "name": "物联网工程",
+          "count": 1,
+          "ratio": 0.003
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "无明确要求",
+          "count": 328,
+          "ratio": 0.9704
+        },
+        {
+          "rank": 2,
+          "name": "CET-6",
+          "count": 3,
+          "ratio": 0.0089
+        },
+        {
+          "rank": 3,
+          "name": "CET-4",
+          "count": 2,
+          "ratio": 0.0059
+        },
+        {
+          "rank": 4,
+          "name": "协助外部认证测试机构的认证",
+          "count": 1,
+          "ratio": 0.003
+        },
+        {
+          "rank": 5,
+          "name": "模组硬件预认证",
+          "count": 1,
+          "ratio": 0.003
+        },
+        {
+          "rank": 6,
+          "name": "HCIA",
+          "count": 1,
+          "ratio": 0.003
+        },
+        {
+          "rank": 7,
+          "name": "主导完成认证",
+          "count": 1,
+          "ratio": 0.003
+        },
+        {
+          "rank": 8,
+          "name": "分析及认证",
+          "count": 1,
+          "ratio": 0.003
+        },
+        {
+          "rank": 9,
+          "name": "统筹推进认证",
+          "count": 1,
+          "ratio": 0.003
+        },
+        {
+          "rank": 10,
+          "name": "按时完成产品认证",
+          "count": 1,
+          "ratio": 0.003
+        },
+        {
+          "rank": 11,
+          "name": "负责产品国内外认证",
+          "count": 1,
+          "ratio": 0.003
+        },
+        {
+          "rank": 12,
+          "name": "日语N2",
+          "count": 1,
+          "ratio": 0.003
+        }
+      ],
+      "no_certificate_requirement_ratio": 0.9704,
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    {
+      "standard_job_name": "Java开发工程师",
+      "sample_count": 265,
+      "job_category": "技术/研发",
+      "job_level_summary": "",
+      "display_order": 3,
+      "selection_reason": "样本数 265，代表技术/研发方向，画像完整度较高",
+      "mainstream_degree": "大专",
+      "mainstream_majors_summary": "计算机科学与技术、软件工程、电子信息工程",
+      "mainstream_cert_summary": "日语N3、日语N2、CET-4",
+      "top_skills": [
+        "Android开发",
+        "C#开发",
+        "COBOL开发",
+        "C语言开发",
+        "IOS开发",
+        "Java开发",
+        "VB.NET开发",
+        "代码编写"
+      ],
+      "degree_gate": "大专",
+      "major_gate_set": [
+        "计算机科学与技术",
+        "软件工程"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [
+        "日语N3"
+      ],
+      "source_quality": {
+        "degree_coverage": 1.0,
+        "major_coverage": 0.5925,
+        "certificate_coverage": 1.0
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "大专",
+          "count": 180,
+          "ratio": 0.6792
+        },
+        {
+          "rank": 2,
+          "name": "本科",
+          "count": 79,
+          "ratio": 0.2981
+        },
+        {
+          "rank": 3,
+          "name": "硕士",
+          "count": 6,
+          "ratio": 0.0226
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "计算机科学与技术",
+          "count": 132,
+          "ratio": 0.4981
+        },
+        {
+          "rank": 2,
+          "name": "未明确",
+          "count": 108,
+          "ratio": 0.4075
+        },
+        {
+          "rank": 3,
+          "name": "软件工程",
+          "count": 66,
+          "ratio": 0.2491
+        },
+        {
+          "rank": 4,
+          "name": "电子信息工程",
+          "count": 17,
+          "ratio": 0.0642
+        },
+        {
+          "rank": 5,
+          "name": "数据科学与大数据技术",
+          "count": 16,
+          "ratio": 0.0604
+        },
+        {
+          "rank": 6,
+          "name": "数学",
+          "count": 9,
+          "ratio": 0.034
+        },
+        {
+          "rank": 7,
+          "name": "人工智能",
+          "count": 8,
+          "ratio": 0.0302
+        },
+        {
+          "rank": 8,
+          "name": "信息管理与信息系统",
+          "count": 6,
+          "ratio": 0.0226
+        },
+        {
+          "rank": 9,
+          "name": "物联网工程",
+          "count": 4,
+          "ratio": 0.0151
+        },
+        {
+          "rank": 10,
+          "name": "网络空间安全",
+          "count": 3,
+          "ratio": 0.0113
+        },
+        {
+          "rank": 11,
+          "name": "金融学",
+          "count": 2,
+          "ratio": 0.0075
+        },
+        {
+          "rank": 12,
+          "name": "统计学",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 13,
+          "name": "市场营销",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 14,
+          "name": "地理信息科学",
+          "count": 1,
+          "ratio": 0.0038
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "日语N3",
+          "count": 250,
+          "ratio": 0.9434
+        },
+        {
+          "rank": 2,
+          "name": "日语N2",
+          "count": 5,
+          "ratio": 0.0189
+        },
+        {
+          "rank": 3,
+          "name": "CET-4",
+          "count": 4,
+          "ratio": 0.0151
+        },
+        {
+          "rank": 4,
+          "name": "有相关证书",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 5,
+          "name": "Azure架构师认证",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 6,
+          "name": "软考",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 7,
+          "name": "PMP",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 8,
+          "name": "国际认证",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 9,
+          "name": "CCNA",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 10,
+          "name": "有过1年以上对日开发经验或有日语能力2级以上资格证书",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 11,
+          "name": "有上述开发语言资格证书",
+          "count": 1,
+          "ratio": 0.0038
+        },
+        {
+          "rank": 12,
+          "name": "日语N1",
+          "count": 1,
+          "ratio": 0.0038
+        }
+      ],
+      "no_certificate_requirement_ratio": 0.0,
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理",
+        "Java基础语法",
+        "Spring Boot开发",
+        "SQL查询",
+        "测试用例设计",
+        "功能测试",
+        "缺陷管理",
+        "测试报告编写",
+        "接口测试方法",
+        "接口用例设计",
+        "HTTP协议基础",
+        "JavaScript基础",
+        "DOM交互",
+        "异步编程",
+        "React组件开发",
+        "状态管理",
+        "接口联调",
+        "容器基础"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础",
+        "Git基础",
+        "Linux基础",
+        "Redis基础",
+        "接口测试",
+        "自动化测试",
+        "性能测试",
+        "Postman使用",
+        "自动化测试脚本",
+        "TypeScript基础",
+        "前端工程化",
+        "性能优化",
+        "Docker Compose使用",
+        "容器化发布",
+        "数据库设计",
+        "SQL性能优化",
+        "索引基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    {
+      "standard_job_name": "技术支持工程师",
+      "sample_count": 245,
+      "job_category": "技术支持/客户服务",
+      "job_level_summary": "初级/中级",
+      "display_order": 4,
+      "selection_reason": "样本数 245，代表技术支持/客户服务方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "电子信息工程、计算机科学与技术、软件工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "产品功能培训",
+        "产品测试与质量控制",
+        "技术方案制定",
+        "故障诊断与排除",
+        "系统集成",
+        "跨部门协调",
+        "软件配置与部署",
+        "需求分析与对接"
+      ],
+      "degree_gate": "本科",
+      "major_gate_set": [
+        "电子信息工程",
+        "计算机科学与技术",
+        "软件工程",
+        "物联网工程"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [],
+      "source_quality": {
+        "degree_coverage": 1.0,
+        "major_coverage": 1.0,
+        "certificate_coverage": 0.0571
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "本科",
+          "count": 196,
+          "ratio": 0.8
+        },
+        {
+          "rank": 2,
+          "name": "大专",
+          "count": 45,
+          "ratio": 0.1837
+        },
+        {
+          "rank": 3,
+          "name": "硕士",
+          "count": 3,
+          "ratio": 0.0122
+        },
+        {
+          "rank": 4,
+          "name": "高中/中专",
+          "count": 1,
+          "ratio": 0.0041
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "电子信息工程",
+          "count": 206,
+          "ratio": 0.8408
+        },
+        {
+          "rank": 2,
+          "name": "计算机科学与技术",
+          "count": 178,
+          "ratio": 0.7265
+        },
+        {
+          "rank": 3,
+          "name": "软件工程",
+          "count": 119,
+          "ratio": 0.4857
+        },
+        {
+          "rank": 4,
+          "name": "物联网工程",
+          "count": 51,
+          "ratio": 0.2082
+        },
+        {
+          "rank": 5,
+          "name": "网络空间安全",
+          "count": 5,
+          "ratio": 0.0204
+        },
+        {
+          "rank": 6,
+          "name": "信息管理与信息系统",
+          "count": 3,
+          "ratio": 0.0122
+        },
+        {
+          "rank": 7,
+          "name": "地理信息科学",
+          "count": 2,
+          "ratio": 0.0082
+        },
+        {
+          "rank": 8,
+          "name": "人工智能",
+          "count": 2,
+          "ratio": 0.0082
+        },
+        {
+          "rank": 9,
+          "name": "数学",
+          "count": 2,
+          "ratio": 0.0082
+        },
+        {
+          "rank": 10,
+          "name": "数据科学与大数据技术",
+          "count": 1,
+          "ratio": 0.0041
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "无明确要求",
+          "count": 231,
+          "ratio": 0.9429
+        },
+        {
+          "rank": 2,
+          "name": "CET-4",
+          "count": 3,
+          "ratio": 0.0122
+        },
+        {
+          "rank": 3,
+          "name": "CET-6",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 4,
+          "name": "有网络工程师或网络安全工程师认证证书",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 5,
+          "name": "CCIE以等相关职业资格证书",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 6,
+          "name": "3级国际认证",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 7,
+          "name": "具备网络方面认证",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 8,
+          "name": "线上+线下+技术认证",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 9,
+          "name": "二级机电建造师证书",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 10,
+          "name": "基本工资+交通补贴+通讯补贴+工龄工资+证书",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 11,
+          "name": "有相关证书",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 12,
+          "name": "定期参加技术例会及其他合作商和厂家举办的培训和认证",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 13,
+          "name": "有华为或H3C厂商认证",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 14,
+          "name": "HCIA",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 15,
+          "name": "HCIP",
+          "count": 1,
+          "ratio": 0.0041
+        },
+        {
+          "rank": 16,
+          "name": "Oracle认证",
+          "count": 1,
+          "ratio": 0.0041
+        }
+      ],
+      "no_certificate_requirement_ratio": 0.9429,
+      "required_knowledge_points": [
+        "问题排查",
+        "客户沟通",
+        "产品使用支持"
+      ],
+      "preferred_knowledge_points": [
+        "日志分析",
+        "SQL基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    {
+      "standard_job_name": "C/C++嵌入式软件开发工程师",
+      "sample_count": 238,
+      "job_category": "计算机软件/嵌入式开发",
+      "job_level_summary": "",
+      "display_order": 5,
+      "selection_reason": "样本数 238，代表计算机软件/嵌入式开发方向，画像完整度较高",
+      "mainstream_degree": "硕士",
+      "mainstream_majors_summary": "计算机科学与技术、软件工程、电子信息工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "AUTOSAR基础软件平台设计与开发",
+        "C/C++编程",
+        "CAN/LIN/ETH通信协议栈开发",
+        "CPU虚拟化",
+        "信息安全开发",
+        "功能安全开发",
+        "外设虚拟化",
+        "存储协议栈开发"
+      ],
+      "degree_gate": "硕士",
+      "major_gate_set": [
+        "计算机科学与技术",
+        "软件工程",
+        "电子信息工程"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [],
+      "source_quality": {
+        "degree_coverage": 1.0,
+        "major_coverage": 1.0,
+        "certificate_coverage": 0.042
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "硕士",
+          "count": 129,
+          "ratio": 0.542
+        },
+        {
+          "rank": 2,
+          "name": "本科",
+          "count": 101,
+          "ratio": 0.4244
+        },
+        {
+          "rank": 3,
+          "name": "大专",
+          "count": 8,
+          "ratio": 0.0336
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "计算机科学与技术",
+          "count": 191,
+          "ratio": 0.8025
+        },
+        {
+          "rank": 2,
+          "name": "软件工程",
+          "count": 169,
+          "ratio": 0.7101
+        },
+        {
+          "rank": 3,
+          "name": "电子信息工程",
+          "count": 132,
+          "ratio": 0.5546
+        },
+        {
+          "rank": 4,
+          "name": "数学",
+          "count": 21,
+          "ratio": 0.0882
+        },
+        {
+          "rank": 5,
+          "name": "人工智能",
+          "count": 18,
+          "ratio": 0.0756
+        },
+        {
+          "rank": 6,
+          "name": "数据科学与大数据技术",
+          "count": 9,
+          "ratio": 0.0378
+        },
+        {
+          "rank": 7,
+          "name": "网络空间安全",
+          "count": 5,
+          "ratio": 0.021
+        },
+        {
+          "rank": 8,
+          "name": "物联网工程",
+          "count": 4,
+          "ratio": 0.0168
+        },
+        {
+          "rank": 9,
+          "name": "统计学",
+          "count": 3,
+          "ratio": 0.0126
+        },
+        {
+          "rank": 10,
+          "name": "地理信息科学",
+          "count": 3,
+          "ratio": 0.0126
+        },
+        {
+          "rank": 11,
+          "name": "金融学",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 12,
+          "name": "信息管理与信息系统",
+          "count": 1,
+          "ratio": 0.0042
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "无明确要求",
+          "count": 228,
+          "ratio": 0.958
+        },
+        {
+          "rank": 2,
+          "name": "CET-6",
+          "count": 2,
+          "ratio": 0.0084
+        },
+        {
+          "rank": 3,
+          "name": "CET-4",
+          "count": 2,
+          "ratio": 0.0084
+        },
+        {
+          "rank": 4,
+          "name": "资格证书",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 5,
+          "name": "教师资格证",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 6,
+          "name": "拥有计算机技术与软件专业技术资格证书等相关专业证书",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 7,
+          "name": "享受证书",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 8,
+          "name": "3级国际认证",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 9,
+          "name": "支持评审ISV提交的适配认证",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 10,
+          "name": "支持生态创新中心测试认证",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 11,
+          "name": "项目管理类国家证书",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 12,
+          "name": "计算机二级",
+          "count": 1,
+          "ratio": 0.0042
+        },
+        {
+          "rank": 13,
+          "name": "日语N2",
+          "count": 1,
+          "ratio": 0.0042
+        }
+      ],
+      "no_certificate_requirement_ratio": 0.958,
+      "required_knowledge_points": [
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理",
+        "C/C++基础",
+        "嵌入式系统基础",
+        "硬件接口基础"
+      ],
+      "preferred_knowledge_points": [
+        "STL使用",
+        "Linux开发基础",
+        "Linux驱动基础",
+        "单片机开发"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    {
+      "standard_job_name": "实施工程师",
+      "sample_count": 234,
+      "job_category": "技术/工程",
+      "job_level_summary": "",
+      "display_order": 6,
+      "selection_reason": "样本数 234，代表技术/工程方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "计算机科学与技术、地理信息科学、电子信息工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "产品演示",
+        "客户培训",
+        "数据入库",
+        "数据处理",
+        "数据建库",
+        "数据核查",
+        "文档编写",
+        "软件测试"
+      ],
+      "degree_gate": "本科",
+      "major_gate_set": [
+        "计算机科学与技术",
+        "地理信息科学",
+        "电子信息工程"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [],
+      "source_quality": {
+        "degree_coverage": 1.0,
+        "major_coverage": 1.0,
+        "certificate_coverage": 0.094
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "本科",
+          "count": 203,
+          "ratio": 0.8675
+        },
+        {
+          "rank": 2,
+          "name": "大专",
+          "count": 26,
+          "ratio": 0.1111
+        },
+        {
+          "rank": 3,
+          "name": "高中/中专",
+          "count": 4,
+          "ratio": 0.0171
+        },
+        {
+          "rank": 4,
+          "name": "硕士",
+          "count": 1,
+          "ratio": 0.0043
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "计算机科学与技术",
+          "count": 203,
+          "ratio": 0.8675
+        },
+        {
+          "rank": 2,
+          "name": "地理信息科学",
+          "count": 105,
+          "ratio": 0.4487
+        },
+        {
+          "rank": 3,
+          "name": "电子信息工程",
+          "count": 52,
+          "ratio": 0.2222
+        },
+        {
+          "rank": 4,
+          "name": "软件工程",
+          "count": 18,
+          "ratio": 0.0769
+        },
+        {
+          "rank": 5,
+          "name": "信息管理与信息系统",
+          "count": 17,
+          "ratio": 0.0726
+        },
+        {
+          "rank": 6,
+          "name": "物联网工程",
+          "count": 12,
+          "ratio": 0.0513
+        },
+        {
+          "rank": 7,
+          "name": "数学",
+          "count": 6,
+          "ratio": 0.0256
+        },
+        {
+          "rank": 8,
+          "name": "网络空间安全",
+          "count": 6,
+          "ratio": 0.0256
+        },
+        {
+          "rank": 9,
+          "name": "数据科学与大数据技术",
+          "count": 4,
+          "ratio": 0.0171
+        },
+        {
+          "rank": 10,
+          "name": "人工智能",
+          "count": 4,
+          "ratio": 0.0171
+        },
+        {
+          "rank": 11,
+          "name": "市场营销",
+          "count": 1,
+          "ratio": 0.0043
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "无明确要求",
+          "count": 212,
+          "ratio": 0.906
+        },
+        {
+          "rank": 2,
+          "name": "PMP",
+          "count": 6,
+          "ratio": 0.0256
+        },
+        {
+          "rank": 3,
+          "name": "CET-6",
+          "count": 4,
+          "ratio": 0.0171
+        },
+        {
+          "rank": 4,
+          "name": "软考",
+          "count": 4,
+          "ratio": 0.0171
+        },
+        {
+          "rank": 5,
+          "name": "通过IT行业相关资格认证",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 6,
+          "name": "有相关证书",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 7,
+          "name": "批准证书",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 8,
+          "name": "提供职称证书",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 9,
+          "name": "考取证书",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 10,
+          "name": "微软等网络认证证书",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 11,
+          "name": "有行业证书",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 12,
+          "name": "CET-4",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 13,
+          "name": "获得学士学位证书",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 14,
+          "name": "CCNA",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 15,
+          "name": "能够进行用户认证",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 16,
+          "name": "Oracle认证",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 17,
+          "name": "具有相关的技术认证",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 18,
+          "name": "有以下证书",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 19,
+          "name": "具有相关认证",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 20,
+          "name": "HCT证书",
+          "count": 1,
+          "ratio": 0.0043
+        }
+      ],
+      "no_certificate_requirement_ratio": 0.906,
+      "required_knowledge_points": [
+        "测试用例设计",
+        "功能测试",
+        "缺陷管理",
+        "测试报告编写",
+        "C++基础语法",
+        "面向对象编程",
+        "内存管理",
+        "SQL查询",
+        "表连接",
+        "数据筛选与聚合",
+        "MySQL基础",
+        "数据表设计",
+        "软件部署",
+        "客户沟通",
+        "需求理解",
+        "问题排查"
+      ],
+      "preferred_knowledge_points": [
+        "接口测试",
+        "自动化测试",
+        "性能测试",
+        "STL使用",
+        "Linux开发基础",
+        "数据库设计",
+        "SQL性能优化",
+        "索引基础",
+        "数据库基础",
+        "文档编写"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    {
+      "standard_job_name": "前端开发工程师",
+      "sample_count": 230,
+      "job_category": "",
+      "job_level_summary": "",
+      "display_order": 7,
+      "selection_reason": "样本数 230，具备基础画像数据",
+      "mainstream_degree": "未明确",
+      "mainstream_majors_summary": "计算机科学与技术、软件工程、电子信息工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [],
+      "degree_gate": "本科",
+      "major_gate_set": [
+        "计算机科学与技术",
+        "软件工程"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [],
+      "source_quality": {
+        "degree_coverage": 0.3043,
+        "major_coverage": 0.3609,
+        "certificate_coverage": 0.0087
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "未明确",
+          "count": 160,
+          "ratio": 0.6957
+        },
+        {
+          "rank": 2,
+          "name": "本科",
+          "count": 54,
+          "ratio": 0.2348
+        },
+        {
+          "rank": 3,
+          "name": "大专",
+          "count": 12,
+          "ratio": 0.0522
+        },
+        {
+          "rank": 4,
+          "name": "硕士",
+          "count": 4,
+          "ratio": 0.0174
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "未明确",
+          "count": 147,
+          "ratio": 0.6391
+        },
+        {
+          "rank": 2,
+          "name": "计算机科学与技术",
+          "count": 69,
+          "ratio": 0.3
+        },
+        {
+          "rank": 3,
+          "name": "软件工程",
+          "count": 25,
+          "ratio": 0.1087
+        },
+        {
+          "rank": 4,
+          "name": "电子信息工程",
+          "count": 9,
+          "ratio": 0.0391
+        },
+        {
+          "rank": 5,
+          "name": "信息管理与信息系统",
+          "count": 7,
+          "ratio": 0.0304
+        },
+        {
+          "rank": 6,
+          "name": "地理信息科学",
+          "count": 6,
+          "ratio": 0.0261
+        },
+        {
+          "rank": 7,
+          "name": "数据科学与大数据技术",
+          "count": 5,
+          "ratio": 0.0217
+        },
+        {
+          "rank": 8,
+          "name": "物联网工程",
+          "count": 5,
+          "ratio": 0.0217
+        },
+        {
+          "rank": 9,
+          "name": "人工智能",
+          "count": 4,
+          "ratio": 0.0174
+        },
+        {
+          "rank": 10,
+          "name": "数学",
+          "count": 2,
+          "ratio": 0.0087
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "无明确要求",
+          "count": 228,
+          "ratio": 0.9913
+        },
+        {
+          "rank": 2,
+          "name": "资质证书",
+          "count": 1,
+          "ratio": 0.0043
+        },
+        {
+          "rank": 3,
+          "name": "CET-4",
+          "count": 1,
+          "ratio": 0.0043
+        }
+      ],
+      "no_certificate_requirement_ratio": 0.9913,
+      "required_knowledge_points": [
+        "HTML/CSS基础",
+        "JavaScript基础",
+        "前端框架开发",
+        "接口联调"
+      ],
+      "preferred_knowledge_points": [
+        "性能优化",
+        "工程化构建"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    {
+      "standard_job_name": "硬件测试工程师",
+      "sample_count": 92,
+      "job_category": "硬件测试",
+      "job_level_summary": "",
+      "display_order": 8,
+      "selection_reason": "样本数 92，代表硬件测试方向，画像完整度较高",
+      "mainstream_degree": "大专",
+      "mainstream_majors_summary": "电子信息工程、计算机科学与技术、物联网工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "硬件功能测试",
+        "硬件售后维护",
+        "硬件性能测试",
+        "硬件技术支持"
+      ],
+      "degree_gate": "大专",
+      "major_gate_set": [
+        "电子信息工程",
+        "计算机科学与技术"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [],
+      "source_quality": {
+        "degree_coverage": 1.0,
+        "major_coverage": 1.0,
+        "certificate_coverage": 0.0326
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "大专",
+          "count": 72,
+          "ratio": 0.7826
+        },
+        {
+          "rank": 2,
+          "name": "本科",
+          "count": 19,
+          "ratio": 0.2065
+        },
+        {
+          "rank": 3,
+          "name": "学历不限",
+          "count": 1,
+          "ratio": 0.0109
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "电子信息工程",
+          "count": 88,
+          "ratio": 0.9565
+        },
+        {
+          "rank": 2,
+          "name": "计算机科学与技术",
+          "count": 20,
+          "ratio": 0.2174
+        },
+        {
+          "rank": 3,
+          "name": "物联网工程",
+          "count": 2,
+          "ratio": 0.0217
+        },
+        {
+          "rank": 4,
+          "name": "软件工程",
+          "count": 1,
+          "ratio": 0.0109
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "无明确要求",
+          "count": 89,
+          "ratio": 0.9674
+        },
+        {
+          "rank": 2,
+          "name": "分析及认证",
+          "count": 1,
+          "ratio": 0.0109
+        },
+        {
+          "rank": 3,
+          "name": "统筹推进认证",
+          "count": 1,
+          "ratio": 0.0109
+        },
+        {
+          "rank": 4,
+          "name": "按时完成产品认证",
+          "count": 1,
+          "ratio": 0.0109
+        },
+        {
+          "rank": 5,
+          "name": "负责产品国内外认证",
+          "count": 1,
+          "ratio": 0.0109
+        },
+        {
+          "rank": 6,
+          "name": "器件认证",
+          "count": 1,
+          "ratio": 0.0109
+        },
+        {
+          "rank": 7,
+          "name": "CET-4",
+          "count": 1,
+          "ratio": 0.0109
+        }
+      ],
+      "no_certificate_requirement_ratio": 0.9674,
+      "required_knowledge_points": [
+        "问题排查",
+        "客户沟通",
+        "产品使用支持"
+      ],
+      "preferred_knowledge_points": [
+        "日志分析",
+        "SQL基础"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    {
+      "standard_job_name": "质量管理/测试工程师",
+      "sample_count": 9,
+      "job_category": "质量管理/测试",
+      "job_level_summary": "初级/专员",
+      "display_order": 9,
+      "selection_reason": "样本数 9，代表质量管理/测试方向，画像完整度较高",
+      "mainstream_degree": "本科",
+      "mainstream_majors_summary": "电子信息工程、计算机科学与技术、统计学",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "KPI管控",
+        "培训与指导",
+        "数据分析",
+        "时效管理",
+        "服务质量管理",
+        "标准制定与落地",
+        "流程优化",
+        "质量监控"
+      ],
+      "degree_gate": "本科",
+      "major_gate_set": [
+        "电子信息工程",
+        "计算机科学与技术",
+        "统计学"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [],
+      "source_quality": {
+        "degree_coverage": 1.0,
+        "major_coverage": 1.0,
+        "certificate_coverage": 0.0
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "本科",
+          "count": 7,
+          "ratio": 0.7778
+        },
+        {
+          "rank": 2,
+          "name": "硕士",
+          "count": 1,
+          "ratio": 0.1111
+        },
+        {
+          "rank": 3,
+          "name": "大专",
+          "count": 1,
+          "ratio": 0.1111
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "电子信息工程",
+          "count": 9,
+          "ratio": 1.0
+        },
+        {
+          "rank": 2,
+          "name": "计算机科学与技术",
+          "count": 9,
+          "ratio": 1.0
+        },
+        {
+          "rank": 3,
+          "name": "统计学",
+          "count": 9,
+          "ratio": 1.0
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "无明确要求",
+          "count": 9,
+          "ratio": 1.0
+        }
+      ],
+      "no_certificate_requirement_ratio": 1.0,
+      "required_knowledge_points": [
+        "数据清洗",
+        "指标分析",
+        "SQL查询",
+        "数据可视化"
+      ],
+      "preferred_knowledge_points": [
+        "A/B测试基础",
+        "业务分析"
+      ],
+      "knowledge_source": "skill_rule_map_v1"
+    },
+    {
+      "standard_job_name": "项目经理/主管",
+      "sample_count": 18,
+      "job_category": "项目管理",
+      "job_level_summary": "主管",
+      "display_order": 10,
+      "selection_reason": "样本数 18，代表项目管理方向，画像完整度较高",
+      "mainstream_degree": "大专",
+      "mainstream_majors_summary": "计算机科学与技术、信息管理与信息系统、电子信息工程",
+      "mainstream_cert_summary": "多数岗位无明确证书要求",
+      "top_skills": [
+        "商务谈判",
+        "团队协调",
+        "客户需求对接",
+        "技术交流",
+        "技术跟踪",
+        "招投标支持",
+        "方案设计",
+        "需求分析"
+      ],
+      "degree_gate": "大专",
+      "major_gate_set": [
+        "计算机科学与技术",
+        "信息管理与信息系统"
+      ],
+      "must_have_certificates": [],
+      "preferred_certificates": [
+        "PMP"
+      ],
+      "source_quality": {
+        "degree_coverage": 1.0,
+        "major_coverage": 0.2778,
+        "certificate_coverage": 0.2778
+      },
+      "degree_distribution": [
+        {
+          "rank": 1,
+          "name": "大专",
+          "count": 9,
+          "ratio": 0.5
+        },
+        {
+          "rank": 2,
+          "name": "本科",
+          "count": 7,
+          "ratio": 0.3889
+        },
+        {
+          "rank": 3,
+          "name": "学历不限",
+          "count": 2,
+          "ratio": 0.1111
+        }
+      ],
+      "major_distribution": [
+        {
+          "rank": 1,
+          "name": "未明确",
+          "count": 13,
+          "ratio": 0.7222
+        },
+        {
+          "rank": 2,
+          "name": "计算机科学与技术",
+          "count": 4,
+          "ratio": 0.2222
+        },
+        {
+          "rank": 3,
+          "name": "信息管理与信息系统",
+          "count": 2,
+          "ratio": 0.1111
+        },
+        {
+          "rank": 4,
+          "name": "电子信息工程",
+          "count": 1,
+          "ratio": 0.0556
+        },
+        {
+          "rank": 5,
+          "name": "软件工程",
+          "count": 1,
+          "ratio": 0.0556
+        },
+        {
+          "rank": 6,
+          "name": "地理信息科学",
+          "count": 1,
+          "ratio": 0.0556
+        }
+      ],
+      "certificate_distribution": [
+        {
+          "rank": 1,
+          "name": "无明确要求",
+          "count": 13,
+          "ratio": 0.7222
+        },
+        {
+          "rank": 2,
+          "name": "PMP",
+          "count": 5,
+          "ratio": 0.2778
+        }
+      ],
+      "no_certificate_requirement_ratio": 0.7222,
+      "required_knowledge_points": [
+        "商务谈判基础",
+        "团队协调基础",
+        "客户需求对接基础",
+        "技术交流基础",
+        "技术跟踪基础"
+      ],
+      "preferred_knowledge_points": [],
+      "knowledge_source": "skill_rule_map_v1"
+    }
+  ],
+  "target_job_profile_assets": {
+    "requested_job_name": "java工程师",
+    "standard_job_name": "Java开发工程师",
+    "resolved_standard_job_name": "Java开发工程师",
+    "asset_found": true,
+    "resolution_method": "alias",
+    "resolution_confidence": 0.98,
+    "asset_resolution": {
+      "requested_job_name": "java工程师",
+      "resolved_standard_job_name": "Java开发工程师",
+      "asset_found": true,
+      "resolution_method": "alias",
+      "resolution_confidence": 0.98,
+      "candidate_jobs": [
+        "Java开发工程师"
+      ],
+      "matched_alias": "java工程师"
+    },
+    "evaluation_status": "ok",
+    "sample_count": 265,
+    "job_category": "技术/研发",
+    "job_level_summary": "",
+    "mainstream_degree": "大专",
+    "mainstream_degree_ratio": 0.6792,
+    "mainstream_majors": [
+      "计算机科学与技术",
+      "软件工程",
+      "电子信息工程",
+      "数据科学与大数据技术",
+      "数学"
+    ],
+    "mainstream_certificates": [
+      "日语N3",
+      "日语N2",
+      "CET-4",
+      "有相关证书",
+      "Azure架构师认证"
+    ],
+    "degree_gate": "大专",
+    "major_gate_set": [
+      "计算机科学与技术",
+      "软件工程"
+    ],
+    "must_have_certificates": [],
+    "preferred_certificates": [
+      "日语N3"
+    ],
+    "source_quality": {
+      "degree_coverage": 1.0,
+      "major_coverage": 0.5925,
+      "certificate_coverage": 1.0
+    },
+    "degree_distribution": [
+      {
+        "rank": 1,
+        "name": "大专",
+        "count": 180,
+        "ratio": 0.6792
+      },
+      {
+        "rank": 2,
+        "name": "本科",
+        "count": 79,
+        "ratio": 0.2981
+      },
+      {
+        "rank": 3,
+        "name": "硕士",
+        "count": 6,
+        "ratio": 0.0226
+      }
+    ],
+    "major_distribution": [
+      {
+        "rank": 1,
+        "name": "计算机科学与技术",
+        "count": 132,
+        "ratio": 0.4981
+      },
+      {
+        "rank": 2,
+        "name": "未明确",
+        "count": 108,
+        "ratio": 0.4075
+      },
+      {
+        "rank": 3,
+        "name": "软件工程",
+        "count": 66,
+        "ratio": 0.2491
+      },
+      {
+        "rank": 4,
+        "name": "电子信息工程",
+        "count": 17,
+        "ratio": 0.0642
+      },
+      {
+        "rank": 5,
+        "name": "数据科学与大数据技术",
+        "count": 16,
+        "ratio": 0.0604
+      },
+      {
+        "rank": 6,
+        "name": "数学",
+        "count": 9,
+        "ratio": 0.034
+      },
+      {
+        "rank": 7,
+        "name": "人工智能",
+        "count": 8,
+        "ratio": 0.0302
+      },
+      {
+        "rank": 8,
+        "name": "信息管理与信息系统",
+        "count": 6,
+        "ratio": 0.0226
+      },
+      {
+        "rank": 9,
+        "name": "物联网工程",
+        "count": 4,
+        "ratio": 0.0151
+      },
+      {
+        "rank": 10,
+        "name": "网络空间安全",
+        "count": 3,
+        "ratio": 0.0113
+      },
+      {
+        "rank": 11,
+        "name": "金融学",
+        "count": 2,
+        "ratio": 0.0075
+      },
+      {
+        "rank": 12,
+        "name": "统计学",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 13,
+        "name": "市场营销",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 14,
+        "name": "地理信息科学",
+        "count": 1,
+        "ratio": 0.0038
+      }
+    ],
+    "certificate_distribution": [
+      {
+        "rank": 1,
+        "name": "日语N3",
+        "count": 250,
+        "ratio": 0.9434
+      },
+      {
+        "rank": 2,
+        "name": "日语N2",
+        "count": 5,
+        "ratio": 0.0189
+      },
+      {
+        "rank": 3,
+        "name": "CET-4",
+        "count": 4,
+        "ratio": 0.0151
+      },
+      {
+        "rank": 4,
+        "name": "有相关证书",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 5,
+        "name": "Azure架构师认证",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 6,
+        "name": "软考",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 7,
+        "name": "PMP",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 8,
+        "name": "国际认证",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 9,
+        "name": "CCNA",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 10,
+        "name": "有过1年以上对日开发经验或有日语能力2级以上资格证书",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 11,
+        "name": "有上述开发语言资格证书",
+        "count": 1,
+        "ratio": 0.0038
+      },
+      {
+        "rank": 12,
+        "name": "日语N1",
+        "count": 1,
+        "ratio": 0.0038
+      }
+    ],
+    "no_certificate_requirement_ratio": 0.0,
+    "required_knowledge_points": [
+      "C++基础语法",
+      "面向对象编程",
+      "内存管理",
+      "Java基础语法",
+      "Spring Boot开发",
+      "SQL查询",
+      "测试用例设计",
+      "功能测试",
+      "缺陷管理",
+      "测试报告编写",
+      "接口测试方法",
+      "接口用例设计",
+      "HTTP协议基础",
+      "JavaScript基础",
+      "DOM交互",
+      "异步编程",
+      "React组件开发",
+      "状态管理",
+      "接口联调",
+      "容器基础"
+    ],
+    "preferred_knowledge_points": [
+      "STL使用",
+      "Linux开发基础",
+      "Git基础",
+      "Linux基础",
+      "Redis基础",
+      "接口测试",
+      "自动化测试",
+      "性能测试",
+      "Postman使用",
+      "自动化测试脚本",
+      "TypeScript基础",
+      "前端工程化",
+      "性能优化",
+      "Docker Compose使用",
+      "容器化发布",
+      "数据库设计",
+      "SQL性能优化",
+      "索引基础"
+    ],
+    "knowledge_source": "skill_rule_map_v1"
+  },
+  "llm_profile_result": {},
+  "build_warnings": [
+    "未找到 standard_job_name=java工程师 的岗位组数据",
+    "未从岗位描述中抽取到明确学历要求",
+    "未从岗位描述中抽取到明确技能要求",
+    "未从岗位描述中抽取到明确经验要求",
+    "未从岗位描述中抽取到明确专业要求",
+    "技能频次为空，可能缺少结构化技能字段且 job_desc 也未抽取到有效技能",
+    "学历要求分布为空，可能缺少学历字段且 job_desc 未包含明确学历要求",
+    "薪资统计为空，当前岗位组缺少可解析的月薪字段",
+    "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
+  ]
+}

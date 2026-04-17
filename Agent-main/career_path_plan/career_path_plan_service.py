@@ -8,7 +8,7 @@ career_path_plan 模块业务服务层。
 2. 调用 career_path_plan_selector 生成规则层目标岗位与路径结果；
 3. 通过统一大模型接口 call_llm(task_type="career_path_plan", ...) 补充解释性规划内容；
 4. 合并规则结果与模型结果；
-5. 写回 student.json 的 career_path_plan_result 字段。
+5. 写回 student_api_state.json 的 career_path_plan_result 字段。
 
 边界约束：
 - 不重写 llm_service 和 state_manager；
@@ -34,13 +34,14 @@ from .career_path_plan_builder import (
     build_demo_student_profile_result,
 )
 from .career_path_plan_selector import select_career_path_plan
+from .representative_paths import build_representative_promotion_paths
 from llm_interface_layer.llm_service import call_llm
 from llm_interface_layer.state_manager import StateManager
 from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
 
 
 LOGGER = logging.getLogger(__name__)
-DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_STATE_PATH = Path("student_api_state.json")
 DEFAULT_BUILDER_OUTPUT_PATH = Path("outputs/state/career_path_plan_input_payload.json")
 DEFAULT_SELECTOR_OUTPUT_PATH = Path("outputs/state/career_path_plan_selection_result.json")
 DEFAULT_SERVICE_OUTPUT_PATH = Path("outputs/state/career_path_plan_service_result.json")
@@ -53,6 +54,7 @@ class CareerPathPlanLLMSupplement:
 
     goal_reason: str = ""
     decision_summary: str = ""
+    llm_goal_decision_explanation: Dict[str, Any] = field(default_factory=dict)
     risk_and_gap: List[str] = field(default_factory=list)
     fallback_strategy: str = ""
     short_term_plan: List[str] = field(default_factory=list)
@@ -61,9 +63,19 @@ class CareerPathPlanLLMSupplement:
 
 @dataclass
 class CareerPathPlanServiceResult:
-    """最终写回 student.json 的 career_path_plan_result 结构。"""
+    """最终写回 student_api_state.json 的 career_path_plan_result 结构。"""
 
     primary_target_job: str = ""
+    primary_plan_job: str = ""
+    user_target_job: str = ""
+    system_recommended_job: str = ""
+    target_job_role: str = ""
+    recommended_job_role: str = ""
+    goal_decision_source: str = ""
+    goal_decision_confidence: str = ""
+    goal_decision_reason: List[str] = field(default_factory=list)
+    goal_decision_context: Dict[str, Any] = field(default_factory=dict)
+    llm_goal_decision_explanation: Dict[str, Any] = field(default_factory=dict)
     secondary_target_jobs: List[str] = field(default_factory=list)
     goal_positioning: str = ""
     goal_reason: str = ""
@@ -71,6 +83,12 @@ class CareerPathPlanServiceResult:
     transition_path: List[str] = field(default_factory=list)
     long_term_path: List[str] = field(default_factory=list)
     path_strategy: str = ""
+    target_path_data_status: str = ""
+    target_path_data_message: str = ""
+    representative_promotion_paths: List[Dict[str, Any]] = field(default_factory=list)
+    representative_path_count: int = 0
+    representative_path_status: str = ""
+    representative_path_message: str = ""
     short_term_plan: List[str] = field(default_factory=list)
     mid_term_plan: List[str] = field(default_factory=list)
     decision_summary: str = ""
@@ -161,6 +179,21 @@ def build_default_goal_reason(
 ) -> str:
     """当 LLM 未返回 goal_reason 时，使用规则决策和匹配结论兜底生成。"""
     primary_target_job = clean_text(selector_result.get("primary_target_job"))
+    user_target_job = clean_text(selector_result.get("user_target_job"))
+    system_recommended_job = clean_text(selector_result.get("system_recommended_job"))
+    decision_reasons = [
+        clean_text(item)
+        for item in safe_list(selector_result.get("goal_decision_reason"))
+        if clean_text(item)
+    ]
+    if decision_reasons:
+        if user_target_job and primary_target_job and user_target_job != primary_target_job:
+            return (
+                f"系统将{primary_target_job}作为当前职业规划主目标，同时保留{user_target_job}作为中期冲刺目标。"
+                f"主要依据：{'；'.join(decision_reasons[:4])}"
+            )
+        return f"系统将{primary_target_job or system_recommended_job or '目标岗位'}作为当前主目标。主要依据：{'；'.join(decision_reasons[:4])}"
+
     match_snapshot = safe_dict(career_plan_input_payload.get("match_snapshot"))
     student_snapshot = safe_dict(career_plan_input_payload.get("student_snapshot"))
     overall_match_score = match_snapshot.get("overall_match_score", 0.0)
@@ -180,6 +213,66 @@ def build_default_goal_reason(
     )
 
 
+def build_default_goal_decision_explanation(
+    selector_result: Dict[str, Any],
+) -> Dict[str, Any]:
+    """当 LLM 未返回目标决策解释时，使用规则层结果生成结构化解释。"""
+    context = safe_dict(selector_result.get("goal_decision_context"))
+    evidence = safe_dict(context.get("comparison_evidence"))
+    target_evidence = safe_dict(evidence.get("target_job"))
+    recommended_evidence = safe_dict(evidence.get("recommended_job"))
+    user_target_job = clean_text(selector_result.get("user_target_job") or context.get("user_target_job"))
+    system_recommended_job = clean_text(
+        selector_result.get("system_recommended_job") or context.get("system_recommended_job")
+    )
+    primary_job = clean_text(selector_result.get("primary_target_job") or context.get("primary_plan_job"))
+    reasons = [
+        clean_text(item)
+        for item in safe_list(selector_result.get("goal_decision_reason"))
+        if clean_text(item)
+    ]
+    target_risks = [
+        clean_text(item)
+        for item in safe_list(target_evidence.get("main_risks"))
+        if clean_text(item)
+    ]
+    recommended_advantages = [
+        clean_text(item)
+        for item in safe_list(recommended_evidence.get("main_advantages"))
+        if clean_text(item)
+    ]
+    recommended_risks = [
+        clean_text(item)
+        for item in safe_list(recommended_evidence.get("main_risks"))
+        if clean_text(item)
+    ]
+    if primary_job and system_recommended_job and primary_job == system_recommended_job and user_target_job != primary_job:
+        decision_summary = f"系统建议以{primary_job}作为短期主路径，并将{user_target_job}保留为中期补强后的冲刺目标。"
+    else:
+        decision_summary = f"系统建议以{primary_job or user_target_job or '目标岗位'}作为当前主路径。"
+
+    return {
+        "decision_reason_summary": "；".join(reasons[:4]) or decision_summary,
+        "why_recommended_job": "；".join(recommended_advantages[:4]) or "推荐岗位在当前资产中具备更高可达性或更完整评估依据。",
+        "why_target_job_not_primary": "；".join(target_risks[:4]) if user_target_job != primary_job else "用户原目标仍作为当前主目标。",
+        "how_to_balance_target_and_recommended": (
+            f"短期聚焦{primary_job}提升求职成功率；若仍希望冲刺{user_target_job}，建议在中期补齐对应知识点和项目证据。"
+            if user_target_job and primary_job and user_target_job != primary_job
+            else "继续围绕当前主目标补齐知识点、项目经历和简历证据。"
+        ),
+        "short_term_focus": [
+            f"优先补齐{primary_job}相关缺口",
+            "完善项目和实习经历中与主路径岗位直接相关的证据",
+        ],
+        "mid_term_focus": [
+            f"持续跟踪{user_target_job}方向要求并补齐关键知识点"
+            if user_target_job and user_target_job != primary_job
+            else "根据投递反馈动态调整岗位优先级"
+        ],
+        "risk_notes": recommended_risks[:4],
+    }
+
+
 def build_default_short_term_plan(
     selector_result: Dict[str, Any],
     career_plan_input_payload: Dict[str, Any],
@@ -192,6 +285,8 @@ def build_default_short_term_plan(
         safe_dict(item)
         for item in safe_list(career_plan_input_payload.get("gap_analysis"))
     ]
+    primary_target_job = clean_text(selector_result.get("primary_target_job"))
+    user_target_job = clean_text(selector_result.get("user_target_job"))
 
     for suggestion in safe_list(planner_context.get("improvement_suggestions"))[:3]:
         if clean_text(suggestion):
@@ -205,6 +300,10 @@ def build_default_short_term_plan(
 
     if clean_text(constraints.get("short_term_focus")):
         plans.insert(0, clean_text(constraints.get("short_term_focus")))
+    if primary_target_job:
+        plans.insert(0, f"短期围绕{primary_target_job}补齐岗位知识点、项目作品和面试表达证据。")
+    if user_target_job and primary_target_job and user_target_job != primary_target_job:
+        plans.append(f"保留{user_target_job}为中期冲刺目标，但短期先补齐其关键知识点与项目证明。")
 
     if not plans:
         plans = [
@@ -224,12 +323,15 @@ def build_default_mid_term_plan(
     direct_path = [clean_text(item) for item in safe_list(selector_result.get("direct_path")) if clean_text(item)]
     long_term_path = [clean_text(item) for item in safe_list(selector_result.get("long_term_path")) if clean_text(item)]
     constraints = safe_dict(career_plan_input_payload.get("planning_constraints"))
+    user_target_job = clean_text(selector_result.get("user_target_job"))
 
     plans = []
     if clean_text(constraints.get("mid_term_focus")):
         plans.append(clean_text(constraints.get("mid_term_focus")))
     if primary_target_job:
         plans.append(f"围绕{primary_target_job}持续补充真实业务项目、实习经历和行业认知，争取形成可复用的方法论和作品集。")
+    if user_target_job and primary_target_job and user_target_job != primary_target_job:
+        plans.append(f"将{user_target_job}作为中期补强后的冲刺目标，重点补齐其要求的知识点、项目场景和岗位表达材料。")
     if secondary_jobs:
         plans.append(f"同步关注备选岗位：{'、'.join(secondary_jobs[:3])}，根据投递反馈动态调整主目标和过渡路径。")
     if direct_path:
@@ -251,13 +353,22 @@ def build_default_decision_summary(
 ) -> str:
     """生成兜底版决策摘要。"""
     primary_target_job = clean_text(selector_result.get("primary_target_job"))
+    user_target_job = clean_text(selector_result.get("user_target_job"))
+    system_recommended_job = clean_text(selector_result.get("system_recommended_job"))
     goal_positioning = clean_text(selector_result.get("goal_positioning"))
     path_strategy = clean_text(selector_result.get("path_strategy"))
     match_snapshot = safe_dict(career_plan_input_payload.get("match_snapshot"))
-    overall_match_score = match_snapshot.get("overall_match_score", 0.0)
+    target_display_score = match_snapshot.get("target_display_match_score", 0.0)
+    recommended_display_score = match_snapshot.get("recommended_display_match_score", 0.0)
+    if user_target_job and primary_target_job and user_target_job != primary_target_job:
+        return (
+            f"系统建议以{primary_target_job}作为短期主路径，同时保留{user_target_job}作为中期补强后的冲刺目标。"
+            f"目标岗位展示分为{target_display_score}，系统推荐岗位展示分为{recommended_display_score}。"
+            f"路径策略为{path_strategy or '未明确'}；若无真实路径数据，系统不会强行生成路径。"
+        )
     return (
         f"当前建议以{primary_target_job or '目标岗位'}为主目标，路径策略为{path_strategy or '未明确'}。"
-        f"{goal_positioning or ''} 综合规则匹配得分为{overall_match_score}，短期优先补齐关键能力缺口，"
+        f"{goal_positioning or ''} 系统推荐岗位为{system_recommended_job or '暂无'}，短期优先补齐关键能力缺口，"
         "中期通过项目/实习积累逐步提升岗位可达性。"
     )
 
@@ -387,11 +498,26 @@ def normalize_llm_career_path_plan_result(
 ) -> Dict[str, Any]:
     """对 call_llm('career_path_plan', ...) 返回做字段兼容和默认值补齐。"""
     source = safe_dict(llm_result)
+    llm_goal_decision_explanation = safe_dict(
+        source.get("llm_goal_decision_explanation")
+        or source.get("goal_decision_explanation")
+    )
+    primary_job = clean_text(selector_result.get("primary_target_job"))
+    user_target_job = clean_text(selector_result.get("user_target_job"))
+    source_goal_reason = clean_text(source.get("goal_reason"))
+    source_decision_summary = clean_text(source.get("decision_summary") or source.get("summary"))
+    if user_target_job and primary_job and user_target_job != primary_job:
+        if primary_job not in source_goal_reason:
+            source_goal_reason = ""
+        if primary_job not in source_decision_summary:
+            source_decision_summary = ""
     normalized = CareerPathPlanLLMSupplement(
-        goal_reason=clean_text(source.get("goal_reason"))
+        goal_reason=source_goal_reason
         or build_default_goal_reason(selector_result, career_plan_input_payload),
-        decision_summary=clean_text(source.get("decision_summary") or source.get("summary"))
+        decision_summary=source_decision_summary
         or build_default_decision_summary(selector_result, career_plan_input_payload),
+        llm_goal_decision_explanation=llm_goal_decision_explanation
+        or build_default_goal_decision_explanation(selector_result),
         risk_and_gap=dedup_keep_order(
             [clean_text(item) for item in safe_list(source.get("risk_and_gap") or source.get("risk_notes")) if clean_text(item)]
         )
@@ -452,12 +578,27 @@ def build_career_path_plan_llm_input(
         },
         "selector_snapshot": {
             "primary_target_job": clean_text(selector_result.get("primary_target_job")),
+            "primary_plan_job": clean_text(selector_result.get("primary_plan_job")),
+            "user_target_job": clean_text(selector_result.get("user_target_job")),
+            "system_recommended_job": clean_text(selector_result.get("system_recommended_job")),
+            "target_job_role": clean_text(selector_result.get("target_job_role")),
+            "recommended_job_role": clean_text(selector_result.get("recommended_job_role")),
+            "goal_decision_source": clean_text(selector_result.get("goal_decision_source")),
+            "goal_decision_confidence": clean_text(selector_result.get("goal_decision_confidence")),
+            "goal_decision_reason": deepcopy(safe_list(selector_result.get("goal_decision_reason"))[:6]),
+            "goal_decision_context": deepcopy(safe_dict(selector_result.get("goal_decision_context"))),
             "secondary_target_jobs": deepcopy(safe_list(selector_result.get("secondary_target_jobs"))[:5]),
             "goal_positioning": clean_text(selector_result.get("goal_positioning")),
             "direct_path": deepcopy(safe_list(selector_result.get("direct_path"))[:5]),
             "transition_path": deepcopy(safe_list(selector_result.get("transition_path"))[:5]),
             "long_term_path": deepcopy(safe_list(selector_result.get("long_term_path"))[:5]),
             "path_strategy": clean_text(selector_result.get("path_strategy")),
+            "target_path_data_status": clean_text(selector_result.get("target_path_data_status")),
+            "target_path_data_message": clean_text(selector_result.get("target_path_data_message")),
+            "representative_promotion_paths": deepcopy(
+                safe_list(selector_result.get("representative_promotion_paths"))[:5]
+            ),
+            "representative_path_status": clean_text(selector_result.get("representative_path_status")),
             "target_selection_reason": deepcopy(safe_list(selector_result.get("target_selection_reason"))[:5]),
             "path_selection_reason": deepcopy(safe_list(selector_result.get("path_selection_reason"))[:5]),
             "risk_notes": deepcopy(safe_list(selector_result.get("risk_notes"))[:6]),
@@ -465,10 +606,26 @@ def build_career_path_plan_llm_input(
         "generation_requirements": {
             "goal_reason": "解释为什么选择当前主目标岗位和备选岗位，要求结合学生画像、人岗匹配结果和路径可达性。",
             "decision_summary": "输出一段更自然、可直接用于报告模块的职业目标与路径决策摘要。",
+            "llm_goal_decision_explanation": (
+                "只基于 selector_snapshot.goal_decision_context 解释主目标决策，字段包括 "
+                "decision_reason_summary、why_recommended_job、why_target_job_not_primary、"
+                "how_to_balance_target_and_recommended、short_term_focus、mid_term_focus、risk_notes。"
+                "不要重新计算分数，不要改变 primary_target_job。"
+            ),
             "risk_and_gap": "结合 risk_notes、gap_analysis、weaknesses 和 improvement_suggestions，总结风险与能力缺口。",
-            "fallback_strategy": "给出当主目标岗位短期不可达时的备选路径和切换策略。",
+            "fallback_strategy": "给出当主目标岗位短期不可达时的备选策略，但不要补造职业路径。",
             "short_term_plan": "将短期计划改写成自然、可执行、适合3-6个月推进的行动列表。",
             "mid_term_plan": "将中期计划改写成自然、可执行、适合6-18个月推进的行动列表。",
+            "path_truth_constraints": (
+                "如果 direct_path、transition_path、long_term_path 为空，说明当前目标岗位暂无真实路径数据。"
+                "不要自行生成“高级XX”“XX负责人”“当前学生画像 -> 目标岗位”等路径。"
+                "representative_promotion_paths 是全局代表晋升路径，不一定与当前用户目标岗位相关，只能作为图谱能力展示依据。"
+            ),
+            "goal_decision_constraints": (
+                "LLM 不负责重新选择主目标岗位，只能解释规则层已经给出的 primary_target_job。"
+                "如果推荐岗位 contest_match_success=false，不能说完全匹配，只能说更接近达标或适合作为短期冲刺。"
+                "用户原始目标岗位不能被否定，应定位为中期冲刺、备选或补强后目标。"
+            ),
         },
         "output_schema_hint": asdict(CareerPathPlanLLMSupplement()),
     }
@@ -504,20 +661,30 @@ def merge_career_path_plan_results(
 
     direct_path = dedup_keep_order(
         [clean_text(item) for item in safe_list(rule_result.get("direct_path")) if clean_text(item)]
-        or [clean_text(item) for item in safe_list(safe_dict(llm_result).get("direct_path")) if clean_text(item)]
     )
     transition_path = dedup_keep_order(
         [clean_text(item) for item in safe_list(rule_result.get("transition_path")) if clean_text(item)]
-        or [clean_text(item) for item in safe_list(safe_dict(llm_result).get("transition_path")) if clean_text(item)]
     )
     long_term_path = dedup_keep_order(
         [clean_text(item) for item in safe_list(rule_result.get("long_term_path")) if clean_text(item)]
-        or direct_path
-        or transition_path
     )
 
     result = CareerPathPlanServiceResult(
         primary_target_job=primary_target_job,
+        primary_plan_job=clean_text(rule_result.get("primary_plan_job") or primary_target_job),
+        user_target_job=clean_text(rule_result.get("user_target_job")),
+        system_recommended_job=clean_text(rule_result.get("system_recommended_job")),
+        target_job_role=clean_text(rule_result.get("target_job_role")),
+        recommended_job_role=clean_text(rule_result.get("recommended_job_role")),
+        goal_decision_source=clean_text(rule_result.get("goal_decision_source")),
+        goal_decision_confidence=clean_text(rule_result.get("goal_decision_confidence")),
+        goal_decision_reason=dedup_keep_order(
+            [clean_text(item) for item in safe_list(rule_result.get("goal_decision_reason")) if clean_text(item)]
+        ),
+        goal_decision_context=deepcopy(safe_dict(rule_result.get("goal_decision_context"))),
+        llm_goal_decision_explanation=deepcopy(
+            safe_dict(normalized_llm.get("llm_goal_decision_explanation"))
+        ),
         secondary_target_jobs=secondary_target_jobs,
         goal_positioning=clean_text(rule_result.get("goal_positioning")),
         goal_reason=clean_text(normalized_llm.get("goal_reason")),
@@ -525,6 +692,14 @@ def merge_career_path_plan_results(
         transition_path=transition_path,
         long_term_path=long_term_path,
         path_strategy=clean_text(rule_result.get("path_strategy")),
+        target_path_data_status=clean_text(rule_result.get("target_path_data_status")),
+        target_path_data_message=clean_text(rule_result.get("target_path_data_message")),
+        representative_promotion_paths=deepcopy(
+            [safe_dict(item) for item in safe_list(rule_result.get("representative_promotion_paths"))]
+        ),
+        representative_path_count=int(rule_result.get("representative_path_count") or 0),
+        representative_path_status=clean_text(rule_result.get("representative_path_status")),
+        representative_path_message=clean_text(rule_result.get("representative_path_message")),
         short_term_plan=dedup_keep_order(
             [clean_text(item) for item in safe_list(normalized_llm.get("short_term_plan")) if clean_text(item)]
         ),
@@ -603,6 +778,7 @@ class CareerPathPlanService:
             "expected_fields": [
                 "goal_reason",
                 "decision_summary",
+                "llm_goal_decision_explanation",
                 "risk_and_gap",
                 "fallback_strategy",
                 "short_term_plan",
@@ -633,7 +809,7 @@ class CareerPathPlanService:
         service_output_path: Optional[str | Path] = DEFAULT_SERVICE_OUTPUT_PATH,
         extra_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """执行完整 career_path_plan 服务流程并写回 student.json。"""
+        """执行完整 career_path_plan 服务流程并写回 student_api_state.json。"""
         setup_logging()
         service_warnings = []
         merged_context_data = deepcopy(context_data) if isinstance(context_data, dict) else {}
@@ -695,17 +871,49 @@ class CareerPathPlanService:
                 "primary_target_job": target_job_name,
                 "secondary_target_jobs": [],
                 "goal_positioning": f"以{target_job_name or '目标岗位'}作为默认主目标岗位。",
-                "direct_path": [target_job_name] if target_job_name else [],
+                "direct_path": [],
                 "transition_path": [],
-                "long_term_path": [target_job_name] if target_job_name else [],
-                "path_strategy": "fallback_default",
+                "long_term_path": [],
+                "path_strategy": "no_target_path_data",
+                "target_path_data_status": "missing",
+                "target_path_data_message": "当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。",
                 "target_selection_reason": [f"selector 执行失败，使用默认主目标兜底：{exc}"],
-                "path_selection_reason": ["selector 执行失败，路径结构使用默认兜底。"],
+                "path_selection_reason": ["selector 执行失败，路径结构保持为空，不强行生成路径。"],
                 "risk_notes": [f"selector 执行失败: {exc}"],
                 "selector_metrics": {},
                 "career_plan_input_payload": deepcopy(career_plan_input_payload),
             }
             service_warnings.append(f"selector 执行失败: {exc}")
+
+        try:
+            representative_result = build_representative_promotion_paths(limit=3)
+            selector_result.update(
+                {
+                    "representative_promotion_paths": deepcopy(
+                        safe_list(representative_result.get("representative_promotion_paths"))
+                    ),
+                    "representative_path_count": int(
+                        representative_result.get("representative_path_count") or 0
+                    ),
+                    "representative_path_status": clean_text(
+                        representative_result.get("representative_path_status")
+                    ),
+                    "representative_path_message": clean_text(
+                        representative_result.get("representative_path_message")
+                    ),
+                }
+            )
+        except Exception as exc:
+            LOGGER.warning("representative promotion path build failed: %s", exc)
+            selector_result.update(
+                {
+                    "representative_promotion_paths": [],
+                    "representative_path_count": 0,
+                    "representative_path_status": "insufficient",
+                    "representative_path_message": "代表性岗位晋升关系构建失败，建议检查 Neo4j 或图谱 CSV 产物。",
+                }
+            )
+            service_warnings.append(f"代表性岗位晋升关系构建失败: {exc}")
 
         LOGGER.info("Step 3/4: call LLM career_path_plan")
         try:
@@ -752,7 +960,7 @@ class CareerPathPlanService:
         service_output_path: Optional[str | Path] = DEFAULT_SERVICE_OUTPUT_PATH,
         extra_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """从 student.json 读取三个上游结果，执行职业路径规划并写回 state。"""
+        """从 student_api_state.json 读取三个上游结果，执行职业路径规划并写回 state。"""
         student_state = self.state_manager.load_state(state_path)
         return self.run(
             student_profile_result=safe_dict(student_state.get("student_profile_result")),
@@ -817,7 +1025,7 @@ def run_career_path_plan_service_from_state(
 def parse_args() -> argparse.Namespace:
     """命令行参数解析。"""
     parser = argparse.ArgumentParser(description="Run career_path_plan service")
-    parser.add_argument("--state-path", default=str(DEFAULT_STATE_PATH), help="student.json 路径")
+    parser.add_argument("--state-path", default=str(DEFAULT_STATE_PATH), help="student_api_state.json 路径")
     parser.add_argument("--student-profile-json", default="", help="可选：单独的 student_profile_result JSON 文件")
     parser.add_argument("--job-profile-json", default="", help="可选：单独的 job_profile_result JSON 文件")
     parser.add_argument("--job-match-json", default="", help="可选：单独的 job_match_result JSON 文件")

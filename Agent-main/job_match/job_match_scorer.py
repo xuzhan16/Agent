@@ -855,7 +855,7 @@ def parse_args() -> argparse.Namespace:
     """命令行参数解析。"""
     parser = argparse.ArgumentParser(description="Rule-based scorer for job_match module")
     parser.add_argument("--input", default="", help="可选：match_input_payload JSON 路径")
-    parser.add_argument("--state-path", default="", help="可选：包含 student_profile_result 和 job_profile_result 的 student.json 路径")
+    parser.add_argument("--state-path", default="", help="可选：包含 student_profile_result 和 job_profile_result 的 student_api_state.json 路径")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT_PATH), help="评分结果输出路径")
     return parser.parse_args()
 

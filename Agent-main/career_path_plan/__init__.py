@@ -1,4 +1,4 @@
-"""职业路径规划：规则选岗与路径、LLM 扩写、写回 student.json。"""
+"""职业路径规划：规则选岗与路径、LLM 扩写、写回 student_api_state.json。"""
 
 from .career_path_plan_builder import (
     build_career_plan_input_payload,

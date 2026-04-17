@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 
-DEFAULT_STATE_PATH = Path("outputs/state/student.json")
+DEFAULT_STATE_PATH = Path("student_api_state.json")
 DEFAULT_OUTPUT_PATH = Path("outputs/state/career_path_plan_input_payload.json")
 
 
@@ -87,6 +87,8 @@ class TargetJobPlanSnapshot:
 class MatchPlanSnapshot:
     """人岗匹配结论快照。"""
 
+    user_target_job: str = ""
+    system_recommended_job: str = ""
     basic_requirement_score: float = 0.0
     vocational_skill_score: float = 0.0
     professional_quality_score: float = 0.0
@@ -101,6 +103,19 @@ class MatchPlanSnapshot:
     recommendation: str = ""
     analysis_summary: str = ""
     dimension_details: Dict[str, Any] = field(default_factory=dict)
+    target_display_match_score: float = 0.0
+    recommended_display_match_score: float = 0.0
+    target_asset_match_score: float = 0.0
+    recommended_asset_match_score: float = 0.0
+    target_knowledge_point_accuracy: float = 0.0
+    recommended_knowledge_point_accuracy: float = 0.0
+    target_contest_match_success: bool = False
+    recommended_contest_match_success: bool = False
+    target_hard_info_pass: bool = False
+    recommended_hard_info_pass: bool = False
+    target_job_match: Dict[str, Any] = field(default_factory=dict)
+    recommended_job_match: Dict[str, Any] = field(default_factory=dict)
+    recommendation_ranking: List[Dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
@@ -168,6 +183,20 @@ def safe_float(value: Any, default: float = 0.0) -> float:
         return float(text)
     except (TypeError, ValueError):
         return default
+
+
+def safe_bool(value: Any) -> bool:
+    """安全转 bool，兼容字符串/数字形式。"""
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return value != 0
+    text = clean_text(value).lower()
+    if text in {"true", "yes", "y", "1", "通过", "是"}:
+        return True
+    if text in {"false", "no", "n", "0", "未通过", "否"}:
+        return False
+    return False
 
 
 def dedup_keep_order(values: Iterable[Any]) -> List[Any]:
@@ -319,6 +348,7 @@ def normalize_job_profile_result(job_profile_result: Dict[str, Any]) -> Dict[str
     """将 job_profile_result 归一成职业规划可用的目标岗位快照。"""
     source = safe_dict(job_profile_result)
     normalized_requirements = safe_dict(source.get("normalized_requirements"))
+    target_assets = safe_dict(source.get("target_job_profile_assets"))
 
     hard_skills = normalize_text_list(source.get("hard_skills"))
     if not hard_skills:
@@ -327,6 +357,25 @@ def normalize_job_profile_result(job_profile_result: Dict[str, Any]) -> Dict[str
     tool_skills = normalize_text_list(source.get("tools_or_tech_stack"))
     if not tool_skills:
         tool_skills = normalize_text_list(normalized_requirements.get("tool_skill_tags"))
+
+    asset_required_knowledge = normalize_text_list(target_assets.get("required_knowledge_points"))
+    asset_summary = ""
+    if safe_bool(target_assets.get("asset_found")):
+        asset_job_name = clean_text(
+            target_assets.get("resolved_standard_job_name")
+            or target_assets.get("standard_job_name")
+            or source.get("standard_job_name")
+        )
+        asset_degree = clean_text(target_assets.get("degree_gate") or target_assets.get("mainstream_degree"))
+        asset_majors = normalize_text_list(target_assets.get("major_gate_set") or target_assets.get("mainstream_majors"))[:5]
+        summary_parts = [f"{asset_job_name}岗位画像来自后处理资产"]
+        if asset_degree:
+            summary_parts.append(f"主流学历门槛为{asset_degree}")
+        if asset_majors:
+            summary_parts.append(f"高频专业方向包括{'、'.join(asset_majors)}")
+        if asset_required_knowledge:
+            summary_parts.append(f"核心知识点包括{'、'.join(asset_required_knowledge[:8])}")
+        asset_summary = "；".join(part for part in summary_parts if clean_text(part)) + "。"
 
     snapshot = TargetJobPlanSnapshot(
         standard_job_name=clean_text(source.get("standard_job_name")),
@@ -348,7 +397,7 @@ def normalize_job_profile_result(job_profile_result: Dict[str, Any]) -> Dict[str
             source.get("soft_skills") or normalized_requirements.get("soft_skill_tags")
         ),
         suitable_student_profile=clean_text(source.get("suitable_student_profile")),
-        summary=clean_text(source.get("summary")),
+        summary=asset_summary or clean_text(source.get("summary")),
         vertical_paths=normalize_text_list(source.get("vertical_paths")),
         transfer_paths=normalize_text_list(source.get("transfer_paths")),
         skill_frequency=normalize_dict_list(source.get("skill_frequency")),
@@ -359,12 +408,81 @@ def normalize_job_profile_result(job_profile_result: Dict[str, Any]) -> Dict[str
     return asdict(snapshot)
 
 
+def pick_job_match_job_name(match_detail: Dict[str, Any]) -> str:
+    """从 target/recommended match 结构中取展示岗位名。"""
+    detail = safe_dict(match_detail)
+    return clean_text(
+        detail.get("job_name")
+        or detail.get("asset_job_name")
+        or detail.get("resolved_standard_job_name")
+    )
+
+
+def pick_job_match_display_score(match_detail: Dict[str, Any]) -> float:
+    """优先使用赛题资产主展示分，避免旧规则分把规划目标拉偏。"""
+    detail = safe_dict(match_detail)
+    return safe_float(
+        detail.get("display_match_score")
+        or detail.get("asset_match_score")
+        or detail.get("overall_match_score"),
+        default=0.0,
+    )
+
+
+def pick_job_match_asset_score(match_detail: Dict[str, Any]) -> float:
+    """读取岗位资产分，缺失时回退到主展示分。"""
+    detail = safe_dict(match_detail)
+    return safe_float(
+        detail.get("asset_match_score")
+        or detail.get("display_match_score")
+        or detail.get("overall_match_score"),
+        default=0.0,
+    )
+
+
+def pick_job_match_knowledge_accuracy(match_detail: Dict[str, Any]) -> float:
+    """读取技能知识点覆盖率。"""
+    detail = safe_dict(match_detail)
+    return safe_float(
+        safe_dict(detail.get("skill_knowledge_match")).get("knowledge_point_accuracy"),
+        default=0.0,
+    )
+
+
+def pick_job_match_hard_pass(match_detail: Dict[str, Any]) -> bool:
+    """读取学历/专业/证书硬门槛是否通过。"""
+    detail = safe_dict(match_detail)
+    hard_info = safe_dict(detail.get("hard_info_evaluation"))
+    contest = safe_dict(detail.get("contest_evaluation"))
+    if "all_pass" in hard_info:
+        return safe_bool(hard_info.get("all_pass"))
+    return safe_bool(contest.get("hard_info_pass"))
+
+
+def pick_job_match_contest_success(match_detail: Dict[str, Any]) -> bool:
+    """读取赛题综合评测是否通过。"""
+    detail = safe_dict(match_detail)
+    return safe_bool(safe_dict(detail.get("contest_evaluation")).get("contest_match_success"))
+
+
 def normalize_job_match_result(job_match_result: Dict[str, Any]) -> Dict[str, Any]:
     """将 job_match_result 归一成职业规划可用的人岗匹配快照。"""
     source = safe_dict(job_match_result)
     rule_score_result = safe_dict(source.get("rule_score_result"))
+    target_job_match = deepcopy(safe_dict(source.get("target_job_match")))
+    recommended_job_match = deepcopy(safe_dict(source.get("recommended_job_match")))
+    recommendation_ranking = deepcopy(normalize_dict_list(source.get("recommendation_ranking")))
+    user_target_job = clean_text(
+        source.get("target_job_name")
+        or pick_job_match_job_name(target_job_match)
+        or safe_dict(safe_dict(source.get("match_input_payload")).get("job_profile")).get("standard_job_name")
+    )
+    ranking_top_job = clean_text(safe_dict(recommendation_ranking[0]).get("job_name")) if recommendation_ranking else ""
+    system_recommended_job = clean_text(pick_job_match_job_name(recommended_job_match) or ranking_top_job)
 
     snapshot = MatchPlanSnapshot(
+        user_target_job=user_target_job,
+        system_recommended_job=system_recommended_job,
         basic_requirement_score=safe_float(
             source.get("basic_requirement_score") or rule_score_result.get("basic_requirement_score"),
             default=0.0,
@@ -394,6 +512,19 @@ def normalize_job_match_result(job_match_result: Dict[str, Any]) -> Dict[str, An
         recommendation=clean_text(source.get("recommendation")),
         analysis_summary=clean_text(source.get("analysis_summary") or source.get("summary")),
         dimension_details=deepcopy(safe_dict(source.get("dimension_details"))),
+        target_display_match_score=pick_job_match_display_score(target_job_match),
+        recommended_display_match_score=pick_job_match_display_score(recommended_job_match),
+        target_asset_match_score=pick_job_match_asset_score(target_job_match),
+        recommended_asset_match_score=pick_job_match_asset_score(recommended_job_match),
+        target_knowledge_point_accuracy=pick_job_match_knowledge_accuracy(target_job_match),
+        recommended_knowledge_point_accuracy=pick_job_match_knowledge_accuracy(recommended_job_match),
+        target_contest_match_success=pick_job_match_contest_success(target_job_match),
+        recommended_contest_match_success=pick_job_match_contest_success(recommended_job_match),
+        target_hard_info_pass=pick_job_match_hard_pass(target_job_match),
+        recommended_hard_info_pass=pick_job_match_hard_pass(recommended_job_match),
+        target_job_match=target_job_match,
+        recommended_job_match=recommended_job_match,
+        recommendation_ranking=recommendation_ranking,
     )
     return asdict(snapshot)
 
@@ -520,6 +651,20 @@ def build_candidate_goal_jobs(
     if target_job:
         candidates.append(target_job)
 
+    for job_name in [
+        match_snapshot.get("user_target_job"),
+        match_snapshot.get("system_recommended_job"),
+        safe_dict(match_snapshot.get("target_job_match")).get("asset_job_name"),
+        safe_dict(match_snapshot.get("recommended_job_match")).get("asset_job_name"),
+    ]:
+        if clean_text(job_name):
+            candidates.append(clean_text(job_name))
+
+    for ranking_item in normalize_dict_list(match_snapshot.get("recommendation_ranking"))[:10]:
+        ranking_job = clean_text(ranking_item.get("job_name") or ranking_item.get("asset_job_name"))
+        if ranking_job:
+            candidates.append(ranking_job)
+
     graph_paths = extract_graph_path_context(context_data)
     for related_job in normalize_text_list(graph_paths.get("related_jobs")):
         candidates.append(related_job)
@@ -557,7 +702,7 @@ def build_direct_path_options(
     match_snapshot: Dict[str, Any],
     context_data: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
-    """构造直接发展路径候选，优先来自图谱/离线路径，其次才是岗位画像与兜底。"""
+    """构造直接发展路径候选，只使用图谱或离线岗位画像中的真实路径。"""
     options = []
     score = safe_float(match_snapshot.get("overall_match_score"), default=0.0)
     graph_paths = extract_graph_path_context(context_data)
@@ -593,25 +738,6 @@ def build_direct_path_options(
             )
         )
 
-    if not options and target_job:
-        options.append(
-            annotate_path_option(
-                asdict(
-                    CareerPlanPathOption(
-                        path_type="direct_target",
-                        from_job="当前学生画像",
-                        to_job=target_job,
-                        path_text=f"当前学生画像 -> {target_job}",
-                        source="fallback_target_job",
-                    )
-                ),
-                match_score=score,
-                score_delta=-8.0,
-                priority_hint="low",
-                source_tier="fallback",
-                is_fallback=True,
-            )
-        )
     return dedup_keep_order(options)
 
 
@@ -621,7 +747,7 @@ def build_transition_path_options(
     match_snapshot: Dict[str, Any],
     context_data: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
-    """构造过渡路径候选，优先来自图谱/离线路径，学生方向桥接仅作为 fallback。"""
+    """构造过渡路径候选，只使用图谱或离线岗位画像中的真实转岗路径。"""
     options = []
     target_job = clean_text(target_job_snapshot.get("standard_job_name"))
     score = safe_float(match_snapshot.get("overall_match_score"), default=0.0)
@@ -656,28 +782,6 @@ def build_transition_path_options(
                 source_tier="offline_profile",
             )
         )
-
-    if not options:
-        for direction in normalize_text_list(student_snapshot.get("occupation_hints")):
-            if target_job and direction and direction != target_job:
-                options.append(
-                    annotate_path_option(
-                        asdict(
-                            CareerPlanPathOption(
-                                path_type="bridge",
-                                from_job=direction,
-                                to_job=target_job,
-                                path_text=f"{direction} -> {target_job}",
-                                source="student_profile.occupation_hints",
-                            )
-                        ),
-                        match_score=max(45.0, score - 10.0),
-                        score_delta=0.0,
-                        priority_hint="low",
-                        source_tier="fallback",
-                        is_fallback=True,
-                    )
-                )
 
     return dedup_keep_order(options)
 
@@ -874,8 +978,14 @@ def build_planning_constraints(
 ) -> Dict[str, Any]:
     """构造路径规划约束与默认策略提示。"""
     overall_score = safe_float(match_snapshot.get("overall_match_score"), default=0.0)
-    direct_path_feasible = overall_score >= 75
-    transition_first_recommended = overall_score < 70
+    target_display_score = safe_float(
+        match_snapshot.get("target_display_match_score"),
+        default=overall_score,
+    )
+    recommended_display_score = safe_float(match_snapshot.get("recommended_display_match_score"), default=0.0)
+    planning_score = max(target_display_score, recommended_display_score, overall_score)
+    direct_path_feasible = planning_score >= 75
+    transition_first_recommended = planning_score < 70
 
     return {
         "current_degree": clean_text(student_snapshot.get("degree")),
@@ -885,10 +995,22 @@ def build_planning_constraints(
         "target_job_level": clean_text(target_job_snapshot.get("job_level")),
         "target_degree_requirement": clean_text(target_job_snapshot.get("degree_requirement")),
         "overall_match_score": round(overall_score, 2),
+        "target_display_match_score": round(target_display_score, 2),
+        "recommended_display_match_score": round(recommended_display_score, 2),
+        "target_knowledge_point_accuracy": round(
+            safe_float(match_snapshot.get("target_knowledge_point_accuracy"), default=0.0),
+            4,
+        ),
+        "recommended_knowledge_point_accuracy": round(
+            safe_float(match_snapshot.get("recommended_knowledge_point_accuracy"), default=0.0),
+            4,
+        ),
+        "user_target_job": clean_text(match_snapshot.get("user_target_job")),
+        "system_recommended_job": clean_text(match_snapshot.get("system_recommended_job")),
         "direct_path_feasible": direct_path_feasible,
         "transition_first_recommended": transition_first_recommended,
         "short_term_focus": "优先补齐高优先级技能/工具/项目缺口，并准备 1-2 个能直接支撑目标岗位的作品或案例。",
-        "mid_term_focus": "结合岗位纵向路径和横向转岗路径，形成主目标岗位 + 备选过渡岗位组合，并持续补充行业项目经验。",
+        "mid_term_focus": "围绕主目标岗位和备选目标岗位持续补充真实项目、实习经历和投递反馈证据。",
     }
 
 
@@ -938,6 +1060,27 @@ def build_planner_context(
             "top_k": semantic_context.get("top_k", 0),
             "hits": deepcopy(semantic_context.get("hits", [])[:3]),
         },
+        "goal_decision_seed": {
+            "user_target_job": clean_text(match_snapshot.get("user_target_job")),
+            "system_recommended_job": clean_text(match_snapshot.get("system_recommended_job")),
+            "target_display_match_score": safe_float(match_snapshot.get("target_display_match_score"), default=0.0),
+            "recommended_display_match_score": safe_float(
+                match_snapshot.get("recommended_display_match_score"),
+                default=0.0,
+            ),
+            "target_knowledge_point_accuracy": safe_float(
+                match_snapshot.get("target_knowledge_point_accuracy"),
+                default=0.0,
+            ),
+            "recommended_knowledge_point_accuracy": safe_float(
+                match_snapshot.get("recommended_knowledge_point_accuracy"),
+                default=0.0,
+            ),
+            "target_contest_match_success": bool(match_snapshot.get("target_contest_match_success")),
+            "recommended_contest_match_success": bool(match_snapshot.get("recommended_contest_match_success")),
+            "target_hard_info_pass": bool(match_snapshot.get("target_hard_info_pass")),
+            "recommended_hard_info_pass": bool(match_snapshot.get("recommended_hard_info_pass")),
+        },
         "expected_output_hint": {
             "primary_target_job": "首选目标岗位",
             "alternative_target_jobs": "备选岗位列表",
@@ -972,11 +1115,11 @@ def build_warnings(
     if safe_float(match_snapshot.get("overall_match_score"), default=0.0) <= 0:
         warnings.append("job_match_result 缺少有效 overall_match_score")
     if not direct_path_options and not transition_path_options:
-        warnings.append("当前未解析到可用岗位路径选项，后续 selector 可能只能基于目标岗位兜底生成路径")
+        warnings.append("当前未解析到可用岗位路径选项，后续 selector 将返回空路径并提示暂无目标岗位路径数据")
     if direct_path_options and all(bool(safe_dict(item).get("is_fallback")) for item in direct_path_options):
-        warnings.append("当前直接路径全部来自 fallback，说明离线岗位晋升路径/图谱路径仍不足")
+        warnings.append("当前直接路径缺少图谱或离线画像中的真实晋升关系")
     if transition_path_options and all(bool(safe_dict(item).get("is_fallback")) for item in transition_path_options):
-        warnings.append("当前过渡路径全部来自 fallback，说明离线岗位转岗路径/图谱路径仍不足")
+        warnings.append("当前过渡路径缺少图谱或离线画像中的真实转岗关系")
     return dedup_keep_order(clean_text(item) for item in warnings if clean_text(item))
 
 
@@ -1054,7 +1197,7 @@ def build_career_plan_input_payload(
 def load_upstream_results_from_state(
     state_path: str | Path = DEFAULT_STATE_PATH,
 ) -> Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
-    """从 student.json 读取三个上游模块结果。"""
+    """从 student_api_state.json 读取三个上游模块结果。"""
     state_data = load_json_file(state_path)
     return (
         safe_dict(state_data.get("student_profile_result")),
@@ -1068,7 +1211,7 @@ def build_career_plan_input_payload_from_state(
     context_data: Optional[Dict[str, Any]] = None,
     output_path: Optional[str | Path] = DEFAULT_OUTPUT_PATH,
 ) -> Dict[str, Any]:
-    """从 student.json 读取上游结果并构造 career_plan_input_payload。"""
+    """从 student_api_state.json 读取上游结果并构造 career_plan_input_payload。"""
     student_profile_result, job_profile_result, job_match_result = load_upstream_results_from_state(state_path)
     return build_career_plan_input_payload(
         student_profile_result=student_profile_result,
@@ -1198,7 +1341,7 @@ def build_demo_job_match_result() -> Dict[str, Any]:
 def parse_args() -> argparse.Namespace:
     """命令行参数解析。"""
     parser = argparse.ArgumentParser(description="Build career_path_plan input payload")
-    parser.add_argument("--state-path", default="", help="可选：包含三个上游结果的 student.json 路径")
+    parser.add_argument("--state-path", default="", help="可选：包含三个上游结果的 student_api_state.json 路径")
     parser.add_argument("--student-profile-json", default="", help="可选：单独的 student_profile_result JSON 文件")
     parser.add_argument("--job-profile-json", default="", help="可选：单独的 job_profile_result JSON 文件")
     parser.add_argument("--job-match-json", default="", help="可选：单独的 job_match_result JSON 文件")

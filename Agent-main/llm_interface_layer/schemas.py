@@ -1,7 +1,7 @@
 """
 schemas.py
 
-定义任务类型、输入输出数据结构、student.json 推荐结构、
+定义任务类型、输入输出数据结构、student_api_state.json 推荐结构、
 以及 task_type 到 state 字段的映射关系（含 job_extract / job_dedup）。
 """
 
@@ -241,7 +241,7 @@ class CareerReportOutput:
 
 @dataclass
 class StudentState:
-    """student.json 推荐结构。"""
+    """student_api_state.json 推荐结构。"""
 
     basic_info: Dict[str, Any] = field(default_factory=dict)
     resume_parse_result: Dict[str, Any] = field(default_factory=dict)
@@ -296,6 +296,6 @@ def get_default_output_dict(task_type: "TaskType | str") -> Dict[str, Any]:
 
 
 def build_empty_student_state() -> Dict[str, Any]:
-    """生成空 student.json 状态。"""
+    """生成空 student_api_state.json 状态。"""
     return asdict(StudentState())
 

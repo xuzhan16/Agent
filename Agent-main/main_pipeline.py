@@ -465,7 +465,7 @@ def _write_pipeline_status(
 def run_pipeline(
     resume_path: str,
     initial_target_job: str,
-    state_path: str = "student.json",
+    state_path: str = "student_api_state.json",
 ) -> Dict[str, Any]:
     state_manager = StateManager()
     state_path = str(state_path)
@@ -633,7 +633,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--resume", type=str, required=True, help="简历文件路径")
     parser.add_argument("--job", type=str, required=True, help="目标应聘岗位")
-    parser.add_argument("--out", type=str, default="student.json")
+    parser.add_argument("--out", type=str, default="student_api_state.json")
     args = parser.parse_args()
 
     run_pipeline(args.resume, args.job, args.out)

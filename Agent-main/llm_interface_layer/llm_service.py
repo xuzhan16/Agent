@@ -86,7 +86,7 @@ class LLMService:
         extra_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        执行任务并把结果写回 student.json。
+        执行任务并把结果写回 student_api_state.json。
 
         返回结构：
         {
