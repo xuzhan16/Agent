@@ -57,6 +57,7 @@ _STATE_RESULT_KEY_ALLOWLIST = {
         "skill_profile",
         "certificate_profile",
         "soft_skills",
+        "employment_ability_profile",
         "potential_profile",
         "complete_score",
         "competitiveness_score",

@@ -29,11 +29,18 @@ export interface InternshipExperience {
   description: string
 }
 
+export interface EmploymentAbilityDimensionItem {
+  score?: number
+  level?: string
+  evidence?: string[]
+}
+
 export interface StudentProfileResult {
   complete_score: number
   competitiveness_score: number
   score_level: string
   soft_skills: string[]
+  employment_ability_profile?: Record<string, EmploymentAbilityDimensionItem>
   strengths: string[]
   weaknesses: string[]
   missing_dimensions: string[]

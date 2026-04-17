@@ -176,6 +176,7 @@ class StudentProfileOutput:
     skill_profile: Dict[str, Any] = field(default_factory=dict)
     certificate_profile: List[str] = field(default_factory=list)
     soft_skill_profile: Dict[str, Any] = field(default_factory=dict)
+    employment_ability_profile: Dict[str, Dict[str, Any]] = field(default_factory=dict)
     complete_score: float = 0.0
     competitiveness_score: float = 0.0
     strengths: List[str] = field(default_factory=list)

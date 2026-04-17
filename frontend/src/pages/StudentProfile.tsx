@@ -6,6 +6,44 @@ import { careerApi } from '../services/api'
 import { useState } from 'react'
 import '../styles/StudentProfile.css'
 
+const EMPLOYMENT_ABILITY_DIMENSIONS = ['专业技能', '证书', '创新能力', '学习能力', '抗压能力', '沟通能力', '实习能力']
+
+const clampScore = (value: number): number => Math.max(0, Math.min(100, Math.round(value)))
+
+const parseScore = (value: unknown, fallback = 0): number => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (!trimmed) {
+      return fallback
+    }
+    const normalized = trimmed.endsWith('%') ? trimmed.slice(0, -1) : trimmed
+    const parsed = Number(normalized)
+    if (Number.isFinite(parsed)) {
+      return parsed
+    }
+  }
+
+  return fallback
+}
+
+const inferAbilityLevel = (score: number): string => {
+  if (score >= 85) return '优秀'
+  if (score >= 70) return '良好'
+  if (score >= 55) return '中等'
+  return '待提升'
+}
+
+const abilityColorByScore = (score: number): string => {
+  if (score >= 85) return '#16a34a'
+  if (score >= 70) return '#1677ff'
+  if (score >= 55) return '#faad14'
+  return '#ff4d4f'
+}
+
 const StudentProfile = () => {
   const studentInfo = useCareerStore((state) => state.studentInfo)
   const studentProfile = useCareerStore((state) => state.studentProfile)
@@ -91,6 +129,56 @@ const StudentProfile = () => {
   const weaknesses = studentProfile?.weaknesses || []
   const missingDimensions = studentProfile?.missing_dimensions || []
   const preferredDirections = studentProfile?.potential_profile?.preferred_directions || normalizedProfile?.occupation_hints || []
+  const employmentAbilityProfile = studentProfile?.employment_ability_profile || {}
+
+  const projectCount = practiceProfile?.project_count || projectExperience.length
+  const internshipCount = practiceProfile?.internship_count || internshipExperience.length
+  const certificateCount = explicitProfile?.certificates?.length || studentInfo.certificates.length || 0
+  const softSkillText = softSkills.join(' ').toLowerCase()
+  const hasLearningSignal = softSkillText.includes('learning') || softSkillText.includes('学习')
+  const hasPressureSignal = softSkillText.includes('problem_solving') || softSkillText.includes('抗压')
+  const hasCommunicationSignal = softSkillText.includes('communication') || softSkillText.includes('沟通') || softSkillText.includes('协作')
+
+  const fallbackAbilityScores: Record<string, number> = {
+    专业技能: technicalScore,
+    证书: certificateCount > 0 ? 40 + certificateCount * 20 : 20,
+    创新能力: projectCount * 24 + (certificateCount > 0 ? 8 : 0),
+    学习能力: technicalScore * 0.65 + hardSkills.length * 4 + (hasLearningSignal ? 12 : 0),
+    抗压能力: (projectCount + internshipCount) * 16 + (hasPressureSignal ? 14 : 0),
+    沟通能力: internshipCount * 25 + projectCount * 10 + (hasCommunicationSignal ? 15 : 0),
+    实习能力: internshipCount * 45,
+  }
+
+  const fallbackAbilityEvidence: Record<string, string[]> = {
+    专业技能: [`硬技能 ${hardSkills.length} 项`, `工具技能 ${toolSkills.length} 项`],
+    证书: [`证书/资格 ${certificateCount} 项`],
+    创新能力: [`项目经历 ${projectCount} 段`, `证书/获奖 ${certificateCount} 项`],
+    学习能力: [`当前技能覆盖 ${hardSkills.length + toolSkills.length} 项`, hasLearningSignal ? '软技能含学习信号' : '建议补充学习能力证据'],
+    抗压能力: [`项目 + 实习共 ${projectCount + internshipCount} 段`, hasPressureSignal ? '软技能含抗压信号' : '建议补充高压场景案例'],
+    沟通能力: [`项目经历 ${projectCount} 段`, `实习经历 ${internshipCount} 段`],
+    实习能力: [`实习经历 ${internshipCount} 段`],
+  }
+
+  const employmentAbilityDimensions = EMPLOYMENT_ABILITY_DIMENSIONS.map((dimension) => {
+    const rawItem = employmentAbilityProfile?.[dimension] || {}
+    const fallbackScore = fallbackAbilityScores[dimension] || 0
+    const score = clampScore(parseScore(rawItem.score, fallbackScore))
+
+    const rawLevel = typeof rawItem.level === 'string' ? rawItem.level.trim() : ''
+    const level = rawLevel || inferAbilityLevel(score)
+
+    const rawEvidence = Array.isArray(rawItem.evidence)
+      ? rawItem.evidence.filter((item) => typeof item === 'string' && item.trim())
+      : []
+    const evidence = (rawEvidence.length > 0 ? rawEvidence : (fallbackAbilityEvidence[dimension] || [])).slice(0, 3)
+
+    return {
+      dimension,
+      score,
+      level,
+      evidence,
+    }
+  })
 
   return (
     <div className="student-profile-container">
@@ -294,6 +382,33 @@ const StudentProfile = () => {
                   />
                 </div>
               </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+        <Col xs={24}>
+          <Card title="就业能力画像（核心维度）" className="profile-card ability-dimension-card">
+            <Row gutter={[16, 16]}>
+              {employmentAbilityDimensions.map((item) => (
+                <Col xs={24} sm={12} lg={8} key={item.dimension}>
+                  <div className="ability-dimension-item">
+                    <div className="ability-dimension-header">
+                      <span className="ability-dimension-title">{item.dimension}</span>
+                      <Tag color={abilityColorByScore(item.score)}>{item.level}</Tag>
+                    </div>
+                    <Progress
+                      percent={item.score}
+                      size="small"
+                      strokeColor={abilityColorByScore(item.score)}
+                    />
+                    {item.evidence.length > 0 && (
+                      <p className="ability-dimension-evidence">{item.evidence.join('；')}</p>
+                    )}
+                  </div>
+                </Col>
+              ))}
             </Row>
           </Card>
         </Col>

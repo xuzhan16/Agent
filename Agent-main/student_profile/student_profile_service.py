@@ -39,12 +39,33 @@ DEFAULT_BUILDER_OUTPUT_PATH = Path("outputs/state/student_profile_input_payload.
 DEFAULT_SCORER_OUTPUT_PATH = Path("outputs/state/student_profile_score_result.json")
 DEFAULT_SERVICE_OUTPUT_PATH = Path("outputs/state/student_profile_service_result.json")
 
+EMPLOYMENT_ABILITY_DIMENSIONS = (
+    "专业技能",
+    "证书",
+    "创新能力",
+    "学习能力",
+    "抗压能力",
+    "沟通能力",
+    "实习能力",
+)
+
+EMPLOYMENT_ABILITY_DIMENSION_ALIASES = {
+    "专业技能": {"专业技能", "技能能力", "professional_skills", "skill"},
+    "证书": {"证书", "证书能力", "certificate", "certification"},
+    "创新能力": {"创新能力", "innovation", "innovation_ability"},
+    "学习能力": {"学习能力", "learning", "learning_ability"},
+    "抗压能力": {"抗压能力", "resilience", "stress_resistance", "pressure_resistance"},
+    "沟通能力": {"沟通能力", "communication", "communication_ability"},
+    "实习能力": {"实习能力", "internship", "internship_ability", "practical_ability"},
+}
+
 
 @dataclass
 class StudentProfileLLMSupplement:
     """大模型补充画像字段。"""
 
     soft_skills: List[str] = field(default_factory=list)
+    employment_ability_profile: Dict[str, Dict[str, Any]] = field(default_factory=dict)
     potential_profile: Dict[str, Any] = field(default_factory=dict)
     strengths: List[str] = field(default_factory=list)
     weaknesses: List[str] = field(default_factory=list)
@@ -61,6 +82,7 @@ class StudentProfileServiceResult:
     certificate_profile: List[str] = field(default_factory=list)
     soft_skill_profile: Dict[str, Any] = field(default_factory=dict)
     soft_skills: List[str] = field(default_factory=list)
+    employment_ability_profile: Dict[str, Dict[str, Any]] = field(default_factory=dict)
     potential_profile: Dict[str, Any] = field(default_factory=dict)
     complete_score: float = 0.0
     competitiveness_score: float = 0.0
@@ -329,6 +351,283 @@ def _build_ability_evidence(
     }
 
 
+def _to_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _clip_percent(value: Any) -> float:
+    return round(min(100.0, max(0.0, _to_float(value))), 2)
+
+
+def _infer_ability_level(score: float) -> str:
+    if score >= 85:
+        return "优秀"
+    if score >= 70:
+        return "良好"
+    if score >= 55:
+        return "中等"
+    return "待提升"
+
+
+def _extract_score(value: Any) -> Optional[float]:
+    if isinstance(value, (int, float)):
+        return _clip_percent(value)
+
+    text = _clean_text(value)
+    if not text:
+        return None
+
+    normalized_text = text[:-1] if text.endswith("%") else text
+    try:
+        return _clip_percent(float(normalized_text))
+    except (TypeError, ValueError):
+        return None
+
+
+def _build_dimension_item(score: float, evidence: List[str], level: str = "") -> Dict[str, Any]:
+    normalized_score = _clip_percent(score)
+    return {
+        "score": normalized_score,
+        "level": _clean_text(level) or _infer_ability_level(normalized_score),
+        "evidence": _dedup_keep_order([_clean_text(item) for item in evidence if _clean_text(item)])[:4],
+    }
+
+
+def _build_default_employment_ability_profile(
+    profile_input_payload: Dict[str, Any],
+    rule_score_result: Dict[str, Any],
+    soft_skills: List[str],
+    soft_skill_profile: Dict[str, Any],
+    certificate_profile: List[str],
+) -> Dict[str, Dict[str, Any]]:
+    normalized_profile = _safe_dict(profile_input_payload.get("normalized_profile"))
+    normalized_education = _safe_dict(profile_input_payload.get("normalized_education"))
+    explicit_profile = _safe_dict(profile_input_payload.get("explicit_profile"))
+    practice_profile = _safe_dict(profile_input_payload.get("practice_profile"))
+    competitiveness_detail = _safe_dict(rule_score_result.get("competitiveness_detail"))
+
+    hard_skills = [
+        _clean_text(item)
+        for item in _safe_list(normalized_profile.get("hard_skills"))
+        if _clean_text(item)
+    ]
+    tool_skills = [
+        _clean_text(item)
+        for item in _safe_list(normalized_profile.get("tool_skills"))
+        if _clean_text(item)
+    ]
+    certificates = _dedup_keep_order(
+        [
+            _clean_text(item)
+            for item in certificate_profile
+            + _safe_list(explicit_profile.get("certificates"))
+            if _clean_text(item)
+        ]
+    )
+
+    project_count = _to_non_negative_int(practice_profile.get("project_count"))
+    if project_count <= 0:
+        project_count = len(_safe_list(explicit_profile.get("project_experience")))
+
+    internship_count = _to_non_negative_int(practice_profile.get("internship_count"))
+    if internship_count <= 0:
+        internship_count = len(_safe_list(explicit_profile.get("internship_experience")))
+
+    award_count = _to_non_negative_int(practice_profile.get("award_count"))
+    practice_tags = [
+        _clean_text(item)
+        for item in _safe_list(practice_profile.get("practice_tags"))
+        + _safe_list(normalized_profile.get("experience_tags"))
+        if _clean_text(item)
+    ]
+    internship_keywords = [
+        _clean_text(item)
+        for item in _safe_list(practice_profile.get("internship_keywords"))
+        if _clean_text(item)
+    ]
+
+    soft_skill_text = " ".join(
+        [
+            _clean_text(item)
+            for item in soft_skills
+            + list(soft_skill_profile.keys())
+            + list(soft_skill_profile.values())
+            if _clean_text(item)
+        ]
+    ).lower()
+
+    has_learning_signal = any(keyword in soft_skill_text for keyword in ("learning", "学习", "自驱", "成长"))
+    has_communication_signal = any(
+        keyword in soft_skill_text for keyword in ("communication", "沟通", "协作", "表达", "team")
+    )
+    has_pressure_signal = any(
+        keyword in soft_skill_text for keyword in ("problem_solving", "抗压", "压力", "韧性", "resilience")
+    )
+    has_innovation_signal = any(
+        keyword in soft_skill_text for keyword in ("innovation", "创新", "研究", "建模", "算法", "creative")
+    )
+
+    skill_score = _clip_percent(
+        (
+            _to_float(competitiveness_detail.get("skill_base_score"))
+            + _to_float(competitiveness_detail.get("tool_base_score"))
+        )
+        / 35.0
+        * 100.0
+    )
+    certificate_score = _clip_percent(
+        _to_float(competitiveness_detail.get("qualification_base_score")) / 10.0 * 100.0
+    )
+    internship_score = _clip_percent(
+        _to_float(competitiveness_detail.get("internship_base_score")) / 20.0 * 100.0
+    )
+
+    innovation_score = project_count * 18.0 + award_count * 12.0
+    if any(keyword in " ".join(practice_tags) for keyword in ("建模", "科研", "算法", "创新")):
+        innovation_score += 15.0
+    if has_innovation_signal:
+        innovation_score += 10.0
+    innovation_score = _clip_percent(innovation_score)
+
+    learning_score = skill_score * 0.45 + min(40.0, len(hard_skills) * 5.0 + len(tool_skills) * 4.0)
+    if has_learning_signal:
+        learning_score += 12.0
+    if _clean_text(normalized_education.get("degree")):
+        learning_score += 6.0
+    learning_score = _clip_percent(learning_score)
+
+    stress_score = internship_count * 22.0 + project_count * 14.0
+    if has_pressure_signal:
+        stress_score += 16.0
+    if project_count + internship_count >= 3:
+        stress_score += 8.0
+    stress_score = _clip_percent(stress_score)
+
+    communication_score = internship_count * 24.0 + project_count * 10.0
+    if has_communication_signal:
+        communication_score += 18.0
+    if internship_count > 0 and project_count > 0:
+        communication_score += 6.0
+    communication_score = _clip_percent(communication_score)
+
+    return {
+        "专业技能": _build_dimension_item(
+            score=skill_score,
+            evidence=[
+                f"硬技能 {len(hard_skills)} 项",
+                f"工具技能 {len(tool_skills)} 项",
+                f"核心技能示例: {', '.join(hard_skills[:3])}" if hard_skills else "待补充硬技能",
+            ],
+        ),
+        "证书": _build_dimension_item(
+            score=certificate_score,
+            evidence=[
+                f"证书/背书 {len(certificates)} 项",
+                f"证书示例: {', '.join(certificates[:3])}" if certificates else "暂无证书背书",
+            ],
+        ),
+        "创新能力": _build_dimension_item(
+            score=innovation_score,
+            evidence=[
+                f"项目经历 {project_count} 段",
+                f"获奖/竞赛 {award_count} 项",
+                f"实践标签: {', '.join(practice_tags[:3])}" if practice_tags else "建议补充科研/创新类实践",
+            ],
+        ),
+        "学习能力": _build_dimension_item(
+            score=learning_score,
+            evidence=[
+                f"已覆盖技能总数 {len(hard_skills) + len(tool_skills)} 项",
+                "软技能含学习信号" if has_learning_signal else "建议补充学习能力证明",
+                f"学历层次: {_clean_text(normalized_education.get('degree')) or '未明确'}",
+            ],
+        ),
+        "抗压能力": _build_dimension_item(
+            score=stress_score,
+            evidence=[
+                f"项目 + 实习共 {project_count + internship_count} 段",
+                "软技能含抗压/问题解决信号" if has_pressure_signal else "建议补充高压场景实践证据",
+            ],
+        ),
+        "沟通能力": _build_dimension_item(
+            score=communication_score,
+            evidence=[
+                f"项目经历 {project_count} 段",
+                f"实习经历 {internship_count} 段",
+                "软技能含沟通协作信号" if has_communication_signal else "建议补充跨团队协作案例",
+            ],
+        ),
+        "实习能力": _build_dimension_item(
+            score=internship_score,
+            evidence=[
+                f"实习经历 {internship_count} 段",
+                f"实习关键词: {', '.join(internship_keywords[:3])}" if internship_keywords else "暂无实习关键词证据",
+            ],
+        ),
+    }
+
+
+def _merge_dimension_item(default_item: Dict[str, Any], llm_value: Any) -> Dict[str, Any]:
+    merged = deepcopy(default_item) if default_item else _build_dimension_item(0.0, [])
+    llm_score = None
+    llm_level = ""
+    llm_evidence: List[str] = []
+
+    if isinstance(llm_value, dict):
+        llm_score = _extract_score(llm_value.get("score"))
+        if llm_score is None:
+            llm_score = _extract_score(llm_value.get("value"))
+        llm_level = _clean_text(llm_value.get("level"))
+        llm_evidence = [
+            _clean_text(item)
+            for item in _safe_list(llm_value.get("evidence"))
+            if _clean_text(item)
+        ]
+        comment = _clean_text(
+            llm_value.get("comment")
+            or llm_value.get("summary")
+            or llm_value.get("reason")
+        )
+        if comment:
+            llm_evidence.append(comment)
+    else:
+        llm_score = _extract_score(llm_value)
+
+    if llm_score is not None:
+        merged["score"] = _clip_percent(llm_score)
+    merged["level"] = llm_level or _clean_text(merged.get("level")) or _infer_ability_level(_to_float(merged.get("score")))
+
+    merged["evidence"] = _dedup_keep_order(
+        _safe_list(merged.get("evidence")) + llm_evidence
+    )[:4]
+    return merged
+
+
+def _normalize_employment_ability_profile(
+    llm_profile: Dict[str, Any],
+    default_profile: Dict[str, Dict[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    source = _safe_dict(llm_profile)
+    normalized: Dict[str, Dict[str, Any]] = {}
+
+    for dimension in EMPLOYMENT_ABILITY_DIMENSIONS:
+        dimension_value = None
+        for alias in EMPLOYMENT_ABILITY_DIMENSION_ALIASES.get(dimension, {dimension}):
+            if alias in source:
+                dimension_value = source.get(alias)
+                break
+
+        normalized[dimension] = _merge_dimension_item(
+            default_item=_safe_dict(default_profile.get(dimension)),
+            llm_value=dimension_value,
+        )
+
+    return normalized
+
+
 def normalize_llm_student_profile_result(
     llm_result: Dict[str, Any],
     profile_input_payload: Dict[str, Any],
@@ -401,9 +700,22 @@ def normalize_llm_student_profile_result(
     if not ability_evidence:
         ability_evidence = _build_ability_evidence(profile_input_payload, rule_score_result)
 
+    default_employment_ability_profile = _build_default_employment_ability_profile(
+        profile_input_payload=profile_input_payload,
+        rule_score_result=rule_score_result,
+        soft_skills=soft_skills,
+        soft_skill_profile=soft_skill_profile,
+        certificate_profile=certificate_profile,
+    )
+    employment_ability_profile = _normalize_employment_ability_profile(
+        llm_profile=_safe_dict(llm_result.get("employment_ability_profile")),
+        default_profile=default_employment_ability_profile,
+    )
+
     return asdict(
         StudentProfileLLMSupplement(
             soft_skills=soft_skills,
+            employment_ability_profile=employment_ability_profile,
             potential_profile=potential_profile,
             strengths=strengths,
             weaknesses=weaknesses,
@@ -501,6 +813,7 @@ def build_student_profile_llm_input(
         },
         "generation_requirements": {
             "soft_skills": "从项目、实习、自我评价和经历表述中归纳软技能标签。",
+            "employment_ability_profile": "输出至少包含专业技能、证书、创新能力、学习能力、抗压能力、沟通能力、实习能力7个维度；每个维度包含 score(0-100)、level、evidence。",
             "potential_profile": "结合专业、技能、实践、方向聚焦度，给出潜力画像。",
             "strengths": "总结学生相对优势，尽量可落到可证明证据。",
             "weaknesses": "总结当前主要短板，避免泛泛而谈。",
@@ -554,6 +867,7 @@ def merge_rule_and_llm_result(
             for item in _safe_list(normalized_llm_result.get("soft_skills"))
             if _clean_text(item)
         ],
+        employment_ability_profile=_safe_dict(normalized_llm_result.get("employment_ability_profile")),
         potential_profile=_safe_dict(normalized_llm_result.get("potential_profile")),
         complete_score=float(rule_score_result.get("profile_completeness_score") or 0.0),
         competitiveness_score=float(rule_score_result.get("competitiveness_base_score") or 0.0),
@@ -622,6 +936,7 @@ class StudentProfileService:
             "service_name": "student_profile_service",
             "expected_fields": [
                 "soft_skills",
+                "employment_ability_profile",
                 "potential_profile",
                 "strengths",
                 "weaknesses",
