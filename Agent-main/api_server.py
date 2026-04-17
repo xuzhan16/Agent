@@ -6,6 +6,7 @@ import shutil
 import asyncio
 import re
 import uuid
+import csv
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -56,6 +57,15 @@ AI_MAX_HISTORY_MESSAGES = 12
 AI_MAX_CONTEXT_CHUNKS = 6
 AI_CONTEXT_CHUNK_MAX_CHARS = 420
 AI_SEMANTIC_TOP_K = 3
+AI_SQL_MAX_ROWS = 15
+AI_SQL_CONTEXT_ROWS = 8
+AI_SQL_MAX_VALUE_CHARS = 120
+AI_SQL_TABLE_NAME = "jobs"
+AI_SQL_FORBIDDEN_PATTERN = re.compile(
+    r"\b(insert|update|delete|drop|alter|create|attach|detach|pragma|vacuum|replace|truncate|grant|revoke|execute|exec)\b",
+    re.IGNORECASE,
+)
+AI_SQL_FROM_JOIN_PATTERN = re.compile(r"\b(?:from|join)\s+([a-zA-Z_][\w]*)", re.IGNORECASE)
 PERSONAL_CONTEXT_PATTERN = re.compile(r"我|我的|根据我的|按我的|当前|这个岗位|结合我的")
 CITY_SUFFIX_PATTERN = re.compile(r"([\u4e00-\u9fff]{2,12}(?:市|省|自治区|特别行政区|自治州|地区|盟|县|区))")
 COMMON_CITY_HINTS = [
@@ -1095,6 +1105,7 @@ def _format_context_for_prompt(
     snapshot: Dict[str, Any],
     chunks: List[Dict[str, str]],
     semantic_hits: Optional[List[Dict[str, Any]]] = None,
+    sql_context: Optional[Dict[str, Any]] = None,
 ) -> str:
     loaded_files = "、".join(_safe_list(snapshot.get("loaded_files"))) or "无"
     missing_files = "、".join(_safe_list(snapshot.get("missing_files"))) or "无"
@@ -1119,6 +1130,13 @@ def _format_context_for_prompt(
                 f"- [semantic_kb] {hit.get('standard_job_name')} "
                 f"(score={hit.get('score')}): {hit.get('doc_text_excerpt')}"
             )
+    context_lines.append("SQL 查询上下文：")
+    sql_context_dict = _safe_dict(sql_context)
+    sql_context_text = _clean_text(sql_context_dict.get("context_text"))
+    if sql_context_text:
+        context_lines.extend(sql_context_text.splitlines())
+    else:
+        context_lines.append("- 未启用 SQL 查询或当前问题不需要结构化查询")
     return "\n".join(context_lines)
 
 
@@ -1264,6 +1282,483 @@ def _retrieve_semantic_hits(question: str, snapshot: Dict[str, Any], top_k: int 
         return []
 
 
+def _ai_sql_data_csv_path() -> Path:
+    return _project_root() / "outputs" / "intermediate" / "jobs_extracted_full.csv"
+
+
+def _read_csv_header(csv_path: Path) -> List[str]:
+    if not csv_path.exists():
+        return []
+    try:
+        with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.reader(f)
+            first_row = next(reader, [])
+            return [_clean_text(item) for item in first_row if _clean_text(item)]
+    except Exception:
+        return []
+
+
+def _should_use_sql_query(question: str) -> bool:
+    normalized = _clean_text(question)
+    if not normalized:
+        return False
+    sql_keywords = [
+        "公司",
+        "企业",
+        "薪资",
+        "工资",
+        "收入",
+        "城市",
+        "地区",
+        "地点",
+        "岗位",
+        "职位",
+        "推荐",
+        "有哪些",
+        "多少",
+        "筛选",
+        "地域",
+    ]
+    return any(keyword in normalized for keyword in sql_keywords)
+
+
+def _extract_sql_from_text(value: str) -> str:
+    text = _clean_text(value)
+    if not text:
+        return ""
+    fenced = re.search(r"```(?:sql)?\s*(.*?)```", text, flags=re.IGNORECASE | re.DOTALL)
+    if fenced:
+        text = _clean_text(fenced.group(1))
+    statements = [item.strip() for item in text.split(";") if _clean_text(item)]
+    return _clean_text(statements[0]) if statements else ""
+
+
+def _sanitize_readonly_sql(sql_text: str, table_name: str = AI_SQL_TABLE_NAME) -> str:
+    sql = _extract_sql_from_text(sql_text)
+    if not sql:
+        return ""
+    if "--" in sql or "/*" in sql or "*/" in sql:
+        return ""
+    if AI_SQL_FORBIDDEN_PATTERN.search(sql):
+        return ""
+
+    normalized = sql.strip()
+    lowered = normalized.lower()
+    if not lowered.startswith("select"):
+        return ""
+
+    table_names = AI_SQL_FROM_JOIN_PATTERN.findall(normalized)
+    if not table_names:
+        return ""
+    for table in table_names:
+        clean_table = _clean_text(table).strip('"`[]').lower()
+        if clean_table != table_name.lower():
+            return ""
+
+    if " limit " not in f" {lowered} ":
+        normalized = f"{normalized} LIMIT {AI_SQL_MAX_ROWS}"
+    else:
+        def _clamp_limit(match: re.Match) -> str:
+            try:
+                raw_value = int(match.group(1))
+            except Exception:
+                raw_value = AI_SQL_MAX_ROWS
+            return f"LIMIT {min(max(raw_value, 1), AI_SQL_MAX_ROWS)}"
+
+        normalized = re.sub(r"\blimit\s+(\d+)\b", _clamp_limit, normalized, flags=re.IGNORECASE)
+
+    return normalized
+
+
+def _convert_salary_token(value: str, unit: str) -> Optional[float]:
+    number = _safe_float(value)
+    if number is None:
+        return None
+    unit_text = _clean_text(unit).lower()
+    if unit_text == "k":
+        return number * 1000.0
+    if unit_text in {"w", "万"}:
+        return number * 10000.0
+    return number
+
+
+def _extract_salary_floor_from_question(question: str) -> Optional[float]:
+    normalized = _clean_text(question)
+    if not normalized:
+        return None
+    if not any(keyword in normalized for keyword in ["薪资", "工资", "收入", "月薪", "k", "K", "w", "W", "万"]):
+        return None
+
+    range_match = re.search(r"(\d+(?:\.\d+)?)\s*[-~到至]\s*(\d+(?:\.\d+)?)\s*(k|K|w|W|万)?", normalized)
+    if range_match:
+        return _convert_salary_token(range_match.group(1), range_match.group(3) or "")
+
+    min_match = re.search(
+        r"(?:不低于|不少于|至少|大于等于|>=|以上|达到|目标|期望|薪资|工资|月薪)\s*(\d+(?:\.\d+)?)\s*(k|K|w|W|万)?",
+        normalized,
+    )
+    if min_match:
+        return _convert_salary_token(min_match.group(1), min_match.group(2) or "")
+
+    loose_match = re.search(r"(\d+(?:\.\d+)?)\s*(k|K|w|W|万)", normalized)
+    if loose_match:
+        return _convert_salary_token(loose_match.group(1), loose_match.group(2) or "")
+
+    return None
+
+
+def _extract_job_keyword_from_question(question: str) -> str:
+    normalized = _clean_text(question)
+    if not normalized:
+        return ""
+
+    lower_text = normalized.lower()
+    priority_keywords = [
+        "java",
+        "python",
+        "golang",
+        "c++",
+        "前端",
+        "后端",
+        "测试",
+        "运维",
+        "算法",
+        "数据",
+        "产品",
+        "安卓",
+        "android",
+        "ios",
+    ]
+    for keyword in priority_keywords:
+        if keyword in lower_text or keyword in normalized:
+            return keyword
+
+    pattern_match = re.search(r"([\u4e00-\u9fffA-Za-z0-9+#/]{2,20}(?:开发|测试|工程师|运维|算法|产品))", normalized)
+    if pattern_match:
+        return _clean_text(pattern_match.group(1))
+    return ""
+
+
+def _build_rule_based_sql(question: str, table_name: str = AI_SQL_TABLE_NAME) -> str:
+    city = _extract_city_from_text(question)
+    salary_floor = _extract_salary_floor_from_question(question)
+    job_keyword = _extract_job_keyword_from_question(question)
+
+    where_conditions = [
+        "company_name IS NOT NULL",
+        "TRIM(company_name) != ''",
+    ]
+    if city:
+        city_sql = city.replace("'", "''")
+        where_conditions.append(f"city LIKE '%{city_sql}%'")
+    if salary_floor is not None:
+        where_conditions.append(
+            f"COALESCE(salary_month_max, salary_max, 0) >= {float(salary_floor):.2f}"
+        )
+    if job_keyword:
+        keyword_sql = job_keyword.replace("'", "''")
+        where_conditions.append(
+            "(" +
+            f"job_title LIKE '%{keyword_sql}%' OR "
+            f"job_title_norm LIKE '%{keyword_sql}%' OR "
+            f"standard_job_name_y LIKE '%{keyword_sql}%'" +
+            ")"
+        )
+
+    where_sql = " AND ".join(where_conditions)
+    return (
+        "SELECT "
+        "company_name, city, standard_job_name_y AS standard_job_name, job_title, "
+        "salary_month_min, salary_month_max, industry, company_size, company_type "
+        f"FROM {table_name} "
+        f"WHERE {where_sql} "
+        "ORDER BY COALESCE(salary_month_max, salary_max, 0) DESC, "
+        "COALESCE(salary_month_min, salary_min, 0) DESC "
+        f"LIMIT {AI_SQL_MAX_ROWS}"
+    )
+
+
+def _generate_sql_via_llm(question: str, history: List[Dict[str, str]], table_columns: List[str]) -> str:
+    llm_config = DEFAULT_LLM_CONFIG
+    columns_text = ", ".join(table_columns[:120])
+    history_lines = []
+    for item in history[-4:]:
+        role = _clean_text(item.get("role"))
+        content = _clean_text(item.get("content"))
+        if role and content:
+            history_lines.append(f"{role}: {content}")
+
+    payload_messages = [
+        {
+            "role": "system",
+            "content": (
+                "你是 SQLite SQL 生成器，只输出一条 SQL，不要解释。"
+                "必须满足：1) 只允许 SELECT；2) 只查询 jobs 表；3) 默认 LIMIT<=15；"
+                "4) 优先返回公司、城市、岗位、薪资列；5) 不要输出 markdown。"
+                f"\n可用字段：{columns_text}"
+            ),
+        },
+        {
+            "role": "user",
+            "content": (
+                f"对话历史（可选参考）：{'; '.join(history_lines) if history_lines else '无'}\n"
+                f"用户当前问题：{_clean_text(question)}\n"
+                "请生成一条可直接执行的 SQLite SQL。"
+            ),
+        },
+    ]
+
+    payload = {
+        "model": llm_config.model_name,
+        "temperature": 0.0,
+        "max_tokens": 260,
+        "messages": payload_messages,
+    }
+    headers = {"Content-Type": "application/json"}
+    api_key = _clean_text(llm_config.api_key) or _clean_text(os.getenv(llm_config.api_key_env_name))
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+
+    req = urllib_request.Request(
+        llm_config.api_base_url.rstrip("/") + "/chat/completions",
+        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        headers=headers,
+        method="POST",
+    )
+
+    with urllib_request.urlopen(req, timeout=llm_config.timeout_seconds) as resp:
+        response_payload = json.loads(resp.read().decode("utf-8"))
+
+    content = _clean_text(
+        _safe_dict(_safe_list(response_payload.get("choices"))[0]).get("message", {}).get("content")
+        if _safe_list(response_payload.get("choices"))
+        else ""
+    )
+    return _extract_sql_from_text(content)
+
+
+def _plan_sql_query(question: str, history: List[Dict[str, str]], table_columns: List[str]) -> Dict[str, Any]:
+    llm_error = ""
+    llm_sql = ""
+    try:
+        llm_sql = _sanitize_readonly_sql(_generate_sql_via_llm(question, history, table_columns))
+    except Exception as exc:
+        llm_error = str(exc)
+
+    if llm_sql:
+        return {
+            "sql": llm_sql,
+            "source": "llm_sql",
+            "llm_error": llm_error,
+        }
+
+    fallback_sql = _sanitize_readonly_sql(_build_rule_based_sql(question))
+    return {
+        "sql": fallback_sql,
+        "source": "rule_fallback",
+        "llm_error": llm_error or "LLM SQL 为空或未通过安全校验",
+    }
+
+
+def _quote_sql_identifier(name: str) -> str:
+    return '"' + _clean_text(name).replace('"', '""') + '"'
+
+
+def _execute_sql_on_jobs_csv(csv_path: Path, sql: str, max_rows: int = AI_SQL_MAX_ROWS) -> Dict[str, Any]:
+    if not csv_path.exists():
+        return {"success": False, "error": f"SQL 数据源不存在：{csv_path.name}", "rows": [], "columns": []}
+
+    try:
+        with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.DictReader(f)
+            fieldnames = [_clean_text(item) for item in (reader.fieldnames or []) if _clean_text(item)]
+            if not fieldnames:
+                return {"success": False, "error": "CSV 表头为空", "rows": [], "columns": []}
+
+            real_columns = {
+                "_source_index",
+                "source_row_no",
+                "salary_min",
+                "salary_max",
+                "salary_months",
+                "salary_month_min",
+                "salary_month_max",
+                "company_size_min",
+                "company_size_max",
+                "completeness_score",
+                "cs_filter_confidence",
+                "cs_filter_cs_score",
+                "cs_filter_non_cs_score",
+                "confidence",
+            }
+            bool_columns = {
+                "is_salary_negotiable",
+                "is_abnormal",
+                "is_duplicate_removed",
+                "is_cs_related",
+                "cs_filter_is_ambiguous_title",
+                "is_same_standard_job",
+                "extract_success",
+            }
+
+            conn = sqlite3.connect(":memory:")
+            try:
+                ddl_columns = []
+                for col in fieldnames:
+                    col_type = "REAL" if col in real_columns else ("INTEGER" if col in bool_columns else "TEXT")
+                    ddl_columns.append(f"{_quote_sql_identifier(col)} {col_type}")
+                conn.execute(f"CREATE TABLE {_quote_sql_identifier(AI_SQL_TABLE_NAME)} ({', '.join(ddl_columns)})")
+
+                insert_sql = (
+                    f"INSERT INTO {_quote_sql_identifier(AI_SQL_TABLE_NAME)} "
+                    f"({', '.join(_quote_sql_identifier(col) for col in fieldnames)}) "
+                    f"VALUES ({', '.join(['?'] * len(fieldnames))})"
+                )
+
+                batch_values = []
+                for row in reader:
+                    item_values = []
+                    row_dict = row if isinstance(row, dict) else {}
+                    for col in fieldnames:
+                        raw_value = row_dict.get(col)
+                        if col in real_columns:
+                            item_values.append(_safe_float(raw_value))
+                        elif col in bool_columns:
+                            raw_text = _clean_text(raw_value).lower()
+                            item_values.append(1 if raw_text in {"1", "true", "yes", "y"} else 0)
+                        else:
+                            item_values.append(_clean_text(raw_value))
+                    batch_values.append(item_values)
+                    if len(batch_values) >= 800:
+                        conn.executemany(insert_sql, batch_values)
+                        batch_values = []
+                if batch_values:
+                    conn.executemany(insert_sql, batch_values)
+
+                cursor = conn.execute(sql)
+                columns = [item[0] for item in (cursor.description or [])]
+                fetched = cursor.fetchmany(max_rows)
+
+                rows = []
+                for row in fetched:
+                    row_dict = {}
+                    for index, col in enumerate(columns):
+                        value = row[index] if index < len(row) else None
+                        if isinstance(value, float) and value.is_integer():
+                            value = int(value)
+                        row_dict[col] = value
+                    rows.append(row_dict)
+
+                return {
+                    "success": True,
+                    "error": "",
+                    "columns": columns,
+                    "rows": rows,
+                }
+            finally:
+                conn.close()
+    except Exception as exc:
+        return {
+            "success": False,
+            "error": f"SQL 查询执行失败: {exc}",
+            "columns": [],
+            "rows": [],
+        }
+
+
+def _truncate_sql_value(value: Any, max_chars: int = AI_SQL_MAX_VALUE_CHARS) -> str:
+    text = _clean_text(value)
+    if len(text) <= max_chars:
+        return text
+    return f"{text[: max_chars - 1]}…"
+
+
+def _build_sql_context_text(sql_plan: Dict[str, Any], sql_exec: Dict[str, Any], data_file_name: str) -> str:
+    lines = [
+        f"- SQL 数据源：{data_file_name}",
+        f"- SQL 生成来源：{_clean_text(sql_plan.get('source')) or 'unknown'}",
+    ]
+    if _clean_text(sql_plan.get("llm_error")):
+        lines.append(f"- SQL 生成备注：{_truncate_sql_value(sql_plan.get('llm_error'), 180)}")
+
+    sql_text = _clean_text(sql_plan.get("sql"))
+    if sql_text:
+        lines.append(f"- SQL 语句：{sql_text}")
+    else:
+        lines.append("- SQL 语句：未生成")
+
+    if not bool(sql_exec.get("success")):
+        lines.append(f"- SQL 执行失败：{_clean_text(sql_exec.get('error')) or '未知错误'}")
+        return "\n".join(lines)
+
+    rows = _safe_list(sql_exec.get("rows"))
+    lines.append(f"- SQL 查询结果行数：{len(rows)}")
+    if not rows:
+        lines.append("- 未查到匹配记录")
+        return "\n".join(lines)
+
+    lines.append(f"- SQL 结果预览（最多 {AI_SQL_CONTEXT_ROWS} 行）：")
+    for row in rows[:AI_SQL_CONTEXT_ROWS]:
+        row_dict = _safe_dict(row)
+        if not row_dict:
+            continue
+        keys = list(row_dict.keys())[:8]
+        row_text = "；".join(
+            f"{key}={_truncate_sql_value(row_dict.get(key))}"
+            for key in keys
+        )
+        lines.append(f"  - {row_text}")
+    return "\n".join(lines)
+
+
+def _build_sql_query_context(question: str, history: List[Dict[str, str]]) -> Dict[str, Any]:
+    result: Dict[str, Any] = {
+        "enabled": False,
+        "context_text": "",
+        "generated_sql": "",
+        "sql_source": "",
+        "row_count": 0,
+        "rows": [],
+        "columns": [],
+        "error": "",
+        "data_file": "",
+    }
+
+    if not _should_use_sql_query(question):
+        return result
+
+    csv_path = _ai_sql_data_csv_path()
+    result["enabled"] = True
+    result["data_file"] = csv_path.name
+
+    table_columns = _read_csv_header(csv_path)
+    if not table_columns:
+        result["error"] = f"SQL 数据文件不可用：{csv_path.name}"
+        result["context_text"] = f"- SQL 数据文件不可用：{csv_path.name}"
+        return result
+
+    sql_plan = _plan_sql_query(question=question, history=history, table_columns=table_columns)
+    sql_text = _clean_text(sql_plan.get("sql"))
+    result["generated_sql"] = sql_text
+    result["sql_source"] = _clean_text(sql_plan.get("source"))
+
+    if not sql_text:
+        result["error"] = _clean_text(sql_plan.get("llm_error")) or "SQL 生成失败"
+        result["context_text"] = _build_sql_context_text(sql_plan, {"success": False, "error": result["error"]}, csv_path.name)
+        return result
+
+    sql_exec = _execute_sql_on_jobs_csv(csv_path=csv_path, sql=sql_text, max_rows=AI_SQL_MAX_ROWS)
+    rows = _safe_list(sql_exec.get("rows"))
+
+    result["rows"] = rows
+    result["columns"] = _safe_list(sql_exec.get("columns"))
+    result["row_count"] = len(rows)
+    result["error"] = _clean_text(sql_exec.get("error"))
+    result["context_text"] = _build_sql_context_text(sql_plan, sql_exec, csv_path.name)
+
+    return result
+
+
 def _invoke_ai_chat_completion(
     user_message: str,
     history: List[Dict[str, str]],
@@ -1376,6 +1871,7 @@ def _build_local_fallback_answer(
     chunks: List[Dict[str, str]],
     web_search_enabled: bool,
     semantic_hits: Optional[List[Dict[str, Any]]] = None,
+    sql_query_context: Optional[Dict[str, Any]] = None,
 ) -> str:
     if not chunks:
         if semantic_hits:
@@ -1422,6 +1918,26 @@ def _build_local_fallback_answer(
         lines.append(f"- 用户地址：{_clean_text(profile.get('user_address')) or '未提供'}")
     if any(keyword in normalized_question for keyword in ["意愿地址", "意向地址", "期望地址", "就业意愿"]):
         lines.append(f"- 就业意愿地址：{_clean_text(profile.get('employment_intention_address')) or '未提供'}")
+
+    sql_context = _safe_dict(sql_query_context)
+    sql_rows = _safe_list(sql_context.get("rows"))
+    sql_generated = _clean_text(sql_context.get("generated_sql"))
+    if sql_generated:
+        lines.append(f"- 已执行 SQL：{sql_generated}")
+    if sql_rows:
+        lines.append(f"- SQL 返回候选记录 {len(sql_rows)} 条（展示前 {min(5, len(sql_rows))} 条）：")
+        for row in sql_rows[:5]:
+            row_dict = _safe_dict(row)
+            if not row_dict:
+                continue
+            keys = list(row_dict.keys())[:8]
+            row_text = "；".join(
+                f"{key}={_truncate_sql_value(row_dict.get(key))}"
+                for key in keys
+            )
+            lines.append(f"  - {row_text}")
+    elif _clean_text(sql_context.get("error")):
+        lines.append(f"- SQL 查询状态：{sql_context.get('error')}")
 
     lines.append("- 结合当前问题召回到的关键档案片段：")
     for chunk in chunks[:4]:
@@ -1967,11 +2483,18 @@ async def handle_ai_chat(req: AIChatRequest):
     snapshot = _build_ai_context_snapshot()
     context_chunks = _retrieve_context_chunks(user_message, snapshot)
     semantic_hits = _retrieve_semantic_hits(user_message, snapshot)
-    context_markdown = _format_context_for_prompt(snapshot, context_chunks, semantic_hits)
 
     memory_store = _load_ai_memory_store()
     conversation_id = _ensure_conversation_id(memory_store, req.conversation_id)
     history = _get_recent_history(memory_store, conversation_id)
+
+    sql_query_context = _build_sql_query_context(user_message, history)
+    context_markdown = _format_context_for_prompt(
+        snapshot,
+        context_chunks,
+        semantic_hits,
+        sql_query_context,
+    )
 
     answer = ""
     answer_source = "local_fallback"
@@ -1990,6 +2513,7 @@ async def handle_ai_chat(req: AIChatRequest):
             chunks=context_chunks,
             web_search_enabled=bool(req.web_search_enabled),
             semantic_hits=semantic_hits,
+            sql_query_context=sql_query_context,
         )
 
     _append_conversation_message(memory_store, conversation_id, "user", user_message)
@@ -2007,10 +2531,19 @@ async def handle_ai_chat(req: AIChatRequest):
                 {
                     *{chunk.get("source") for chunk in context_chunks if chunk.get("source")},
                     *({"semantic_kb"} if semantic_hits else set()),
+                    *({"sql_query"} if _clean_text(_safe_dict(sql_query_context).get("generated_sql")) else set()),
                 }
             ),
             "loaded_files": _safe_list(snapshot.get("loaded_files")),
             "missing_files": _safe_list(snapshot.get("missing_files")),
+            "sql_debug": {
+                "enabled": bool(_safe_dict(sql_query_context).get("enabled")),
+                "sql_source": _clean_text(_safe_dict(sql_query_context).get("sql_source")),
+                "generated_sql": _clean_text(_safe_dict(sql_query_context).get("generated_sql")),
+                "row_count": _safe_dict(sql_query_context).get("row_count", 0),
+                "error": _clean_text(_safe_dict(sql_query_context).get("error")),
+                "data_file": _clean_text(_safe_dict(sql_query_context).get("data_file")),
+            },
         },
     }
 
