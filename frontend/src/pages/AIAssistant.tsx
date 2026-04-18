@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Alert, Button, Card, Empty, Input, Space, Spin, Switch, Tag, Typography } from 'antd'
+import { Alert, Button, Card, Collapse, Empty, Input, Space, Spin, Table, Tag, Typography } from 'antd'
 import { MessageOutlined, ReloadOutlined, RobotOutlined, SendOutlined, UserOutlined } from '@ant-design/icons'
 import { careerApi } from '../services/api'
-import { AIContextSummaryData } from '../types'
+import { AIChatData, AIContextSummaryData, AIResultCard } from '../types'
 import '../styles/AIAssistant.css'
 
 const { TextArea } = Input
@@ -13,6 +13,7 @@ interface ChatMessage {
   content: string
   source?: string
   contextSources?: string[]
+  data?: AIChatData
 }
 
 const AIAssistant = () => {
@@ -24,7 +25,6 @@ const AIAssistant = () => {
   const [conversationId, setConversationId] = useState('')
   const [draft, setDraft] = useState('')
   const [sending, setSending] = useState(false)
-  const [webSearchEnabled, setWebSearchEnabled] = useState(false)
 
   const messageListRef = useRef<HTMLDivElement | null>(null)
 
@@ -80,7 +80,7 @@ const AIAssistant = () => {
       const response = await careerApi.chatWithAI({
         message: question,
         conversation_id: conversationId,
-        web_search_enabled: webSearchEnabled,
+        web_search_enabled: false,
       })
 
       if (!response.success) {
@@ -103,6 +103,7 @@ const AIAssistant = () => {
           content: chatData.answer,
           source: chatData.source,
           contextSources: chatData.used_context_sources || [],
+          data: chatData,
         },
       ])
     } catch (error) {
@@ -128,10 +129,269 @@ const AIAssistant = () => {
     setDraft('')
   }
 
+  const handleQuickPrompt = (prompt: string) => {
+    setDraft(prompt)
+  }
+
+  const renderCompanyCards = (cards?: AIResultCard[]) => {
+    const companyCards = (cards || []).filter((card) => card.type === 'company')
+    if (companyCards.length === 0) {
+      return null
+    }
+
+    return (
+      <div className="ai-company-card-grid">
+        {companyCards.slice(0, 8).map((card, index) => (
+          <Card
+            key={`${card.company_name || 'company'}_${index}`}
+            className="ai-company-result-card"
+            size="small"
+          >
+            <div className="ai-company-card-header">
+              <Typography.Text strong>{card.company_name || '未知公司'}</Typography.Text>
+              {card.city && <Tag color="blue">{card.city}</Tag>}
+            </div>
+            <div className="ai-company-card-title">
+              {card.standard_job_name || card.job_title || '岗位未记录'}
+            </div>
+            <div className="ai-company-card-meta">
+              <Tag color="green">{card.salary_range || '暂无薪资'}</Tag>
+              {card.industry && <Tag>{card.industry}</Tag>}
+              {card.company_size && <Tag>{card.company_size}</Tag>}
+            </div>
+            <Typography.Paragraph className="ai-company-card-reason" ellipsis={{ rows: 2 }}>
+              {card.reason || card.match_reason || '与当前查询条件相关。'}
+            </Typography.Paragraph>
+          </Card>
+        ))}
+      </div>
+    )
+  }
+
+  const renderResultTable = (data?: AIChatData) => {
+    const table = data?.result_table
+    const rows = table?.rows || []
+    if (!table || rows.length === 0) {
+      return null
+    }
+    const columnKeys = table.columns && table.columns.length > 0
+      ? table.columns
+      : Object.keys(rows[0] || {})
+    const columns = columnKeys.map((key) => ({
+      title: key,
+      dataIndex: key,
+      key,
+      render: (value: unknown) => String(value ?? '暂无'),
+    }))
+    const dataSource = rows.map((row, index) => ({
+      key: `row_${index}`,
+      ...row,
+    }))
+    return (
+      <div className="ai-result-table-wrap">
+        <Typography.Text strong>{table.title || '查询结果'}</Typography.Text>
+        <Table
+          size="small"
+          columns={columns}
+          dataSource={dataSource}
+          pagination={false}
+          scroll={{ x: true }}
+        />
+      </div>
+    )
+  }
+
+  const renderEvidenceCollapse = (data?: AIChatData) => {
+    const sql = data?.evidence?.sql || data?.sql_debug
+    const pathGraph = data?.evidence?.path_graph
+    const semanticHits = data?.evidence?.semantic_hits || []
+    if (!sql?.enabled && !pathGraph?.enabled && semanticHits.length === 0) {
+      return null
+    }
+
+    return (
+      <Collapse
+        className="ai-evidence-collapse"
+        size="small"
+        items={[
+          {
+            key: 'evidence',
+            label: '数据来源与查询细节',
+            children: (
+              <Space direction="vertical" size={8} style={{ width: '100%' }}>
+                {sql?.enabled && (
+                  <div className="ai-evidence-block">
+                    <Typography.Text type="secondary">结构化查询</Typography.Text>
+                    <div className="ai-evidence-tags">
+                      <Tag color={sql.data_source === 'sqlite_jobs_db' ? 'green' : 'orange'}>
+                        {sql.data_source === 'sqlite_jobs_db' ? 'jobs.db' : (sql.data_source || 'unknown')}
+                      </Tag>
+                      {sql.db_table && <Tag>表：{sql.db_table}</Tag>}
+                      <Tag>行数：{sql.row_count ?? 0}</Tag>
+                      {sql.sql_source && <Tag>{sql.sql_source}</Tag>}
+                    </div>
+                    {sql.generated_sql && (
+                      <pre className="ai-sql-preview">{sql.generated_sql}</pre>
+                    )}
+                    {sql.error && <Alert type="warning" message={sql.error} showIcon />}
+                  </div>
+                )}
+                {semanticHits.length > 0 && (
+                  <div className="ai-evidence-block">
+                    <Typography.Text type="secondary">语义知识召回</Typography.Text>
+                    <pre className="ai-sql-preview">
+                      {JSON.stringify(semanticHits.slice(0, 3), null, 2)}
+                    </pre>
+                  </div>
+                )}
+                {pathGraph?.enabled && (
+                  <div className="ai-evidence-block">
+                    <Typography.Text type="secondary">岗位路径图谱</Typography.Text>
+                    <div className="ai-evidence-tags">
+                      <Tag color={pathGraph.source === 'neo4j' ? 'green' : 'orange'}>
+                        {pathGraph.source || '本地图谱'}
+                      </Tag>
+                      <Tag>状态：{pathGraph.path_graph_status || 'unknown'}</Tag>
+                      <Tag>晋升：{pathGraph.stats?.promote_edge_count ?? 0}</Tag>
+                      <Tag>转岗：{pathGraph.stats?.transfer_edge_count ?? 0}</Tag>
+                    </div>
+                    {pathGraph.message && <Typography.Text type="secondary">{pathGraph.message}</Typography.Text>}
+                  </div>
+                )}
+              </Space>
+            ),
+          },
+        ]}
+      />
+    )
+  }
+
+  const renderPathGraphResult = (data?: AIChatData) => {
+    const pathGraph = data?.evidence?.path_graph
+    if (!pathGraph?.enabled) {
+      return null
+    }
+    const edges = pathGraph.matched_edges || []
+    return (
+      <div className="ai-path-graph-result">
+        <div className="ai-path-graph-header">
+          <Typography.Text strong>岗位路径图谱结果</Typography.Text>
+          <Space size={6} wrap>
+            <Tag color={pathGraph.source === 'neo4j' ? 'green' : 'orange'}>
+              {pathGraph.source === 'neo4j' ? 'Neo4j' : (pathGraph.source || '本地图谱')}
+            </Tag>
+            <Tag>晋升 {pathGraph.stats?.promote_edge_count ?? 0}</Tag>
+            <Tag>转岗 {pathGraph.stats?.transfer_edge_count ?? 0}</Tag>
+          </Space>
+        </div>
+        {edges.length > 0 ? (
+          <div className="ai-path-edge-list">
+            {edges.slice(0, 8).map((edge, index) => (
+              <div className="ai-path-edge-item" key={`${edge.source_job}_${edge.target_job}_${index}`}>
+                <span>{edge.source_job || '未知岗位'}</span>
+                <strong>{edge.label || edge.relation || '关系'}</strong>
+                <span>{edge.target_job || '未知岗位'}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <Alert type="info" showIcon message="本地图谱中未查到相关真实路径关系。" />
+        )}
+      </div>
+    )
+  }
+
+  const renderLocalSourceTags = (data?: AIChatData) => {
+    const sources = data?.local_sources_used && data.local_sources_used.length > 0
+      ? data.local_sources_used
+      : (data?.used_context_sources || [])
+    const labelMap: Record<string, string> = {
+      jobs_db: 'SQLite jobs.db',
+      csv_fallback: 'CSV fallback',
+      student_profile: '学生画像',
+      job_match: '人岗匹配',
+      career_path: '职业路径',
+      report_data: '报告摘要',
+      semantic_kb: '岗位语义知识库',
+      job_path_graph: '岗位路径图谱',
+      path_graph: '岗位路径图谱',
+      sql_query: '结构化查询',
+      offline_mode: '未联网',
+    }
+    const colorMap: Record<string, string> = {
+      jobs_db: 'green',
+      csv_fallback: 'orange',
+      semantic_kb: 'purple',
+      job_path_graph: 'cyan',
+      path_graph: 'cyan',
+      offline_mode: 'gold',
+    }
+    const normalizedSources = Array.from(new Set([...sources, 'offline_mode']))
+    return (
+      <div className="ai-local-source-tags">
+        {normalizedSources.map((source) => (
+          <Tag key={source} color={colorMap[source] || 'blue'}>
+            {labelMap[source] || source}
+          </Tag>
+        ))}
+      </div>
+    )
+  }
+
+  const renderAssistantMessage = (message: ChatMessage) => {
+    const data = message.data
+    return (
+      <>
+        <p className="ai-message-text">{message.content}</p>
+        {renderCompanyCards(data?.result_cards)}
+        {renderResultTable(data)}
+        {renderPathGraphResult(data)}
+        {renderEvidenceCollapse(data)}
+        {renderLocalSourceTags(data)}
+        {data?.intent && data.intent !== 'general' && (
+          <div className="ai-followup-actions">
+            {[
+              '继续基于上一次查询结果，按薪资从高到低排序',
+              '继续基于上一次查询结果，只看当前系统推荐岗位方向',
+              '继续基于上一次查询结果，只看北京',
+              '结合当前学生画像，生成投递建议',
+              '查看当前推荐岗位的学历、专业、证书和知识点要求',
+            ].map((prompt) => (
+              <Button size="small" key={prompt} onClick={() => handleQuickPrompt(prompt)}>
+                {prompt}
+              </Button>
+            ))}
+          </div>
+        )}
+      </>
+    )
+  }
+
   return (
     <div className="ai-assistant-container">
       <h1 className="page-title">AI 助手</h1>
       <p className="page-description">基于学生画像、岗位匹配、职业路径与报告数据进行智能问答。</p>
+
+      <Card className="ai-capability-card">
+        <div className="ai-capability-header">
+          <RobotOutlined />
+          <div>
+            <Typography.Title level={4}>当前助手能做什么</Typography.Title>
+            <Typography.Text type="secondary">
+              当前助手使用本地知识源，不使用联网搜索：SQLite jobs.db 查公司/薪资/城市样本，岗位路径图谱查晋升/转岗关系，语义知识库补充岗位要求，LLM 只负责解释和总结。
+            </Typography.Text>
+          </div>
+        </div>
+        <div className="ai-capability-tags">
+          <Tag color="blue">查询城市/薪资/公司样本</Tag>
+          <Tag color="cyan">查询岗位晋升/转岗路径</Tag>
+          <Tag color="cyan">解释学生画像与匹配结果</Tag>
+          <Tag color="purple">查询学历/专业/证书要求</Tag>
+          <Tag color="green">分析推荐岗位差异</Tag>
+          <Tag color="geekblue">总结报告行动建议</Tag>
+          <Tag color="orange">联网检索暂未启用</Tag>
+        </div>
+      </Card>
 
       <Card className="ai-summary-card" title="上下文状态" extra={<Button icon={<ReloadOutlined />} onClick={loadContextSummary}>刷新</Button>}>
         {summaryLoading ? (
@@ -176,7 +436,9 @@ const AIAssistant = () => {
               <div key={message.id} className={`ai-message-row ${message.role}`}>
                 {message.role === 'assistant' && <RobotOutlined className="ai-message-avatar" />}
                 <div className={`ai-message-bubble ${message.role}`}>
-                  <p className="ai-message-text">{message.content}</p>
+                  {message.role === 'assistant' ? renderAssistantMessage(message) : (
+                    <p className="ai-message-text">{message.content}</p>
+                  )}
                   {message.role === 'assistant' && (
                     <div className="ai-message-meta">
                       <Tag>{message.source || 'unknown'}</Tag>
@@ -210,10 +472,7 @@ const AIAssistant = () => {
           <div className="ai-input-actions">
             <Space size={12} wrap>
               <Button icon={<MessageOutlined />} onClick={handleNewConversation} disabled={sending}>新会话</Button>
-              <Space>
-                <Typography.Text type="secondary">联网检索</Typography.Text>
-                <Switch checked={webSearchEnabled} onChange={setWebSearchEnabled} />
-              </Space>
+              <Tag color="orange">联网检索暂未启用，本页回答基于本地数据</Tag>
             </Space>
             <Button type="primary" icon={<SendOutlined />} loading={sending} onClick={() => void handleSend()}>
               发送

@@ -110,14 +110,34 @@ export interface JobProfileSummary {
 
 export type RiskLevel = 'high_match' | 'risk' | 'no_match' | string
 
+export interface TargetJobCandidate {
+  standard_job_name?: string
+  candidate_score?: number
+  sample_count?: number
+  job_category?: string
+  mainstream_degree?: string
+  mainstream_majors?: string[]
+  mainstream_certificates?: string[]
+  top_skills?: string[]
+  required_knowledge_points?: string[]
+  preferred_knowledge_points?: string[]
+  match_reason?: string
+  is_core_job?: boolean
+}
+
 export interface JobNameResolution {
+  resolution_status?: 'resolved' | 'needs_confirmation' | 'unresolved' | string
   requested_job_name?: string
   resolved_standard_job_name?: string
+  confirmed_standard_job_name?: string
   asset_found?: boolean
   resolution_method?: string
   resolution_confidence?: number
-  candidate_jobs?: string[]
+  candidate_jobs?: Array<string | TargetJobCandidate>
+  candidate_job_names?: string[]
   matched_alias?: string
+  confirmation_source?: string
+  message?: string
 }
 
 export interface RequirementDistributionItem {
@@ -172,11 +192,14 @@ export interface TargetJobProfileAssets extends RequirementDistributions {
   requested_job_name?: string
   standard_job_name?: string
   resolved_standard_job_name?: string
+  confirmed_standard_job_name?: string
+  resolution_status?: string
   asset_found?: boolean
   resolution_method?: string
   resolution_confidence?: number
   asset_resolution?: JobNameResolution
   evaluation_status?: string
+  candidate_jobs?: Array<string | TargetJobCandidate>
   message?: string
   sample_count?: number
   job_category?: string
@@ -225,23 +248,23 @@ export interface HardInfoEvaluation {
   degree?: {
     student_value?: string
     job_gate?: string
-    pass?: boolean
+    pass?: boolean | null
     reason?: string
   }
   major?: {
     student_value?: string
     job_gate_set?: string[]
-    pass?: boolean
+    pass?: boolean | null
     reason?: string
   }
   certificate?: {
     student_values?: string[]
     must_have_certificates?: string[]
     preferred_certificates?: string[]
-    pass?: boolean
+    pass?: boolean | null
     reason?: string
   }
-  all_pass?: boolean
+  all_pass?: boolean | null
 }
 
 export interface SkillKnowledgeMatch {
@@ -250,15 +273,16 @@ export interface SkillKnowledgeMatch {
   student_knowledge_points?: string[]
   matched_knowledge_points?: string[]
   missing_knowledge_points?: string[]
-  knowledge_point_accuracy?: number
-  pass?: boolean
+  knowledge_point_accuracy?: number | null
+  pass?: boolean | null
   risk_level?: RiskLevel
+  message?: string
 }
 
 export interface ContestEvaluation {
-  hard_info_pass?: boolean
-  skill_accuracy_pass?: boolean
-  contest_match_success?: boolean
+  hard_info_pass?: boolean | null
+  skill_accuracy_pass?: boolean | null
+  contest_match_success?: boolean | null
 }
 
 export interface TargetJobMatch {
@@ -266,14 +290,16 @@ export interface TargetJobMatch {
   asset_job_name?: string
   match_type?: string
   asset_found?: boolean
+  resolution_status?: string
   evaluation_status?: string
   message?: string
   job_name_resolution?: JobNameResolution
+  candidate_jobs?: Array<string | TargetJobCandidate>
   sample_count?: number
-  overall_match_score?: number
-  rule_match_score?: number
-  asset_match_score?: number
-  display_match_score?: number
+  overall_match_score?: number | null
+  rule_match_score?: number | null
+  asset_match_score?: number | null
+  display_match_score?: number | null
   score_source?: string
   score_explanation?: string
   requirement_distributions?: RequirementDistributions
@@ -299,6 +325,13 @@ export interface RecommendationRankingItem {
   recommendation_reason?: string
 }
 
+export interface TargetJobConfirmation {
+  requested_job_name?: string
+  confirmed_standard_job_name?: string
+  confirmation_source?: string
+  confirmed_at?: string
+}
+
 // 岗位匹配结果
 export interface JobMatchResult {
   job_name: string
@@ -321,6 +354,7 @@ export interface JobMatchResult {
   target_job_match?: TargetJobMatch
   recommended_job_match?: RecommendedJobMatch
   recommendation_ranking?: RecommendationRankingItem[]
+  target_job_confirmation?: TargetJobConfirmation
   core_job_profiles?: CoreJobProfile[]
   target_job_profile_assets?: TargetJobProfileAssets
   match_input_payload?: {
@@ -339,6 +373,47 @@ export interface RepresentativePromotionPath {
   edge_count?: number
   source?: string
   selection_reason?: string
+}
+
+export interface JobPathGraphNode {
+  id: string
+  label?: string
+  node_type?: string
+  job_category?: string
+  job_level?: string
+  degree_requirement?: string
+  major_requirement?: string[]
+  occurrence_count?: number | string
+  is_isolated?: boolean
+}
+
+export interface JobPathGraphEdge {
+  id: string
+  source: string
+  target: string
+  relation: 'PROMOTE_TO' | 'TRANSFER_TO' | string
+  label?: string
+  edge_type?: 'promotion' | 'transfer' | string
+  source_name?: string
+  target_name?: string
+  reason?: string
+  confidence?: number | string
+}
+
+export interface JobPathGraphStats {
+  job_node_count?: number
+  promote_edge_count?: number
+  transfer_edge_count?: number
+  total_edge_count?: number
+}
+
+export interface JobPathGraphResponse {
+  graph_status?: 'available' | 'empty' | 'unavailable' | string
+  source?: 'neo4j' | 'csv_fallback' | 'none' | string
+  stats?: JobPathGraphStats
+  nodes?: JobPathGraphNode[]
+  edges?: JobPathGraphEdge[]
+  message?: string
 }
 
 // 职业路径规划结果
@@ -396,14 +471,87 @@ export interface AIContextSummaryData {
   missing_files: string[]
 }
 
+export interface AIResultCard {
+  type?: string
+  company_name?: string
+  city?: string
+  job_title?: string
+  standard_job_name?: string
+  salary_range?: string
+  industry?: string
+  company_size?: string
+  company_type?: string
+  reason?: string
+  match_reason?: string
+}
+
+export interface AIResultTable {
+  title?: string
+  columns?: string[]
+  rows?: Array<Record<string, unknown>>
+}
+
+export interface AISqlEvidence {
+  enabled?: boolean
+  data_source?: string
+  db_table?: string
+  data_file?: string
+  sql_source?: string
+  generated_sql?: string
+  row_count?: number
+  error?: string
+}
+
+export interface AIIntentResult {
+  intent?: string
+  confidence?: number
+  query_domain?: string
+  reason?: string
+  should_use_sql?: boolean
+  should_use_path_graph?: boolean
+  should_use_semantic?: boolean
+  should_use_profile_context?: boolean
+}
+
+export interface AIPathGraphEvidence {
+  enabled?: boolean
+  path_graph_status?: string
+  source?: string
+  stats?: JobPathGraphStats
+  matched_edges?: Array<{
+    source_job?: string
+    target_job?: string
+    relation?: string
+    label?: string
+    source?: string
+  }>
+  summary_text?: string
+  message?: string
+}
+
+export interface AIChatEvidence {
+  context_chunks?: Array<Record<string, unknown>>
+  semantic_hits?: Array<Record<string, unknown>>
+  sql?: AISqlEvidence
+  path_graph?: AIPathGraphEvidence
+}
+
 export interface AIChatData {
   conversation_id: string
+  intent?: string
+  intent_result?: AIIntentResult
   answer: string
   source: string
   context_summary: string
   used_context_sources: string[]
+  local_sources_used?: string[]
   loaded_files: string[]
   missing_files: string[]
+  result_cards?: AIResultCard[]
+  result_table?: AIResultTable
+  summary_stats?: Record<string, unknown>
+  evidence?: AIChatEvidence
+  sql_debug?: AISqlEvidence
 }
 
 // API响应类型

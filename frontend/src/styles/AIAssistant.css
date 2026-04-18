@@ -5,11 +5,41 @@
 }
 
 .ai-summary-card,
+.ai-capability-card,
 .ai-chat-card {
   border-radius: 12px;
   border: none;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
+}
+
+.ai-capability-card {
+  background:
+    radial-gradient(circle at 8% 12%, rgba(59, 130, 246, 0.14), transparent 28%),
+    linear-gradient(135deg, #ffffff 0%, #f5f7ff 52%, #eef2ff 100%);
+}
+
+.ai-capability-header {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.ai-capability-header .anticon {
+  margin-top: 4px;
+  color: #2563eb;
+  font-size: 24px;
+}
+
+.ai-capability-header .ant-typography {
+  margin: 0;
+}
+
+.ai-capability-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
 }
 
 .ai-context-tags {
@@ -74,6 +104,145 @@
   font-size: 14px;
 }
 
+.ai-company-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.ai-company-result-card {
+  border-radius: 12px;
+  border: 1px solid #e7eefc;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.ai-company-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.ai-company-card-title {
+  margin-top: 8px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.ai-company-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 6px;
+}
+
+.ai-company-card-reason {
+  margin-bottom: 0 !important;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.ai-result-table-wrap {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #edf1fa;
+  border-radius: 12px;
+  background: #fbfdff;
+}
+
+.ai-result-table-wrap .ant-table-wrapper {
+  margin-top: 8px;
+}
+
+.ai-evidence-collapse {
+  margin-top: 12px;
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+.ai-evidence-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-evidence-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ai-sql-preview {
+  max-height: 180px;
+  overflow: auto;
+  margin: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+.ai-followup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.ai-path-graph-result {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #d7f0ff;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f8fdff 0%, #eef9ff 100%);
+}
+
+.ai-path-graph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.ai-path-edge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-path-edge-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e6f4ff;
+}
+
+.ai-path-edge-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-path-edge-item strong {
+  color: #0891b2;
+}
+
+.ai-local-source-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
 .ai-message-meta {
   margin-top: 10px;
   display: flex;
@@ -106,5 +275,9 @@
 
   .ai-message-bubble {
     max-width: 92%;
+  }
+
+  .ai-company-card-grid {
+    grid-template-columns: 1fr;
   }
 }

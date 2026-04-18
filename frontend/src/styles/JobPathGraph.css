@@ -1,0 +1,308 @@
+.job-path-graph-page {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+.job-path-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 28px 32px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(14, 165, 233, 0.24), transparent 28%),
+    radial-gradient(circle at 92% 10%, rgba(139, 92, 246, 0.22), transparent 30%),
+    linear-gradient(135deg, #f8fbff 0%, #f3f0ff 100%);
+  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.job-path-hero h1 {
+  margin: 14px 0 10px;
+  font-size: 34px;
+  line-height: 1.2;
+  color: #0f172a;
+  letter-spacing: -0.04em;
+}
+
+.job-path-hero p {
+  max-width: 760px;
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.job-path-alert {
+  margin-top: 18px;
+  border-radius: 14px;
+}
+
+.job-path-stats {
+  margin-top: 18px;
+}
+
+.job-path-stats .ant-card {
+  border: 0;
+  border-radius: 18px;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.07);
+}
+
+.job-path-workspace {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr) 300px;
+  gap: 16px;
+  margin-top: 18px;
+  min-height: 680px;
+}
+
+.graph-control-panel,
+.graph-detail-panel,
+.graph-canvas-card,
+.job-path-list-card,
+.job-path-note-card {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07);
+}
+
+.graph-control-panel,
+.graph-detail-panel {
+  padding: 20px;
+}
+
+.graph-control-panel h3,
+.graph-detail-panel h3 {
+  margin: 0 0 16px;
+  color: #0f172a;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.control-group span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.job-path-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 22px;
+  color: #475569;
+  font-size: 13px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  margin-right: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.legend-promotion {
+  background: #6366f1;
+}
+
+.legend-transfer {
+  background: #06b6d4;
+}
+
+.legend-line {
+  display: inline-block;
+  width: 26px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.legend-promote-line {
+  border-top: 3px solid #22c55e;
+}
+
+.legend-transfer-line {
+  border-top: 3px dashed #f59e0b;
+}
+
+.graph-canvas-card {
+  position: relative;
+  min-height: 680px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+    radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08), transparent 36%),
+    #ffffff;
+  background-size: 28px 28px, 28px 28px, auto, auto;
+}
+
+.graph-canvas {
+  width: 100%;
+  height: 680px;
+}
+
+.graph-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 680px;
+}
+
+.graph-detail-panel {
+  min-height: 680px;
+  max-height: 680px;
+  overflow-y: auto;
+}
+
+.detail-placeholder {
+  display: flex;
+  min-height: 380px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.detail-placeholder .anticon {
+  font-size: 42px;
+  color: #93c5fd;
+}
+
+.graph-detail-content h3 {
+  margin: 12px 0;
+  color: #0f172a;
+  font-size: 20px;
+}
+
+.graph-detail-content p {
+  margin: 10px 0;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.detail-stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.detail-stat-row span {
+  padding: 12px;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: #64748b;
+}
+
+.detail-mini-list {
+  margin-top: 16px;
+}
+
+.detail-mini-list h4 {
+  margin: 0 0 10px;
+  color: #334155;
+}
+
+.detail-mini-list .ant-tag {
+  margin: 0 6px 8px 0;
+  white-space: normal;
+}
+
+.edge-arrow-detail {
+  width: 44px;
+  height: 44px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #22c55e;
+  background: #f0fdf4;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.muted-text {
+  color: #94a3b8;
+}
+
+.job-path-lists {
+  margin-top: 18px;
+}
+
+.job-path-list-card {
+  border: 0;
+}
+
+.job-path-list-card .ant-card-head {
+  border-bottom-color: rgba(148, 163, 184, 0.16);
+}
+
+.path-list-scroll {
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.path-list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 4px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  color: #334155;
+}
+
+.path-list-item:last-child {
+  border-bottom: none;
+}
+
+.path-list-arrow {
+  color: #94a3b8;
+}
+
+.job-path-note-card {
+  margin-top: 18px;
+  border: 0;
+}
+
+@media (max-width: 1180px) {
+  .job-path-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .graph-control-panel,
+  .graph-detail-panel {
+    min-height: auto;
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .job-path-hero {
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  .job-path-hero h1 {
+    font-size: 26px;
+  }
+
+  .graph-canvas,
+  .graph-empty,
+  .graph-canvas-card {
+    height: 560px;
+    min-height: 560px;
+  }
+}

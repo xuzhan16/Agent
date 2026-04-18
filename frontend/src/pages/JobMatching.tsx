@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { Card, Row, Col, Progress, Tag, Table, Tooltip, Divider, Alert, Button, Space } from 'antd'
+import { Card, Row, Col, Progress, Tag, Table, Tooltip, Divider, Alert, Button, Space, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import {
   AimOutlined,
@@ -15,10 +15,14 @@ import {
 import { useCareerStore } from '../store'
 import { useNavigate } from 'react-router-dom'
 import { careerApi } from '../services/api'
+import TargetJobConfirmation from '../components/TargetJobConfirmation'
 import type {
   HardInfoDisplay,
   RecommendedJobMatch,
   RequirementDistributionItem,
+  TargetJobCandidate,
+  TargetJobConfirmation as TargetJobConfirmationData,
+  TargetJobProfileAssets,
   TargetJobMatch,
 } from '../types'
 import '../styles/JobMatching.css'
@@ -27,8 +31,8 @@ const emptyText = '暂无数据'
 
 const firstNonEmpty = (...groups: Array<string[] | undefined>) => groups.find((group) => group && group.length) || []
 
-const toPercent = (value?: number) => {
-  if (value === undefined || Number.isNaN(value)) return 0
+const toPercent = (value?: number | null) => {
+  if (value === undefined || value === null || Number.isNaN(value)) return 0
   return Math.round((value <= 1 ? value * 100 : value) * 10) / 10
 }
 
@@ -52,10 +56,52 @@ const getRiskMeta = (risk?: string) => {
   return { label: risk ? '有风险' : '待评估', color: 'orange', className: 'risk-mid' }
 }
 
-const passText = (value?: boolean) => (value ? '通过' : '未通过')
+const passText = (value?: boolean | null) => {
+  if (value === undefined || value === null) return '待确认'
+  return value ? '通过' : '未通过'
+}
+
+const getResolutionStatus = (source?: TargetJobMatch | TargetJobProfileAssets | RecommendedJobMatch) => (
+  source
+    ? (
+      source.evaluation_status
+      || source.resolution_status
+      || (source as TargetJobMatch).job_name_resolution?.resolution_status
+      || (source as TargetJobProfileAssets).asset_resolution?.resolution_status
+    )
+    : undefined
+)
+
+const isNeedsConfirmation = (source?: TargetJobMatch | TargetJobProfileAssets | RecommendedJobMatch) => (
+  getResolutionStatus(source) === 'needs_confirmation'
+)
+
+const normalizeCandidateJobs = (...sources: Array<TargetJobMatch | TargetJobProfileAssets | undefined>): TargetJobCandidate[] => {
+  const candidates = sources.flatMap((source) => (
+    source?.candidate_jobs
+    || (source as TargetJobMatch | undefined)?.job_name_resolution?.candidate_jobs
+    || (source as TargetJobProfileAssets | undefined)?.asset_resolution?.candidate_jobs
+    || []
+  ))
+  const seen = new Set<string>()
+  return candidates
+    .map((candidate) => (typeof candidate === 'string' ? { standard_job_name: candidate } : candidate))
+    .filter((candidate) => {
+      const name = candidate.standard_job_name
+      if (!name || seen.has(name)) return false
+      seen.add(name)
+      return true
+    })
+}
+
+const getOptionalMatchDisplayScore = (match?: TargetJobMatch | RecommendedJobMatch, fallbackScore?: number) => {
+  if (isNeedsConfirmation(match)) return null
+  const value = match?.display_match_score ?? match?.asset_match_score ?? match?.overall_match_score ?? fallbackScore
+  return value === undefined || value === null ? null : Math.round(value)
+}
 
 const getMatchDisplayScore = (match?: TargetJobMatch | RecommendedJobMatch, fallbackScore?: number) => (
-  Math.round(match?.display_match_score ?? match?.asset_match_score ?? match?.overall_match_score ?? fallbackScore ?? 0)
+  getOptionalMatchDisplayScore(match, fallbackScore) ?? 0
 )
 
 const getRuleScore = (match?: TargetJobMatch | RecommendedJobMatch, fallbackScore?: number) => (
@@ -68,11 +114,14 @@ const getAssetScore = (match?: TargetJobMatch | RecommendedJobMatch) => (
 
 const getContestStatusText = (match?: TargetJobMatch | RecommendedJobMatch) => {
   const contest = match?.contest_evaluation
+  if (isNeedsConfirmation(match)) return '待确认'
   if (!match?.asset_found || match?.evaluation_status === 'insufficient_asset') return '资产不足'
+  if (contest?.contest_match_success === undefined || contest?.contest_match_success === null) return '待确认'
   return contest?.contest_match_success ? '通过' : '未通过'
 }
 
 const ScoreGuideCard = ({ targetMatch }: { targetMatch?: TargetJobMatch }) => {
+  const pending = isNeedsConfirmation(targetMatch)
   const ruleScore = getRuleScore(targetMatch)
   const assetScore = getAssetScore(targetMatch)
   const knowledgePercent = toPercent(targetMatch?.skill_knowledge_match?.knowledge_point_accuracy)
@@ -81,19 +130,19 @@ const ScoreGuideCard = ({ targetMatch }: { targetMatch?: TargetJobMatch }) => {
   const guideItems = [
     {
       title: '旧规则总分',
-      value: `${ruleScore}%`,
+      value: pending ? '待确认' : `${ruleScore}%`,
       tone: 'blue',
       desc: '原有 job_match_scorer 的综合推荐分，偏兼容旧链路和整体推荐解释，不作为赛题硬通过依据。',
     },
     {
       title: '赛题资产分',
-      value: `${assetScore}%`,
+      value: pending ? '待确认' : `${assetScore}%`,
       tone: 'green',
       desc: '基于后处理资产计算，综合学历、专业、证书硬门槛和岗位知识点覆盖，是本页主展示分。',
     },
     {
       title: '知识覆盖率',
-      value: `${knowledgePercent}%`,
+      value: pending ? '待确认' : `${knowledgePercent}%`,
       tone: 'purple',
       desc: '学生已掌握的岗位必备知识点 / 岗位必备知识点总数，达到 80% 才算技能评测通过。',
     },
@@ -113,6 +162,15 @@ const ScoreGuideCard = ({ targetMatch }: { targetMatch?: TargetJobMatch }) => {
           message="当前目标岗位评分说明"
           description={targetMatch.score_explanation}
           type={targetMatch.contest_evaluation?.contest_match_success ? 'success' : 'warning'}
+          showIcon
+        />
+      )}
+      {pending && (
+        <Alert
+          className="score-guide-alert"
+          message="当前目标岗位需要先确认本地标准岗位"
+          description={targetMatch?.score_explanation || targetMatch?.message || '系统已找到候选岗位，请先选择一个标准岗位后再计算赛题资产分、知识点覆盖率和最终评测结果。'}
+          type="warning"
           showIcon
         />
       )}
@@ -212,6 +270,7 @@ const MatchCompareCard = ({
   accent: 'target' | 'recommended'
   description?: string
 }) => {
+  const pending = isNeedsConfirmation(match)
   const score = getMatchDisplayScore(match, fallbackScore)
   const ruleScore = getRuleScore(match, fallbackScore)
   const assetScore = getAssetScore(match)
@@ -238,17 +297,26 @@ const MatchCompareCard = ({
           percent={score}
           width={120}
           strokeColor={getScoreColor(score)}
-          format={() => <span className="compare-score">{score}%</span>}
+          format={() => <span className="compare-score">{pending ? '待确认' : `${score}%`}</span>}
         />
         <div className="compare-facts">
-          <div><span>赛题资产分</span><strong>{assetScore}%</strong></div>
-          <div><span>旧规则总分</span><strong>{ruleScore}%</strong></div>
+          <div><span>赛题资产分</span><strong>{pending ? '待确认' : `${assetScore}%`}</strong></div>
+          <div><span>旧规则总分</span><strong>{pending ? '仅供参考' : `${ruleScore}%`}</strong></div>
           <div><span>硬门槛</span><strong>{passText(hardPass)}</strong></div>
           <div><span>知识点</span><strong>{knowledgePercent}%</strong></div>
           <div><span>技能达标</span><strong>{passText(skillPass)}</strong></div>
           <div><span>赛题评测</span><strong>{contestText || passText(contestPass)}</strong></div>
         </div>
       </div>
+      {pending && (
+        <Alert
+          className="compare-pending-alert"
+          message="请先确认本地标准岗位"
+          description={match?.message || '当前目标岗位未唯一命中标准岗位资产，暂不计算最终赛题评测分。'}
+          type="warning"
+          showIcon
+        />
+      )}
       <p className="compare-reason">{reason}</p>
     </Card>
   )
@@ -331,6 +399,18 @@ const HardInfoRiskCards = ({ hardInfo }: { hardInfo?: HardInfoDisplay }) => {
 }
 
 const KnowledgePointPanel = ({ match }: { match?: TargetJobMatch }) => {
+  if (isNeedsConfirmation(match)) {
+    return (
+      <Card className="match-card" title={<span><BulbOutlined /> 技能知识点覆盖</span>}>
+        <Alert
+          message="知识点覆盖率待确认"
+          description="请先选择本次评估采用的本地标准岗位，系统随后会基于该岗位的必备知识点重新计算覆盖率。"
+          type="warning"
+          showIcon
+        />
+      </Card>
+    )
+  }
   const knowledge = match?.skill_knowledge_match
   const accuracy = toPercent(knowledge?.knowledge_point_accuracy)
   return (
@@ -373,11 +453,13 @@ const JobMatching = () => {
   const studentInfo = useCareerStore((state) => state.studentInfo)
   const studentProfile = useCareerStore((state) => state.studentProfile)
   const jobMatches = useCareerStore((state) => state.jobMatches)
+  const setJobMatches = useCareerStore((state) => state.setJobMatches)
   const setCareerPath = useCareerStore((state) => state.setCareerPath)
   const setLoading = useCareerStore((state) => state.setLoading)
   const setError = useCareerStore((state) => state.setError)
   const navigate = useNavigate()
   const [generatingPath, setGeneratingPath] = useState(false)
+  const [confirmingTarget, setConfirmingTarget] = useState(false)
 
   if (!studentInfo || jobMatches.length === 0) {
     return (
@@ -402,8 +484,13 @@ const JobMatching = () => {
   const targetAssets = primaryMatch.target_job_profile_assets || rawProfile?.target_job_profile_assets
   const targetName = targetJobMatch?.job_name || targetAssets?.standard_job_name || primaryMatch.job_name || '未明确目标岗位'
   const recommendedName = recommendedJobMatch?.job_name || ranking[0]?.job_name || '暂无推荐岗位'
-  const targetScore = getMatchDisplayScore(targetJobMatch, primaryMatch.match_score)
+  const targetNeedsConfirmation = isNeedsConfirmation(targetJobMatch) || isNeedsConfirmation(targetAssets)
+  const targetScoreValue = getOptionalMatchDisplayScore(targetJobMatch, primaryMatch.match_score)
+  const targetScore = targetScoreValue ?? 0
+  const targetScoreText = targetNeedsConfirmation ? '待确认' : `${targetScore}%`
   const knowledgePercent = toPercent(targetJobMatch?.skill_knowledge_match?.knowledge_point_accuracy)
+  const knowledgeText = targetNeedsConfirmation ? '待确认' : `${knowledgePercent}%`
+  const targetCandidates = normalizeCandidateJobs(targetJobMatch, targetAssets)
 
   const matchDetails = [
     {
@@ -548,6 +635,55 @@ const JobMatching = () => {
     }
   }
 
+  const handleConfirmTargetJob = async (candidate: TargetJobCandidate) => {
+    const confirmedName = candidate.standard_job_name
+    if (!confirmedName) {
+      message.warning('候选岗位名称为空，无法确认')
+      return
+    }
+
+    setConfirmingTarget(true)
+    setLoading(true)
+    setError(null)
+
+    try {
+      const response = await careerApi.confirmTargetJob({
+        requested_job_name: targetName,
+        confirmed_standard_job_name: confirmedName,
+      })
+
+      if (!response.success) {
+        setError(response.message || '目标岗位确认失败，请重试')
+        message.error(response.message || '目标岗位确认失败')
+        return
+      }
+
+      const refreshed = await careerApi.matchJobs()
+      if (refreshed.success) {
+        setJobMatches(refreshed.data || [])
+      } else {
+        const data = response.data || {}
+        setJobMatches([
+          {
+            ...primaryMatch,
+            target_job_match: data.target_job_match as TargetJobMatch,
+            target_job_profile_assets: data.target_job_profile_assets as TargetJobProfileAssets,
+            target_job_confirmation: data.target_job_confirmation as TargetJobConfirmationData,
+          },
+          ...jobMatches.slice(1),
+        ])
+      }
+
+      message.success(`已采用“${confirmedName}”作为本次评估标准岗位`)
+    } catch {
+      setError('目标岗位确认接口调用失败，请检查后端服务')
+      message.error('目标岗位确认接口调用失败')
+    } finally {
+      setConfirmingTarget(false)
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="job-matching-container">
       <section className="matching-hero">
@@ -559,12 +695,21 @@ const JobMatching = () => {
         <div className="hero-metrics">
           <MetricPill label="目标岗位" value={targetName} />
           <MetricPill label="推荐岗位" value={recommendedName} tone="green" />
-          <MetricPill label="目标匹配分" value={`${targetScore}%`} tone="orange" />
-          <MetricPill label="知识点覆盖" value={`${knowledgePercent}%`} tone="purple" />
+          <MetricPill label="目标匹配分" value={targetScoreText} tone="orange" />
+          <MetricPill label="知识点覆盖" value={knowledgeText} tone="purple" />
         </div>
       </section>
 
       <ScoreGuideCard targetMatch={targetJobMatch} />
+
+      {targetNeedsConfirmation && (
+        <TargetJobConfirmation
+          requestedJobName={targetName}
+          candidates={targetCandidates}
+          loading={confirmingTarget}
+          onConfirm={handleConfirmTargetJob}
+        />
+      )}
 
       <Card className="match-card section-card profile-link-card">
         <div>
@@ -578,7 +723,14 @@ const JobMatching = () => {
       </Card>
 
       <Card className="match-card section-card" title={<span><BarChartOutlined /> 目标岗位主流画像</span>}>
-        {targetAssets?.asset_found === false ? (
+        {targetNeedsConfirmation ? (
+          <Alert
+            message="目标岗位画像待确认"
+            description="请先在上方候选卡片中选择一个本地标准岗位。确认后，系统会基于该标准岗位展示学历、专业、证书分布和知识点要求。"
+            type="warning"
+            showIcon
+          />
+        ) : targetAssets?.asset_found === false ? (
           <Alert
             message="当前目标岗位未命中标准岗位画像资产"
             description={targetAssets.message || '系统会优先尝试后端岗位名归一；若仍未命中，可参考推荐岗位或全局岗位画像。'}

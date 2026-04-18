@@ -14,6 +14,11 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 from .job_match_builder import degree_to_rank, normalize_degree_text
 from .match_asset_loader import MatchAssetLoader, clean_text, safe_dict, safe_list
+from .target_job_confirmation_service import (
+    EVALUATION_NEEDS_CONFIRMATION,
+    RESOLUTION_NEEDS_CONFIRMATION,
+    resolve_job_with_confirmation,
+)
 
 
 RISK_HIGH_MATCH = "high_match"
@@ -549,6 +554,65 @@ def build_insufficient_asset_match_result(
     }
 
 
+def build_needs_confirmation_match_result(
+    requested_job_name: str,
+    match_type: str,
+    resolution: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Return a pending result when user must choose a local standard job."""
+    message = clean_text(resolution.get("message")) or "当前目标岗位未唯一命中本地标准岗位，请先选择标准岗位后再评估。"
+    candidates = deepcopy(safe_list(resolution.get("candidate_jobs")))
+    return {
+        "job_name": requested_job_name,
+        "asset_job_name": "",
+        "match_type": match_type,
+        "asset_found": False,
+        "evaluation_status": EVALUATION_NEEDS_CONFIRMATION,
+        "resolution_status": RESOLUTION_NEEDS_CONFIRMATION,
+        "message": message,
+        "candidate_jobs": candidates,
+        "job_name_resolution": deepcopy(resolution),
+        "sample_count": 0,
+        "overall_match_score": None,
+        "rule_match_score": None,
+        "asset_match_score": None,
+        "display_match_score": None,
+        "score_source": SCORE_SOURCE_ASSET,
+        "score_explanation": "目标岗位需要先确认本地标准岗位，暂不计算赛题资产分，旧规则分仅供参考。",
+        "requirement_distributions": build_requirement_distributions({}),
+        "hard_info_display": {},
+        "hard_info_evaluation": {
+            "degree": {"student_value": "", "job_gate": "", "pass": None, "reason": message},
+            "major": {"student_value": "", "job_gate_set": [], "pass": None, "reason": message},
+            "certificate": {
+                "student_values": [],
+                "must_have_certificates": [],
+                "preferred_certificates": [],
+                "pass": None,
+                "reason": message,
+            },
+            "all_pass": None,
+        },
+        "skill_knowledge_match": {
+            "required_knowledge_points": [],
+            "preferred_knowledge_points": [],
+            "student_knowledge_points": [],
+            "matched_knowledge_points": [],
+            "missing_knowledge_points": [],
+            "knowledge_point_accuracy": None,
+            "pass": None,
+            "risk_level": RISK_UNKNOWN,
+            "message": message,
+        },
+        "contest_evaluation": {
+            "hard_info_pass": None,
+            "skill_accuracy_pass": None,
+            "contest_match_success": None,
+        },
+        "risk_level": RISK_UNKNOWN,
+    }
+
+
 def evaluate_single_job(
     job_name: Any,
     student_profile: Dict[str, Any],
@@ -558,7 +622,19 @@ def evaluate_single_job(
 ) -> Dict[str, Any]:
     """Evaluate one job against the student using post-processing assets."""
     requested_job_name = clean_text(job_name)
-    resolution = loader.resolve_job_name(requested_job_name)
+    resolution = resolve_job_with_confirmation(
+        requested_job_name,
+        loader=loader,
+        student_profile=student_profile,
+        project_root=loader.project_root,
+    )
+    if resolution.get("resolution_status") == RESOLUTION_NEEDS_CONFIRMATION:
+        return build_needs_confirmation_match_result(
+            requested_job_name=requested_job_name,
+            match_type=match_type,
+            resolution=resolution,
+        )
+
     standard_job_name = clean_text(resolution.get("resolved_standard_job_name")) if resolution.get("asset_found") else requested_job_name
     stats = loader.get_requirement_stats_by_standard_name(standard_job_name)
     skill_assets = loader.get_skill_assets_by_standard_name(standard_job_name)

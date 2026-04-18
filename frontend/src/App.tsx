@@ -8,6 +8,7 @@ import StudentProfile from './pages/StudentProfile'
 import JobProfile from './pages/JobProfile'
 import JobMatching from './pages/JobMatching'
 import CareerPath from './pages/CareerPath'
+import JobPathGraph from './pages/JobPathGraph'
 import Report from './pages/Report'
 import SharedReport from './pages/SharedReport'
 import AIAssistant from './pages/AIAssistant'
@@ -54,6 +55,7 @@ function App() {
               <Route path="/job-profile" element={<JobProfile />} />
               <Route path="/matching" element={<JobMatching />} />
               <Route path="/career" element={<CareerPath />} />
+              <Route path="/job-path-graph" element={<JobPathGraph />} />
               <Route path="/report" element={<Report />} />
               <Route path="/ai-assistant" element={<AIAssistant />} />
               <Route path="/report/view" element={<SharedReport />} />

@@ -61,6 +61,51 @@ AI_SQL_MAX_ROWS = 15
 AI_SQL_CONTEXT_ROWS = 8
 AI_SQL_MAX_VALUE_CHARS = 120
 AI_SQL_TABLE_NAME = "jobs"
+AI_SQL_DB_SOURCE = "sqlite_jobs_db"
+AI_SQL_CSV_SOURCE = "csv_fallback"
+AI_SQL_VIEW_COLUMNS = [
+    "company_name",
+    "city",
+    "standard_job_name",
+    "standard_job_name_y",
+    "standard_job_name_x",
+    "job_title",
+    "job_title_norm",
+    "salary_min",
+    "salary_max",
+    "salary_month_min",
+    "salary_month_max",
+    "industry",
+    "company_size",
+    "company_type",
+    "degree_requirement",
+    "major_requirement",
+    "certificate_requirement",
+    "hard_skills",
+    "tools_or_tech_stack",
+    "job_description_clean",
+]
+AI_SQL_PREFERRED_TABLES = ["job_detail", "jobs", "job_samples", "job_postings", "job_market_assets"]
+AI_SQL_FIELD_ALIASES = {
+    "company_name": ["company_name", "company_name_clean", "company_name_raw", "company", "companyName", "公司名称"],
+    "city": ["city", "work_city", "工作城市", "城市"],
+    "standard_job_name": ["standard_job_name", "standard_job_name_y", "standard_job_name_x", "job_name", "normalized_job_name"],
+    "job_title": ["job_title", "job_name_clean", "job_name_raw", "title", "position_name", "岗位名称"],
+    "job_title_norm": ["job_title_norm", "normalized_job_name", "job_name_clean", "job_name_raw"],
+    "salary_min": ["salary_month_min", "salary_min", "min_salary"],
+    "salary_max": ["salary_month_max", "salary_max", "max_salary"],
+    "salary_month_min": ["salary_month_min", "salary_min", "min_salary"],
+    "salary_month_max": ["salary_month_max", "salary_max", "max_salary"],
+    "industry": ["industry", "industry_name", "行业"],
+    "company_size": ["company_size", "company_size_norm", "company_scale", "公司规模"],
+    "company_type": ["company_type", "company_type_norm", "企业类型"],
+    "degree_requirement": ["degree_requirement", "学历要求"],
+    "major_requirement": ["major_requirement", "major_requirement_json", "专业要求"],
+    "certificate_requirement": ["certificate_requirement", "certificate_requirement_json", "证书要求"],
+    "hard_skills": ["hard_skills", "hard_skills_json", "专业技能", "技能要求"],
+    "tools_or_tech_stack": ["tools_or_tech_stack", "tools_or_tech_stack_json", "技术栈"],
+    "job_description_clean": ["job_description_clean", "job_desc_clean", "job_desc_raw", "岗位描述"],
+}
 AI_SQL_FORBIDDEN_PATTERN = re.compile(
     r"\b(insert|update|delete|drop|alter|create|attach|detach|pragma|vacuum|replace|truncate|grant|revoke|execute|exec)\b",
     re.IGNORECASE,
@@ -120,6 +165,11 @@ class AIChatRequest(BaseModel):
     message: str
     conversation_id: str = ""
     web_search_enabled: bool = False
+
+
+class TargetJobConfirmRequest(BaseModel):
+    requested_job_name: str
+    confirmed_standard_job_name: str
 
 
 def _clean_text(value):
@@ -1106,6 +1156,7 @@ def _format_context_for_prompt(
     chunks: List[Dict[str, str]],
     semantic_hits: Optional[List[Dict[str, Any]]] = None,
     sql_context: Optional[Dict[str, Any]] = None,
+    path_graph_context: Optional[Dict[str, Any]] = None,
 ) -> str:
     loaded_files = "、".join(_safe_list(snapshot.get("loaded_files"))) or "无"
     missing_files = "、".join(_safe_list(snapshot.get("missing_files"))) or "无"
@@ -1137,6 +1188,20 @@ def _format_context_for_prompt(
         context_lines.extend(sql_context_text.splitlines())
     else:
         context_lines.append("- 未启用 SQL 查询或当前问题不需要结构化查询")
+    context_lines.append("岗位路径图谱上下文：")
+    path_context_dict = _safe_dict(path_graph_context)
+    if bool(path_context_dict.get("enabled")):
+        summary_text = _clean_text(path_context_dict.get("summary_text"))
+        if summary_text:
+            context_lines.append(f"- {summary_text}")
+        for edge in _safe_list(path_context_dict.get("matched_edges"))[:AI_SQL_CONTEXT_ROWS]:
+            edge_dict = _safe_dict(edge)
+            context_lines.append(
+                f"- {edge_dict.get('source_job')} -> {edge_dict.get('target_job')} "
+                f"({edge_dict.get('label') or edge_dict.get('relation')})"
+            )
+    else:
+        context_lines.append("- 未启用路径图谱查询或当前问题不需要图谱路径")
     return "\n".join(context_lines)
 
 
@@ -1274,7 +1339,7 @@ def _retrieve_semantic_hits(question: str, snapshot: Dict[str, Any], top_k: int 
         return []
     try:
         retriever = SemanticJobKnowledgeRetriever(_semantic_knowledge_dir())
-        return retriever.search(query_text=query_text, top_k=top_k, min_score=0.0)
+        return retriever.search(query_text=query_text, top_k=top_k, min_score=0.30)
     except FileNotFoundError:
         return []
     except Exception as exc:
@@ -1284,6 +1349,101 @@ def _retrieve_semantic_hits(question: str, snapshot: Dict[str, Any], top_k: int 
 
 def _ai_sql_data_csv_path() -> Path:
     return _project_root() / "outputs" / "intermediate" / "jobs_extracted_full.csv"
+
+
+def _ai_sql_data_db_path() -> Path:
+    return _project_root() / DEFAULT_SQL_DB_PATH
+
+
+def _read_sqlite_tables(conn: sqlite3.Connection) -> List[Dict[str, Any]]:
+    tables: List[Dict[str, Any]] = []
+    try:
+        raw_tables = conn.execute(
+            "SELECT name, type FROM sqlite_master WHERE type IN ('table', 'view') ORDER BY name"
+        ).fetchall()
+    except sqlite3.Error:
+        return tables
+
+    for row in raw_tables:
+        table_name = _clean_text(row[0])
+        if not table_name or table_name.startswith("sqlite_"):
+            continue
+        try:
+            columns = [
+                _clean_text(item[1])
+                for item in conn.execute(f"PRAGMA table_info({_quote_sql_identifier(table_name)})").fetchall()
+                if _clean_text(item[1])
+            ]
+        except sqlite3.Error:
+            columns = []
+        try:
+            row_count = int(conn.execute(f"SELECT COUNT(*) FROM {_quote_sql_identifier(table_name)}").fetchone()[0])
+        except sqlite3.Error:
+            row_count = 0
+        tables.append(
+            {
+                "table_name": table_name,
+                "type": _clean_text(row[1]),
+                "row_count": row_count,
+                "columns": columns,
+            }
+        )
+    return tables
+
+
+def _score_ai_sql_table(table: Dict[str, Any]) -> int:
+    table_name = _clean_text(table.get("table_name"))
+    columns = set(_safe_list(table.get("columns")))
+    row_count = int(table.get("row_count") or 0)
+    score = 0
+    if row_count > 0:
+        score += 100
+    if table_name in AI_SQL_PREFERRED_TABLES:
+        score += 80 - AI_SQL_PREFERRED_TABLES.index(table_name) * 8
+    for aliases in AI_SQL_FIELD_ALIASES.values():
+        if any(alias in columns for alias in aliases):
+            score += 8
+    score += min(row_count // 100, 30)
+    return score
+
+
+def inspect_jobs_db_schema(db_path: Path) -> Dict[str, Any]:
+    result: Dict[str, Any] = {
+        "available": False,
+        "db_path": str(db_path),
+        "tables": [],
+        "preferred_table": "",
+        "message": "",
+    }
+    if not db_path.exists() or db_path.stat().st_size <= 0:
+        result["message"] = "jobs.db 不存在或为空"
+        return result
+
+    try:
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        try:
+            tables = _read_sqlite_tables(conn)
+        finally:
+            conn.close()
+    except sqlite3.Error as exc:
+        result["message"] = f"jobs.db 无法打开：{exc}"
+        return result
+
+    usable_tables = [table for table in tables if int(table.get("row_count") or 0) > 0]
+    result["tables"] = tables
+    if not usable_tables:
+        result["message"] = "jobs.db 中没有可用数据表"
+        return result
+
+    preferred = sorted(usable_tables, key=_score_ai_sql_table, reverse=True)[0]
+    if _score_ai_sql_table(preferred) < 120:
+        result["message"] = "jobs.db 表结构不足以支撑岗位事实查询"
+        return result
+
+    result["available"] = True
+    result["preferred_table"] = _clean_text(preferred.get("table_name"))
+    result["message"] = "jobs.db 可用"
+    return result
 
 
 def _read_csv_header(csv_path: Path) -> List[str]:
@@ -1298,28 +1458,76 @@ def _read_csv_header(csv_path: Path) -> List[str]:
         return []
 
 
-def _should_use_sql_query(question: str) -> bool:
+def classify_ai_question_intent(question: str, history: Optional[List[Dict[str, str]]] = None) -> Dict[str, Any]:
     normalized = _clean_text(question)
+    lowered = normalized.lower()
+    result: Dict[str, Any] = {
+        "intent": "general_advice",
+        "confidence": 0.55,
+        "query_domain": "local_context",
+        "reason": "默认使用本地档案上下文回答",
+        "should_use_sql": False,
+        "should_use_path_graph": False,
+        "should_use_semantic": False,
+        "should_use_profile_context": True,
+    }
     if not normalized:
-        return False
-    sql_keywords = [
-        "公司",
-        "企业",
-        "薪资",
-        "工资",
-        "收入",
-        "城市",
-        "地区",
-        "地点",
-        "岗位",
-        "职位",
-        "推荐",
-        "有哪些",
-        "多少",
-        "筛选",
-        "地域",
-    ]
-    return any(keyword in normalized for keyword in sql_keywords)
+        return result
+
+    def _set(intent: str, confidence: float, domain: str, reason: str, sql: bool = False, path: bool = False, semantic: bool = False) -> Dict[str, Any]:
+        result.update(
+            {
+                "intent": intent,
+                "confidence": confidence,
+                "query_domain": domain,
+                "reason": reason,
+                "should_use_sql": sql,
+                "should_use_path_graph": path,
+                "should_use_semantic": semantic,
+                "should_use_profile_context": True,
+            }
+        )
+        return result
+
+    path_keywords = ["路径图谱", "岗位路径", "职业路径", "晋升", "转岗", "promote_to", "transfer_to", "图谱关系"]
+    if any(keyword in lowered or keyword in normalized for keyword in path_keywords):
+        return _set("career_path_question", 0.92, "path_graph", "用户询问岗位晋升/转岗/路径图谱关系", path=True)
+
+    report_keywords = ["报告", "总结", "行动计划", "职业建议", "结论", "规划建议"]
+    if any(keyword in normalized for keyword in report_keywords):
+        return _set("report_question", 0.86, "report_state", "用户询问报告总结或行动建议")
+
+    match_keywords = ["为什么推荐", "为什么不匹配", "匹配", "风险", "覆盖率", "赛题评测", "硬门槛", "最推荐"]
+    if any(keyword in normalized for keyword in match_keywords):
+        return _set("match_explanation", 0.88, "job_match_state", "用户询问人岗匹配、推荐原因或风险")
+
+    profile_keywords = ["我的学历", "我的专业", "我的技能", "我的证书", "我的项目", "我的实习", "学生画像", "个人画像", "我会什么"]
+    if any(keyword in normalized for keyword in profile_keywords):
+        return _set("student_profile_question", 0.86, "student_profile_state", "用户询问学生画像或个人能力信息")
+
+    requirement_keywords = ["岗位要求", "学历要求", "专业要求", "证书要求", "技能要求", "学历", "专业", "证书", "知识点", "需要什么", "要求是什么"]
+    if any(keyword in normalized for keyword in requirement_keywords):
+        return _set("job_requirement_question", 0.84, "semantic_job_knowledge", "用户询问岗位要求或知识点", semantic=True)
+
+    company_keywords = ["公司", "企业", "厂", "投递清单", "投递公司"]
+    salary_keywords = ["薪资", "工资", "收入", "月薪", "待遇", "k", "K", "万", "高薪"]
+    city_keywords = ["城市", "地区", "地点", "北京", "上海", "广州", "深圳", "杭州", "成都", "南京", "苏州", "武汉"]
+    industry_keywords = ["行业", "领域", "产业"]
+    market_words = ["有哪些", "哪些", "查询", "筛选", "多少", "分布", "样本", "机会", "岗位"]
+    if any(keyword in normalized for keyword in company_keywords):
+        return _set("company_search", 0.9, "sql_market", "用户询问公司/企业样本", sql=True)
+    if any(keyword in normalized for keyword in salary_keywords):
+        return _set("salary_search", 0.88, "sql_market", "用户询问薪资或薪资排序", sql=True)
+    if any(keyword in normalized for keyword in industry_keywords):
+        return _set("industry_search", 0.82, "sql_market", "用户询问行业相关岗位样本", sql=True)
+    if any(keyword in normalized for keyword in city_keywords) and any(word in normalized for word in market_words):
+        return _set("city_market_search", 0.84, "sql_market", "用户询问城市岗位机会或本地样本", sql=True)
+
+    return result
+
+
+def _should_use_sql_query(question: str) -> bool:
+    return bool(classify_ai_question_intent(question).get("should_use_sql"))
 
 
 def _extract_sql_from_text(value: str) -> str:
@@ -1330,7 +1538,9 @@ def _extract_sql_from_text(value: str) -> str:
     if fenced:
         text = _clean_text(fenced.group(1))
     statements = [item.strip() for item in text.split(";") if _clean_text(item)]
-    return _clean_text(statements[0]) if statements else ""
+    if len(statements) != 1:
+        return ""
+    return _clean_text(statements[0])
 
 
 def _sanitize_readonly_sql(sql_text: str, table_name: str = AI_SQL_TABLE_NAME) -> str:
@@ -1564,6 +1774,162 @@ def _quote_sql_identifier(name: str) -> str:
     return '"' + _clean_text(name).replace('"', '""') + '"'
 
 
+def _find_column_name(columns: List[str], aliases: List[str]) -> str:
+    column_lookup = {_clean_text(col).lower(): _clean_text(col) for col in columns if _clean_text(col)}
+    for alias in aliases:
+        matched = column_lookup.get(_clean_text(alias).lower())
+        if matched:
+            return matched
+    return ""
+
+
+def _sql_column_expr(table_alias: str, columns: List[str], semantic_name: str, default: str = "NULL") -> str:
+    column = _find_column_name(columns, _safe_list(AI_SQL_FIELD_ALIASES.get(semantic_name)))
+    if not column:
+        return default
+    return f"{table_alias}.{_quote_sql_identifier(column)}"
+
+
+def _sql_nullif_text_expr(expr: str) -> str:
+    expr_text = _clean_text(expr)
+    if not expr_text or expr_text.upper() == "NULL":
+        return "NULL"
+    return f"NULLIF(TRIM(CAST({expr_text} AS TEXT)), '')"
+
+
+def _sql_real_expr(expr: str) -> str:
+    expr_text = _clean_text(expr)
+    if not expr_text or expr_text.upper() == "NULL":
+        return "NULL"
+    return f"CAST(NULLIF(TRIM(CAST({expr_text} AS TEXT)), '') AS REAL)"
+
+
+def _create_unified_jobs_view(conn: sqlite3.Connection, schema: Dict[str, Any]) -> str:
+    preferred_table = _clean_text(schema.get("preferred_table"))
+    tables = {
+        _clean_text(table.get("table_name")): table
+        for table in _safe_list(schema.get("tables"))
+        if _clean_text(table.get("table_name"))
+    }
+    preferred_columns = _safe_list(_safe_dict(tables.get(preferred_table)).get("columns"))
+    profile_columns = _safe_list(_safe_dict(tables.get("job_profile")).get("columns"))
+
+    if not preferred_table or not preferred_columns:
+        raise sqlite3.Error("jobs.db 未找到可用于岗位事实查询的明细表")
+
+    join_clause = ""
+    profile_alias = "d"
+    if (
+        preferred_table != "job_profile"
+        and "job_profile" in tables
+        and _find_column_name(preferred_columns, ["record_id"])
+        and _find_column_name(profile_columns, ["record_id"])
+    ):
+        join_clause = (
+            f" LEFT JOIN main.{_quote_sql_identifier('job_profile')} p "
+            f"ON p.{_quote_sql_identifier('record_id')} = d.{_quote_sql_identifier('record_id')}"
+        )
+        profile_alias = "p"
+
+    def detail_expr(semantic_name: str, default: str = "NULL") -> str:
+        return _sql_column_expr("d", preferred_columns, semantic_name, default)
+
+    def profile_expr(semantic_name: str, default: str = "NULL") -> str:
+        if profile_alias == "p":
+            expr = _sql_column_expr("p", profile_columns, semantic_name, "")
+            if expr:
+                return expr
+        return detail_expr(semantic_name, default)
+
+    standard_job_candidates = [
+        detail_expr("standard_job_name", "NULL"),
+        detail_expr("job_title_norm", "NULL"),
+        detail_expr("job_title", "NULL"),
+    ]
+    standard_job_expr = "COALESCE(" + ", ".join(_sql_nullif_text_expr(expr) for expr in standard_job_candidates) + ")"
+    company_name_expr = detail_expr("company_name", "''")
+    select_exprs = [
+        f"NULLIF({company_name_expr}, '') AS company_name",
+        f"{detail_expr('city', 'NULL')} AS city",
+        f"{standard_job_expr} AS standard_job_name",
+        f"{standard_job_expr} AS standard_job_name_y",
+        f"{standard_job_expr} AS standard_job_name_x",
+        f"{detail_expr('job_title', 'NULL')} AS job_title",
+        f"{detail_expr('job_title_norm', 'NULL')} AS job_title_norm",
+        f"{_sql_real_expr(detail_expr('salary_min', 'NULL'))} AS salary_min",
+        f"{_sql_real_expr(detail_expr('salary_max', 'NULL'))} AS salary_max",
+        f"{_sql_real_expr(detail_expr('salary_month_min', 'NULL'))} AS salary_month_min",
+        f"{_sql_real_expr(detail_expr('salary_month_max', 'NULL'))} AS salary_month_max",
+        f"{detail_expr('industry', 'NULL')} AS industry",
+        f"{detail_expr('company_size', 'NULL')} AS company_size",
+        f"{detail_expr('company_type', 'NULL')} AS company_type",
+        f"{profile_expr('degree_requirement', 'NULL')} AS degree_requirement",
+        f"{profile_expr('major_requirement', 'NULL')} AS major_requirement",
+        f"{profile_expr('certificate_requirement', 'NULL')} AS certificate_requirement",
+        f"{profile_expr('hard_skills', 'NULL')} AS hard_skills",
+        f"{profile_expr('tools_or_tech_stack', 'NULL')} AS tools_or_tech_stack",
+        f"{detail_expr('job_description_clean', 'NULL')} AS job_description_clean",
+    ]
+    view_sql = (
+        f"CREATE TEMP VIEW {_quote_sql_identifier(AI_SQL_TABLE_NAME)} AS "
+        f"SELECT {', '.join(select_exprs)} "
+        f"FROM main.{_quote_sql_identifier(preferred_table)} d{join_clause}"
+    )
+    conn.execute(view_sql)
+    return preferred_table
+
+
+def _execute_sql_on_jobs_db(db_path: Path, sql: str, max_rows: int = AI_SQL_MAX_ROWS) -> Dict[str, Any]:
+    schema = inspect_jobs_db_schema(db_path)
+    if not bool(schema.get("available")):
+        return {
+            "success": False,
+            "error": _clean_text(schema.get("message")) or "jobs.db 不可用",
+            "columns": [],
+            "rows": [],
+            "schema": schema,
+        }
+
+    try:
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        conn.row_factory = sqlite3.Row
+        try:
+            db_table = _create_unified_jobs_view(conn, schema)
+            cursor = conn.execute(sql)
+            columns = [item[0] for item in (cursor.description or [])]
+            fetched = cursor.fetchmany(max_rows)
+
+            rows = []
+            for row in fetched:
+                row_dict = {}
+                for col in columns:
+                    value = row[col]
+                    if isinstance(value, float) and value.is_integer():
+                        value = int(value)
+                    row_dict[col] = value
+                rows.append(row_dict)
+
+            return {
+                "success": True,
+                "error": "",
+                "columns": columns,
+                "rows": rows,
+                "schema": schema,
+                "db_table": db_table,
+            }
+        finally:
+            conn.close()
+    except Exception as exc:
+        return {
+            "success": False,
+            "error": f"jobs.db 查询执行失败: {exc}",
+            "columns": [],
+            "rows": [],
+            "schema": schema,
+            "db_table": _clean_text(schema.get("preferred_table")),
+        }
+
+
 def _execute_sql_on_jobs_csv(csv_path: Path, sql: str, max_rows: int = AI_SQL_MAX_ROWS) -> Dict[str, Any]:
     if not csv_path.exists():
         return {"success": False, "error": f"SQL 数据源不存在：{csv_path.name}", "rows": [], "columns": []}
@@ -1673,19 +2039,365 @@ def _truncate_sql_value(value: Any, max_chars: int = AI_SQL_MAX_VALUE_CHARS) -> 
     return f"{text[: max_chars - 1]}…"
 
 
+def _get_sql_row_value(row: Dict[str, Any], keys: List[str]) -> Any:
+    row_dict = _safe_dict(row)
+    for key in keys:
+        value = row_dict.get(key)
+        if _clean_text(value):
+            return value
+    return None
+
+
+def _clean_sql_multi_value(value: Any, max_items: int = 3) -> str:
+    text = _clean_text(value)
+    if not text:
+        return ""
+    parts = [
+        _clean_text(part)
+        for part in re.split(r"[,，、/；;]+", text)
+        if _clean_text(part)
+    ]
+    unique_parts: List[str] = []
+    for part in parts:
+        if part not in unique_parts:
+            unique_parts.append(part)
+        if len(unique_parts) >= max_items:
+            break
+    return "、".join(unique_parts) if unique_parts else text
+
+
+def _format_salary_number(value: Any) -> str:
+    number = _safe_float(value)
+    if number is None or number <= 0:
+        return ""
+    if number >= 1000:
+        text = f"{number / 1000:.1f}".rstrip("0").rstrip(".")
+        return f"{text}k"
+    return str(int(number)) if float(number).is_integer() else f"{number:.1f}"
+
+
+def _format_salary_range_from_row(row: Dict[str, Any]) -> str:
+    min_value = _get_sql_row_value(row, ["salary_month_min", "salary_min"])
+    max_value = _get_sql_row_value(row, ["salary_month_max", "salary_max"])
+    min_text = _format_salary_number(min_value)
+    max_text = _format_salary_number(max_value)
+    if min_text and max_text:
+        return f"{min_text}-{max_text}"
+    if max_text:
+        return f"最高约 {max_text}"
+    if min_text:
+        return f"{min_text} 起"
+    return "暂无薪资"
+
+
+def _infer_ai_chat_intent(question: str, sql_context: Optional[Dict[str, Any]] = None) -> str:
+    normalized = _clean_text(question)
+    if not normalized:
+        return "general"
+    if any(keyword in normalized for keyword in ["公司", "企业", "厂", "投递"]):
+        return "company_search"
+    if any(keyword in normalized for keyword in ["薪资", "工资", "收入", "月薪", "k", "K", "万"]):
+        return "salary_job_search"
+    if any(keyword in normalized for keyword in ["城市", "地区", "地点", "北京", "上海", "广州", "深圳"]):
+        return "local_market_search"
+    if bool(_safe_dict(sql_context).get("enabled")):
+        return "job_market_search"
+    return "general"
+
+
+def _build_company_cards(rows: List[Dict[str, Any]], question: str, limit: int = 8) -> List[Dict[str, Any]]:
+    cards: List[Dict[str, Any]] = []
+    seen_companies = set()
+    job_keyword = _extract_job_keyword_from_question(question)
+    for row in rows:
+        row_dict = _safe_dict(row)
+        company_name = _clean_text(_get_sql_row_value(row_dict, ["company_name", "company_name_clean", "company_name_raw"]))
+        if not company_name:
+            continue
+        city = _clean_text(_get_sql_row_value(row_dict, ["city", "work_city"]))
+        dedupe_key = f"{company_name}|{city}".lower()
+        if dedupe_key in seen_companies:
+            continue
+        seen_companies.add(dedupe_key)
+
+        job_title = _clean_text(_get_sql_row_value(row_dict, ["job_title", "job_name_clean", "job_name_raw"]))
+        standard_job_name = _clean_text(_get_sql_row_value(row_dict, ["standard_job_name", "standard_job_name_y", "standard_job_name_x"]))
+        salary_range = _format_salary_range_from_row(row_dict)
+        industry = _clean_sql_multi_value(_get_sql_row_value(row_dict, ["industry"]))
+        company_size = _clean_sql_multi_value(_get_sql_row_value(row_dict, ["company_size"]))
+        company_type = _clean_sql_multi_value(_get_sql_row_value(row_dict, ["company_type"]))
+        direction_text = job_keyword or standard_job_name or job_title or "当前查询方向"
+        reason_parts = []
+        if city:
+            reason_parts.append(f"位于{city}")
+        if standard_job_name or job_title:
+            reason_parts.append(f"岗位为{standard_job_name or job_title}")
+        if salary_range != "暂无薪资":
+            reason_parts.append(f"薪资区间{salary_range}")
+        if industry:
+            reason_parts.append(f"行业为{industry}")
+        reason = "，".join(reason_parts) + f"，与“{direction_text}”查询条件相关。"
+
+        cards.append(
+            {
+                "type": "company",
+                "company_name": company_name,
+                "city": city,
+                "job_title": job_title,
+                "standard_job_name": standard_job_name,
+                "salary_range": salary_range,
+                "industry": industry,
+                "company_size": company_size,
+                "company_type": company_type,
+                "reason": reason,
+                "match_reason": reason,
+            }
+        )
+        if len(cards) >= limit:
+            break
+    return cards
+
+
+def _build_sql_summary_stats(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    companies = set()
+    cities: Dict[str, int] = {}
+    industries: Dict[str, int] = {}
+    salary_values: List[float] = []
+
+    for row in rows:
+        row_dict = _safe_dict(row)
+        company_name = _clean_text(_get_sql_row_value(row_dict, ["company_name", "company_name_clean", "company_name_raw"]))
+        if company_name:
+            companies.add(company_name)
+        city = _clean_text(_get_sql_row_value(row_dict, ["city"]))
+        if city:
+            cities[city] = cities.get(city, 0) + 1
+        industry_text = _clean_sql_multi_value(_get_sql_row_value(row_dict, ["industry"]), max_items=5)
+        for industry in [item for item in industry_text.split("、") if item]:
+            industries[industry] = industries.get(industry, 0) + 1
+        for key in ["salary_month_min", "salary_month_max", "salary_min", "salary_max"]:
+            value = _safe_float(row_dict.get(key))
+            if value is not None and value > 0:
+                salary_values.append(value)
+
+    top_industries = [
+        {"name": name, "count": count}
+        for name, count in sorted(industries.items(), key=lambda item: item[1], reverse=True)[:5]
+    ]
+    top_city = ""
+    if cities:
+        top_city = sorted(cities.items(), key=lambda item: item[1], reverse=True)[0][0]
+
+    return {
+        "company_count": len(companies),
+        "job_count": len(rows),
+        "top_city": top_city,
+        "salary_max": max(salary_values) if salary_values else None,
+        "salary_min": min(salary_values) if salary_values else None,
+        "top_industries": top_industries,
+    }
+
+
+def _build_sql_result_table(rows: List[Dict[str, Any]], title: str = "候选公司列表") -> Dict[str, Any]:
+    columns = ["公司", "城市", "岗位", "标准岗位", "薪资", "行业", "规模"]
+    table_rows = []
+    for row in rows[:AI_SQL_MAX_ROWS]:
+        row_dict = _safe_dict(row)
+        table_rows.append(
+            {
+                "公司": _clean_text(_get_sql_row_value(row_dict, ["company_name", "company_name_clean", "company_name_raw"])) or "暂无",
+                "城市": _clean_text(_get_sql_row_value(row_dict, ["city"])) or "暂无",
+                "岗位": _clean_text(_get_sql_row_value(row_dict, ["job_title", "job_name_clean", "job_name_raw"])) or "暂无",
+                "标准岗位": _clean_text(_get_sql_row_value(row_dict, ["standard_job_name", "standard_job_name_y", "standard_job_name_x"])) or "暂无",
+                "薪资": _format_salary_range_from_row(row_dict),
+                "行业": _clean_sql_multi_value(_get_sql_row_value(row_dict, ["industry"])) or "暂无",
+                "规模": _clean_sql_multi_value(_get_sql_row_value(row_dict, ["company_size"])) or "暂无",
+            }
+        )
+    return {
+        "title": title,
+        "columns": columns,
+        "rows": table_rows,
+    }
+
+
+def _build_query_condition_summary(question: str, sql_context: Dict[str, Any]) -> List[str]:
+    conditions = []
+    city = _extract_city_from_text(question)
+    salary_floor = _extract_salary_floor_from_question(question)
+    job_keyword = _extract_job_keyword_from_question(question)
+    if city:
+        conditions.append(f"城市：{city}")
+    if job_keyword:
+        conditions.append(f"岗位方向：{job_keyword}")
+    if salary_floor is not None:
+        conditions.append(f"薪资要求：{_format_salary_number(salary_floor)} 以上")
+    data_source = _clean_text(sql_context.get("data_source"))
+    if data_source == AI_SQL_DB_SOURCE:
+        conditions.append("数据来源：jobs.db")
+    elif data_source == AI_SQL_CSV_SOURCE:
+        conditions.append("数据来源：CSV fallback")
+    return conditions
+
+
+def _should_use_semantic_for_intent(intent_result: Dict[str, Any]) -> bool:
+    intent = _clean_text(intent_result.get("intent"))
+    return bool(intent_result.get("should_use_semantic")) or intent in {"job_requirement_question", "match_explanation"}
+
+
+def _extract_path_graph_keywords(question: str) -> List[str]:
+    normalized = _clean_text(question)
+    if not normalized:
+        return []
+    stop_words = {
+        "岗位",
+        "路径",
+        "图谱",
+        "关系",
+        "晋升",
+        "转岗",
+        "有哪些",
+        "什么",
+        "查看",
+        "查询",
+        "职业",
+    }
+    keywords = []
+    job_keyword = _extract_job_keyword_from_question(normalized)
+    if job_keyword:
+        keywords.append(job_keyword)
+    for token in re.findall(r"[A-Za-z+#.]{2,20}|[\u4e00-\u9fff]{2,12}", normalized):
+        cleaned = _clean_text(token)
+        if cleaned and cleaned not in stop_words and cleaned not in keywords:
+            keywords.append(cleaned)
+    return keywords[:6]
+
+
+def _build_path_graph_context(question: str, limit: int = 8) -> Dict[str, Any]:
+    result: Dict[str, Any] = {
+        "enabled": True,
+        "path_graph_status": "unavailable",
+        "source": "none",
+        "stats": {},
+        "matched_edges": [],
+        "summary_text": "",
+        "message": "",
+    }
+    try:
+        from job_path_graph_service import build_full_job_path_graph
+
+        graph = build_full_job_path_graph(project_root=_project_root(), prefer_neo4j=True)
+    except Exception as exc:
+        result["message"] = f"岗位路径图谱查询失败：{exc}"
+        result["summary_text"] = "当前无法读取本地岗位路径图谱。"
+        return result
+
+    stats = _safe_dict(graph.get("stats"))
+    edges = [_safe_dict(edge) for edge in _safe_list(graph.get("edges")) if _safe_dict(edge)]
+    keywords = _extract_path_graph_keywords(question)
+    normalized_question = _clean_text(question).lower()
+    relation_filter = ""
+    if "转岗" in normalized_question or "transfer_to" in normalized_question:
+        relation_filter = "TRANSFER_TO"
+    elif "晋升" in normalized_question or "promote_to" in normalized_question:
+        relation_filter = "PROMOTE_TO"
+    if relation_filter:
+        edges = [edge for edge in edges if _clean_text(edge.get("relation")).upper() == relation_filter]
+
+    def _edge_score(edge: Dict[str, Any]) -> int:
+        source = _clean_text(edge.get("source_name") or edge.get("source"))
+        target = _clean_text(edge.get("target_name") or edge.get("target"))
+        relation = _clean_text(edge.get("relation"))
+        combined = f"{source} {target} {relation}".lower()
+        score = 0
+        for keyword in keywords:
+            if _clean_text(keyword).lower() in combined:
+                score += 10
+        if "PROMOTE" in relation:
+            score += 2
+        return score
+
+    scored_edges = sorted(edges, key=lambda edge: (_edge_score(edge), _clean_text(edge.get("source"))), reverse=True)
+    if keywords:
+        matched_edges = [edge for edge in scored_edges if _edge_score(edge) > 0][:limit]
+    else:
+        matched_edges = scored_edges[:limit]
+
+    normalized_edges = []
+    for edge in matched_edges:
+        relation = _clean_text(edge.get("relation"))
+        normalized_edges.append(
+            {
+                "source_job": _clean_text(edge.get("source_name") or edge.get("source")),
+                "target_job": _clean_text(edge.get("target_name") or edge.get("target")),
+                "relation": relation,
+                "label": "晋升" if relation == "PROMOTE_TO" else ("转岗" if relation == "TRANSFER_TO" else relation),
+                "source": _clean_text(graph.get("source")),
+            }
+        )
+
+    status = _clean_text(graph.get("graph_status")) or "unavailable"
+    result.update(
+        {
+            "path_graph_status": status,
+            "source": _clean_text(graph.get("source")) or "none",
+            "stats": stats,
+            "matched_edges": normalized_edges,
+            "message": _clean_text(graph.get("message")),
+        }
+    )
+    if normalized_edges:
+        result["summary_text"] = (
+            f"本地岗位路径图谱共包含 {stats.get('promote_edge_count', 0)} 条晋升关系、"
+            f"{stats.get('transfer_edge_count', 0)} 条转岗关系；当前问题命中 {len(normalized_edges)} 条真实路径关系。"
+        )
+    elif status == "available":
+        result["summary_text"] = "本地岗位路径图谱可用，但当前问题没有命中具体岗位路径；可尝试输入更明确的岗位名称。"
+    else:
+        result["summary_text"] = _clean_text(graph.get("message")) or "本地岗位路径图谱暂无可用关系。"
+    return result
+
+
+def _build_path_graph_product_answer(question: str, path_graph_context: Dict[str, Any]) -> str:
+    path_context = _safe_dict(path_graph_context)
+    stats = _safe_dict(path_context.get("stats"))
+    edges = _safe_list(path_context.get("matched_edges"))
+    source = _clean_text(path_context.get("source")) or "本地图谱"
+    lines = [
+        "📁 本地岗位路径图谱分析",
+        f"本回答基于本地岗位路径图谱（来源：{source}），未使用联网搜索。",
+    ]
+    if stats:
+        lines.append(
+            f"图谱统计：岗位节点 {stats.get('job_node_count', 0)} 个，"
+            f"晋升关系 {stats.get('promote_edge_count', 0)} 条，"
+            f"转岗关系 {stats.get('transfer_edge_count', 0)} 条。"
+        )
+    if not edges:
+        lines.append("当前问题没有命中可展示的真实岗位路径关系，系统不会强行生成不存在的路径。")
+        message = _clean_text(path_context.get("message") or path_context.get("summary_text"))
+        if message:
+            lines.append(message)
+        return "\n".join(lines)
+
+    lines.append("命中的真实路径关系如下：")
+    for index, edge in enumerate(edges[:8], start=1):
+        edge_dict = _safe_dict(edge)
+        lines.append(
+            f"{index}. {edge_dict.get('source_job') or '未知岗位'} -> "
+            f"{edge_dict.get('target_job') or '未知岗位'}（{edge_dict.get('label') or edge_dict.get('relation') or '关系'}）"
+        )
+    lines.append("说明：以上关系来自本地 Neo4j 或图谱 CSV 产物，只展示已有事实，不由 LLM 补造。")
+    return "\n".join(lines)
+
+
 def _build_sql_context_text(sql_plan: Dict[str, Any], sql_exec: Dict[str, Any], data_file_name: str) -> str:
     lines = [
-        f"- SQL 数据源：{data_file_name}",
+        f"- 结构化查询数据源：{data_file_name}",
         f"- SQL 生成来源：{_clean_text(sql_plan.get('source')) or 'unknown'}",
     ]
     if _clean_text(sql_plan.get("llm_error")):
         lines.append(f"- SQL 生成备注：{_truncate_sql_value(sql_plan.get('llm_error'), 180)}")
-
-    sql_text = _clean_text(sql_plan.get("sql"))
-    if sql_text:
-        lines.append(f"- SQL 语句：{sql_text}")
-    else:
-        lines.append("- SQL 语句：未生成")
 
     if not bool(sql_exec.get("success")):
         lines.append(f"- SQL 执行失败：{_clean_text(sql_exec.get('error')) or '未知错误'}")
@@ -1711,7 +2423,11 @@ def _build_sql_context_text(sql_plan: Dict[str, Any], sql_exec: Dict[str, Any], 
     return "\n".join(lines)
 
 
-def _build_sql_query_context(question: str, history: List[Dict[str, str]]) -> Dict[str, Any]:
+def _build_sql_query_context(
+    question: str,
+    history: List[Dict[str, str]],
+    intent_result: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     result: Dict[str, Any] = {
         "enabled": False,
         "context_text": "",
@@ -1720,21 +2436,41 @@ def _build_sql_query_context(question: str, history: List[Dict[str, str]]) -> Di
         "row_count": 0,
         "rows": [],
         "columns": [],
+        "company_cards": [],
+        "summary_stats": {},
+        "result_table": {},
         "error": "",
         "data_file": "",
+        "data_source": "",
+        "db_table": "",
+        "schema": {},
     }
 
-    if not _should_use_sql_query(question):
+    intent = _safe_dict(intent_result) or classify_ai_question_intent(question, history)
+    if not bool(intent.get("should_use_sql")):
         return result
 
+    db_path = _ai_sql_data_db_path()
     csv_path = _ai_sql_data_csv_path()
     result["enabled"] = True
-    result["data_file"] = csv_path.name
 
-    table_columns = _read_csv_header(csv_path)
+    db_schema = inspect_jobs_db_schema(db_path)
+    use_db = bool(db_schema.get("available"))
+    if use_db:
+        result["data_source"] = AI_SQL_DB_SOURCE
+        result["data_file"] = db_path.name
+        result["db_table"] = _clean_text(db_schema.get("preferred_table"))
+        result["schema"] = db_schema
+        table_columns = AI_SQL_VIEW_COLUMNS
+    else:
+        result["data_source"] = AI_SQL_CSV_SOURCE
+        result["data_file"] = csv_path.name
+        result["schema"] = db_schema
+        table_columns = _read_csv_header(csv_path)
+
     if not table_columns:
-        result["error"] = f"SQL 数据文件不可用：{csv_path.name}"
-        result["context_text"] = f"- SQL 数据文件不可用：{csv_path.name}"
+        result["error"] = f"SQL 数据源不可用：jobs.db 与 {csv_path.name} 均不可用"
+        result["context_text"] = f"- SQL 数据源不可用：jobs.db 与 {csv_path.name} 均不可用"
         return result
 
     sql_plan = _plan_sql_query(question=question, history=history, table_columns=table_columns)
@@ -1744,17 +2480,41 @@ def _build_sql_query_context(question: str, history: List[Dict[str, str]]) -> Di
 
     if not sql_text:
         result["error"] = _clean_text(sql_plan.get("llm_error")) or "SQL 生成失败"
-        result["context_text"] = _build_sql_context_text(sql_plan, {"success": False, "error": result["error"]}, csv_path.name)
+        result["context_text"] = _build_sql_context_text(sql_plan, {"success": False, "error": result["error"]}, result["data_file"])
         return result
 
-    sql_exec = _execute_sql_on_jobs_csv(csv_path=csv_path, sql=sql_text, max_rows=AI_SQL_MAX_ROWS)
+    sql_exec: Dict[str, Any]
+    if use_db:
+        sql_exec = _execute_sql_on_jobs_db(db_path=db_path, sql=sql_text, max_rows=AI_SQL_MAX_ROWS)
+        if not bool(sql_exec.get("success")):
+            csv_columns = _read_csv_header(csv_path)
+            if csv_columns:
+                csv_plan = _plan_sql_query(question=question, history=history, table_columns=csv_columns)
+                csv_sql_text = _clean_text(csv_plan.get("sql"))
+                if csv_sql_text:
+                    sql_plan = csv_plan
+                    sql_text = csv_sql_text
+                    result["generated_sql"] = sql_text
+                    result["sql_source"] = _clean_text(csv_plan.get("source"))
+                    result["data_source"] = AI_SQL_CSV_SOURCE
+                    result["data_file"] = csv_path.name
+                    result["db_table"] = ""
+                    sql_exec = _execute_sql_on_jobs_csv(csv_path=csv_path, sql=sql_text, max_rows=AI_SQL_MAX_ROWS)
+    else:
+        sql_exec = _execute_sql_on_jobs_csv(csv_path=csv_path, sql=sql_text, max_rows=AI_SQL_MAX_ROWS)
+
     rows = _safe_list(sql_exec.get("rows"))
 
     result["rows"] = rows
     result["columns"] = _safe_list(sql_exec.get("columns"))
     result["row_count"] = len(rows)
     result["error"] = _clean_text(sql_exec.get("error"))
-    result["context_text"] = _build_sql_context_text(sql_plan, sql_exec, csv_path.name)
+    result["db_table"] = _clean_text(sql_exec.get("db_table")) or result["db_table"]
+    result["schema"] = _safe_dict(sql_exec.get("schema")) or result["schema"]
+    result["company_cards"] = _build_company_cards(rows, question)
+    result["summary_stats"] = _build_sql_summary_stats(rows)
+    result["result_table"] = _build_sql_result_table(rows)
+    result["context_text"] = _build_sql_context_text(sql_plan, sql_exec, result["data_file"])
 
     return result
 
@@ -1771,7 +2531,10 @@ def _invoke_ai_chat_completion(
             "content": (
                 "你是一位专业的职业规划 AI 助手。"
                 "请优先使用【本地档案上下文】回答；如果上下文没有相关信息，要明确说明。\n"
-                "回答时请尽量简洁，并标注信息来源（如：📁 本地分析）。\n\n"
+                "回答时请尽量简洁，并标注信息来源（如：📁 本地分析）。"
+                "不要在主回答中输出 SQL 原文、调试日志、完整召回片段列表或内部字段名；"
+                "当前未启用联网搜索，回答必须说明基于本地数据；"
+                "公司、薪资、城市、行业等事实只能基于结构化查询结果总结，不能凭空编造。\n\n"
                 f"【本地档案上下文】\n{local_context_markdown}"
             ),
         }
@@ -1865,6 +2628,66 @@ def _looks_like_realtime_question(question: str) -> bool:
     return any(keyword in normalized for keyword in realtime_keywords)
 
 
+def _build_sql_product_answer(
+    question: str,
+    snapshot: Dict[str, Any],
+    sql_query_context: Dict[str, Any],
+    web_search_enabled: bool = False,
+) -> str:
+    sql_context = _safe_dict(sql_query_context)
+    cards = _safe_list(sql_context.get("company_cards"))
+    rows = _safe_list(sql_context.get("rows"))
+    data_source = _clean_text(sql_context.get("data_source"))
+    data_source_text = "jobs.db" if data_source == AI_SQL_DB_SOURCE else ("CSV fallback" if data_source == AI_SQL_CSV_SOURCE else "本地数据")
+    conditions = _build_query_condition_summary(question, sql_context)
+    match = _safe_dict(snapshot.get("job_match"))
+    career = _safe_dict(snapshot.get("career_path"))
+    recommended_job = (
+        _clean_text(match.get("recommended_job"))
+        or _clean_text(career.get("system_recommended_job"))
+        or _clean_text(career.get("primary_target_job"))
+    )
+
+    lines = ["📁 本地岗位机会分析"]
+    lines.append("本回答基于本地岗位样本数据，未使用联网搜索。")
+    if conditions:
+        lines.append("查询条件：" + "；".join(conditions))
+    else:
+        lines.append(f"数据来源：{data_source_text}")
+
+    if not rows:
+        error_text = _clean_text(sql_context.get("error"))
+        if error_text:
+            lines.append(f"当前没有形成可展示的岗位样本结果：{error_text}")
+        else:
+            lines.append("当前本地岗位样本中没有查到完全匹配的公司或岗位记录。")
+        lines.append("你可以换成更具体的条件继续问，例如“北京 20k 以上有哪些前端岗位？”或“上海 Java 开发有哪些公司？”。")
+        return "\n".join(lines)
+
+    lines.append(f"我从{data_source_text}中查到 {len(rows)} 条候选岗位样本，并整理出以下公司优先关注：")
+    for index, card in enumerate(cards[:5], start=1):
+        card_dict = _safe_dict(card)
+        lines.append(
+            f"{index}. {card_dict.get('company_name') or '未知公司'}："
+            f"{card_dict.get('city') or '城市未记录'}，"
+            f"{card_dict.get('standard_job_name') or card_dict.get('job_title') or '岗位未记录'}，"
+            f"薪资 {card_dict.get('salary_range') or '暂无薪资'}。"
+        )
+
+    if recommended_job:
+        lines.append(
+            f"结合当前档案，系统当前更关注的岗位方向是“{recommended_job}”。"
+            "如果你想让结果更贴近个人匹配，可以继续追问“只看当前推荐岗位”或“按我的目标岗位筛选”。"
+        )
+    else:
+        lines.append("如果你希望结果更贴近个人画像，可以继续补充岗位方向、城市或薪资要求。")
+
+    lines.append("下一步你可以继续问：只看某个岗位方向、按薪资排序、只看本科可投，或帮你生成投递清单。")
+    if (not web_search_enabled) and _looks_like_realtime_question(question):
+        lines.append("说明：当前结果来自本地岗位样本，不是实时招聘网站数据。")
+    return "\n".join(lines)
+
+
 def _build_local_fallback_answer(
     question: str,
     snapshot: Dict[str, Any],
@@ -1873,6 +2696,15 @@ def _build_local_fallback_answer(
     semantic_hits: Optional[List[Dict[str, Any]]] = None,
     sql_query_context: Optional[Dict[str, Any]] = None,
 ) -> str:
+    sql_context = _safe_dict(sql_query_context)
+    if bool(sql_context.get("enabled")):
+        return _build_sql_product_answer(
+            question=question,
+            snapshot=snapshot,
+            sql_query_context=sql_context,
+            web_search_enabled=web_search_enabled,
+        )
+
     if not chunks:
         if semantic_hits:
             lines = ["📁 本地分析", "- 当前尚未加载完整档案，但已召回岗位语义知识片段："]
@@ -1882,7 +2714,7 @@ def _build_local_fallback_answer(
         return "📁 本地分析\n当前没有可用档案内容，请先完成学生画像、岗位匹配、职业路径和报告生成。"
 
     normalized_question = _clean_text(question)
-    lines = ["📁 本地分析"]
+    lines = ["📁 本地分析", "- 本回答基于本地学生画像、岗位匹配、路径规划或报告数据，未使用联网搜索。"]
 
     if "名字" in normalized_question or "姓名" in normalized_question:
         name = _extract_name_from_snapshot(snapshot)
@@ -2031,7 +2863,46 @@ def _extract_report_text(report_res: dict) -> str:
     return _clean_text(report_res.get("report_text_markdown") or report_res.get("report_text"))
 
 
+def _target_job_needs_confirmation(all_data: dict) -> bool:
+    match_res = _safe_dict(all_data.get("job_match_result"))
+    target_match = _safe_dict(match_res.get("target_job_match"))
+    target_assets = _safe_dict(_safe_dict(all_data.get("job_profile_result")).get("target_job_profile_assets"))
+    return (
+        _clean_text(target_match.get("evaluation_status")) == "needs_confirmation"
+        or _clean_text(target_match.get("resolution_status")) == "needs_confirmation"
+        or _clean_text(_safe_dict(target_match.get("job_name_resolution")).get("resolution_status")) == "needs_confirmation"
+        or _clean_text(target_assets.get("evaluation_status")) == "needs_confirmation"
+        or _clean_text(target_assets.get("resolution_status")) == "needs_confirmation"
+    )
+
+
 def _build_report_detail(all_data: dict) -> dict:
+    if _target_job_needs_confirmation(all_data):
+        target_match = _safe_dict(_safe_dict(all_data.get("job_match_result")).get("target_job_match"))
+        requested = (
+            _clean_text(_safe_dict(target_match.get("job_name_resolution")).get("requested_job_name"))
+            or _clean_text(target_match.get("job_name"))
+            or _resolve_state_target_job(all_data)
+        )
+        message = (
+            f"当前目标岗位“{requested}”尚未完成本地标准岗位确认。"
+            "请先在人岗匹配页面选择一个最接近的本地标准岗位，再生成完整职业规划报告。"
+        )
+        return {
+            "file_name": REPORT_FILE_NAME,
+            "report_title": "职业规划报告待生成",
+            "report_summary": message,
+            "report_text": f"# 职业规划报告待生成\n\n{message}\n",
+            "report_sections": [
+                {
+                    "section_title": "目标岗位待确认",
+                    "section_content": message,
+                }
+            ],
+            "edit_suggestions": ["确认本地标准岗位后重新生成职业路径和职业报告。"],
+            "completeness_check": {"is_complete": False, "missing_sections": ["目标岗位标准化确认"]},
+        }
+
     report_res = _safe_dict(all_data.get("career_report_result"))
     report_text = _extract_report_text(report_res)
     if report_text:
@@ -2054,6 +2925,7 @@ def _build_report_detail(all_data: dict) -> dict:
 
 def _resolve_state_target_job(all_data: dict) -> str:
     candidates = [
+        _safe_dict(all_data.get("target_job_confirmation")).get("confirmed_standard_job_name"),
         _safe_dict(all_data.get("career_path_plan_result")).get("primary_target_job"),
         _safe_dict(all_data.get("job_profile_result")).get("standard_job_name"),
         _safe_dict(all_data.get("resume_parse_result")).get("target_job_intention"),
@@ -2221,6 +3093,7 @@ async def match_jobs():
                 "recommendation_ranking": _safe_list(match_res.get("recommendation_ranking")),
                 "core_job_profiles": _safe_list(job_profile_result.get("core_job_profiles")),
                 "target_job_profile_assets": _safe_dict(job_profile_result.get("target_job_profile_assets")),
+                "target_job_confirmation": _safe_dict(all_data.get("target_job_confirmation")),
             }]
 
     if not data:
@@ -2240,6 +3113,81 @@ async def match_jobs():
         "last_updated": _state_last_updated(),
         "data": data,
     }
+
+
+@app.post("/api/job/confirm-target")
+async def confirm_target_job(req: TargetJobConfirmRequest):
+    """保存用户选择的本地标准岗位，并即时刷新目标岗位画像与赛题资产评估。"""
+    requested_job_name = _clean_text(req.requested_job_name)
+    confirmed_standard_job_name = _clean_text(req.confirmed_standard_job_name)
+    if not requested_job_name or not confirmed_standard_job_name:
+        return {"success": False, "message": "requested_job_name 和 confirmed_standard_job_name 不能为空", "data": {}}
+
+    try:
+        from job_match.match_asset_loader import MatchAssetLoader
+        from job_match.target_job_confirmation_service import save_target_job_confirmation
+        from job_profile.core_job_profile_service import build_target_job_profile_assets
+        from job_match.contest_match_evaluator import evaluate_single_job
+
+        confirmation = save_target_job_confirmation(
+            requested_job_name=requested_job_name,
+            confirmed_standard_job_name=confirmed_standard_job_name,
+            project_root=_project_root(),
+            state_path=_state_file_path(),
+        )
+
+        all_data = _load_all_data()
+        loader = MatchAssetLoader(project_root=_project_root())
+        job_profile_result = _safe_dict(all_data.get("job_profile_result"))
+        job_match_result = _safe_dict(all_data.get("job_match_result"))
+        match_payload = _safe_dict(job_match_result.get("match_input_payload"))
+        student_profile = _safe_dict(match_payload.get("student_profile")) or _safe_dict(all_data.get("student_profile_result"))
+        target_overall = _safe_float(job_match_result.get("overall_match_score")) or _safe_float(
+            _safe_dict(job_match_result.get("rule_score_result")).get("overall_match_score")
+        )
+
+        target_assets = build_target_job_profile_assets(
+            requested_job_name,
+            loader=loader,
+        )
+        target_match = evaluate_single_job(
+            job_name=requested_job_name,
+            student_profile=student_profile,
+            loader=loader,
+            match_type="target_job",
+            overall_match_score=target_overall,
+        )
+
+        job_profile_result["user_requested_job_name"] = requested_job_name
+        job_profile_result["confirmed_standard_job_name"] = confirmed_standard_job_name
+        job_profile_result["standard_job_name"] = confirmed_standard_job_name
+        job_profile_result["target_job_profile_assets"] = target_assets
+        all_data["job_profile_result"] = job_profile_result
+
+        job_match_result["target_job_match"] = target_match
+        if match_payload:
+            match_job_profile = _safe_dict(match_payload.get("job_profile"))
+            match_job_profile["standard_job_name"] = confirmed_standard_job_name
+            match_job_profile["requested_job_name"] = requested_job_name
+            match_job_profile["confirmed_standard_job_name"] = confirmed_standard_job_name
+            match_payload["job_profile"] = match_job_profile
+            job_match_result["match_input_payload"] = match_payload
+        all_data["job_match_result"] = job_match_result
+        all_data["target_job_confirmation"] = confirmation
+        _write_all_data(all_data)
+
+        return {
+            "success": True,
+            "message": "目标岗位标准化确认成功，已刷新目标岗位画像与赛题资产评估。",
+            "data": {
+                "target_job_confirmation": confirmation,
+                "target_job_profile_assets": target_assets,
+                "target_job_match": target_match,
+            },
+        }
+    except Exception as exc:
+        logger.error(f"Error confirming target job: {exc}")
+        return {"success": False, "message": str(exc), "data": {}}
 
 
 @app.get("/api/job/profile-assets")
@@ -2267,6 +3215,44 @@ async def job_profile_assets():
     }
 
 
+@app.get("/api/job-path-graph/all")
+async def job_path_graph_all():
+    """返回前端 G6 可渲染的全量岗位路径知识图谱。"""
+    try:
+        from job_path_graph_service import build_full_job_path_graph
+
+        payload = build_full_job_path_graph(project_root=_project_root(), prefer_neo4j=True)
+        return {
+            "success": True,
+            "status": _clean_text(payload.get("graph_status")) or "unavailable",
+            "source": _clean_text(payload.get("source")) or "none",
+            "message": _clean_text(payload.get("message")),
+            "data": payload,
+        }
+    except Exception as exc:
+        logger.error(f"Error building job path graph: {exc}")
+        payload = {
+            "graph_status": "unavailable",
+            "source": "none",
+            "stats": {
+                "job_node_count": 0,
+                "promote_edge_count": 0,
+                "transfer_edge_count": 0,
+                "total_edge_count": 0,
+            },
+            "nodes": [],
+            "edges": [],
+            "message": f"岗位路径图谱读取失败：{exc}",
+        }
+        return {
+            "success": True,
+            "status": "unavailable",
+            "source": "none",
+            "message": payload["message"],
+            "data": payload,
+        }
+
+
 @app.get("/api/career/path")
 @app.post("/api/career/path")
 async def career_path():
@@ -2274,6 +3260,43 @@ async def career_path():
     data = {}
     all_data = _load_all_data()
     if all_data:
+        if _target_job_needs_confirmation(all_data):
+            target_match = _safe_dict(_safe_dict(all_data.get("job_match_result")).get("target_job_match"))
+            requested = (
+                _clean_text(_safe_dict(target_match.get("job_name_resolution")).get("requested_job_name"))
+                or _clean_text(target_match.get("job_name"))
+                or _resolve_state_target_job(all_data)
+            )
+            data = {
+                "primary_target_job": requested,
+                "secondary_target_jobs": [],
+                "goal_positioning": "当前目标岗位尚未完成本地标准岗位确认，暂不生成确定性职业路径。",
+                "goal_reason": "请先在人岗匹配页面选择最接近的本地标准岗位，系统再基于标准岗位资产继续规划。",
+                "path_strategy": "needs_target_confirmation",
+                "target_path_data_status": "needs_confirmation",
+                "target_path_data_message": "当前目标岗位需要先确认本地标准岗位，系统不会在未确认状态下生成职业路径。",
+                "direct_path": [],
+                "transition_path": [],
+                "long_term_path": [],
+                "representative_promotion_paths": [],
+                "representative_path_count": 0,
+                "representative_path_status": "",
+                "representative_path_message": "",
+                "short_term_plan": ["先确认本地标准岗位，再重新生成职业路径规划。"],
+                "mid_term_plan": [],
+                "risk_and_gap": ["目标岗位未完成标准化确认，岗位路径和赛题评测结论暂不完整。"],
+                "fallback_strategy": "确认标准岗位后重新规划。",
+                "target_selection_reason": [],
+                "path_selection_reason": [],
+            }
+            return {
+                "success": True,
+                "status": "needs_confirmation",
+                "source": "state_file",
+                "last_updated": _state_last_updated(),
+                "data": data,
+            }
+
         raw = _safe_dict(all_data.get("career_path_plan_result"))
         service_raw = _safe_read_json(_project_root() / "outputs" / "state" / "career_path_plan_service_result.json")
         service_result = _safe_dict(service_raw.get("career_path_plan_result")) or service_raw
@@ -2480,20 +3503,26 @@ async def handle_ai_chat(req: AIChatRequest):
     if not user_message:
         return {"success": False, "message": "message 不能为空", "data": {}}
 
-    snapshot = _build_ai_context_snapshot()
-    context_chunks = _retrieve_context_chunks(user_message, snapshot)
-    semantic_hits = _retrieve_semantic_hits(user_message, snapshot)
-
     memory_store = _load_ai_memory_store()
     conversation_id = _ensure_conversation_id(memory_store, req.conversation_id)
     history = _get_recent_history(memory_store, conversation_id)
 
-    sql_query_context = _build_sql_query_context(user_message, history)
+    snapshot = _build_ai_context_snapshot()
+    intent_result = classify_ai_question_intent(user_message, history)
+    context_chunks = _retrieve_context_chunks(user_message, snapshot)
+    semantic_hits = _retrieve_semantic_hits(user_message, snapshot) if _should_use_semantic_for_intent(intent_result) else []
+    sql_query_context = _build_sql_query_context(user_message, history, intent_result)
+    path_graph_context = (
+        _build_path_graph_context(user_message)
+        if bool(intent_result.get("should_use_path_graph"))
+        else {"enabled": False, "matched_edges": [], "stats": {}, "summary_text": ""}
+    )
     context_markdown = _format_context_for_prompt(
         snapshot,
         context_chunks,
         semantic_hits,
         sql_query_context,
+        path_graph_context,
     )
 
     answer = ""
@@ -2516,14 +3545,72 @@ async def handle_ai_chat(req: AIChatRequest):
             sql_query_context=sql_query_context,
         )
 
+    sql_context_dict = _safe_dict(sql_query_context)
+    path_context_dict = _safe_dict(path_graph_context)
+    if bool(sql_context_dict.get("enabled")):
+        answer = _build_sql_product_answer(
+            question=user_message,
+            snapshot=snapshot,
+            sql_query_context=sql_context_dict,
+            web_search_enabled=bool(req.web_search_enabled),
+        )
+        answer_source = "local_sql_summary"
+    elif bool(path_context_dict.get("enabled")):
+        answer = _build_path_graph_product_answer(user_message, path_context_dict)
+        answer_source = "local_path_graph_summary"
+
     _append_conversation_message(memory_store, conversation_id, "user", user_message)
     _append_conversation_message(memory_store, conversation_id, "assistant", answer)
     _save_ai_memory_store(memory_store)
+
+    semantic_evidence = [
+        hit for hit in _safe_list(semantic_hits)
+        if (_safe_float(_safe_dict(hit).get("score")) or 0) >= 0.30
+    ]
+    sql_evidence = {
+        "enabled": bool(sql_context_dict.get("enabled")),
+        "data_source": _clean_text(sql_context_dict.get("data_source")),
+        "db_table": _clean_text(sql_context_dict.get("db_table")),
+        "data_file": _clean_text(sql_context_dict.get("data_file")),
+        "sql_source": _clean_text(sql_context_dict.get("sql_source")),
+        "generated_sql": _clean_text(sql_context_dict.get("generated_sql")),
+        "row_count": sql_context_dict.get("row_count", 0),
+        "error": _clean_text(sql_context_dict.get("error")),
+    }
+    path_graph_evidence = {
+        "enabled": bool(path_context_dict.get("enabled")),
+        "path_graph_status": _clean_text(path_context_dict.get("path_graph_status")),
+        "source": _clean_text(path_context_dict.get("source")),
+        "stats": _safe_dict(path_context_dict.get("stats")),
+        "matched_edges": _safe_list(path_context_dict.get("matched_edges")),
+        "summary_text": _clean_text(path_context_dict.get("summary_text")),
+        "message": _clean_text(path_context_dict.get("message")),
+    }
+    local_sources_used = set()
+    if bool(sql_context_dict.get("enabled")):
+        local_sources_used.add("jobs_db" if _clean_text(sql_context_dict.get("data_source")) == AI_SQL_DB_SOURCE else "csv_fallback")
+    if bool(path_context_dict.get("enabled")):
+        local_sources_used.add("job_path_graph")
+    if semantic_evidence:
+        local_sources_used.add("semantic_kb")
+    for chunk in context_chunks:
+        source = _clean_text(_safe_dict(chunk).get("source"))
+        if source == "student_profile":
+            local_sources_used.add("student_profile")
+        elif source == "job_match":
+            local_sources_used.add("job_match")
+        elif source == "career_path":
+            local_sources_used.add("career_path")
+        elif source == "report_data":
+            local_sources_used.add("report_data")
+    local_sources_used.add("offline_mode")
 
     return {
         "success": True,
         "data": {
             "conversation_id": conversation_id,
+            "intent": _clean_text(intent_result.get("intent")) or _infer_ai_chat_intent(user_message, sql_context_dict),
+            "intent_result": intent_result,
             "answer": answer,
             "source": answer_source,
             "context_summary": _build_context_summary_line(snapshot),
@@ -2532,17 +3619,23 @@ async def handle_ai_chat(req: AIChatRequest):
                     *{chunk.get("source") for chunk in context_chunks if chunk.get("source")},
                     *({"semantic_kb"} if semantic_hits else set()),
                     *({"sql_query"} if _clean_text(_safe_dict(sql_query_context).get("generated_sql")) else set()),
+                    *({"path_graph"} if bool(path_context_dict.get("enabled")) else set()),
                 }
             ),
             "loaded_files": _safe_list(snapshot.get("loaded_files")),
             "missing_files": _safe_list(snapshot.get("missing_files")),
+            "local_sources_used": sorted(local_sources_used),
+            "result_cards": _safe_list(sql_context_dict.get("company_cards")),
+            "result_table": _safe_dict(sql_context_dict.get("result_table")),
+            "summary_stats": _safe_dict(sql_context_dict.get("summary_stats")),
+            "evidence": {
+                "context_chunks": context_chunks[:AI_MAX_CONTEXT_CHUNKS],
+                "semantic_hits": semantic_evidence,
+                "sql": sql_evidence,
+                "path_graph": path_graph_evidence,
+            },
             "sql_debug": {
-                "enabled": bool(_safe_dict(sql_query_context).get("enabled")),
-                "sql_source": _clean_text(_safe_dict(sql_query_context).get("sql_source")),
-                "generated_sql": _clean_text(_safe_dict(sql_query_context).get("generated_sql")),
-                "row_count": _safe_dict(sql_query_context).get("row_count", 0),
-                "error": _clean_text(_safe_dict(sql_query_context).get("error")),
-                "data_file": _clean_text(_safe_dict(sql_query_context).get("data_file")),
+                **sql_evidence,
             },
         },
     }

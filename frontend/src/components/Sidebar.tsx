@@ -4,6 +4,7 @@ import {
   UserOutlined,
   BarChartOutlined,
   NodeIndexOutlined,
+  ApartmentOutlined,
   FileTextOutlined,
   HomeOutlined,
   MessageOutlined,
@@ -50,6 +51,11 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
       key: '/career',
       icon: <NodeIndexOutlined />,
       label: <Link to="/career">职业规划</Link>,
+    },
+    {
+      key: '/job-path-graph',
+      icon: <ApartmentOutlined />,
+      label: <Link to="/job-path-graph">岗位路径图谱</Link>,
     },
     {
       key: '/report',

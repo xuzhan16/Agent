@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Card, Row, Col, Timeline, Button, Tag, Space, Alert, Collapse, Steps } from 'antd'
 import {
   ApartmentOutlined,
@@ -11,8 +10,7 @@ import {
 } from '@ant-design/icons'
 import { useCareerStore } from '../store'
 import { useNavigate } from 'react-router-dom'
-import { careerApi } from '../services/api'
-import type { CareerPathResult, RepresentativePromotionPath } from '../types'
+import type { CareerPathResult } from '../types'
 import '../styles/CareerPath.css'
 
 const pathEmptyMessage = '当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。'
@@ -117,105 +115,28 @@ const TargetPathSection = ({ careerPath }: { careerPath: CareerPathResult }) => 
   )
 }
 
-const RepresentativePromotionSection = ({
-  paths,
-  status,
-  message,
-}: {
-  paths?: RepresentativePromotionPath[]
-  status?: string
-  message?: string
-}) => {
-  const representativePaths = safeList(paths)
-  return (
-    <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
-      <Col xs={24}>
-        <Card className="path-card representative-path-card" title={<span><ApartmentOutlined /> 代表性岗位晋升关系</span>}>
-          <Alert
-            className="representative-path-alert"
-            message="全局图谱代表路径"
-            description="以下路径来自本地岗位图谱中的 PROMOTE_TO 关系，用于展示系统已沉淀的真实岗位晋升关系。它们不一定与当前用户目标岗位直接相关。"
-            type="success"
-            showIcon
-          />
-          {status === 'insufficient' && (
-            <Alert
-              className="representative-path-alert"
-              message="代表路径数量不足"
-              description={message || '当前图谱中可用代表晋升路径不足 3 个，建议后续补充岗位关系数据。'}
-              type="warning"
-              showIcon
-            />
-          )}
-          <Row gutter={[16, 16]}>
-            {representativePaths.length > 0 ? (
-              representativePaths.map((item, index) => (
-                <Col xs={24} md={12} xl={8} key={`${item.source_job || index}-${index}`}>
-                  <div className="representative-path-item">
-                    <div className="representative-path-head">
-                      <Tag color="blue">#{index + 1}</Tag>
-                      <Tag color="green">{item.source || 'PROMOTE_TO'}</Tag>
-                    </div>
-                    <h3>{item.source_job || '未命名岗位'}</h3>
-                    <p className="representative-path-count">
-                      晋升关系数量：<b>{item.edge_count ?? safeList(item.promote_targets).length}</b>
-                    </p>
-                    <div className="representative-targets">
-                      {safeList(item.promote_targets).slice(0, 6).map((target) => (
-                        <Tag key={target} color="purple">{target}</Tag>
-                      ))}
-                    </div>
-                    <p className="representative-reason">
-                      {item.selection_reason || '该岗位存在真实 PROMOTE_TO 晋升关系。'}
-                    </p>
-                  </div>
-                </Col>
-              ))
-            ) : (
-              <Col xs={24}>
-                <Alert
-                  message="暂无代表性晋升路径"
-                  description={message || '当前没有读取到可展示的 PROMOTE_TO 晋升关系。'}
-                  type="warning"
-                  showIcon
-                />
-              </Col>
-            )}
-          </Row>
-        </Card>
-      </Col>
-    </Row>
-  )
-}
+const JobPathGraphEntry = ({ onOpen }: { onOpen: () => void }) => (
+  <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+    <Col xs={24}>
+      <Card className="path-card job-path-graph-entry" title={<span><ApartmentOutlined /> 岗位路径知识图谱</span>}>
+        <div>
+          <h3>想查看全部真实岗位路径关系？</h3>
+          <p>
+            岗位路径图谱会一次性展示 Neo4j 中全部 PROMOTE_TO / TRANSFER_TO 关系。它是全局岗位路径事实，不依赖当前用户目标岗位，也不会由 LLM 编造。
+          </p>
+        </div>
+        <Button type="primary" icon={<ApartmentOutlined />} onClick={onOpen}>
+          查看完整岗位路径图谱
+        </Button>
+      </Card>
+    </Col>
+  </Row>
+)
 
 const CareerPath = () => {
   const studentInfo = useCareerStore((state) => state.studentInfo)
   const careerPath = useCareerStore((state) => state.careerPath)
-  const setCareerPath = useCareerStore((state) => state.setCareerPath)
   const navigate = useNavigate()
-  const representativePathCount = safeList(careerPath?.representative_promotion_paths).length
-  const representativePathStatus = careerPath?.representative_path_status
-
-  useEffect(() => {
-    if (!careerPath || representativePathCount > 0 || representativePathStatus) {
-      return
-    }
-
-    let cancelled = false
-    careerApi.planCareerPath()
-      .then((response) => {
-        if (!cancelled && response.success && response.data) {
-          setCareerPath(response.data)
-        }
-      })
-      .catch((error) => {
-        console.warn('[CareerPath] failed to refresh representative paths:', error)
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [careerPath, representativePathCount, representativePathStatus, setCareerPath])
 
   const handleGoToReport = () => {
     navigate('/report')
@@ -324,11 +245,7 @@ const CareerPath = () => {
 
       <TargetPathSection careerPath={careerPath} />
 
-      <RepresentativePromotionSection
-        paths={careerPath.representative_promotion_paths}
-        status={careerPath.representative_path_status}
-        message={careerPath.representative_path_message}
-      />
+      <JobPathGraphEntry onOpen={() => navigate('/job-path-graph')} />
 
       {/* 短期计划 */}
       <Row gutter={[24, 24]} style={{ marginTop: 24 }}>

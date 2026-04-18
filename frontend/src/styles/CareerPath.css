@@ -56,6 +56,35 @@
   line-height: 1.8;
 }
 
+.job-path-graph-entry .ant-card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(99, 102, 241, 0.1), transparent 28%),
+    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  border-radius: 0 0 16px 16px;
+}
+
+.job-path-graph-entry h3 {
+  margin: 0 0 8px;
+  color: #172033;
+}
+
+.job-path-graph-entry p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .job-path-graph-entry .ant-card-body {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 .representative-path-card {
   background:
     radial-gradient(circle at 12% 20%, rgba(82, 196, 26, 0.08), transparent 26%),

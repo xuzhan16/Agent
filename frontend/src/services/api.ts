@@ -6,6 +6,7 @@ import {
   CareerPathResult,
   ApiResponse,
   JobProfileAssetsData,
+  JobPathGraphResponse,
   ReportDetail,
   PipelineStatus,
   AIContextSummaryData,
@@ -72,6 +73,23 @@ export const careerApi = {
   // 岗位画像资产查询（全局岗位资产，不依赖学生状态）
   getJobProfileAssets: (): Promise<ApiResponse<JobProfileAssetsData>> => {
     return api.get('/job/profile-assets')
+  },
+
+  // 用户确认目标岗位对应的本地标准岗位
+  confirmTargetJob: (data: {
+    requested_job_name: string
+    confirmed_standard_job_name: string
+  }): Promise<ApiResponse<{
+    target_job_confirmation?: unknown
+    target_job_profile_assets?: unknown
+    target_job_match?: unknown
+  }>> => {
+    return api.post('/job/confirm-target', data)
+  },
+
+  // 全量岗位路径知识图谱
+  getJobPathGraph: (): Promise<ApiResponse<JobPathGraphResponse>> => {
+    return api.get('/job-path-graph/all')
   },
 
   // 职业路径查询（状态接口，不消费请求体）

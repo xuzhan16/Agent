@@ -11,6 +11,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from job_match.match_asset_loader import MatchAssetLoader, clean_text, safe_dict, safe_list
+from job_match.target_job_confirmation_service import (
+    RESOLUTION_NEEDS_CONFIRMATION,
+    resolve_job_with_confirmation,
+)
 
 
 def _requirement_distributions(stats: Dict[str, Any]) -> Dict[str, Any]:
@@ -88,7 +92,38 @@ def build_target_job_profile_assets(
         return {}
 
     asset_loader = loader or MatchAssetLoader()
-    resolution = asset_loader.resolve_job_name(job_name)
+    resolution = resolve_job_with_confirmation(
+        job_name,
+        loader=asset_loader,
+        project_root=asset_loader.project_root,
+    )
+    if resolution.get("resolution_status") == RESOLUTION_NEEDS_CONFIRMATION:
+        return {
+            "requested_job_name": job_name,
+            "standard_job_name": "",
+            "resolved_standard_job_name": "",
+            "asset_found": False,
+            "resolution_status": RESOLUTION_NEEDS_CONFIRMATION,
+            "resolution_method": clean_text(resolution.get("resolution_method")),
+            "resolution_confidence": resolution.get("resolution_confidence", 0.0),
+            "asset_resolution": deepcopy(resolution),
+            "candidate_jobs": deepcopy(safe_list(resolution.get("candidate_jobs"))),
+            "evaluation_status": "needs_confirmation",
+            "message": clean_text(resolution.get("message"))
+            or "当前目标岗位未唯一命中标准岗位画像资产，请先选择本地标准岗位。",
+            "sample_count": 0,
+            "degree_distribution": [],
+            "major_distribution": [],
+            "certificate_distribution": [],
+            "no_certificate_requirement_ratio": 0.0,
+            "degree_gate": "",
+            "major_gate_set": [],
+            "must_have_certificates": [],
+            "preferred_certificates": [],
+            "required_knowledge_points": [],
+            "preferred_knowledge_points": [],
+        }
+
     asset_job_name = clean_text(resolution.get("resolved_standard_job_name")) if resolution.get("asset_found") else job_name
     stats = asset_loader.get_requirement_stats_by_standard_name(asset_job_name)
     skill_assets = asset_loader.get_skill_assets_by_standard_name(asset_job_name)

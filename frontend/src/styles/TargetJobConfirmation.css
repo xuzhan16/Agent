@@ -1,0 +1,103 @@
+.target-confirm-card {
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 24px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+.target-confirm-card .ant-card-head {
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.94), rgba(245, 243, 255, 0.94));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 24px 24px 0 0;
+}
+
+.target-confirm-alert {
+  margin-bottom: 20px;
+  border-radius: 16px;
+}
+
+.target-candidate-card {
+  height: 100%;
+  padding: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.09), transparent 36%),
+    #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.target-candidate-card:hover {
+  border-color: rgba(37, 99, 235, 0.34);
+  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.12);
+  transform: translateY(-3px);
+}
+
+.target-candidate-head {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.target-candidate-head h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 18px;
+}
+
+.target-candidate-head p {
+  margin: 6px 0 0;
+  color: #64748b;
+}
+
+.target-candidate-score {
+  margin: 12px 0;
+}
+
+.target-candidate-score span,
+.target-candidate-tags span {
+  display: block;
+  margin-bottom: 6px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.target-candidate-meta {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.target-candidate-meta span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  color: #64748b;
+  background: rgba(248, 250, 252, 0.92);
+  border-radius: 12px;
+}
+
+.target-candidate-meta b {
+  color: #0f172a;
+  text-align: right;
+}
+
+.target-candidate-tags {
+  min-height: 64px;
+  margin: 12px 0;
+}
+
+.target-candidate-tags em {
+  color: #94a3b8;
+  font-style: normal;
+}
+
+.target-candidate-reason {
+  min-height: 48px;
+  margin: 10px 0 16px;
+  color: #475569;
+  line-height: 1.7;
+}
