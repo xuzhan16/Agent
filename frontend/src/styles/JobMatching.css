@@ -488,6 +488,120 @@
   font-weight: 700;
 }
 
+.ability-match-card .ant-card-body {
+  display: grid;
+}
+
+.ability-match-summary {
+  height: 100%;
+  min-height: 320px;
+  padding: 22px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(22, 163, 74, 0.16), transparent 34%),
+    linear-gradient(135deg, #ecfdf5, #ffffff);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+}
+
+.ability-match-summary > span {
+  display: block;
+  margin-bottom: 10px;
+  color: #047857;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ability-match-summary > strong {
+  display: block;
+  margin-bottom: 14px;
+  color: #065f46;
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.ability-match-tags {
+  margin-top: 18px;
+}
+
+.ability-match-tags > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.ability-match-radar {
+  min-height: 320px;
+  padding: 10px 8px 0;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 86% 12%, rgba(37, 99, 235, 0.12), transparent 34%),
+    linear-gradient(180deg, #ffffff, #f8fbff);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.ability-gap-card {
+  height: 100%;
+  min-height: 172px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.ability-gap-card.risk-high {
+  background: linear-gradient(180deg, #f0fdf4, #ffffff);
+  border-color: rgba(22, 163, 74, 0.18);
+}
+
+.ability-gap-card.risk-mid {
+  background: linear-gradient(180deg, #fffbeb, #ffffff);
+  border-color: rgba(245, 158, 11, 0.22);
+}
+
+.ability-gap-card.risk-low {
+  background: linear-gradient(180deg, #fef2f2, #ffffff);
+  border-color: rgba(239, 68, 68, 0.22);
+}
+
+.ability-gap-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ability-gap-head strong {
+  color: #0f172a;
+}
+
+.ability-gap-scores {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.ability-gap-scores span {
+  padding: 7px 9px;
+  border-radius: 10px;
+  color: #475569;
+  background: rgba(241, 245, 249, 0.92);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ability-gap-card p {
+  min-height: 42px;
+  margin: 0 0 10px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .soft-tag {
   margin-inline-end: 0;
   border-radius: 999px;

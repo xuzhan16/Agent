@@ -39,6 +39,7 @@ class StudentReportSnapshot:
     tool_skills: List[str] = field(default_factory=list)
     certificates: List[str] = field(default_factory=list)
     soft_skills: List[str] = field(default_factory=list)
+    employment_ability_profile: Dict[str, Any] = field(default_factory=dict)
     practice_profile: Dict[str, Any] = field(default_factory=dict)
     potential_profile: Dict[str, Any] = field(default_factory=dict)
     profile_completeness_score: float = 0.0
@@ -72,6 +73,9 @@ class JobReportSnapshot:
     industry_distribution: List[Dict[str, Any]] = field(default_factory=list)
     target_job_profile_context: Dict[str, Any] = field(default_factory=dict)
     semantic_reference_context: Dict[str, Any] = field(default_factory=dict)
+    ability_requirements: Dict[str, Any] = field(default_factory=dict)
+    ability_radar: List[Dict[str, Any]] = field(default_factory=list)
+    ability_source_quality: Dict[str, Any] = field(default_factory=dict)
     summary: str = ""
 
 
@@ -310,6 +314,7 @@ def normalize_student_profile_result(student_profile_result: Dict[str, Any]) -> 
             or ability_evidence.get("certificate_tags")
         ),
         soft_skills=normalize_text_list(source.get("soft_skills") or safe_dict(source.get("soft_skill_profile")).keys()),
+        employment_ability_profile=deepcopy(safe_dict(source.get("employment_ability_profile"))),
         practice_profile={
             "project_experience": normalize_dict_list(
                 explicit_profile.get("project_experience") or ability_evidence.get("project_examples")
@@ -378,6 +383,9 @@ def normalize_job_profile_result(job_profile_result: Dict[str, Any]) -> Dict[str
         "no_certificate_requirement_ratio": target_assets.get("no_certificate_requirement_ratio"),
         "required_knowledge_points": normalize_text_list(target_assets.get("required_knowledge_points")),
         "preferred_knowledge_points": normalize_text_list(target_assets.get("preferred_knowledge_points")),
+        "ability_requirements": deepcopy(safe_dict(target_assets.get("ability_requirements"))),
+        "ability_radar": deepcopy(normalize_dict_list(target_assets.get("ability_radar"))),
+        "ability_source_quality": deepcopy(safe_dict(target_assets.get("ability_source_quality"))),
         "source_quality": deepcopy(safe_dict(target_assets.get("source_quality"))),
         "knowledge_source": clean_text(target_assets.get("knowledge_source")),
     }
@@ -426,6 +434,9 @@ def normalize_job_profile_result(job_profile_result: Dict[str, Any]) -> Dict[str
         industry_distribution=normalize_dict_list(source.get("industry_distribution")),
         target_job_profile_context=deepcopy(target_context),
         semantic_reference_context={},
+        ability_requirements=deepcopy(safe_dict(target_context.get("ability_requirements"))),
+        ability_radar=deepcopy(normalize_dict_list(target_context.get("ability_radar"))),
+        ability_source_quality=deepcopy(safe_dict(target_context.get("ability_source_quality"))),
         summary=build_asset_job_summary(target_context, fallback_summary=clean_text(source.get("summary"))),
     )
     return asdict(snapshot)

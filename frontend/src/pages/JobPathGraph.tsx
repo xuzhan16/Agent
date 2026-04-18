@@ -28,6 +28,7 @@ import type { JobPathGraphEdge, JobPathGraphNode, JobPathGraphResponse } from '.
 import '../styles/JobPathGraph.css'
 
 type RelationFilter = 'all' | 'PROMOTE_TO' | 'TRANSFER_TO'
+type GraphScope = 'curated' | 'all'
 type Selection =
   | { type: 'node'; item: JobPathGraphNode }
   | { type: 'edge'; item: JobPathGraphEdge }
@@ -299,6 +300,7 @@ const JobPathGraph = () => {
   const [graphData, setGraphData] = useState<JobPathGraphResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [graphScope, setGraphScope] = useState<GraphScope>('curated')
   const [relationFilter, setRelationFilter] = useState<RelationFilter>('all')
   const [searchText, setSearchText] = useState('')
   const deferredSearchText = useDeferredValue(searchText)
@@ -307,7 +309,7 @@ const JobPathGraph = () => {
   const loadGraph = () => {
     setLoading(true)
     setError('')
-    careerApi.getJobPathGraph()
+    careerApi.getJobPathGraph(graphScope)
       .then((response) => {
         if (response.success) {
           setGraphData(response.data || null)
@@ -327,7 +329,7 @@ const JobPathGraph = () => {
 
   useEffect(() => {
     loadGraph()
-  }, [])
+  }, [graphScope])
 
   const nodes = safeNodes(graphData?.nodes)
   const allEdges = safeEdges(graphData?.edges)
@@ -472,6 +474,7 @@ const JobPathGraph = () => {
 
   const graphStatus = graphData?.graph_status || 'unavailable'
   const source = graphData?.source || 'none'
+  const scope = graphData?.graph_scope || graphScope
   const stats = graphData?.stats || {}
   const promotionEdges = filteredEdges.filter((edge) => edge.relation === 'PROMOTE_TO')
   const transferEdges = filteredEdges.filter((edge) => edge.relation === 'TRANSFER_TO')
@@ -483,9 +486,12 @@ const JobPathGraph = () => {
           <Tag color={source === 'neo4j' ? 'blue' : source === 'csv_fallback' ? 'gold' : 'default'}>
             数据来源：{source === 'neo4j' ? 'Neo4j' : source === 'csv_fallback' ? 'CSV fallback' : '暂无'}
           </Tag>
+          <Tag color={scope === 'curated' ? 'green' : 'purple'}>
+            {scope === 'curated' ? '精选计算机岗位图谱' : '全部原始图谱'}
+          </Tag>
           <h1><ApartmentOutlined /> 岗位路径知识图谱</h1>
           <p>
-            基于 Neo4j 中真实 PROMOTE_TO / TRANSFER_TO 关系构建，用于查看系统已沉淀的岗位晋升与转岗路径。
+            基于 Neo4j 中真实 PROMOTE_TO / TRANSFER_TO 关系构建。默认精选图谱用于赛题展示，过滤明显非计算机或低质量岗位名；全部图谱保留原始 Neo4j 数据。
           </p>
         </div>
         <Button icon={<ReloadOutlined />} onClick={loadGraph} loading={loading}>
@@ -507,6 +513,16 @@ const JobPathGraph = () => {
         />
       )}
 
+      {graphData?.filter_notes?.length ? (
+        <Alert
+          className="job-path-alert"
+          message="图谱展示口径说明"
+          description={graphData.filter_notes.join('；')}
+          type="info"
+          showIcon
+        />
+      ) : null}
+
       <Row gutter={[16, 16]} className="job-path-stats">
         <Col xs={12} md={6}>
           <Card><Statistic title="岗位节点数" value={stats.job_node_count || 0} prefix={<AimOutlined />} /></Card>
@@ -522,6 +538,21 @@ const JobPathGraph = () => {
         </Col>
       </Row>
 
+      <Row gutter={[16, 16]} className="job-path-stats">
+        <Col xs={12} md={6}>
+          <Card><Statistic title="原始节点数" value={graphData?.raw_node_count || stats.job_node_count || 0} /></Card>
+        </Col>
+        <Col xs={12} md={6}>
+          <Card><Statistic title="原始关系数" value={graphData?.raw_edge_count || stats.total_edge_count || 0} /></Card>
+        </Col>
+        <Col xs={12} md={6}>
+          <Card><Statistic title="当前展示节点" value={graphData?.filtered_node_count || stats.job_node_count || 0} /></Card>
+        </Col>
+        <Col xs={12} md={6}>
+          <Card><Statistic title="当前展示关系" value={graphData?.filtered_edge_count || stats.total_edge_count || 0} /></Card>
+        </Col>
+      </Row>
+
       <Spin spinning={loading}>
         <div className="job-path-workspace">
           <aside className="graph-control-panel">
@@ -533,6 +564,20 @@ const JobPathGraph = () => {
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
             />
+            <div className="control-group">
+              <span>展示范围</span>
+              <Radio.Group
+                value={graphScope}
+                onChange={(event) => {
+                  setGraphScope(event.target.value)
+                  setSelection(null)
+                }}
+                buttonStyle="solid"
+              >
+                <Radio.Button value="curated">精选图谱</Radio.Button>
+                <Radio.Button value="all">全部原始图谱</Radio.Button>
+              </Radio.Group>
+            </div>
             <div className="control-group">
               <span>关系类型</span>
               <Radio.Group

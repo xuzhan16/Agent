@@ -19,19 +19,39 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from pydantic import BaseModel
 
-from job_data_pipeline import (
-    DEFAULT_GROUP_SAMPLE_SIZE,
-    DEFAULT_INPUT_FILE,
-    DEFAULT_INTERMEDIATE_DIR,
-    DEFAULT_KNOWLEDGE_OUTPUT_DIR,
-    DEFAULT_NEO4J_OUTPUT_DIR,
-    DEFAULT_SQL_DB_PATH,
-    run_job_data_pipeline,
-)
-from main_pipeline import run_pipeline
 from llm_interface_layer.config import DEFAULT_LLM_CONFIG
 from semantic_retrieval.semantic_retriever import SemanticJobKnowledgeRetriever
 from semantic_retrieval.embedding_store import DEFAULT_HASH_EMBEDDING_MODEL
+
+try:
+    from main_pipeline import run_pipeline
+    RUN_PIPELINE_IMPORT_ERROR = ""
+except Exception as exc:
+    run_pipeline = None
+    RUN_PIPELINE_IMPORT_ERROR = str(exc)
+
+try:
+    from job_data_pipeline import (
+        DEFAULT_GROUP_SAMPLE_SIZE,
+        DEFAULT_INPUT_FILE,
+        DEFAULT_INTERMEDIATE_DIR,
+        DEFAULT_KNOWLEDGE_OUTPUT_DIR,
+        DEFAULT_NEO4J_OUTPUT_DIR,
+        DEFAULT_SQL_DB_PATH,
+        run_job_data_pipeline,
+    )
+    JOB_DATA_PIPELINE_IMPORT_ERROR = ""
+except Exception as exc:
+    # Keep the main demo/API server importable even when the optional heavy
+    # data-processing stack (pandas/numpy/xlrd) is broken in the local env.
+    DEFAULT_GROUP_SAMPLE_SIZE = 3
+    DEFAULT_INPUT_FILE = "20260226105856_457.xls"
+    DEFAULT_INTERMEDIATE_DIR = "outputs/intermediate"
+    DEFAULT_SQL_DB_PATH = "outputs/sql/jobs.db"
+    DEFAULT_NEO4J_OUTPUT_DIR = "outputs/neo4j"
+    DEFAULT_KNOWLEDGE_OUTPUT_DIR = "outputs/knowledge"
+    run_job_data_pipeline = None
+    JOB_DATA_PIPELINE_IMPORT_ERROR = str(exc)
 
 app = FastAPI(title="AI Career Plan API")
 
@@ -85,7 +105,7 @@ AI_SQL_VIEW_COLUMNS = [
     "tools_or_tech_stack",
     "job_description_clean",
 ]
-AI_SQL_PREFERRED_TABLES = ["job_detail", "jobs", "job_samples", "job_postings", "job_market_assets"]
+AI_SQL_PREFERRED_TABLES = ["job_market_view", "job_detail_enriched", "job_detail", "jobs", "job_samples", "job_postings", "job_market_assets"]
 AI_SQL_FIELD_ALIASES = {
     "company_name": ["company_name", "company_name_clean", "company_name_raw", "company", "companyName", "公司名称"],
     "city": ["city", "work_city", "工作城市", "城市"],
@@ -217,6 +237,22 @@ def _resolve_project_path(path_value: str) -> str:
     if path.is_absolute():
         return str(path)
     return str((_project_root() / path).resolve())
+
+
+def _get_run_pipeline():
+    global run_pipeline
+    if run_pipeline is not None:
+        return run_pipeline
+    try:
+        from main_pipeline import run_pipeline as imported_pipeline
+
+        run_pipeline = imported_pipeline
+        return run_pipeline
+    except Exception as exc:
+        message = f"主流水线模块当前不可用：{exc}"
+        if RUN_PIPELINE_IMPORT_ERROR:
+            message += f"；服务启动时导入错误：{RUN_PIPELINE_IMPORT_ERROR}"
+        raise RuntimeError(message) from exc
 
 
 def _load_all_data() -> dict:
@@ -366,6 +402,7 @@ def _match_asset_file_paths() -> Dict[str, Path]:
         "core_jobs": asset_dir / "core_jobs.json",
         "requirement_stats": asset_dir / "job_requirement_stats.json",
         "skill_assets": asset_dir / "job_skill_knowledge_assets.json",
+        "ability_assets": asset_dir / "job_ability_assets.json",
         "manifest": asset_dir / "match_assets_manifest.json",
     }
 
@@ -376,6 +413,7 @@ def _build_job_profile_assets_payload() -> Dict[str, Any]:
     core_root = _safe_read_json(paths["core_jobs"])
     requirement_root = _safe_read_json(paths["requirement_stats"])
     skill_root = _safe_read_json(paths["skill_assets"])
+    ability_root = _safe_read_json(paths["ability_assets"])
     manifest = _safe_read_json(paths["manifest"])
 
     missing_assets = [
@@ -385,6 +423,7 @@ def _build_job_profile_assets_payload() -> Dict[str, Any]:
     ]
     requirement_jobs = _safe_dict(requirement_root.get("jobs"))
     skill_jobs = _safe_dict(skill_root.get("jobs"))
+    ability_jobs = _safe_dict(ability_root.get("jobs"))
 
     core_job_profiles = []
     for core_job in _safe_list(core_root.get("jobs")):
@@ -394,6 +433,7 @@ def _build_job_profile_assets_payload() -> Dict[str, Any]:
             continue
         stats = _safe_dict(requirement_jobs.get(job_name))
         skills = _safe_dict(skill_jobs.get(job_name))
+        ability = _safe_dict(ability_jobs.get(job_name))
         core_job_profiles.append(
             {
                 "standard_job_name": job_name,
@@ -425,6 +465,9 @@ def _build_job_profile_assets_payload() -> Dict[str, Any]:
                 "required_knowledge_points": _safe_list(skills.get("required_knowledge_points")),
                 "preferred_knowledge_points": _safe_list(skills.get("preferred_knowledge_points")),
                 "source_quality": _safe_dict(stats.get("source_quality")),
+                "ability_requirements": _safe_dict(ability.get("ability_requirements")),
+                "ability_radar": _safe_list(ability.get("ability_radar")),
+                "ability_source_quality": _safe_dict(ability.get("source_quality")),
             }
         )
 
@@ -433,6 +476,7 @@ def _build_job_profile_assets_payload() -> Dict[str, Any]:
         or _clean_text(core_root.get("generated_at"))
         or _clean_text(requirement_root.get("generated_at"))
         or _clean_text(skill_root.get("generated_at"))
+        or _clean_text(ability_root.get("generated_at"))
     )
     summary = {
         "core_job_count": len(core_job_profiles),
@@ -2945,7 +2989,8 @@ async def parse_resume(resume: UploadFile = File(...)):
             tmp_path = tmp.name
         
         # 跑全流水线 (目前前端一键跑完，我们放在这一步调用后端 pipeline)
-        run_pipeline(tmp_path, "", str(_state_file_path()))
+        pipeline_func = _get_run_pipeline()
+        pipeline_func(tmp_path, "", str(_state_file_path()))
         
         # 返回第一步的数据
         all_data = _load_all_data()
@@ -2982,7 +3027,8 @@ async def parse_manual_resume(req: ManualResumeRequest):
             tmp.write(resume_text)
             tmp_path = tmp.name
 
-        run_pipeline(tmp_path, "", str(_state_file_path()))
+        pipeline_func = _get_run_pipeline()
+        pipeline_func(tmp_path, "", str(_state_file_path()))
         all_data = _load_all_data()
         resume_res = _build_resume_response(all_data) if all_data else {}
         return {"success": True, "message": "success", "data": resume_res}
@@ -3000,8 +3046,19 @@ async def parse_manual_resume(req: ManualResumeRequest):
 @app.post("/api/data/process")
 async def process_job_data(req: JobDataProcessRequest):
     try:
+        pipeline_func = run_job_data_pipeline
+        if pipeline_func is None:
+            try:
+                from job_data_pipeline import run_job_data_pipeline as imported_pipeline
+
+                pipeline_func = imported_pipeline
+            except Exception as import_exc:
+                message = f"岗位底库数据处理模块当前不可用：{import_exc}"
+                if JOB_DATA_PIPELINE_IMPORT_ERROR:
+                    message += f"；服务启动时导入错误：{JOB_DATA_PIPELINE_IMPORT_ERROR}"
+                return {"success": False, "message": message, "data": {}}
         result = await asyncio.to_thread(
-            run_job_data_pipeline,
+            pipeline_func,
             input_path=_resolve_project_path(req.input_file),
             intermediate_dir=_resolve_project_path(req.intermediate_dir),
             sql_db_path=_resolve_project_path(req.sql_db_path),
@@ -3216,12 +3273,12 @@ async def job_profile_assets():
 
 
 @app.get("/api/job-path-graph/all")
-async def job_path_graph_all():
+async def job_path_graph_all(scope: str = Query("curated", description="curated 精选计算机岗位图谱，all 全部原始图谱")):
     """返回前端 G6 可渲染的全量岗位路径知识图谱。"""
     try:
         from job_path_graph_service import build_full_job_path_graph
 
-        payload = build_full_job_path_graph(project_root=_project_root(), prefer_neo4j=True)
+        payload = build_full_job_path_graph(project_root=_project_root(), prefer_neo4j=True, scope=scope)
         return {
             "success": True,
             "status": _clean_text(payload.get("graph_status")) or "unavailable",

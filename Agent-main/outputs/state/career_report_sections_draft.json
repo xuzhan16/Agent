@@ -1,126 +1,165 @@
 [
   {
     "section_title": "学生基本情况与能力画像",
-    "section_content": "学生姓名：李明\n教育背景：中国社会大学，本科，专业为计算机科学与技术，预计毕业年份2016。\n核心硬技能：C++、Java、SQL、eclipse。\n工具技能：Linux、Excel。\n证书与资质：CET-6、普通话二级甲等、C1驾照。\n软技能标签：暂无明确记录。\n项目经历摘要：网络爬虫：开发环境：vc6.0 项目描述：找到学校网站上所有的word，pdf，excel等文件的URL，然后根据后缀名分类，用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求，接收html文件，找出其中站内的URL，属于文件的保存下来，属于新页面的也记录下来； 此网页中的链接找完后，有在新的页面链接中查找，如此反复，直到搜索完所有的站内链接。；爆街僵尸：开发环境：Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux； 项目介绍：3D三国题材回合制(连击)角色扮演手机游戏； 责任描述：参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集，测试游戏bug和游戏相关的优化。。\n实习经历摘要：苏州云开网络科技有限公司-前端工程师：负责游戏中一个重要的组件编程，并和同事对接相应的功能； 负责游戏UI界面设计，完善显示的细节，整理并发现的bug，修复bug。；北京乔布有限公司-前端工程师：参与多个项目的研发，了解一款游戏从策划到完成的完整过程 ； 负责分到的模块开发任务，参与游戏测试以及bug修复， 负责游戏的音效寻找和插入。。\n画像完整度得分：96.00；竞争力得分：94.00。\n潜力画像：较强；优势方向：java工程师、前端开发。\n学生画像总结：该学生在java工程师方向已有一定基础，建议结合技能、项目和实习短板继续补强。",
+    "section_content": "学生姓名：黄学聪\n教育背景：哈尔滨工程大学，本科，专业为计算机科学与技术，预计毕业年份2027。\n核心硬技能：Git。\n工具技能：Git。\n证书与资质：学历:本科、学校:哈尔滨工程大学、专业:计算机科学与技术。\n软技能标签：暂无明确记录。\n项目经历摘要：健身大师智能体：项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。；面试在线刷题平台：项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。。\n实习经历摘要：暂无明确记录。\n画像完整度得分：68.14；竞争力得分：42.50。\n潜力画像：待提升；优势方向：后端开发、前端开发。\n学生画像总结：该学生在后端开发方向已有一定基础，建议结合技能、项目和实习短板继续补强。",
     "section_data": {
-      "name": "李明",
-      "school": "中国社会大学",
+      "name": "黄学聪",
+      "school": "哈尔滨工程大学",
       "major": "计算机科学与技术",
       "degree": "本科",
-      "graduation_year": "2016",
+      "graduation_year": "2027",
       "hard_skills": [
-        "C++",
-        "Java",
-        "SQL",
-        "eclipse"
+        "Git"
       ],
       "tool_skills": [
-        "Linux",
-        "Excel"
+        "Git"
       ],
       "certificates": [
-        "CET-6",
-        "普通话二级甲等",
-        "C1驾照"
+        "学历:本科",
+        "学校:哈尔滨工程大学",
+        "专业:计算机科学与技术"
       ],
       "soft_skills": [],
+      "employment_ability_profile": {
+        "专业技能": {
+          "score": 7.14,
+          "level": "待提升",
+          "evidence": [
+            "硬技能 0 项",
+            "工具技能 1 项",
+            "待补充硬技能"
+          ]
+        },
+        "证书": {
+          "score": 30.0,
+          "level": "待提升",
+          "evidence": [
+            "证书/背书 0 项",
+            "暂无证书背书"
+          ]
+        },
+        "创新能力": {
+          "score": 63.0,
+          "level": "中等",
+          "evidence": [
+            "项目经历 2 段",
+            "获奖/竞赛 1 项",
+            "实践标签: 项目:建模算法, 项目:工程开发, 奖项:科研实践"
+          ]
+        },
+        "学习能力": {
+          "score": 13.21,
+          "level": "待提升",
+          "evidence": [
+            "已覆盖技能总数 1 项",
+            "建议补充学习能力证明",
+            "学历层次: 本科"
+          ]
+        },
+        "抗压能力": {
+          "score": 28.0,
+          "level": "待提升",
+          "evidence": [
+            "项目 + 实习共 2 段",
+            "建议补充高压场景实践证据"
+          ]
+        },
+        "沟通能力": {
+          "score": 20.0,
+          "level": "待提升",
+          "evidence": [
+            "项目经历 2 段",
+            "实习经历 0 段",
+            "建议补充跨团队协作案例"
+          ]
+        },
+        "实习能力": {
+          "score": 0.0,
+          "level": "待提升",
+          "evidence": [
+            "实习经历 0 段",
+            "暂无实习关键词证据"
+          ]
+        }
+      },
       "practice_profile": {
         "project_experience": [
           {
-            "project_name": "网络爬虫",
-            "role": "",
-            "start_date": "2015.12",
-            "end_date": "2016.02",
-            "description": "开发环境：vc6.0 项目描述：找到学校网站上所有的word，pdf，excel等文件的URL，然后根据后缀名分类，用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求，接收html文件，找出其中站内的URL，属于文件的保存下来，属于新页面的也记录下来； 此网页中的链接找完后，有在新的页面链接中查找，如此反复，直到搜索完所有的站内链接。"
+            "project_name": "健身大师智能体",
+            "role": "后端开发工程师",
+            "start_date": "",
+            "end_date": "",
+            "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
           },
           {
-            "project_name": "爆街僵尸",
-            "role": "",
-            "start_date": "2013.09",
-            "end_date": "2014.06",
-            "description": "开发环境：Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux； 项目介绍：3D三国题材回合制(连击)角色扮演手机游戏； 责任描述：参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集，测试游戏bug和游戏相关的优化。"
+            "project_name": "面试在线刷题平台",
+            "role": "后端开发工程师",
+            "start_date": "",
+            "end_date": "",
+            "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
           }
         ],
-        "internship_experience": [
-          {
-            "company_name": "苏州云开网络科技有限公司",
-            "position": "前端工程师",
-            "start_date": "2015.07",
-            "end_date": "2015.08",
-            "description": "负责游戏中一个重要的组件编程，并和同事对接相应的功能； 负责游戏UI界面设计，完善显示的细节，整理并发现的bug，修复bug。"
-          },
-          {
-            "company_name": "北京乔布有限公司",
-            "position": "前端工程师",
-            "start_date": "2014.07",
-            "end_date": "2014.08",
-            "description": "参与多个项目的研发，了解一款游戏从策划到完成的完整过程 ； 负责分到的模块开发任务，参与游戏测试以及bug修复， 负责游戏的音效寻找和插入。"
-          }
-        ],
+        "internship_experience": [],
         "awards": [
-          "2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏，用JS编写，获得优秀等级连续2年获得校综合奖学金“励志奖”，获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏，用JS编写，获得优秀等级连续2年获得校综合奖学金“励志奖”，获校二等奖学金、国家励志奖学金各一次教育背景教育背景",
-          "毕业设计为一款简单手机游戏，用JS编写，获得优秀等级",
-          "连续2年获得校综合奖学金“励志奖”，获校二等奖学金、国家励志奖学金各一次"
+          "在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
         ],
         "experience_tags": [
-          "项目:数据处理",
           "项目:建模算法",
           "项目:工程开发",
-          "实习:工程开发",
+          "奖项:科研实践",
+          "项目:业务协作",
           "有项目经历",
-          "有实习经历",
           "有竞赛/获奖经历"
         ]
       },
       "potential_profile": {
-        "growth_level": "较强",
+        "growth_level": "待提升",
         "preferred_directions": [
-          "java工程师",
+          "后端开发",
           "前端开发"
         ],
         "domain_tags": [
           "软件研发",
-          "商业分析",
-          "云计算/大数据",
           "信息技术"
         ],
-        "basis_score": 94.0,
+        "basis_score": 42.5,
         "reason": "根据规则评分、职业方向标签和领域标签生成的兜底潜力画像。"
       },
-      "profile_completeness_score": 96.0,
-      "competitiveness_score": 94.0,
+      "profile_completeness_score": 68.14,
+      "competitiveness_score": 42.5,
       "strengths": [
         "基本信息较完整，已包含身份、教育背景和联系方式。",
         "教育信息完整，学历、学校、专业和毕业年份均已明确。",
-        "技能信息较丰富，已识别 6 项技能/工具。",
+        "已有明确技能信息，当前识别 1 项。",
         "已有项目经历 2 段，可作为能力证明材料。",
-        "已有实习经历 2 段，有助于证明岗位实践能力。",
         "有竞赛/获奖记录，可增强简历背书。",
-        "求职意向较明确，方向聚焦在 java工程师, 前端开发。",
+        "已有一定职业方向信号，但表达还可以更明确。",
         "学历背景具备一定竞争力，当前学历为本科。",
-        "已有 4 项硬技能，但仍有扩展空间。",
-        "已有工具技能 2 项。",
+        "已有工具技能 1 项。",
         "项目经历数量较充足，对岗位能力证明较有帮助。",
-        "实习经历较丰富，具备一定岗位场景适应基础。",
-        "证书/获奖背书较好，可增强简历可信度。",
-        "职业方向较聚焦，当前方向信号为 java工程师, 前端开发。"
+        "已有一定证书或获奖背书。",
+        "已有职业方向信号，但求职目标仍可进一步收敛。"
       ],
       "weaknesses": [
-        "硬技能数量尚不充分，建议围绕目标岗位补强核心技能。"
+        "技能数量偏少，建议补充与目标岗位直接相关的工具栈和硬技能。",
+        "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
+        "建议在简历中补充更明确的目标岗位或岗位方向。",
+        "硬技能储备偏弱，建议优先补充岗位要求中的核心技能。",
+        "实习经验不足，建议优先争取与目标方向一致的实习。"
       ],
-      "summary": "该学生在java工程师方向已有一定基础，建议结合技能、项目和实习短板继续补强。"
+      "summary": "该学生在后端开发方向已有一定基础，建议结合技能、项目和实习短板继续补强。"
     }
   },
   {
     "section_title": "目标岗位画像与职业探索",
-    "section_content": "目标岗位：java工程师\n标准化岗位：Java开发工程师；画像资产状态：已命中标准岗位画像资产：Java开发工程师。\n岗位类别与层级：技术/研发 / 未明确层级；样本数：265。\n学历主流画像：大专；学历分布：大专（68%，样本180）、本科（30%，样本79）、硕士（2%，样本6）。\n专业主流画像：计算机科学与技术、软件工程；专业分布：计算机科学与技术（50%，样本132）、未明确（41%，样本108）、软件工程（25%，样本66）、电子信息工程（6%，样本17）、数据科学与大数据技术（6%，样本16）。\n证书要求画像：必备证书为暂无明确记录；偏好证书为日语N3；证书分布：日语N3（94%，样本250）、日语N2（2%，样本5）、CET-4（2%，样本4）、有相关证书（0%，样本1）、Azure架构师认证（0%，样本1）；无明确证书要求比例：0%。\n核心技能要求：暂无明确记录。\n工具/技术栈要求：暂无明确记录。\n核心知识点要求：C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试、缺陷管理、测试报告编写、接口测试方法、接口用例设计。\n加分知识点：STL使用、Linux开发基础、Git基础、Linux基础、Redis基础、接口测试、自动化测试、性能测试、Postman使用、自动化测试脚本、TypeScript基础、前端工程化。\n软技能与实践要求：软技能包括暂无明确记录；实践要求包括暂无明确记录。\n薪资概况：暂无明确薪资统计。\n城市分布：暂无明确分布信息。\n行业分布：暂无明确分布信息。\n岗位画像总结：Java开发工程师画像基于 265 条岗位样本形成；主流学历门槛为大专；高频专业方向包括计算机科学与技术、软件工程；常见证书偏好包括日语N3；核心知识点包括C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试。\n相似岗位参考：语义检索还召回了软件测试工程师、硬件测试工程师等岗位，仅作为补充参考，不作为目标岗位主画像。",
+    "section_content": "目标岗位：后端开发\n标准化岗位：Java开发工程师；画像资产状态：已命中标准岗位画像资产：Java开发工程师。\n岗位类别与层级：技术/研发 / 未明确层级；样本数：265。\n学历主流画像：大专；学历分布：大专（68%，样本180）、本科（30%，样本79）、硕士（2%，样本6）。\n专业主流画像：计算机科学与技术、软件工程；专业分布：计算机科学与技术（50%，样本132）、未明确（41%，样本108）、软件工程（25%，样本66）、电子信息工程（6%，样本17）、数据科学与大数据技术（6%，样本16）。\n证书要求画像：必备证书为暂无明确记录；偏好证书为日语N3；证书分布：日语N3（94%，样本250）、日语N2（2%，样本5）、CET-4（2%，样本4）、有相关证书（0%，样本1）、Azure架构师认证（0%，样本1）；无明确证书要求比例：0%。\n核心技能要求：暂无明确记录。\n工具/技术栈要求：暂无明确记录。\n核心知识点要求：C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试、缺陷管理、测试报告编写、接口测试方法、接口用例设计。\n加分知识点：STL使用、Linux开发基础、Git基础、Linux基础、Redis基础、接口测试、自动化测试、性能测试、Postman使用、自动化测试脚本、TypeScript基础、前端工程化。\n岗位七维能力画像：专业技能100分（high，样本证据占比100%，关键词：Android开发、C#开发、COBOL开发、C语言开发）；证书要求74分（medium_high，样本证据占比100%，关键词：日语N3或以上）；创新能力89分（high，样本证据占比100%，关键词：技术攻关、方案设计、优化、算法）；学习能力44分（medium，样本证据占比34%，关键词：学习能力、培训、善于总结、快速学习）；抗压能力89分（high，样本证据占比100%，关键词：抗压、心理素质、责任心、加班）；沟通能力89分（high，样本证据占比100%，关键词：沟通、协调、协作、团队协作）；实习能力39分（medium，样本证据占比27%，关键词：实习、工作经验、交付、项目经验）。\n软技能与实践要求：软技能包括暂无明确记录；实践要求包括暂无明确记录。\n薪资概况：暂无明确薪资统计。\n城市分布：暂无明确分布信息。\n行业分布：暂无明确分布信息。\n岗位画像总结：Java开发工程师画像基于 265 条岗位样本形成；主流学历门槛为大专；高频专业方向包括计算机科学与技术、软件工程；常见证书偏好包括日语N3；核心知识点包括C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试。\n相似岗位参考：语义检索还召回了销售运营、律师助理等岗位，仅作为补充参考，不作为目标岗位主画像。",
     "section_data": {
-      "requested_job_name": "java工程师",
+      "requested_job_name": "后端开发",
       "resolved_standard_job_name": "Java开发工程师",
       "asset_found": true,
       "evaluation_status": "ok",
       "sample_count": 265,
-      "standard_job_name": "java工程师",
+      "standard_job_name": "后端开发",
       "job_category": "技术/研发",
       "job_level": "",
       "degree_requirement": "大专",
@@ -151,22 +190,25 @@
       "city_distribution": [],
       "industry_distribution": [],
       "target_job_profile_context": {
-        "requested_job_name": "java工程师",
+        "requested_job_name": "后端开发",
         "standard_job_name": "Java开发工程师",
         "resolved_standard_job_name": "Java开发工程师",
         "asset_found": true,
-        "resolution_method": "alias",
-        "resolution_confidence": 0.98,
+        "resolution_method": "user_confirmed",
+        "resolution_confidence": 1.0,
         "asset_resolution": {
-          "requested_job_name": "java工程师",
+          "resolution_status": "resolved",
+          "requested_job_name": "后端开发",
           "resolved_standard_job_name": "Java开发工程师",
+          "confirmed_standard_job_name": "Java开发工程师",
           "asset_found": true,
-          "resolution_method": "alias",
-          "resolution_confidence": 0.98,
-          "candidate_jobs": [
-            "Java开发工程师"
-          ],
-          "matched_alias": "java工程师"
+          "resolution_method": "user_confirmed",
+          "resolution_confidence": 1.0,
+          "candidate_jobs": [],
+          "candidate_job_names": [],
+          "confirmation_source": "user_selected",
+          "confirmed_at": "2026-04-18T02:07:04.246441Z",
+          "message": "已使用用户确认的本地标准岗位：Java开发工程师。"
         },
         "evaluation_status": "ok",
         "sample_count": 265,
@@ -420,6 +462,179 @@
           "SQL性能优化",
           "索引基础"
         ],
+        "ability_requirements": {
+          "professional_skill": {
+            "dimension": "professional_skill",
+            "label": "专业技能",
+            "score": 100,
+            "level": "high",
+            "keywords": [
+              "Android开发",
+              "C#开发",
+              "COBOL开发",
+              "C语言开发",
+              "IOS开发",
+              "Java开发",
+              "VB.NET开发",
+              "代码编写",
+              "技术攻关",
+              "技术方案设计",
+              "数据库优化",
+              "测试"
+            ],
+            "evidence_ratio": 1.0,
+            "evidence_count": 265,
+            "description": "该岗位专业技能要求较高，高频技能包括Android开发、C#开发、COBOL开发、C语言开发、IOS开发。"
+          },
+          "certificate": {
+            "dimension": "certificate",
+            "label": "证书要求",
+            "score": 74,
+            "level": "medium_high",
+            "keywords": [
+              "日语N3或以上"
+            ],
+            "evidence_ratio": 1.0,
+            "evidence_count": 265,
+            "description": "该岗位证书要求要求中高，常见证书为日语N3或以上。"
+          },
+          "innovation": {
+            "dimension": "innovation",
+            "label": "创新能力",
+            "score": 89,
+            "level": "high",
+            "keywords": [
+              "技术攻关",
+              "方案设计",
+              "优化",
+              "算法",
+              "新技术",
+              "研发",
+              "改进",
+              "解决方案"
+            ],
+            "evidence_ratio": 1.0,
+            "evidence_count": 265,
+            "description": "该岗位创新能力要求较高，证据关键词包括技术攻关、方案设计、优化、算法、新技术。"
+          },
+          "learning": {
+            "dimension": "learning",
+            "label": "学习能力",
+            "score": 44,
+            "level": "medium",
+            "keywords": [
+              "学习能力",
+              "培训",
+              "善于总结",
+              "快速学习",
+              "成长",
+              "自驱",
+              "适应能力"
+            ],
+            "evidence_ratio": 0.3358,
+            "evidence_count": 89,
+            "description": "该岗位学习能力要求中等，证据关键词包括学习能力、培训、善于总结、快速学习、成长。"
+          },
+          "pressure_resistance": {
+            "dimension": "pressure_resistance",
+            "label": "抗压能力",
+            "score": 89,
+            "level": "high",
+            "keywords": [
+              "抗压",
+              "心理素质",
+              "责任心",
+              "加班",
+              "压力",
+              "驻场",
+              "承受压力"
+            ],
+            "evidence_ratio": 1.0,
+            "evidence_count": 265,
+            "description": "该岗位抗压能力要求较高，证据关键词包括抗压、心理素质、责任心、加班、压力。"
+          },
+          "communication": {
+            "dimension": "communication",
+            "label": "沟通能力",
+            "score": 89,
+            "level": "high",
+            "keywords": [
+              "沟通",
+              "协调",
+              "协作",
+              "团队协作",
+              "文档编写",
+              "表达",
+              "需求沟通",
+              "客户对接"
+            ],
+            "evidence_ratio": 1.0,
+            "evidence_count": 265,
+            "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、协作、团队协作、文档编写。"
+          },
+          "internship_practice": {
+            "dimension": "internship_practice",
+            "label": "实习能力",
+            "score": 39,
+            "level": "medium",
+            "keywords": [
+              "实习",
+              "工作经验",
+              "交付",
+              "项目经验",
+              "上线",
+              "实践经验",
+              "实际项目",
+              "项目实施"
+            ],
+            "evidence_ratio": 0.2679,
+            "evidence_count": 71,
+            "description": "该岗位实习能力要求中等，证据关键词包括实习、工作经验、交付、项目经验、上线。"
+          }
+        },
+        "ability_radar": [
+          {
+            "dimension": "专业技能",
+            "key": "professional_skill",
+            "score": 100
+          },
+          {
+            "dimension": "证书要求",
+            "key": "certificate",
+            "score": 74
+          },
+          {
+            "dimension": "创新能力",
+            "key": "innovation",
+            "score": 89
+          },
+          {
+            "dimension": "学习能力",
+            "key": "learning",
+            "score": 44
+          },
+          {
+            "dimension": "抗压能力",
+            "key": "pressure_resistance",
+            "score": 89
+          },
+          {
+            "dimension": "沟通能力",
+            "key": "communication",
+            "score": 89
+          },
+          {
+            "dimension": "实习能力",
+            "key": "internship_practice",
+            "score": 39
+          }
+        ],
+        "ability_source_quality": {
+          "soft_skill_coverage": 1.0,
+          "practice_coverage": 0.0,
+          "hard_skill_coverage": 1.0,
+          "confidence": 0.85
+        },
         "source_quality": {
           "degree_coverage": 1.0,
           "major_coverage": 0.5925,
@@ -428,21 +643,194 @@
         "knowledge_source": "skill_rule_map_v1"
       },
       "semantic_reference_context": {},
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 100,
+          "level": "high",
+          "keywords": [
+            "Android开发",
+            "C#开发",
+            "COBOL开发",
+            "C语言开发",
+            "IOS开发",
+            "Java开发",
+            "VB.NET开发",
+            "代码编写",
+            "技术攻关",
+            "技术方案设计",
+            "数据库优化",
+            "测试"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位专业技能要求较高，高频技能包括Android开发、C#开发、COBOL开发、C语言开发、IOS开发。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 74,
+          "level": "medium_high",
+          "keywords": [
+            "日语N3或以上"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位证书要求要求中高，常见证书为日语N3或以上。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "技术攻关",
+            "方案设计",
+            "优化",
+            "算法",
+            "新技术",
+            "研发",
+            "改进",
+            "解决方案"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位创新能力要求较高，证据关键词包括技术攻关、方案设计、优化、算法、新技术。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 44,
+          "level": "medium",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "善于总结",
+            "快速学习",
+            "成长",
+            "自驱",
+            "适应能力"
+          ],
+          "evidence_ratio": 0.3358,
+          "evidence_count": 89,
+          "description": "该岗位学习能力要求中等，证据关键词包括学习能力、培训、善于总结、快速学习、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "心理素质",
+            "责任心",
+            "加班",
+            "压力",
+            "驻场",
+            "承受压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、心理素质、责任心、加班、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "协作",
+            "团队协作",
+            "文档编写",
+            "表达",
+            "需求沟通",
+            "客户对接"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、协作、团队协作、文档编写。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 39,
+          "level": "medium",
+          "keywords": [
+            "实习",
+            "工作经验",
+            "交付",
+            "项目经验",
+            "上线",
+            "实践经验",
+            "实际项目",
+            "项目实施"
+          ],
+          "evidence_ratio": 0.2679,
+          "evidence_count": 71,
+          "description": "该岗位实习能力要求中等，证据关键词包括实习、工作经验、交付、项目经验、上线。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 100
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 74
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 89
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 44
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 89
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 89
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 39
+        }
+      ],
+      "ability_source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.85
+      },
       "summary": "Java开发工程师画像基于 265 条岗位样本形成；主流学历门槛为大专；高频专业方向包括计算机科学与技术、软件工程；常见证书偏好包括日语N3；核心知识点包括C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试。"
     }
   },
   {
     "section_title": "人岗匹配分析",
-    "section_content": "目标岗位：java工程师\n第一层：规则匹配结果。\n综合匹配分数：99.81；匹配等级：A-高度匹配。\n四维度分数：基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 98.14。\n说明：旧规则综合分代表规则侧综合匹配程度，不等同于赛题硬门槛全部通过。\n匹配优势：已满足 java工程师。\n当前短板：暂无明确记录。\n补强建议：建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。。\n投递建议：推荐优先投递该岗位，整体匹配度较高，可同步准备面试项目表达和岗位业务理解。\n分析摘要：针对java工程师，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 99.81，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 98.14。当前仍有 0 项岗位要求或能力维度存在缺口。\n第二层：赛题评测结果。\n赛题资产分：58.25；主展示分：58.25；风险等级：risk。\n学历匹配：学生学历为本科；岗位门槛/主流要求为大专；结论：通过；风险：high_match；说明：学历达到岗位主流要求，学历风险较低。。\n专业匹配：学生专业为计算机科学与技术；岗位专业集合为计算机科学与技术、软件工程；结论：通过；风险：high_match；说明：专业属于岗位主流相关方向，专业匹配风险较低。。\n证书匹配：学生证书为学历:本科、学校:中国社会大学、专业:计算机科学与技术、证书:CET-6、证书:普通话二级甲等、证书:C1驾照；必备证书为暂无明确记录；偏好证书为日语N3；结论：通过；风险：risk；说明：没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。。\n三项硬门槛总体结论：通过。\n技能知识点匹配：要求知识点包括C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试、缺陷管理、测试报告编写、接口测试方法、接口用例设计、HTTP协议基础、JavaScript基础、DOM交互、异步编程、React组件开发、状态管理、接口联调、容器基础；已命中知识点包括C++基础语法、Java基础语法、SQL查询、JavaScript基础、React组件开发；缺失知识点包括面向对象编程、内存管理、Spring Boot开发、测试用例设计、功能测试、缺陷管理、测试报告编写、接口测试方法、接口用例设计、HTTP协议基础、DOM交互、异步编程、状态管理、接口联调、容器基础；知识点覆盖率为25%；是否达到 80%：未通过。\n赛题综合评测：硬门槛通过=通过；技能准确性达标=未通过；最终赛题匹配成功=未通过。\n分数解释：主展示分采用赛题资产分 58.25。旧规则综合分为 99.81，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 25%，赛题评测未通过。技能达标状态：未通过。",
+    "section_content": "目标岗位：后端开发\n第一层：规则匹配结果。\n综合匹配分数：98.30；匹配等级：A-高度匹配。\n四维度分数：基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 83.01。\n说明：旧规则综合分代表规则侧综合匹配程度，不等同于赛题硬门槛全部通过。\n匹配优势：已满足 后端开发。\n当前短板：暂无明确记录。\n补强建议：建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。。\n投递建议：推荐优先投递该岗位，整体匹配度较高，可同步准备面试项目表达和岗位业务理解。\n分析摘要：针对后端开发，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 98.30，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 83.01。当前仍有 0 项岗位要求或能力维度存在缺口。\n第二层：赛题评测结果。\n赛题资产分：47.00；主展示分：47.00；风险等级：no_match。\n学历匹配：学生学历为本科；岗位门槛/主流要求为大专；结论：通过；风险：high_match；说明：学历达到岗位主流要求，学历风险较低。。\n专业匹配：学生专业为计算机科学与技术；岗位专业集合为计算机科学与技术、软件工程；结论：通过；风险：high_match；说明：专业属于岗位主流相关方向，专业匹配风险较低。。\n证书匹配：学生证书为学历:本科、学校:哈尔滨工程大学、专业:计算机科学与技术；必备证书为暂无明确记录；偏好证书为日语N3；结论：通过；风险：risk；说明：没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。。\n三项硬门槛总体结论：通过。\n技能知识点匹配：要求知识点包括C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试、缺陷管理、测试报告编写、接口测试方法、接口用例设计、HTTP协议基础、JavaScript基础、DOM交互、异步编程、React组件开发、状态管理、接口联调、容器基础；已命中知识点包括暂无明确记录；缺失知识点包括C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试、缺陷管理、测试报告编写、接口测试方法、接口用例设计、HTTP协议基础、JavaScript基础、DOM交互、异步编程、React组件开发、状态管理、接口联调、容器基础；知识点覆盖率为0%；是否达到 80%：未通过。\n七维能力匹配：总体能力适配度为43%；优势能力为暂无明确记录；风险能力为专业技能、证书要求、创新能力、学习能力。能力差距明细：专业技能：学生7分，岗位要求100分，差距-93分，风险=no_match，专业技能与岗位要求差距较明显，需要优先补强。；证书要求：学生30分，岗位要求74分，差距-44分，风险=no_match，证书要求与岗位要求差距较明显，需要优先补强。；创新能力：学生63分，岗位要求89分，差距-26分，风险=no_match，创新能力与岗位要求差距较明显，需要优先补强。；学习能力：学生13分，岗位要求44分，差距-31分，风险=no_match，学习能力与岗位要求差距较明显，需要优先补强。；抗压能力：学生28分，岗位要求89分，差距-61分，风险=no_match，抗压能力与岗位要求差距较明显，需要优先补强。；沟通能力：学生20分，岗位要求89分，差距-69分，风险=no_match，沟通能力与岗位要求差距较明显，需要优先补强。；实习能力：学生0分，岗位要求39分，差距-39分，风险=no_match，实习能力与岗位要求差距较明显，需要优先补强。。\n赛题综合评测：硬门槛通过=通过；技能准确性达标=未通过；最终赛题匹配成功=未通过。\n分数解释：主展示分采用赛题资产分 47.00。旧规则综合分为 98.30，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 0%，赛题评测未通过。技能达标状态：未通过。",
     "section_data": {
-      "target_job_name": "java工程师",
-      "overall_match_score": 99.81,
+      "target_job_name": "后端开发",
+      "overall_match_score": 98.3,
       "match_level": "A-高度匹配",
       "dimension_scores": {
         "basic_requirement_score": 100.0,
         "vocational_skill_score": 100.0,
         "professional_quality_score": 100.0,
-        "development_potential_score": 98.14,
+        "development_potential_score": 83.01,
         "dimension_details": {
           "basic_requirement": {
             "score": 100.0,
@@ -491,45 +879,43 @@
               "practice_detail": {
                 "requirement_count": 0,
                 "project_count": 2,
-                "internship_count": 2
+                "internship_count": 0
               }
             }
           },
           "development_potential": {
-            "score": 98.14,
+            "score": 83.01,
             "matched_items": [
               {
                 "dimension": "career_direction",
-                "student_item": "java工程师",
-                "required_item": "java工程师",
+                "student_item": "后端开发",
+                "required_item": "后端开发",
                 "similarity": 1.0
               }
             ],
             "missing_items": [],
             "score_reasons": [
               "职业方向一致性得分 100.00。",
-              "学生完整度/竞争力形成的发展基础得分 94.70。",
+              "学生完整度/竞争力形成的发展基础得分 51.47。",
               "岗位层级适配得分 100.00。岗位层级未明确，层级适配项默认满分。"
             ],
             "detail": {
               "direction_alignment_score": 100.0,
-              "readiness_score": 94.7,
+              "readiness_score": 51.47,
               "level_fit_score": 100.0,
-              "complete_score": 96.0,
-              "competitiveness_score": 94.0,
-              "student_level_rank": 4,
+              "complete_score": 68.14,
+              "competitiveness_score": 42.5,
+              "student_level_rank": 0,
               "job_level_rank": 0,
               "direction_detail": {
                 "student_direction_tags": [
-                  "java工程师",
+                  "后端开发",
                   "前端开发",
                   "软件研发",
-                  "商业分析",
-                  "云计算/大数据",
                   "信息技术"
                 ],
                 "job_direction_tags": [
-                  "java工程师"
+                  "后端开发"
                 ]
               }
             }
@@ -539,45 +925,48 @@
       "matched_items": [
         {
           "dimension": "career_direction",
-          "student_item": "java工程师",
-          "required_item": "java工程师",
+          "student_item": "后端开发",
+          "required_item": "后端开发",
           "similarity": 1.0
         }
       ],
       "missing_items": [],
       "strengths": [
-        "已满足 java工程师"
+        "已满足 后端开发"
       ],
       "weaknesses": [],
       "improvement_suggestions": [
         "建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。"
       ],
       "recommendation": "推荐优先投递该岗位，整体匹配度较高，可同步准备面试项目表达和岗位业务理解。",
-      "analysis_summary": "针对java工程师，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 99.81，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 98.14。当前仍有 0 项岗位要求或能力维度存在缺口。 语义检索显示其与硬件测试工程师等相近岗位画像也存在较强关联。",
+      "analysis_summary": "针对后端开发，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 98.30，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 83.01。当前仍有 0 项岗位要求或能力维度存在缺口。 语义检索显示其与总经理助理/CEO助理/董事长助理等相近岗位画像也存在较强关联。",
       "target_job_match": {
-        "job_name": "java工程师",
+        "job_name": "后端开发",
         "asset_job_name": "Java开发工程师",
         "match_type": "target_job",
         "asset_found": true,
         "evaluation_status": "ok",
         "job_name_resolution": {
-          "requested_job_name": "java工程师",
+          "resolution_status": "resolved",
+          "requested_job_name": "后端开发",
           "resolved_standard_job_name": "Java开发工程师",
+          "confirmed_standard_job_name": "Java开发工程师",
           "asset_found": true,
-          "resolution_method": "alias",
-          "resolution_confidence": 0.98,
-          "candidate_jobs": [
-            "Java开发工程师"
-          ],
-          "matched_alias": "java工程师"
+          "resolution_method": "user_confirmed",
+          "resolution_confidence": 1.0,
+          "candidate_jobs": [],
+          "candidate_job_names": [],
+          "confirmation_source": "user_selected",
+          "confirmed_at": "2026-04-18T02:07:04.246441Z",
+          "message": "已使用用户确认的本地标准岗位：Java开发工程师。"
         },
         "sample_count": 265,
-        "overall_match_score": 99.81,
-        "rule_match_score": 99.81,
-        "asset_match_score": 58.25,
-        "display_match_score": 58.25,
+        "overall_match_score": 98.3,
+        "rule_match_score": 98.3,
+        "asset_match_score": 47.0,
+        "display_match_score": 47.0,
         "score_source": "contest_asset",
-        "score_explanation": "主展示分采用赛题资产分 58.25。旧规则综合分为 99.81，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 25%，赛题评测未通过。技能达标状态：未通过。",
+        "score_explanation": "主展示分采用赛题资产分 47.00。旧规则综合分为 98.30，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 0%，赛题评测未通过。技能达标状态：未通过。",
         "requirement_distributions": {
           "degree_distribution": [
             {
@@ -787,11 +1176,8 @@
           "certificate": {
             "student_values": [
               "学历:本科",
-              "学校:中国社会大学",
-              "专业:计算机科学与技术",
-              "证书:CET-6",
-              "证书:普通话二级甲等",
-              "证书:C1驾照"
+              "学校:哈尔滨工程大学",
+              "专业:计算机科学与技术"
             ],
             "must_have_certificates": [],
             "preferred_certificates": [
@@ -821,11 +1207,8 @@
           "certificate": {
             "student_values": [
               "学历:本科",
-              "学校:中国社会大学",
-              "专业:计算机科学与技术",
-              "证书:CET-6",
-              "证书:普通话二级甲等",
-              "证书:C1驾照"
+              "学校:哈尔滨工程大学",
+              "专业:计算机科学与技术"
             ],
             "must_have_certificates": [],
             "preferred_certificates": [
@@ -880,48 +1263,36 @@
             "索引基础"
           ],
           "student_knowledge_points": [
-            "C++基础语法",
-            "Java基础语法",
-            "SQL查询",
-            "JavaScript基础",
-            "React组件开发",
-            "Linux开发基础",
-            "Linux基础",
-            "TypeScript基础",
-            "Docker Compose使用",
-            "SQL性能优化",
-            "C++",
-            "Java",
-            "SQL",
-            "eclipse",
-            "Linux",
-            "Excel",
+            "Git基础",
+            "dict_keys(['Git'])",
+            "Git",
             "学历:本科",
-            "学校:中国社会大学",
+            "学校:哈尔滨工程大学",
             "专业:计算机科学与技术",
-            "证书:CET-6",
-            "证书:普通话二级甲等",
-            "证书:C1驾照",
-            "项目:数据处理",
             "项目:建模算法",
             "项目:工程开发",
-            "实习:工程开发",
+            "奖项:科研实践",
+            "项目:业务协作",
             "有项目经历",
-            "有实习经历",
             "有竞赛/获奖经历",
-            "java工程师"
+            "后端开发",
+            "前端开发",
+            "软件研发",
+            "信息技术",
+            "基本信息较完整，已包含身份、教育背景和联系方式。",
+            "教育信息完整，学历、学校、专业和毕业年份均已明确。",
+            "已有明确技能信息，当前识别 1 项。",
+            "已有项目经历 2 段，可作为能力证明材料。",
+            "有竞赛/获奖记录，可增强简历背书。"
           ],
-          "matched_knowledge_points": [
-            "C++基础语法",
-            "Java基础语法",
-            "SQL查询",
-            "JavaScript基础",
-            "React组件开发"
-          ],
+          "matched_knowledge_points": [],
           "missing_knowledge_points": [
+            "C++基础语法",
             "面向对象编程",
             "内存管理",
+            "Java基础语法",
             "Spring Boot开发",
+            "SQL查询",
             "测试用例设计",
             "功能测试",
             "缺陷管理",
@@ -929,22 +1300,239 @@
             "接口测试方法",
             "接口用例设计",
             "HTTP协议基础",
+            "JavaScript基础",
             "DOM交互",
             "异步编程",
+            "React组件开发",
             "状态管理",
             "接口联调",
             "容器基础"
           ],
-          "knowledge_point_accuracy": 0.25,
+          "knowledge_point_accuracy": 0.0,
           "pass": false,
-          "risk_level": "risk"
+          "risk_level": "no_match"
+        },
+        "ability_match": {
+          "evaluation_status": "ok",
+          "overall_ability_match_score": 42.87,
+          "dimensions": [
+            {
+              "dimension": "professional_skill",
+              "label": "专业技能",
+              "student_score": 7.14,
+              "student_level": "待提升",
+              "job_required_score": 100.0,
+              "job_required_level": "high",
+              "gap": -92.86,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "硬技能 0 项",
+                "工具技能 1 项",
+                "待补充硬技能"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：Android开发、C#开发、COBOL开发、C语言开发、IOS开发"
+              ],
+              "job_keywords": [
+                "Android开发",
+                "C#开发",
+                "COBOL开发",
+                "C语言开发",
+                "IOS开发",
+                "Java开发",
+                "VB.NET开发",
+                "代码编写",
+                "技术攻关",
+                "技术方案设计",
+                "数据库优化",
+                "测试"
+              ],
+              "message": "专业技能与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "certificate",
+              "label": "证书要求",
+              "student_score": 30.0,
+              "student_level": "待提升",
+              "job_required_score": 74.0,
+              "job_required_level": "medium_high",
+              "gap": -44.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "证书/背书 0 项",
+                "暂无证书背书"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：日语N3或以上"
+              ],
+              "job_keywords": [
+                "日语N3或以上"
+              ],
+              "message": "证书要求与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "innovation",
+              "label": "创新能力",
+              "student_score": 63.0,
+              "student_level": "中等",
+              "job_required_score": 89.0,
+              "job_required_level": "high",
+              "gap": -26.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "项目经历 2 段",
+                "获奖/竞赛 1 项",
+                "实践标签: 项目:建模算法, 项目:工程开发, 奖项:科研实践"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：技术攻关、方案设计、优化、算法、新技术"
+              ],
+              "job_keywords": [
+                "技术攻关",
+                "方案设计",
+                "优化",
+                "算法",
+                "新技术",
+                "研发",
+                "改进",
+                "解决方案"
+              ],
+              "message": "创新能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "learning",
+              "label": "学习能力",
+              "student_score": 13.21,
+              "student_level": "待提升",
+              "job_required_score": 44.0,
+              "job_required_level": "medium",
+              "gap": -30.79,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "已覆盖技能总数 1 项",
+                "建议补充学习能力证明",
+                "学历层次: 本科"
+              ],
+              "job_evidence": [
+                "岗位样本中 34% 出现相关要求",
+                "关键词：学习能力、培训、善于总结、快速学习、成长"
+              ],
+              "job_keywords": [
+                "学习能力",
+                "培训",
+                "善于总结",
+                "快速学习",
+                "成长",
+                "自驱",
+                "适应能力"
+              ],
+              "message": "学习能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "pressure_resistance",
+              "label": "抗压能力",
+              "student_score": 28.0,
+              "student_level": "待提升",
+              "job_required_score": 89.0,
+              "job_required_level": "high",
+              "gap": -61.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "项目 + 实习共 2 段",
+                "建议补充高压场景实践证据"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：抗压、心理素质、责任心、加班、压力"
+              ],
+              "job_keywords": [
+                "抗压",
+                "心理素质",
+                "责任心",
+                "加班",
+                "压力",
+                "驻场",
+                "承受压力"
+              ],
+              "message": "抗压能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "communication",
+              "label": "沟通能力",
+              "student_score": 20.0,
+              "student_level": "待提升",
+              "job_required_score": 89.0,
+              "job_required_level": "high",
+              "gap": -69.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "项目经历 2 段",
+                "实习经历 0 段",
+                "建议补充跨团队协作案例"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：沟通、协调、协作、团队协作、文档编写"
+              ],
+              "job_keywords": [
+                "沟通",
+                "协调",
+                "协作",
+                "团队协作",
+                "文档编写",
+                "表达",
+                "需求沟通",
+                "客户对接"
+              ],
+              "message": "沟通能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "internship_practice",
+              "label": "实习能力",
+              "student_score": 0.0,
+              "student_level": "待提升",
+              "job_required_score": 39.0,
+              "job_required_level": "medium",
+              "gap": -39.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "实习经历 0 段",
+                "暂无实习关键词证据"
+              ],
+              "job_evidence": [
+                "岗位样本中 27% 出现相关要求",
+                "关键词：实习、工作经验、交付、项目经验、上线"
+              ],
+              "job_keywords": [
+                "实习",
+                "工作经验",
+                "交付",
+                "项目经验",
+                "上线",
+                "实践经验",
+                "实际项目",
+                "项目实施"
+              ],
+              "message": "实习能力与岗位要求差距较明显，需要优先补强。"
+            }
+          ],
+          "main_strengths": [],
+          "main_risks": [
+            "专业技能",
+            "证书要求",
+            "创新能力",
+            "学习能力"
+          ]
         },
         "contest_evaluation": {
           "hard_info_pass": true,
           "skill_accuracy_pass": false,
           "contest_match_success": false
         },
-        "risk_level": "risk"
+        "risk_level": "no_match"
       },
       "recommended_job_match": {
         "job_name": "前端开发工程师",
@@ -958,18 +1546,19 @@
           "asset_found": true,
           "resolution_method": "exact",
           "resolution_confidence": 1.0,
-          "candidate_jobs": [
-            "前端开发工程师"
-          ],
-          "matched_alias": ""
+          "candidate_jobs": [],
+          "matched_alias": "",
+          "resolution_status": "resolved",
+          "candidate_job_names": [],
+          "message": "已命中本地标准岗位：前端开发工程师。"
         },
         "sample_count": 230,
-        "overall_match_score": 88.75,
-        "rule_match_score": 88.75,
-        "asset_match_score": 88.75,
-        "display_match_score": 88.75,
+        "overall_match_score": 58.25,
+        "rule_match_score": 58.25,
+        "asset_match_score": 58.25,
+        "display_match_score": 58.25,
         "score_source": "contest_asset",
-        "score_explanation": "主展示分采用赛题资产分 88.75。旧规则综合分为 88.75，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 75%，赛题评测未通过。技能达标状态：未通过。",
+        "score_explanation": "主展示分采用赛题资产分 58.25。旧规则综合分为 58.25，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 25%，赛题评测未通过。技能达标状态：未通过。",
         "requirement_distributions": {
           "degree_distribution": [
             {
@@ -1107,11 +1696,8 @@
           "certificate": {
             "student_values": [
               "学历:本科",
-              "学校:中国社会大学",
-              "专业:计算机科学与技术",
-              "证书:CET-6",
-              "证书:普通话二级甲等",
-              "证书:C1驾照"
+              "学校:哈尔滨工程大学",
+              "专业:计算机科学与技术"
             ],
             "must_have_certificates": [],
             "preferred_certificates": [],
@@ -1139,11 +1725,8 @@
           "certificate": {
             "student_values": [
               "学历:本科",
-              "学校:中国社会大学",
-              "专业:计算机科学与技术",
-              "证书:CET-6",
-              "证书:普通话二级甲等",
-              "证书:C1驾照"
+              "学校:哈尔滨工程大学",
+              "专业:计算机科学与技术"
             ],
             "must_have_certificates": [],
             "preferred_certificates": [],
@@ -1164,41 +1747,246 @@
             "工程化构建"
           ],
           "student_knowledge_points": [
-            "HTML/CSS基础",
-            "JavaScript基础",
             "前端框架开发",
-            "C++",
-            "Java",
-            "SQL",
-            "eclipse",
-            "Linux",
-            "Excel",
+            "dict_keys(['Git'])",
+            "Git",
             "学历:本科",
-            "学校:中国社会大学",
+            "学校:哈尔滨工程大学",
             "专业:计算机科学与技术",
-            "证书:CET-6",
-            "证书:普通话二级甲等",
-            "证书:C1驾照",
-            "项目:数据处理",
             "项目:建模算法",
             "项目:工程开发",
-            "实习:工程开发",
+            "奖项:科研实践",
+            "项目:业务协作",
             "有项目经历",
-            "有实习经历",
             "有竞赛/获奖经历",
-            "java工程师"
+            "后端开发",
+            "前端开发",
+            "软件研发",
+            "信息技术",
+            "基本信息较完整，已包含身份、教育背景和联系方式。",
+            "教育信息完整，学历、学校、专业和毕业年份均已明确。",
+            "已有明确技能信息，当前识别 1 项。",
+            "已有项目经历 2 段，可作为能力证明材料。",
+            "有竞赛/获奖记录，可增强简历背书。"
           ],
           "matched_knowledge_points": [
-            "HTML/CSS基础",
-            "JavaScript基础",
             "前端框架开发"
           ],
           "missing_knowledge_points": [
+            "HTML/CSS基础",
+            "JavaScript基础",
             "接口联调"
           ],
-          "knowledge_point_accuracy": 0.75,
+          "knowledge_point_accuracy": 0.25,
           "pass": false,
           "risk_level": "risk"
+        },
+        "ability_match": {
+          "evaluation_status": "ok",
+          "overall_ability_match_score": 81.02,
+          "dimensions": [
+            {
+              "dimension": "professional_skill",
+              "label": "专业技能",
+              "student_score": 7.14,
+              "student_level": "待提升",
+              "job_required_score": 19.0,
+              "job_required_level": "low",
+              "gap": -11.86,
+              "risk_level": "risk",
+              "student_evidence": [
+                "硬技能 0 项",
+                "工具技能 1 项",
+                "待补充硬技能"
+              ],
+              "job_evidence": [
+                "岗位样本中 0% 出现相关要求",
+                "关键词：HTML/CSS基础、JavaScript基础、前端框架开发、接口联调"
+              ],
+              "job_keywords": [
+                "HTML/CSS基础",
+                "JavaScript基础",
+                "前端框架开发",
+                "接口联调"
+              ],
+              "message": "专业技能略低于岗位要求，建议补充更明确的经历证据。"
+            },
+            {
+              "dimension": "certificate",
+              "label": "证书要求",
+              "student_score": 30.0,
+              "student_level": "待提升",
+              "job_required_score": 1.0,
+              "job_required_level": "low",
+              "gap": 29.0,
+              "risk_level": "high_match",
+              "student_evidence": [
+                "证书/背书 0 项",
+                "暂无证书背书"
+              ],
+              "job_evidence": [
+                "岗位样本中 1% 出现相关要求",
+                "暂无明确关键词"
+              ],
+              "job_keywords": [],
+              "message": "证书要求与岗位要求较接近。"
+            },
+            {
+              "dimension": "innovation",
+              "label": "创新能力",
+              "student_score": 63.0,
+              "student_level": "中等",
+              "job_required_score": 60.0,
+              "job_required_level": "medium_high",
+              "gap": 3.0,
+              "risk_level": "high_match",
+              "student_evidence": [
+                "项目经历 2 段",
+                "获奖/竞赛 1 项",
+                "实践标签: 项目:建模算法, 项目:工程开发, 奖项:科研实践"
+              ],
+              "job_evidence": [
+                "岗位样本中 57% 出现相关要求",
+                "关键词：优化、新技术、创新、研发、改进"
+              ],
+              "job_keywords": [
+                "优化",
+                "新技术",
+                "创新",
+                "研发",
+                "改进",
+                "算法",
+                "解决方案",
+                "架构设计"
+              ],
+              "message": "创新能力与岗位要求较接近。"
+            },
+            {
+              "dimension": "learning",
+              "label": "学习能力",
+              "student_score": 13.21,
+              "student_level": "待提升",
+              "job_required_score": 41.0,
+              "job_required_level": "medium",
+              "gap": -27.79,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "已覆盖技能总数 1 项",
+                "建议补充学习能力证明",
+                "学历层次: 本科"
+              ],
+              "job_evidence": [
+                "岗位样本中 29% 出现相关要求",
+                "关键词：学习能力、培训、成长、快速学习、自驱"
+              ],
+              "job_keywords": [
+                "学习能力",
+                "培训",
+                "成长",
+                "快速学习",
+                "自驱",
+                "学习新技术",
+                "主动学习",
+                "善于总结"
+              ],
+              "message": "学习能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "pressure_resistance",
+              "label": "抗压能力",
+              "student_score": 28.0,
+              "student_level": "待提升",
+              "job_required_score": 28.0,
+              "job_required_level": "low",
+              "gap": 0.0,
+              "risk_level": "high_match",
+              "student_evidence": [
+                "项目 + 实习共 2 段",
+                "建议补充高压场景实践证据"
+              ],
+              "job_evidence": [
+                "岗位样本中 16% 出现相关要求",
+                "关键词：责任心、抗压、压力、加班、心理素质"
+              ],
+              "job_keywords": [
+                "责任心",
+                "抗压",
+                "压力",
+                "加班",
+                "心理素质"
+              ],
+              "message": "抗压能力与岗位要求较接近。"
+            },
+            {
+              "dimension": "communication",
+              "label": "沟通能力",
+              "student_score": 20.0,
+              "student_level": "待提升",
+              "job_required_score": 56.0,
+              "job_required_level": "medium_high",
+              "gap": -36.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "项目经历 2 段",
+                "实习经历 0 段",
+                "建议补充跨团队协作案例"
+              ],
+              "job_evidence": [
+                "岗位样本中 52% 出现相关要求",
+                "关键词：沟通、协作、协调、团队协作、表达"
+              ],
+              "job_keywords": [
+                "沟通",
+                "协作",
+                "协调",
+                "团队协作",
+                "表达",
+                "文档编写",
+                "跨部门"
+              ],
+              "message": "沟通能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "internship_practice",
+              "label": "实习能力",
+              "student_score": 0.0,
+              "student_level": "待提升",
+              "job_required_score": 43.0,
+              "job_required_level": "medium",
+              "gap": -43.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "实习经历 0 段",
+                "暂无实习关键词证据"
+              ],
+              "job_evidence": [
+                "岗位样本中 32% 出现相关要求",
+                "关键词：工作经验、项目经验、实习、交付、实际项目"
+              ],
+              "job_keywords": [
+                "工作经验",
+                "项目经验",
+                "实习",
+                "交付",
+                "实际项目",
+                "实践经验",
+                "项目实施",
+                "上线"
+              ],
+              "message": "实习能力与岗位要求差距较明显，需要优先补强。"
+            }
+          ],
+          "main_strengths": [
+            "证书要求",
+            "创新能力",
+            "抗压能力"
+          ],
+          "main_risks": [
+            "专业技能",
+            "学习能力",
+            "沟通能力",
+            "实习能力"
+          ]
         },
         "contest_evaluation": {
           "hard_info_pass": true,
@@ -1206,103 +1994,111 @@
           "contest_match_success": false
         },
         "risk_level": "risk",
-        "recommendation_reason": "前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 75%，建议作为可冲刺岗位。"
+        "recommendation_reason": "前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 25%，建议作为可冲刺岗位。"
       },
       "recommendation_ranking": [
         {
           "rank": 1,
           "job_name": "前端开发工程师",
-          "overall_match_score": 88.75,
-          "display_match_score": 88.75,
-          "hard_info_pass": true,
-          "knowledge_point_accuracy": 0.75,
-          "risk_level": "risk",
-          "recommendation_reason": "前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 75%，建议作为可冲刺岗位。"
-        },
-        {
-          "rank": 2,
-          "job_name": "测试工程师",
-          "overall_match_score": 62.0,
-          "display_match_score": 62.0,
-          "hard_info_pass": true,
-          "knowledge_point_accuracy": 0.3333,
-          "risk_level": "risk",
-          "recommendation_reason": "测试工程师 的硬门槛通过，但技能知识点覆盖率为 33%，建议作为可冲刺岗位。"
-        },
-        {
-          "rank": 3,
-          "job_name": "Java开发工程师",
           "overall_match_score": 58.25,
           "display_match_score": 58.25,
           "hard_info_pass": true,
           "knowledge_point_accuracy": 0.25,
+          "ability_match_score": 81.02,
           "risk_level": "risk",
-          "recommendation_reason": "Java开发工程师 的硬门槛通过，但技能知识点覆盖率为 25%，建议作为可冲刺岗位。"
+          "recommendation_reason": "前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 25%，建议作为可冲刺岗位。"
+        },
+        {
+          "rank": 2,
+          "job_name": "Java开发工程师",
+          "overall_match_score": 47.0,
+          "display_match_score": 47.0,
+          "hard_info_pass": true,
+          "knowledge_point_accuracy": 0.0,
+          "ability_match_score": 42.87,
+          "risk_level": "no_match",
+          "recommendation_reason": "Java开发工程师 的硬门槛通过，但技能知识点覆盖率为 0%，建议作为可冲刺岗位。"
+        },
+        {
+          "rank": 3,
+          "job_name": "实施工程师",
+          "overall_match_score": 47.0,
+          "display_match_score": 47.0,
+          "hard_info_pass": true,
+          "knowledge_point_accuracy": 0.0,
+          "ability_match_score": 35.62,
+          "risk_level": "no_match",
+          "recommendation_reason": "实施工程师 的硬门槛通过，但技能知识点覆盖率为 0%，建议作为可冲刺岗位。"
         },
         {
           "rank": 4,
-          "job_name": "实施工程师",
-          "overall_match_score": 55.44,
-          "display_match_score": 55.44,
+          "job_name": "技术支持工程师",
+          "overall_match_score": 47.0,
+          "display_match_score": 47.0,
           "hard_info_pass": true,
-          "knowledge_point_accuracy": 0.1875,
-          "risk_level": "risk",
-          "recommendation_reason": "实施工程师 的硬门槛通过，但技能知识点覆盖率为 19%，建议作为可冲刺岗位。"
+          "knowledge_point_accuracy": 0.0,
+          "ability_match_score": 36.27,
+          "risk_level": "no_match",
+          "recommendation_reason": "技术支持工程师 的硬门槛通过，但技能知识点覆盖率为 0%，建议作为可冲刺岗位。"
         },
         {
           "rank": 5,
-          "job_name": "项目专员/助理",
-          "overall_match_score": 55.2,
-          "display_match_score": 55.2,
+          "job_name": "测试工程师",
+          "overall_match_score": 47.0,
+          "display_match_score": 47.0,
           "hard_info_pass": true,
-          "knowledge_point_accuracy": 0.3333,
-          "risk_level": "risk",
-          "recommendation_reason": "项目专员/助理 的硬门槛通过，但技能知识点覆盖率为 33%，建议作为可冲刺岗位。"
+          "knowledge_point_accuracy": 0.0,
+          "ability_match_score": 54.57,
+          "risk_level": "no_match",
+          "recommendation_reason": "测试工程师 的硬门槛通过，但技能知识点覆盖率为 0%，建议作为可冲刺岗位。"
         }
       ],
       "rule_match_context": {
-        "overall_match_score": 99.81,
+        "overall_match_score": 98.3,
         "score_level": "A-高度匹配",
         "dimension_scores": {
           "basic_requirement_score": 100.0,
           "vocational_skill_score": 100.0,
           "professional_quality_score": 100.0,
-          "development_potential_score": 98.14
+          "development_potential_score": 83.01
         },
         "strengths": [
-          "已满足 java工程师"
+          "已满足 后端开发"
         ],
         "weaknesses": [],
         "improvement_suggestions": [
           "建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。"
         ],
         "recommendation": "推荐优先投递该岗位，整体匹配度较高，可同步准备面试项目表达和岗位业务理解。",
-        "analysis_summary": "针对java工程师，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 99.81，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 98.14。当前仍有 0 项岗位要求或能力维度存在缺口。 语义检索显示其与硬件测试工程师等相近岗位画像也存在较强关联。"
+        "analysis_summary": "针对后端开发，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 98.30，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 83.01。当前仍有 0 项岗位要求或能力维度存在缺口。 语义检索显示其与总经理助理/CEO助理/董事长助理等相近岗位画像也存在较强关联。"
       },
       "contest_match_context": {
-        "job_name": "java工程师",
+        "job_name": "后端开发",
         "asset_job_name": "Java开发工程师",
         "match_type": "target_job",
         "asset_found": true,
         "evaluation_status": "ok",
         "job_name_resolution": {
-          "requested_job_name": "java工程师",
+          "resolution_status": "resolved",
+          "requested_job_name": "后端开发",
           "resolved_standard_job_name": "Java开发工程师",
+          "confirmed_standard_job_name": "Java开发工程师",
           "asset_found": true,
-          "resolution_method": "alias",
-          "resolution_confidence": 0.98,
-          "candidate_jobs": [
-            "Java开发工程师"
-          ],
-          "matched_alias": "java工程师"
+          "resolution_method": "user_confirmed",
+          "resolution_confidence": 1.0,
+          "candidate_jobs": [],
+          "candidate_job_names": [],
+          "confirmation_source": "user_selected",
+          "confirmed_at": "2026-04-18T02:07:04.246441Z",
+          "message": "已使用用户确认的本地标准岗位：Java开发工程师。"
         },
         "sample_count": 265,
-        "overall_match_score": 99.81,
-        "rule_match_score": 99.81,
-        "asset_match_score": 58.25,
-        "display_match_score": 58.25,
+        "overall_match_score": 98.3,
+        "rule_match_score": 98.3,
+        "asset_match_score": 47.0,
+        "display_match_score": 47.0,
         "score_source": "contest_asset",
-        "score_explanation": "主展示分采用赛题资产分 58.25。旧规则综合分为 99.81，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 25%，赛题评测未通过。技能达标状态：未通过。",
+        "score_explanation": "主展示分采用赛题资产分 47.00。旧规则综合分为 98.30，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 0%，赛题评测未通过。技能达标状态：未通过。",
         "requirement_distributions": {
           "degree_distribution": [
             {
@@ -1512,11 +2308,8 @@
           "certificate": {
             "student_values": [
               "学历:本科",
-              "学校:中国社会大学",
-              "专业:计算机科学与技术",
-              "证书:CET-6",
-              "证书:普通话二级甲等",
-              "证书:C1驾照"
+              "学校:哈尔滨工程大学",
+              "专业:计算机科学与技术"
             ],
             "must_have_certificates": [],
             "preferred_certificates": [
@@ -1546,11 +2339,8 @@
           "certificate": {
             "student_values": [
               "学历:本科",
-              "学校:中国社会大学",
-              "专业:计算机科学与技术",
-              "证书:CET-6",
-              "证书:普通话二级甲等",
-              "证书:C1驾照"
+              "学校:哈尔滨工程大学",
+              "专业:计算机科学与技术"
             ],
             "must_have_certificates": [],
             "preferred_certificates": [
@@ -1605,48 +2395,36 @@
             "索引基础"
           ],
           "student_knowledge_points": [
-            "C++基础语法",
-            "Java基础语法",
-            "SQL查询",
-            "JavaScript基础",
-            "React组件开发",
-            "Linux开发基础",
-            "Linux基础",
-            "TypeScript基础",
-            "Docker Compose使用",
-            "SQL性能优化",
-            "C++",
-            "Java",
-            "SQL",
-            "eclipse",
-            "Linux",
-            "Excel",
+            "Git基础",
+            "dict_keys(['Git'])",
+            "Git",
             "学历:本科",
-            "学校:中国社会大学",
+            "学校:哈尔滨工程大学",
             "专业:计算机科学与技术",
-            "证书:CET-6",
-            "证书:普通话二级甲等",
-            "证书:C1驾照",
-            "项目:数据处理",
             "项目:建模算法",
             "项目:工程开发",
-            "实习:工程开发",
+            "奖项:科研实践",
+            "项目:业务协作",
             "有项目经历",
-            "有实习经历",
             "有竞赛/获奖经历",
-            "java工程师"
+            "后端开发",
+            "前端开发",
+            "软件研发",
+            "信息技术",
+            "基本信息较完整，已包含身份、教育背景和联系方式。",
+            "教育信息完整，学历、学校、专业和毕业年份均已明确。",
+            "已有明确技能信息，当前识别 1 项。",
+            "已有项目经历 2 段，可作为能力证明材料。",
+            "有竞赛/获奖记录，可增强简历背书。"
           ],
-          "matched_knowledge_points": [
-            "C++基础语法",
-            "Java基础语法",
-            "SQL查询",
-            "JavaScript基础",
-            "React组件开发"
-          ],
+          "matched_knowledge_points": [],
           "missing_knowledge_points": [
+            "C++基础语法",
             "面向对象编程",
             "内存管理",
+            "Java基础语法",
             "Spring Boot开发",
+            "SQL查询",
             "测试用例设计",
             "功能测试",
             "缺陷管理",
@@ -1654,57 +2432,296 @@
             "接口测试方法",
             "接口用例设计",
             "HTTP协议基础",
+            "JavaScript基础",
             "DOM交互",
             "异步编程",
+            "React组件开发",
             "状态管理",
             "接口联调",
             "容器基础"
           ],
-          "knowledge_point_accuracy": 0.25,
+          "knowledge_point_accuracy": 0.0,
           "pass": false,
-          "risk_level": "risk"
+          "risk_level": "no_match"
+        },
+        "ability_match": {
+          "evaluation_status": "ok",
+          "overall_ability_match_score": 42.87,
+          "dimensions": [
+            {
+              "dimension": "professional_skill",
+              "label": "专业技能",
+              "student_score": 7.14,
+              "student_level": "待提升",
+              "job_required_score": 100.0,
+              "job_required_level": "high",
+              "gap": -92.86,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "硬技能 0 项",
+                "工具技能 1 项",
+                "待补充硬技能"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：Android开发、C#开发、COBOL开发、C语言开发、IOS开发"
+              ],
+              "job_keywords": [
+                "Android开发",
+                "C#开发",
+                "COBOL开发",
+                "C语言开发",
+                "IOS开发",
+                "Java开发",
+                "VB.NET开发",
+                "代码编写",
+                "技术攻关",
+                "技术方案设计",
+                "数据库优化",
+                "测试"
+              ],
+              "message": "专业技能与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "certificate",
+              "label": "证书要求",
+              "student_score": 30.0,
+              "student_level": "待提升",
+              "job_required_score": 74.0,
+              "job_required_level": "medium_high",
+              "gap": -44.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "证书/背书 0 项",
+                "暂无证书背书"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：日语N3或以上"
+              ],
+              "job_keywords": [
+                "日语N3或以上"
+              ],
+              "message": "证书要求与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "innovation",
+              "label": "创新能力",
+              "student_score": 63.0,
+              "student_level": "中等",
+              "job_required_score": 89.0,
+              "job_required_level": "high",
+              "gap": -26.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "项目经历 2 段",
+                "获奖/竞赛 1 项",
+                "实践标签: 项目:建模算法, 项目:工程开发, 奖项:科研实践"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：技术攻关、方案设计、优化、算法、新技术"
+              ],
+              "job_keywords": [
+                "技术攻关",
+                "方案设计",
+                "优化",
+                "算法",
+                "新技术",
+                "研发",
+                "改进",
+                "解决方案"
+              ],
+              "message": "创新能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "learning",
+              "label": "学习能力",
+              "student_score": 13.21,
+              "student_level": "待提升",
+              "job_required_score": 44.0,
+              "job_required_level": "medium",
+              "gap": -30.79,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "已覆盖技能总数 1 项",
+                "建议补充学习能力证明",
+                "学历层次: 本科"
+              ],
+              "job_evidence": [
+                "岗位样本中 34% 出现相关要求",
+                "关键词：学习能力、培训、善于总结、快速学习、成长"
+              ],
+              "job_keywords": [
+                "学习能力",
+                "培训",
+                "善于总结",
+                "快速学习",
+                "成长",
+                "自驱",
+                "适应能力"
+              ],
+              "message": "学习能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "pressure_resistance",
+              "label": "抗压能力",
+              "student_score": 28.0,
+              "student_level": "待提升",
+              "job_required_score": 89.0,
+              "job_required_level": "high",
+              "gap": -61.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "项目 + 实习共 2 段",
+                "建议补充高压场景实践证据"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：抗压、心理素质、责任心、加班、压力"
+              ],
+              "job_keywords": [
+                "抗压",
+                "心理素质",
+                "责任心",
+                "加班",
+                "压力",
+                "驻场",
+                "承受压力"
+              ],
+              "message": "抗压能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "communication",
+              "label": "沟通能力",
+              "student_score": 20.0,
+              "student_level": "待提升",
+              "job_required_score": 89.0,
+              "job_required_level": "high",
+              "gap": -69.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "项目经历 2 段",
+                "实习经历 0 段",
+                "建议补充跨团队协作案例"
+              ],
+              "job_evidence": [
+                "岗位样本中 100% 出现相关要求",
+                "关键词：沟通、协调、协作、团队协作、文档编写"
+              ],
+              "job_keywords": [
+                "沟通",
+                "协调",
+                "协作",
+                "团队协作",
+                "文档编写",
+                "表达",
+                "需求沟通",
+                "客户对接"
+              ],
+              "message": "沟通能力与岗位要求差距较明显，需要优先补强。"
+            },
+            {
+              "dimension": "internship_practice",
+              "label": "实习能力",
+              "student_score": 0.0,
+              "student_level": "待提升",
+              "job_required_score": 39.0,
+              "job_required_level": "medium",
+              "gap": -39.0,
+              "risk_level": "no_match",
+              "student_evidence": [
+                "实习经历 0 段",
+                "暂无实习关键词证据"
+              ],
+              "job_evidence": [
+                "岗位样本中 27% 出现相关要求",
+                "关键词：实习、工作经验、交付、项目经验、上线"
+              ],
+              "job_keywords": [
+                "实习",
+                "工作经验",
+                "交付",
+                "项目经验",
+                "上线",
+                "实践经验",
+                "实际项目",
+                "项目实施"
+              ],
+              "message": "实习能力与岗位要求差距较明显，需要优先补强。"
+            }
+          ],
+          "main_strengths": [],
+          "main_risks": [
+            "专业技能",
+            "证书要求",
+            "创新能力",
+            "学习能力"
+          ]
         },
         "contest_evaluation": {
           "hard_info_pass": true,
           "skill_accuracy_pass": false,
           "contest_match_success": false
         },
-        "risk_level": "risk"
+        "risk_level": "no_match"
       }
     }
   },
   {
     "section_title": "职业目标设定与职业路径规划",
-    "section_content": "用户原始目标岗位：java工程师\n系统推荐岗位：前端开发工程师\n系统推荐主路径岗位：前端开发工程师\n原目标角色：stretch_goal；推荐岗位角色：primary_goal_candidate。\n主目标决策来源：match_asset_score；置信度：medium_high。\n备选目标岗位：java工程师、前端开发、Java开发工程师、测试工程师、实施工程师。\n目标定位：系统建议以前端开发工程师作为短期主路径，同时保留java工程师作为中期补强后的冲刺目标；但当前主路径岗位暂无真实晋升/转岗路径数据，因此报告不生成目标岗位路径。\n选择原因：系统将前端开发工程师作为当前职业规划主目标，同时保留java工程师作为中期冲刺目标。主要依据：前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。；前端开发工程师知识点覆盖率75%，高于目标岗位25%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。\n规则决策依据：前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。、前端开发工程师知识点覆盖率75%，高于目标岗位25%。、前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。、用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。。\nLLM解释摘要：前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。；前端开发工程师知识点覆盖率75%，高于目标岗位25%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。\n为什么推荐该主路径：学历、专业、证书硬门槛通过；已命中知识点：HTML/CSS基础、JavaScript基础、前端框架开发；前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 75%，建议作为可冲刺岗位。；主展示分为88.75\n为什么原目标暂不作为主路径：风险等级为risk；缺失知识点：面向对象编程、内存管理、Spring Boot开发、测试用例设计、功能测试、缺陷管理；知识点覆盖率为25%，尚未达到80%；没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。\n如何平衡两个目标：短期聚焦前端开发工程师提升求职成功率；若仍希望冲刺java工程师，建议在中期补齐对应知识点和项目证据。\n目标岗位路径数据状态：missing。\n路径数据说明：当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。\n直接路径：暂无真实路径数据。\n过渡路径：暂无真实路径数据。\n长期路径：暂无真实路径数据。\n路径策略：no_target_path_data。\n路径决策摘要：当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。\n可信度说明：当前目标岗位没有真实路径数据，报告不会展示或生成任何伪造的晋升/转岗路径。",
+    "section_content": "用户原始目标岗位：后端开发\n系统推荐岗位：前端开发工程师\n系统推荐主路径岗位：前端开发工程师\n原目标角色：stretch_goal；推荐岗位角色：primary_goal_candidate。\n主目标决策来源：match_asset_score；置信度：medium。\n备选目标岗位：后端开发、前端开发、Java开发工程师、实施工程师、技术支持工程师。\n目标定位：系统建议以前端开发工程师作为短期主路径，同时保留后端开发作为中期补强后的冲刺目标；但当前主路径岗位暂无真实晋升/转岗路径数据，因此报告不生成目标岗位路径。\n选择原因：系统将前端开发工程师作为当前职业规划主目标，同时保留后端开发作为中期冲刺目标。主要依据：前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。；前端开发工程师知识点覆盖率25%，高于目标岗位0%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。\n规则决策依据：前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。、前端开发工程师知识点覆盖率25%，高于目标岗位0%。、前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。、用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。。\nLLM解释摘要：前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。；前端开发工程师知识点覆盖率25%，高于目标岗位0%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。\n为什么推荐该主路径：学历、专业、证书硬门槛通过；已命中知识点：前端框架开发；前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 25%，建议作为可冲刺岗位。；主展示分为58.25\n为什么原目标暂不作为主路径：风险等级为no_match；缺失知识点：C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询；知识点覆盖率为0%，尚未达到80%；没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。\n如何平衡两个目标：短期聚焦前端开发工程师提升求职成功率；若仍希望冲刺后端开发，建议在中期补齐对应知识点和项目证据。\n目标岗位路径数据状态：missing。\n路径数据说明：当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。\n直接路径：暂无真实路径数据。\n过渡路径：暂无真实路径数据。\n长期路径：暂无真实路径数据。\n路径策略：no_target_path_data。\n路径决策摘要：当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。\n可信度说明：当前目标岗位没有真实路径数据，报告不会展示或生成任何伪造的晋升/转岗路径。",
     "section_data": {
       "career_goal": {
         "primary_target_job": "前端开发工程师",
         "primary_plan_job": "前端开发工程师",
-        "user_target_job": "java工程师",
+        "user_target_job": "后端开发",
         "system_recommended_job": "前端开发工程师",
         "target_job_role": "stretch_goal",
         "recommended_job_role": "primary_goal_candidate",
         "goal_decision_source": "match_asset_score",
-        "goal_decision_confidence": "medium_high",
+        "goal_decision_confidence": "medium",
         "goal_decision_reason": [
-          "前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。",
-          "前端开发工程师知识点覆盖率75%，高于目标岗位25%。",
+          "前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。",
+          "前端开发工程师知识点覆盖率25%，高于目标岗位0%。",
           "前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。",
-          "用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。"
+          "用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。"
         ],
         "goal_decision_context": {
-          "user_target_job": "java工程师",
+          "user_target_job": "后端开发",
           "system_recommended_job": "前端开发工程师",
           "primary_plan_job": "前端开发工程师",
           "target_job_role": "stretch_goal",
           "recommended_job_role": "primary_goal_candidate",
           "decision_source": "match_asset_score",
-          "decision_confidence": "medium_high",
+          "decision_confidence": "medium",
           "comparison_evidence": {
             "target_job": {
               "job_name": "Java开发工程师",
+              "display_match_score": 47.0,
+              "rule_match_score": 98.3,
+              "asset_match_score": 47.0,
+              "knowledge_point_accuracy": 0.0,
+              "hard_info_pass": true,
+              "contest_match_success": false,
+              "asset_found": true,
+              "risk_level": "no_match",
+              "main_risks": [
+                "风险等级为no_match",
+                "缺失知识点：C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询",
+                "知识点覆盖率为0%，尚未达到80%",
+                "没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。"
+              ],
+              "main_advantages": [
+                "学历、专业、证书硬门槛通过",
+                "主展示分采用赛题资产分 47.00。旧规则综合分为 98.30，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 0%，赛题评测未通过。技能达标状态：未通过。",
+                "主展示分为47.00"
+              ]
+            },
+            "recommended_job": {
+              "job_name": "前端开发工程师",
               "display_match_score": 58.25,
-              "rule_match_score": 99.81,
+              "rule_match_score": 58.25,
               "asset_match_score": 58.25,
               "knowledge_point_accuracy": 0.25,
               "hard_info_pass": true,
@@ -1713,69 +2730,46 @@
               "risk_level": "risk",
               "main_risks": [
                 "风险等级为risk",
-                "缺失知识点：面向对象编程、内存管理、Spring Boot开发、测试用例设计、功能测试、缺陷管理",
-                "知识点覆盖率为25%，尚未达到80%",
-                "没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。"
+                "缺失知识点：HTML/CSS基础、JavaScript基础、接口联调",
+                "知识点覆盖率为25%，尚未达到80%"
               ],
               "main_advantages": [
                 "学历、专业、证书硬门槛通过",
-                "已命中知识点：C++基础语法、Java基础语法、SQL查询、JavaScript基础、React组件开发",
-                "主展示分采用赛题资产分 58.25。旧规则综合分为 99.81，仅作为兼容参考；硬门槛通过，技能知识点覆盖率 25%，赛题评测未通过。技能达标状态：未通过。",
+                "已命中知识点：前端框架开发",
+                "前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 25%，建议作为可冲刺岗位。",
                 "主展示分为58.25"
-              ]
-            },
-            "recommended_job": {
-              "job_name": "前端开发工程师",
-              "display_match_score": 88.75,
-              "rule_match_score": 88.75,
-              "asset_match_score": 88.75,
-              "knowledge_point_accuracy": 0.75,
-              "hard_info_pass": true,
-              "contest_match_success": false,
-              "asset_found": true,
-              "risk_level": "risk",
-              "main_risks": [
-                "风险等级为risk",
-                "缺失知识点：接口联调",
-                "知识点覆盖率为75%，尚未达到80%"
-              ],
-              "main_advantages": [
-                "学历、专业、证书硬门槛通过",
-                "已命中知识点：HTML/CSS基础、JavaScript基础、前端框架开发",
-                "前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 75%，建议作为可冲刺岗位。",
-                "主展示分为88.75"
               ]
             }
           },
-          "rule_decision_summary": "前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。；前端开发工程师知识点覆盖率75%，高于目标岗位25%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。"
+          "rule_decision_summary": "前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。；前端开发工程师知识点覆盖率25%，高于目标岗位0%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。"
         },
         "llm_goal_decision_explanation": {
-          "decision_reason_summary": "前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。；前端开发工程师知识点覆盖率75%，高于目标岗位25%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。",
-          "why_recommended_job": "学历、专业、证书硬门槛通过；已命中知识点：HTML/CSS基础、JavaScript基础、前端框架开发；前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 75%，建议作为可冲刺岗位。；主展示分为88.75",
-          "why_target_job_not_primary": "风险等级为risk；缺失知识点：面向对象编程、内存管理、Spring Boot开发、测试用例设计、功能测试、缺陷管理；知识点覆盖率为25%，尚未达到80%；没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。",
-          "how_to_balance_target_and_recommended": "短期聚焦前端开发工程师提升求职成功率；若仍希望冲刺java工程师，建议在中期补齐对应知识点和项目证据。",
+          "decision_reason_summary": "前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。；前端开发工程师知识点覆盖率25%，高于目标岗位0%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。",
+          "why_recommended_job": "学历、专业、证书硬门槛通过；已命中知识点：前端框架开发；前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 25%，建议作为可冲刺岗位。；主展示分为58.25",
+          "why_target_job_not_primary": "风险等级为no_match；缺失知识点：C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询；知识点覆盖率为0%，尚未达到80%；没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。",
+          "how_to_balance_target_and_recommended": "短期聚焦前端开发工程师提升求职成功率；若仍希望冲刺后端开发，建议在中期补齐对应知识点和项目证据。",
           "short_term_focus": [
             "优先补齐前端开发工程师相关缺口",
             "完善项目和实习经历中与主路径岗位直接相关的证据"
           ],
           "mid_term_focus": [
-            "持续跟踪java工程师方向要求并补齐关键知识点"
+            "持续跟踪后端开发方向要求并补齐关键知识点"
           ],
           "risk_notes": [
             "风险等级为risk",
-            "缺失知识点：接口联调",
-            "知识点覆盖率为75%，尚未达到80%"
+            "缺失知识点：HTML/CSS基础、JavaScript基础、接口联调",
+            "知识点覆盖率为25%，尚未达到80%"
           ]
         },
         "secondary_target_jobs": [
-          "java工程师",
+          "后端开发",
           "前端开发",
           "Java开发工程师",
-          "测试工程师",
-          "实施工程师"
+          "实施工程师",
+          "技术支持工程师"
         ],
-        "goal_positioning": "系统建议以前端开发工程师作为短期主路径，同时保留java工程师作为中期补强后的冲刺目标；但当前主路径岗位暂无真实晋升/转岗路径数据，因此报告不生成目标岗位路径。",
-        "goal_reason": "系统将前端开发工程师作为当前职业规划主目标，同时保留java工程师作为中期冲刺目标。主要依据：前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。；前端开发工程师知识点覆盖率75%，高于目标岗位25%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。"
+        "goal_positioning": "系统建议以前端开发工程师作为短期主路径，同时保留后端开发作为中期补强后的冲刺目标；但当前主路径岗位暂无真实晋升/转岗路径数据，因此报告不生成目标岗位路径。",
+        "goal_reason": "系统将前端开发工程师作为当前职业规划主目标，同时保留后端开发作为中期冲刺目标。主要依据：前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。；前端开发工程师知识点覆盖率25%，高于目标岗位0%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。"
       },
       "career_path": {
         "direct_path": [],
@@ -1789,25 +2783,25 @@
   },
   {
     "section_title": "分阶段行动计划",
-    "section_content": "短期计划（建议 3-6 个月）：\n1. 优先补齐前端开发工程师相关缺口\n2. 完善项目和实习经历中与主路径岗位直接相关的证据\n3. 短期围绕前端开发工程师补齐岗位知识点、项目作品和面试表达证据。\n4. 优先补齐高优先级技能/工具/项目缺口，并准备 1-2 个能直接支撑目标岗位的作品或案例。\n5. 建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。\n6. 保留java工程师为中期冲刺目标，但短期先补齐其关键知识点与项目证明。\n7. 围绕学历、专业、证书三项硬门槛核验结果，补充可证明的简历材料与证书信息。\n8. 优先补齐缺失知识点：面向对象编程、内存管理、Spring Boot开发、测试用例设计、功能测试、缺陷管理、测试报告编写、接口测试方法。\n9. 准备 1-2 个与前端开发工程师直接相关的项目案例，突出技术选型、问题定位和结果指标。\n中期计划（建议 6-18 个月）：\n1. 持续跟踪java工程师方向要求并补齐关键知识点\n2. 围绕主目标岗位和备选目标岗位持续补充真实项目、实习经历和投递反馈证据。\n3. 围绕前端开发工程师持续补充真实业务项目、实习经历和行业认知，争取形成可复用的方法论和作品集。\n4. 将java工程师作为中期补强后的冲刺目标，重点补齐其要求的知识点、项目场景和岗位表达材料。\n5. 围绕前端开发工程师持续积累真实项目或实习经验，并用作品集证明岗位关键能力。\n6. 将java工程师作为中期补强后的冲刺目标，逐步补齐其关键知识点与项目证据。\n7. 根据投递反馈动态调整目标岗位和备选岗位，不依赖当前缺失的晋升/转岗路径数据。",
+    "section_content": "短期计划（建议 3-6 个月）：\n1. 优先补齐前端开发工程师相关缺口\n2. 完善项目和实习经历中与主路径岗位直接相关的证据\n3. 短期围绕前端开发工程师补齐岗位知识点、项目作品和面试表达证据。\n4. 优先补齐高优先级技能/工具/项目缺口，并准备 1-2 个能直接支撑目标岗位的作品或案例。\n5. 建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。\n6. 保留后端开发为中期冲刺目标，但短期先补齐其关键知识点与项目证明。\n7. 围绕学历、专业、证书三项硬门槛核验结果，补充可证明的简历材料与证书信息。\n8. 优先补齐缺失知识点：C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试。\n9. 准备 1-2 个与前端开发工程师直接相关的项目案例，突出技术选型、问题定位和结果指标。\n10. 围绕岗位高频技能继续补强：Android开发、C#开发、COBOL开发、C语言开发。\n11. 结合岗位证书偏好补充可验证证书或资格证明，降低硬门槛风险。\n12. 沉淀项目优化、方案设计、技术攻关或创新改进案例，突出问题、方案和效果指标。\n13. 整理近期学习路线、技术复盘和新技术应用案例，证明快速学习和持续成长能力。\n中期计划（建议 6-18 个月）：\n1. 持续跟踪后端开发方向要求并补齐关键知识点\n2. 围绕主目标岗位和备选目标岗位持续补充真实项目、实习经历和投递反馈证据。\n3. 围绕前端开发工程师持续补充真实业务项目、实习经历和行业认知，争取形成可复用的方法论和作品集。\n4. 将后端开发作为中期补强后的冲刺目标，重点补齐其要求的知识点、项目场景和岗位表达材料。\n5. 围绕前端开发工程师持续积累真实项目或实习经验，并用作品集证明岗位关键能力。\n6. 将后端开发作为中期补强后的冲刺目标，逐步补齐其关键知识点与项目证据。\n7. 根据投递反馈动态调整目标岗位和备选岗位，不依赖当前缺失的晋升/转岗路径数据。",
     "section_data": {
       "short_term_plan": [
         "短期围绕前端开发工程师补齐岗位知识点、项目作品和面试表达证据。",
         "优先补齐高优先级技能/工具/项目缺口，并准备 1-2 个能直接支撑目标岗位的作品或案例。",
         "建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。",
-        "保留java工程师为中期冲刺目标，但短期先补齐其关键知识点与项目证明。"
+        "保留后端开发为中期冲刺目标，但短期先补齐其关键知识点与项目证明。"
       ],
       "mid_term_plan": [
         "围绕主目标岗位和备选目标岗位持续补充真实项目、实习经历和投递反馈证据。",
         "围绕前端开发工程师持续补充真实业务项目、实习经历和行业认知，争取形成可复用的方法论和作品集。",
-        "将java工程师作为中期补强后的冲刺目标，重点补齐其要求的知识点、项目场景和岗位表达材料。",
-        "同步关注备选岗位：java工程师、前端开发、Java开发工程师，根据投递反馈动态调整主目标和过渡路径。"
+        "将后端开发作为中期补强后的冲刺目标，重点补齐其要求的知识点、项目场景和岗位表达材料。",
+        "同步关注备选岗位：后端开发、前端开发、Java开发工程师，根据投递反馈动态调整主目标和过渡路径。"
       ]
     }
   },
   {
     "section_title": "风险分析与动态调整建议",
-    "section_content": "主要风险与缺口：建议转化为近期行动项：建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。、当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。、主目标岗位已从原始目标切换为 前端开发工程师，需确认该方向是否符合学生真实求职偏好。。\n匹配短板补充：暂无明确记录。\n学历风险：学历达到岗位主流要求，学历风险较低。\n专业风险：专业属于岗位主流相关方向，专业匹配风险较低。\n证书风险：没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。\n知识点缺口：面向对象编程、内存管理、Spring Boot开发、测试用例设计、功能测试、缺陷管理、测试报告编写、接口测试方法、接口用例设计、HTTP协议基础、DOM交互、异步编程、状态管理、接口联调、容器基础；知识点覆盖率：25%；是否达到 80%：未通过。\n赛题匹配成功结论：未通过。\n动态调整建议：建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。。\n建议每 1-2 个月根据岗位招聘要求、项目产出、实习反馈和技能掌握情况更新一次职业规划，并同步修订简历与目标岗位优先级。",
+    "section_content": "主要风险与缺口：建议转化为近期行动项：建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。、当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。、主目标岗位已从原始目标切换为 前端开发工程师，需确认该方向是否符合学生真实求职偏好。。\n匹配短板补充：暂无明确记录。\n学历风险：学历达到岗位主流要求，学历风险较低。\n专业风险：专业属于岗位主流相关方向，专业匹配风险较低。\n证书风险：没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。\n知识点缺口：C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试、缺陷管理、测试报告编写、接口测试方法、接口用例设计、HTTP协议基础、JavaScript基础、DOM交互、异步编程、React组件开发、状态管理、接口联调、容器基础；知识点覆盖率：0%；是否达到 80%：未通过。\n七维能力风险：优势能力为暂无明确记录；风险能力为专业技能、证书要求、创新能力、学习能力；建议行动：围绕岗位高频技能继续补强：Android开发、C#开发、COBOL开发、C语言开发。、结合岗位证书偏好补充可验证证书或资格证明，降低硬门槛风险。、沉淀项目优化、方案设计、技术攻关或创新改进案例，突出问题、方案和效果指标。、整理近期学习路线、技术复盘和新技术应用案例，证明快速学习和持续成长能力。。\n赛题匹配成功结论：未通过。\n动态调整建议：建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。。\n建议每 1-2 个月根据岗位招聘要求、项目产出、实习反馈和技能掌握情况更新一次职业规划，并同步修订简历与目标岗位优先级。",
     "section_data": {
       "risk_and_gap": [
         "建议转化为近期行动项：建议围绕岗位要求继续补充可量化项目成果、关键技能证据和业务场景理解。",
@@ -1822,46 +2816,46 @@
   },
   {
     "section_title": "总结与建议",
-    "section_content": "综合结论：系统建议以前端开发工程师作为短期主路径，同时保留java工程师作为中期补强后的冲刺目标。当前主路径岗位暂无真实晋升/转岗路径数据，因此本报告不生成职业路径，只从岗位匹配、硬门槛评测、知识点缺口和行动计划角度给出建议。\n用户原始目标岗位：java工程师；系统推荐岗位：前端开发工程师；主路径岗位：前端开发工程师。\n目标平衡建议：短期聚焦前端开发工程师提升求职成功率；若仍希望冲刺java工程师，建议在中期补齐对应知识点和项目证据。\n核心建议：短期优先围绕前端开发工程师准备项目证据、知识点补齐和投递材料；java工程师作为中期补强后的冲刺目标持续跟踪。\n报告对象：李明；报告主路径岗位：前端开发工程师。",
+    "section_content": "综合结论：系统建议以前端开发工程师作为短期主路径，同时保留后端开发作为中期补强后的冲刺目标。当前主路径岗位暂无真实晋升/转岗路径数据，因此本报告不生成职业路径，只从岗位匹配、硬门槛评测、知识点缺口和行动计划角度给出建议。\n用户原始目标岗位：后端开发；系统推荐岗位：前端开发工程师；主路径岗位：前端开发工程师。\n目标平衡建议：短期聚焦前端开发工程师提升求职成功率；若仍希望冲刺后端开发，建议在中期补齐对应知识点和项目证据。\n核心建议：短期优先围绕前端开发工程师准备项目证据、知识点补齐和投递材料；后端开发作为中期补强后的冲刺目标持续跟踪。\n报告对象：黄学聪；报告主路径岗位：前端开发工程师。",
     "section_data": {
       "report_meta": {
-        "report_title": "李明的前端开发工程师职业生涯发展报告",
-        "student_name": "李明",
+        "report_title": "黄学聪的前端开发工程师职业生涯发展报告",
+        "student_name": "黄学聪",
         "target_job_name": "前端开发工程师"
       },
       "report_generation_context": {
-        "student_summary": "该学生在java工程师方向已有一定基础，建议结合技能、项目和实习短板继续补强。",
+        "student_summary": "该学生在后端开发方向已有一定基础，建议结合技能、项目和实习短板继续补强。",
         "job_summary": "Java开发工程师画像基于 265 条岗位样本形成；主流学历门槛为大专；高频专业方向包括计算机科学与技术、软件工程；常见证书偏好包括日语N3；核心知识点包括C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询、测试用例设计、功能测试。",
-        "match_summary": "针对java工程师，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 99.81，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 98.14。当前仍有 0 项岗位要求或能力维度存在缺口。 语义检索显示其与硬件测试工程师等相近岗位画像也存在较强关联。",
-        "decision_summary": "系统建议以前端开发工程师作为短期主路径，同时保留java工程师作为中期补强后的冲刺目标。当前主路径岗位暂无真实晋升/转岗路径数据，因此本报告不生成目标岗位路径，重点从匹配评测、知识点缺口和行动计划角度给出建议。",
-        "goal_reason": "系统将前端开发工程师作为当前职业规划主目标，同时保留java工程师作为中期冲刺目标。主要依据：前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。；前端开发工程师知识点覆盖率75%，高于目标岗位25%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。",
-        "user_target_job": "java工程师",
+        "match_summary": "针对后端开发，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 98.30，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 83.01。当前仍有 0 项岗位要求或能力维度存在缺口。 语义检索显示其与总经理助理/CEO助理/董事长助理等相近岗位画像也存在较强关联。",
+        "decision_summary": "系统建议以前端开发工程师作为短期主路径，同时保留后端开发作为中期补强后的冲刺目标。当前主路径岗位暂无真实晋升/转岗路径数据，因此本报告不生成目标岗位路径，重点从匹配评测、知识点缺口和行动计划角度给出建议。",
+        "goal_reason": "系统将前端开发工程师作为当前职业规划主目标，同时保留后端开发作为中期冲刺目标。主要依据：前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。；前端开发工程师知识点覆盖率25%，高于目标岗位0%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。",
+        "user_target_job": "后端开发",
         "system_recommended_job": "前端开发工程师",
         "primary_plan_job": "前端开发工程师",
         "goal_decision_source": "match_asset_score",
-        "goal_decision_confidence": "medium_high",
+        "goal_decision_confidence": "medium",
         "goal_decision_reason": [
-          "前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。",
-          "前端开发工程师知识点覆盖率75%，高于目标岗位25%。",
+          "前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。",
+          "前端开发工程师知识点覆盖率25%，高于目标岗位0%。",
           "前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。",
-          "用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。"
+          "用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。"
         ],
         "llm_goal_decision_explanation": {
-          "decision_reason_summary": "前端开发工程师主展示分88.75，高于Java开发工程师58.25，优势为30.50分。；前端开发工程师知识点覆盖率75%，高于目标岗位25%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标java工程师不被否定，建议作为中期补强后的冲刺目标或备选目标保留。",
-          "why_recommended_job": "学历、专业、证书硬门槛通过；已命中知识点：HTML/CSS基础、JavaScript基础、前端框架开发；前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 75%，建议作为可冲刺岗位。；主展示分为88.75",
-          "why_target_job_not_primary": "风险等级为risk；缺失知识点：面向对象编程、内存管理、Spring Boot开发、测试用例设计、功能测试、缺陷管理；知识点覆盖率为25%，尚未达到80%；没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。",
-          "how_to_balance_target_and_recommended": "短期聚焦前端开发工程师提升求职成功率；若仍希望冲刺java工程师，建议在中期补齐对应知识点和项目证据。",
+          "decision_reason_summary": "前端开发工程师主展示分58.25，高于Java开发工程师47.00，优势为11.25分。；前端开发工程师知识点覆盖率25%，高于目标岗位0%。；前端开发工程师虽未完全通过赛题综合评测，但更接近达标，适合作为短期主路径候选。；用户原始目标后端开发不被否定，建议作为中期补强后的冲刺目标或备选目标保留。",
+          "why_recommended_job": "学历、专业、证书硬门槛通过；已命中知识点：前端框架开发；前端开发工程师 的硬门槛通过，但技能知识点覆盖率为 25%，建议作为可冲刺岗位。；主展示分为58.25",
+          "why_target_job_not_primary": "风险等级为no_match；缺失知识点：C++基础语法、面向对象编程、内存管理、Java基础语法、Spring Boot开发、SQL查询；知识点覆盖率为0%，尚未达到80%；没有触发强制证书风险，但建议补充岗位高频偏好证书提升竞争力。",
+          "how_to_balance_target_and_recommended": "短期聚焦前端开发工程师提升求职成功率；若仍希望冲刺后端开发，建议在中期补齐对应知识点和项目证据。",
           "short_term_focus": [
             "优先补齐前端开发工程师相关缺口",
             "完善项目和实习经历中与主路径岗位直接相关的证据"
           ],
           "mid_term_focus": [
-            "持续跟踪java工程师方向要求并补齐关键知识点"
+            "持续跟踪后端开发方向要求并补齐关键知识点"
           ],
           "risk_notes": [
             "风险等级为risk",
-            "缺失知识点：接口联调",
-            "知识点覆盖率为75%，尚未达到80%"
+            "缺失知识点：HTML/CSS基础、JavaScript基础、接口联调",
+            "知识点覆盖率为25%，尚未达到80%"
           ]
         },
         "recommendation": "推荐优先投递该岗位，整体匹配度较高，可同步准备面试项目表达和岗位业务理解。",
@@ -1917,48 +2911,36 @@
             "索引基础"
           ],
           "student_knowledge_points": [
-            "C++基础语法",
-            "Java基础语法",
-            "SQL查询",
-            "JavaScript基础",
-            "React组件开发",
-            "Linux开发基础",
-            "Linux基础",
-            "TypeScript基础",
-            "Docker Compose使用",
-            "SQL性能优化",
-            "C++",
-            "Java",
-            "SQL",
-            "eclipse",
-            "Linux",
-            "Excel",
+            "Git基础",
+            "dict_keys(['Git'])",
+            "Git",
             "学历:本科",
-            "学校:中国社会大学",
+            "学校:哈尔滨工程大学",
             "专业:计算机科学与技术",
-            "证书:CET-6",
-            "证书:普通话二级甲等",
-            "证书:C1驾照",
-            "项目:数据处理",
             "项目:建模算法",
             "项目:工程开发",
-            "实习:工程开发",
+            "奖项:科研实践",
+            "项目:业务协作",
             "有项目经历",
-            "有实习经历",
             "有竞赛/获奖经历",
-            "java工程师"
+            "后端开发",
+            "前端开发",
+            "软件研发",
+            "信息技术",
+            "基本信息较完整，已包含身份、教育背景和联系方式。",
+            "教育信息完整，学历、学校、专业和毕业年份均已明确。",
+            "已有明确技能信息，当前识别 1 项。",
+            "已有项目经历 2 段，可作为能力证明材料。",
+            "有竞赛/获奖记录，可增强简历背书。"
           ],
-          "matched_knowledge_points": [
-            "C++基础语法",
-            "Java基础语法",
-            "SQL查询",
-            "JavaScript基础",
-            "React组件开发"
-          ],
+          "matched_knowledge_points": [],
           "missing_knowledge_points": [
+            "C++基础语法",
             "面向对象编程",
             "内存管理",
+            "Java基础语法",
             "Spring Boot开发",
+            "SQL查询",
             "测试用例设计",
             "功能测试",
             "缺陷管理",
@@ -1966,15 +2948,17 @@
             "接口测试方法",
             "接口用例设计",
             "HTTP协议基础",
+            "JavaScript基础",
             "DOM交互",
             "异步编程",
+            "React组件开发",
             "状态管理",
             "接口联调",
             "容器基础"
           ],
-          "knowledge_point_accuracy": 0.25,
+          "knowledge_point_accuracy": 0.0,
           "pass": false,
-          "risk_level": "risk"
+          "risk_level": "no_match"
         },
         "target_path_data_status": "missing",
         "target_path_data_message": "当前目标岗位暂无可用晋升/转岗路径数据，系统不会强行生成路径。",
@@ -1988,66 +2972,14 @@
           "总结与建议"
         ],
         "semantic_fact_snapshot": {
-          "query": "报告目标岗位：前端开发工程师 岗位类别：技术/研发 岗位层级： 岗位核心技能： 学生摘要：该学生在java工程师方向已有一定基础，建议结合技能、项目和实习短板继续补强。 匹配摘要：针对java工程师，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 99.81，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 98.14。当前仍有 0 项岗位要求或能力维度存在缺口。 语义检索显示其与硬件测试工程师等相近岗位画像也存在较强关联。 职业规划摘要：系统建议以前端开发工程师作为短期主路径，同时保留java工程师作为中期补强后的冲刺目标。当前主路径岗位暂无真实晋升/转岗路径数据，因此本报告不生成目标岗位路径，重点从匹配评测、知识点缺口和行动计划角度给出建议。 主路径： 过渡路径： 长期路径： 关键缺口： 行动建议摘要：推荐优先投递该岗位，整体匹配度较高，可同步准备面试项目表达和岗位业务理解。",
+          "query": "报告目标岗位：前端开发工程师 岗位类别：技术/研发 岗位层级： 岗位核心技能： 学生摘要：该学生在后端开发方向已有一定基础，建议结合技能、项目和实习短板继续补强。 匹配摘要：针对后端开发，候选人计算机科学与技术背景与岗位要求的规则评估结果如下：规则侧人岗匹配总分为 98.30，等级为A-高度匹配。其中基础要求 100.00，职业技能 100.00，职业素质 100.00，发展潜力 83.01。当前仍有 0 项岗位要求或能力维度存在缺口。 语义检索显示其与总经理助理/CEO助理/董事长助理等相近岗位画像也存在较强关联。 职业规划摘要：系统建议以前端开发工程师作为短期主路径，同时保留后端开发作为中期补强后的冲刺目标。当前主路径岗位暂无真实晋升/转岗路径数据，因此本报告不生成目标岗位路径，重点从匹配评测、知识点缺口和行动计划角度给出建议。 主路径： 过渡路径： 长期路径： 关键缺口： 行动建议摘要：推荐优先投递该岗位，整体匹配度较高，可同步准备面试项目表达和岗位业务理解。",
           "top_k": 3,
           "hits": [
-            {
-              "standard_job_name": "软件测试工程师",
-              "job_category": "计算机软件/信息技术",
-              "job_level": "初级/中级",
-              "score": 0.3101,
-              "doc_text_excerpt": "软件测试工程师属于计算机软件/信息技术岗位，岗位层级为初级/中级。 常见学历要求为本科及以上，专业要求为计算机科学、软件工程、电子信息工程等相关专业。 经验要求：1-3年相关经验。 核心硬技能包括：功能测试、接口测试、数据测试、测试报告编写、测试用例设计、缺陷管理。 常见工具或技术栈包括：JIRA、JMeter、MySQL、Postman、Selenium、TestLink。 软技能要求包括：团队协作、学习能力、沟通能力、细心、责任心…",
-              "hard_skills": [
-                "功能测试",
-                "接口测试",
-                "数据测试",
-                "测试报告编写",
-                "测试用例设计",
-                "缺陷管理"
-              ],
-              "vertical_paths": [
-                "测试主管/测试经理",
-                "测试架构师",
-                "质量保证总监",
-                "高级软件测试工程师"
-              ],
-              "transfer_paths": [
-                "产品经理",
-                "技术支持工程师",
-                "软件开发工程师",
-                "运维工程师"
-              ]
-            },
-            {
-              "standard_job_name": "硬件测试工程师",
-              "job_category": "硬件测试",
-              "job_level": "",
-              "score": 0.3084,
-              "doc_text_excerpt": "硬件测试工程师属于硬件测试岗位，岗位层级为未明确层级。 常见学历要求为大专及以上，专业要求为通讯自动化及相关理工类专业。 经验要求：有岗位工作经验或物联网行业经验优先。 核心硬技能包括：硬件功能测试、硬件售后维护、硬件性能测试、硬件技术支持。 常见工具或技术栈包括：硬件功能测试、硬件售后维护、硬件性能测试、硬件技术支持。 软技能要求包括：动手能力强、学习能力强。 岗位摘要：负责硬件产品的功能、性能测试及售后维护支持，要求大专及以上学历…",
-              "hard_skills": [
-                "硬件功能测试",
-                "硬件售后维护",
-                "硬件性能测试",
-                "硬件技术支持"
-              ],
-              "vertical_paths": [
-                "硬件测试主管/经理",
-                "硬件研发经理",
-                "硬件质量经理",
-                "高级硬件测试工程师"
-              ],
-              "transfer_paths": [
-                "产品经理",
-                "嵌入式软件工程师",
-                "硬件研发工程师",
-                "系统测试工程师"
-              ]
-            },
             {
               "standard_job_name": "Java开发工程师",
               "job_category": "技术/研发",
               "job_level": "",
-              "score": 0.2638,
+              "score": 0.2688,
               "doc_text_excerpt": "Java开发工程师属于技术/研发岗位，岗位层级为未明确层级。 常见学历要求为专科或以上，专业要求为未明确。 经验要求：三年以上开发经验。 核心硬技能包括：Android开发、C#开发、COBOL开发、C语言开发、IOS开发、Java开发、VB.NET开发、代码编写、技术攻关、技术方案设计。 常见工具或技术栈包括：Android、C、C#、COBOL、IOS、Java、MySQL、VB.NET。 软技能要求包括：协调能力、心理素质、抗压…",
               "hard_skills": [
                 "Android开发",
@@ -2070,6 +3002,59 @@
                 "全栈开发工程师",
                 "后端开发工程师",
                 "技术顾问"
+              ]
+            },
+            {
+              "standard_job_name": "销售运营",
+              "job_category": "运营",
+              "job_level": "实习生/初级",
+              "score": 0.2302,
+              "doc_text_excerpt": "销售运营属于运营岗位，岗位层级为实习生/初级。 常见学历要求为本科，专业要求为不限。 经验要求：无明确要求（实习岗）。 核心硬技能包括：基础数据分析、报表制作、效果汇总、数据整理、活动策划与执行。 常见工具或技术栈包括：Excel、PPT。 软技能要求包括：学习能力强、能适应快节奏工作、责任心强。 实践要求：对互联网运营感兴趣。 岗位摘要：协助日常运营工作，包括数据整理、内容上传、用户反馈收集；参与活动策划与执行，跟进进度并汇总效果；…",
+              "hard_skills": [
+                "基础数据分析",
+                "报表制作",
+                "效果汇总",
+                "数据整理",
+                "活动策划与执行"
+              ],
+              "vertical_paths": [
+                "销售运营专员",
+                "销售运营总监",
+                "销售运营经理",
+                "高级销售运营"
+              ],
+              "transfer_paths": [
+                "产品运营",
+                "市场策划",
+                "数据分析",
+                "用户运营"
+              ]
+            },
+            {
+              "standard_job_name": "律师助理",
+              "job_category": "法律",
+              "job_level": "",
+              "score": 0.2243,
+              "doc_text_excerpt": "律师助理属于法律岗位，岗位层级为未明确层级。 常见学历要求为本科及以上，专业要求为未明确。 核心硬技能包括：IPO、上市公司再融资、信息检索、并购重组、民事诉讼业务知识、法律逻辑、私募基金设立及投资。 常见工具或技术栈包括：IPO、上市公司再融资、信息检索、并购重组、民事诉讼业务知识、法律逻辑、私募基金设立及投资。 软技能要求包括：工作积极、沟通协调能力、认真仔细、责任心强。 证书要求包括：法律职业资格证书（通过法考）。 实践要求：试…",
+              "hard_skills": [
+                "IPO",
+                "上市公司再融资",
+                "信息检索",
+                "并购重组",
+                "民事诉讼业务知识",
+                "法律逻辑",
+                "私募基金设立及投资"
+              ],
+              "vertical_paths": [
+                "合伙人",
+                "律师",
+                "资深律师"
+              ],
+              "transfer_paths": [
+                "仲裁秘书",
+                "合规专员",
+                "法务专员",
+                "法官助理"
               ]
             }
           ]

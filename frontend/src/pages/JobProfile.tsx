@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Alert, Button, Card, Col, Divider, Row, Space, Spin, Tag } from 'antd'
 import {
+  PolarAngleAxis,
+  PolarGrid,
+  PolarRadiusAxis,
+  Radar,
+  RadarChart,
+  ResponsiveContainer,
+  Tooltip,
+} from 'recharts'
+import {
   AppstoreOutlined,
   BookOutlined,
   DatabaseOutlined,
@@ -8,7 +17,13 @@ import {
   TeamOutlined,
 } from '@ant-design/icons'
 import { careerApi } from '../services/api'
-import type { CoreJobProfile, JobProfileAssetsData, RequirementDistributionItem } from '../types'
+import type {
+  CoreJobProfile,
+  JobAbilityRadarItem,
+  JobAbilityRequirement,
+  JobProfileAssetsData,
+  RequirementDistributionItem,
+} from '../types'
 import '../styles/JobProfile.css'
 
 const emptyText = '暂无数据'
@@ -23,6 +38,26 @@ const toPercent = (value?: number) => {
   if (value === undefined || Number.isNaN(value)) return 0
   return Math.round((value <= 1 ? value * 100 : value) * 10) / 10
 }
+
+const abilityLevelMeta = (level?: string) => {
+  if (level === 'high') return { text: '要求较高', color: 'red' }
+  if (level === 'medium_high') return { text: '要求中高', color: 'orange' }
+  if (level === 'medium') return { text: '要求中等', color: 'blue' }
+  if (level === 'low') return { text: '要求较低', color: 'green' }
+  return { text: '未明确', color: 'default' }
+}
+
+const getAbilityEntries = (requirements?: Record<string, JobAbilityRequirement>) => (
+  Object.values(requirements || {})
+    .filter((item) => item?.label)
+    .sort((left, right) => (right.score || 0) - (left.score || 0))
+)
+
+const getAbilitySummary = (job: CoreJobProfile) => (
+  getAbilityEntries(job.ability_requirements)
+    .filter((item) => (item.score || 0) >= 55)
+    .slice(0, 2)
+)
 
 const TagList = ({
   items,
@@ -45,6 +80,63 @@ const TagList = ({
         </Tag>
       ))}
     </Space>
+  )
+}
+
+const AbilityRadar = ({ data }: { data?: JobAbilityRadarItem[] }) => {
+  const items = (data || []).filter((item) => item.dimension)
+  if (!items.length) {
+    return <Alert message="暂无岗位能力画像资产" description="当前岗位尚未生成七维能力画像，不影响学历、专业、证书和知识点展示。" type="info" showIcon />
+  }
+  return (
+    <div className="ability-radar-panel">
+      <ResponsiveContainer width="100%" height={300}>
+        <RadarChart data={items} margin={{ top: 16, right: 28, bottom: 8, left: 28 }}>
+          <PolarGrid stroke="#dbe7f5" />
+          <PolarAngleAxis dataKey="dimension" tick={{ fill: '#334155', fontSize: 12, fontWeight: 700 }} />
+          <PolarRadiusAxis angle={90} domain={[0, 100]} tickCount={6} tick={{ fill: '#64748b', fontSize: 11 }} />
+          <Radar
+            name="岗位要求强度"
+            dataKey="score"
+            stroke="#2563eb"
+            fill="#2563eb"
+            fillOpacity={0.26}
+            strokeWidth={2}
+          />
+          <Tooltip formatter={(value) => [`${value} 分`, '岗位要求']} />
+        </RadarChart>
+      </ResponsiveContainer>
+    </div>
+  )
+}
+
+const AbilityRequirementCards = ({ requirements }: { requirements?: Record<string, JobAbilityRequirement> }) => {
+  const items = getAbilityEntries(requirements)
+  if (!items.length) {
+    return <Alert message="暂无七维能力要求" description="当前岗位没有生成通用能力要求资产。" type="info" showIcon />
+  }
+  return (
+    <Row gutter={[12, 12]}>
+      {items.map((item) => {
+        const meta = abilityLevelMeta(item.level)
+        return (
+          <Col xs={24} md={12} xl={8} key={item.dimension || item.label}>
+            <div className="ability-requirement-card">
+              <div className="ability-requirement-head">
+                <span>{item.label || emptyText}</span>
+                <Tag color={meta.color}>{meta.text}</Tag>
+              </div>
+              <strong>{Math.round(item.score || 0)} 分</strong>
+              <p>{item.description || '暂无能力要求说明。'}</p>
+              <div className="ability-evidence-line">
+                样本证据：{toPercent(item.evidence_ratio)}%{item.evidence_count ? ` · ${item.evidence_count} 条` : ''}
+              </div>
+              <TagList items={item.keywords} color="geekblue" limit={5} empty="暂无关键词" />
+            </div>
+          </Col>
+        )
+      })}
+    </Row>
   )
 }
 
@@ -111,6 +203,17 @@ const CoreJobCard = ({
         <span>专业：{toArray(job.mainstream_majors_summary).slice(0, 3).join('、') || emptyText}</span>
         <span>证书：{toArray(job.mainstream_cert_summary).slice(0, 2).join('、') || emptyText}</span>
       </div>
+      <div className="profile-job-ability-summary">
+        {getAbilitySummary(job).length ? (
+          getAbilitySummary(job).map((item) => (
+            <Tag key={item.dimension || item.label} color={abilityLevelMeta(item.level).color}>
+              {item.label}{Math.round(item.score || 0)}
+            </Tag>
+          ))
+        ) : (
+          <span className="job-profile-empty">暂无能力摘要</span>
+        )}
+      </div>
       <TagList items={job.top_skills} limit={4} empty="暂无技能标签" />
     </button>
   )
@@ -153,6 +256,21 @@ const JobDetail = ({ job }: { job?: CoreJobProfile }) => {
               <DistributionBars title="证书分布" data={job.certificate_distribution} />
               <div className="profile-no-cert">
                 无明确证书要求：{toPercent(job.no_certificate_requirement_ratio)}%
+              </div>
+            </Col>
+          </Row>
+          <Divider />
+          <Row gutter={[16, 16]}>
+            <Col xs={24} lg={10}>
+              <div className="detail-tag-group ability-radar-group">
+                <span>岗位七维能力画像</span>
+                <AbilityRadar data={job.ability_radar} />
+              </div>
+            </Col>
+            <Col xs={24} lg={14}>
+              <div className="detail-tag-group">
+                <span>能力要求说明</span>
+                <AbilityRequirementCards requirements={job.ability_requirements} />
               </div>
             </Col>
           </Row>

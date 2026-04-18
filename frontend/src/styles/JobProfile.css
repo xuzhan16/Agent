@@ -180,6 +180,11 @@
   -webkit-box-orient: vertical;
 }
 
+.profile-job-ability-summary {
+  min-height: 28px;
+  margin-bottom: 12px;
+}
+
 .detail-card {
   min-height: 420px;
 }
@@ -300,6 +305,64 @@
 .detail-tag-group > span {
   color: #475569;
   font-size: 13px;
+  font-weight: 700;
+}
+
+.ability-radar-panel {
+  min-height: 300px;
+  padding: 10px 8px 4px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 85% 10%, rgba(59, 130, 246, 0.12), transparent 34%),
+    linear-gradient(180deg, #ffffff, #f8fbff);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.ability-requirement-card {
+  height: 100%;
+  min-height: 188px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background:
+    radial-gradient(circle at 88% 12%, rgba(37, 99, 235, 0.09), transparent 35%),
+    #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.ability-requirement-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.ability-requirement-head span {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.ability-requirement-card strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #2563eb;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.ability-requirement-card p {
+  min-height: 42px;
+  margin: 0 0 10px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.ability-evidence-line {
+  margin-bottom: 10px;
+  color: #64748b;
+  font-size: 12px;
   font-weight: 700;
 }
 

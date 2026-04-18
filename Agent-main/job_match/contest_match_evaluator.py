@@ -30,6 +30,34 @@ EVALUATION_INSUFFICIENT_ASSET = "insufficient_asset"
 SCORE_SOURCE_ASSET = "contest_asset"
 SCORE_SOURCE_RULE = "legacy_rule"
 
+ABILITY_DIMENSIONS = [
+    ("professional_skill", "专业技能"),
+    ("certificate", "证书要求"),
+    ("innovation", "创新能力"),
+    ("learning", "学习能力"),
+    ("pressure_resistance", "抗压能力"),
+    ("communication", "沟通能力"),
+    ("internship_practice", "实习能力"),
+]
+ABILITY_ALIASES = {
+    "professional_skill": {"professional_skill", "专业技能", "技能", "职业技能"},
+    "certificate": {"certificate", "证书", "证书要求", "资格证书"},
+    "innovation": {"innovation", "创新", "创新能力"},
+    "learning": {"learning", "学习", "学习能力"},
+    "pressure_resistance": {"pressure_resistance", "stress", "抗压", "抗压能力", "压力承受"},
+    "communication": {"communication", "沟通", "沟通能力", "协作能力"},
+    "internship_practice": {"internship_practice", "internship", "实习", "实习能力", "实践能力"},
+}
+ABILITY_WEIGHTS = {
+    "professional_skill": 0.25,
+    "certificate": 0.10,
+    "innovation": 0.10,
+    "learning": 0.15,
+    "pressure_resistance": 0.10,
+    "communication": 0.15,
+    "internship_practice": 0.15,
+}
+
 
 def safe_float(value: Any, default: float = 0.0) -> float:
     text = clean_text(value)
@@ -78,6 +106,16 @@ def normalize_tag_token(value: Any) -> str:
     text = clean_text(value).lower()
     text = re.sub(r"^(证书|学历|学校|专业|项目|实习|技能|工具|知识点)[:：]", "", text)
     return re.sub(r"[()（）\[\]【】<>《》\-_/\\|·,，;；:：+.#\s]", "", text)
+
+
+def score_to_level(score: float) -> str:
+    if score >= 75:
+        return "high"
+    if score >= 55:
+        return "medium_high"
+    if score >= 35:
+        return "medium"
+    return "low"
 
 
 def token_similarity(left: Any, right: Any) -> float:
@@ -370,6 +408,149 @@ def match_knowledge_points(
     }
 
 
+def _extract_ability_item(source: Dict[str, Any], dimension_key: str) -> Dict[str, Any]:
+    """Find a student ability dimension by stable key or Chinese label."""
+    aliases = ABILITY_ALIASES.get(dimension_key, {dimension_key})
+    for alias in aliases:
+        value = source.get(alias)
+        if isinstance(value, dict):
+            return deepcopy(value)
+    normalized_aliases = {normalize_tag_token(alias) for alias in aliases}
+    for key, value in source.items():
+        if normalize_tag_token(key) in normalized_aliases and isinstance(value, dict):
+            return deepcopy(value)
+    return {}
+
+
+def _student_ability_fallback(student_profile: Dict[str, Any], dimension_key: str) -> Dict[str, Any]:
+    """Estimate a student ability score when employment_ability_profile is missing."""
+    hard_skills = normalize_tag_list(student_profile.get("hard_skills"))
+    tool_skills = normalize_tag_list(student_profile.get("tool_skills"))
+    certificates = normalize_tag_list(student_profile.get("certificates"))
+    soft_skills = normalize_tag_list(student_profile.get("soft_skills"))
+    experience_tags = normalize_tag_list(student_profile.get("experience_tags"))
+    project_count = int(student_profile.get("project_count") or 0)
+    internship_count = int(student_profile.get("internship_count") or 0)
+    soft_text = " ".join(soft_skills + experience_tags).lower()
+
+    if dimension_key == "professional_skill":
+        score = min(100.0, len(hard_skills) * 8.0 + len(tool_skills) * 6.0)
+        evidence = [f"硬技能 {len(hard_skills)} 项", f"工具技能 {len(tool_skills)} 项"]
+    elif dimension_key == "certificate":
+        score = min(100.0, len(certificates) * 30.0)
+        evidence = [f"证书/资质 {len(certificates)} 项"]
+    elif dimension_key == "innovation":
+        score = min(100.0, project_count * 18.0 + (18.0 if any(k in soft_text for k in ["创新", "算法", "建模", "研发"]) else 0.0))
+        evidence = [f"项目经历 {project_count} 段"]
+    elif dimension_key == "learning":
+        score = min(100.0, 35.0 + len(hard_skills) * 4.0 + len(tool_skills) * 3.0 + (12.0 if "学习" in soft_text else 0.0))
+        evidence = [f"已覆盖技能 {len(hard_skills) + len(tool_skills)} 项"]
+    elif dimension_key == "pressure_resistance":
+        score = min(100.0, internship_count * 22.0 + project_count * 14.0 + (16.0 if any(k in soft_text for k in ["抗压", "压力", "责任心"]) else 0.0))
+        evidence = [f"项目 + 实习共 {project_count + internship_count} 段"]
+    elif dimension_key == "communication":
+        score = min(100.0, internship_count * 24.0 + project_count * 10.0 + (18.0 if any(k in soft_text for k in ["沟通", "协作", "表达"]) else 0.0))
+        evidence = [f"实习经历 {internship_count} 段", f"项目经历 {project_count} 段"]
+    else:
+        score = min(100.0, internship_count * 40.0 + project_count * 10.0)
+        evidence = [f"实习经历 {internship_count} 段", f"项目经历 {project_count} 段"]
+
+    return {
+        "score": round(score, 2),
+        "level": score_to_level(score),
+        "evidence": evidence,
+    }
+
+
+def extract_student_ability_dimension(student_profile: Dict[str, Any], dimension_key: str) -> Dict[str, Any]:
+    raw = safe_dict(student_profile.get("raw_student_profile_result"))
+    profile = safe_dict(raw.get("employment_ability_profile") or student_profile.get("employment_ability_profile"))
+    item = _extract_ability_item(profile, dimension_key)
+    if not item:
+        item = _student_ability_fallback(student_profile, dimension_key)
+    score = safe_float(item.get("score") or item.get("value"), default=0.0)
+    return {
+        "score": round(max(0.0, min(score, 100.0)), 2),
+        "level": clean_text(item.get("level")) or score_to_level(score),
+        "evidence": normalize_tag_list(item.get("evidence")),
+    }
+
+
+def build_ability_match(student_profile: Dict[str, Any], ability_assets: Dict[str, Any]) -> Dict[str, Any]:
+    """Compare student employment ability profile against job ability requirements."""
+    requirements = safe_dict(ability_assets.get("ability_requirements"))
+    if not requirements:
+        return {
+            "evaluation_status": EVALUATION_INSUFFICIENT_ASSET,
+            "overall_ability_match_score": None,
+            "dimensions": [],
+            "main_strengths": [],
+            "main_risks": [],
+            "message": "暂无岗位七维能力画像资产，暂不计算能力匹配分。",
+        }
+
+    dimensions: List[Dict[str, Any]] = []
+    weighted_score = 0.0
+    total_weight = 0.0
+    strengths: List[str] = []
+    risks: List[str] = []
+
+    for dimension_key, label in ABILITY_DIMENSIONS:
+        job_req = safe_dict(requirements.get(dimension_key))
+        job_score = safe_float(job_req.get("score"), default=0.0)
+        student_item = extract_student_ability_dimension(student_profile, dimension_key)
+        student_score = safe_float(student_item.get("score"), default=0.0)
+        gap = round(student_score - job_score, 2)
+        if gap >= -10:
+            risk_level = RISK_HIGH_MATCH
+            strengths.append(label)
+            message = f"{label}与岗位要求较接近。"
+        elif gap >= -25:
+            risk_level = RISK_RISK
+            risks.append(label)
+            message = f"{label}略低于岗位要求，建议补充更明确的经历证据。"
+        else:
+            risk_level = RISK_NO_MATCH
+            risks.append(label)
+            message = f"{label}与岗位要求差距较明显，需要优先补强。"
+
+        evidence_ratio = safe_float(job_req.get("evidence_ratio"), default=0.0)
+        job_keywords = normalize_tag_list(job_req.get("keywords"))
+        job_evidence = [
+            f"岗位样本中 {evidence_ratio:.0%} 出现相关要求",
+            f"关键词：{'、'.join(job_keywords[:5])}" if job_keywords else "暂无明确关键词",
+        ]
+        dimension_match_score = max(0.0, min(100.0, 100.0 + gap))
+        weight = ABILITY_WEIGHTS.get(dimension_key, 1.0 / len(ABILITY_DIMENSIONS))
+        weighted_score += dimension_match_score * weight
+        total_weight += weight
+        dimensions.append(
+            {
+                "dimension": dimension_key,
+                "label": clean_text(job_req.get("label")) or label,
+                "student_score": round(student_score, 2),
+                "student_level": clean_text(student_item.get("level")) or score_to_level(student_score),
+                "job_required_score": round(job_score, 2),
+                "job_required_level": clean_text(job_req.get("level")) or score_to_level(job_score),
+                "gap": gap,
+                "risk_level": risk_level,
+                "student_evidence": deepcopy(safe_list(student_item.get("evidence"))),
+                "job_evidence": job_evidence,
+                "job_keywords": deepcopy(job_keywords),
+                "message": message,
+            }
+        )
+
+    overall = weighted_score / total_weight if total_weight else 0.0
+    return {
+        "evaluation_status": EVALUATION_OK,
+        "overall_ability_match_score": round(overall, 2),
+        "dimensions": dimensions,
+        "main_strengths": dedup_keep_order(strengths)[:4],
+        "main_risks": dedup_keep_order(risks)[:4],
+    }
+
+
 def build_contest_evaluation(
     hard_info_evaluation: Dict[str, Any],
     skill_knowledge_match: Dict[str, Any],
@@ -519,6 +700,14 @@ def build_insufficient_asset_match_result(
         "risk_level": RISK_UNKNOWN,
         "message": message,
     }
+    ability_match = {
+        "evaluation_status": EVALUATION_INSUFFICIENT_ASSET,
+        "overall_ability_match_score": None,
+        "dimensions": [],
+        "main_strengths": [],
+        "main_risks": [],
+        "message": message,
+    }
     contest_evaluation = {
         "hard_info_pass": False,
         "skill_accuracy_pass": False,
@@ -549,6 +738,7 @@ def build_insufficient_asset_match_result(
         "hard_info_display": hard_info_display,
         "hard_info_evaluation": hard_info_evaluation,
         "skill_knowledge_match": skill_knowledge_match,
+        "ability_match": ability_match,
         "contest_evaluation": contest_evaluation,
         "risk_level": RISK_UNKNOWN,
     }
@@ -604,6 +794,14 @@ def build_needs_confirmation_match_result(
             "risk_level": RISK_UNKNOWN,
             "message": message,
         },
+        "ability_match": {
+            "evaluation_status": EVALUATION_NEEDS_CONFIRMATION,
+            "overall_ability_match_score": None,
+            "dimensions": [],
+            "main_strengths": [],
+            "main_risks": [],
+            "message": message,
+        },
         "contest_evaluation": {
             "hard_info_pass": None,
             "skill_accuracy_pass": None,
@@ -638,7 +836,8 @@ def evaluate_single_job(
     standard_job_name = clean_text(resolution.get("resolved_standard_job_name")) if resolution.get("asset_found") else requested_job_name
     stats = loader.get_requirement_stats_by_standard_name(standard_job_name)
     skill_assets = loader.get_skill_assets_by_standard_name(standard_job_name)
-    asset_found = bool(stats or skill_assets)
+    ability_assets = loader.get_ability_assets_by_standard_name(standard_job_name)
+    asset_found = bool(stats or skill_assets or ability_assets)
 
     if not asset_found:
         return build_insufficient_asset_match_result(
@@ -649,6 +848,7 @@ def evaluate_single_job(
 
     hard_info_display, hard_info_evaluation = build_hard_info(student_profile, stats)
     skill_knowledge_match = match_knowledge_points(student_profile, skill_assets)
+    ability_match = build_ability_match(student_profile, ability_assets)
     contest_evaluation = build_contest_evaluation(hard_info_evaluation, skill_knowledge_match)
     asset_score = calculate_asset_match_score(stats, hard_info_evaluation, skill_knowledge_match)
     final_score = safe_float(overall_match_score, default=0.0) if overall_match_score is not None else asset_score
@@ -681,6 +881,7 @@ def evaluate_single_job(
         "hard_info_display": hard_info_display,
         "hard_info_evaluation": hard_info_evaluation,
         "skill_knowledge_match": skill_knowledge_match,
+        "ability_match": ability_match,
         "contest_evaluation": contest_evaluation,
         "risk_level": aggregate_risk_level(hard_info_display, skill_knowledge_match, contest_evaluation),
     }
@@ -714,6 +915,10 @@ def build_recommendation_ranking(
                 "hard_info_pass": bool(safe_dict(evaluated.get("contest_evaluation")).get("hard_info_pass")),
                 "knowledge_point_accuracy": safe_float(
                     safe_dict(evaluated.get("skill_knowledge_match")).get("knowledge_point_accuracy"),
+                    default=0.0,
+                ),
+                "ability_match_score": safe_float(
+                    safe_dict(evaluated.get("ability_match")).get("overall_ability_match_score"),
                     default=0.0,
                 ),
                 "risk_level": clean_text(evaluated.get("risk_level")),

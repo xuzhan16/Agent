@@ -154,6 +154,55 @@ export interface RequirementDistributions {
   no_certificate_requirement_ratio?: number
 }
 
+export interface JobAbilityRequirement {
+  dimension?: string
+  label?: string
+  score?: number
+  level?: string
+  keywords?: string[]
+  evidence_ratio?: number
+  evidence_count?: number
+  description?: string
+}
+
+export interface JobAbilityRadarItem {
+  dimension?: string
+  key?: string
+  score?: number
+}
+
+export interface JobAbilitySourceQuality {
+  soft_skill_coverage?: number
+  practice_coverage?: number
+  hard_skill_coverage?: number
+  confidence?: number
+  [key: string]: number | string | undefined
+}
+
+export interface AbilityMatchDimension {
+  dimension?: string
+  label?: string
+  student_score?: number
+  student_level?: string
+  job_required_score?: number
+  job_required_level?: string
+  gap?: number
+  risk_level?: RiskLevel
+  student_evidence?: string[]
+  job_evidence?: string[]
+  job_keywords?: string[]
+  message?: string
+}
+
+export interface AbilityMatch {
+  evaluation_status?: string
+  overall_ability_match_score?: number | null
+  dimensions?: AbilityMatchDimension[]
+  main_strengths?: string[]
+  main_risks?: string[]
+  message?: string
+}
+
 export interface CoreJobProfile extends RequirementDistributions {
   standard_job_name?: string
   sample_count?: number
@@ -174,6 +223,9 @@ export interface CoreJobProfile extends RequirementDistributions {
   required_knowledge_points?: string[]
   preferred_knowledge_points?: string[]
   source_quality?: Record<string, number | string>
+  ability_requirements?: Record<string, JobAbilityRequirement>
+  ability_radar?: JobAbilityRadarItem[]
+  ability_source_quality?: JobAbilitySourceQuality
 }
 
 export interface JobProfileAssetsSummary {
@@ -215,6 +267,9 @@ export interface TargetJobProfileAssets extends RequirementDistributions {
   required_knowledge_points?: string[]
   preferred_knowledge_points?: string[]
   source_quality?: Record<string, number | string>
+  ability_requirements?: Record<string, JobAbilityRequirement>
+  ability_radar?: JobAbilityRadarItem[]
+  ability_source_quality?: JobAbilitySourceQuality
 }
 
 export interface HardInfoDisplay {
@@ -306,6 +361,7 @@ export interface TargetJobMatch {
   hard_info_display?: HardInfoDisplay
   hard_info_evaluation?: HardInfoEvaluation
   skill_knowledge_match?: SkillKnowledgeMatch
+  ability_match?: AbilityMatch
   contest_evaluation?: ContestEvaluation
   risk_level?: RiskLevel
 }
@@ -321,6 +377,7 @@ export interface RecommendationRankingItem {
   display_match_score?: number
   hard_info_pass?: boolean
   knowledge_point_accuracy?: number
+  ability_match_score?: number
   risk_level?: RiskLevel
   recommendation_reason?: string
 }
@@ -410,6 +467,12 @@ export interface JobPathGraphStats {
 export interface JobPathGraphResponse {
   graph_status?: 'available' | 'empty' | 'unavailable' | string
   source?: 'neo4j' | 'csv_fallback' | 'none' | string
+  graph_scope?: 'curated' | 'all' | string
+  raw_node_count?: number
+  raw_edge_count?: number
+  filtered_node_count?: number
+  filtered_edge_count?: number
+  filter_notes?: string[]
   stats?: JobPathGraphStats
   nodes?: JobPathGraphNode[]
   edges?: JobPathGraphEdge[]

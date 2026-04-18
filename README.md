@@ -695,4 +695,177 @@ python -m pip install pypdf
 
 ---
 
+## 14. 最终提交前运行顺序
+
+这一节用于赛题提交或答辩前做最后检查。它不会要求你重跑完整岗位数据处理主流水线，只对当前已有 SQLite、Neo4j CSV、match_assets 和前端页面做轻量修复与验证。
+
+### 14.1 环境准备
+
+建议先确认依赖已经安装：
+
+```powershell
+Set-Location E:\Agent
+python -m pip install fastapi "uvicorn[standard]" python-multipart pandas pypdf neo4j xlrd openpyxl
+
+Set-Location E:\Agent\frontend
+npm install
+```
+
+### 14.2 启动并检查 Neo4j
+
+```powershell
+Set-Location E:\Agent\Agent-main
+docker compose --env-file .env.neo4j -f docker-compose.neo4j.yml up -d
+```
+
+如果怀疑 Neo4j 数据为空，强制重导：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+.\scripts\neo4j\import-graph.ps1 -ForceReimport
+```
+
+检查图谱数据：
+
+```cypher
+MATCH (n:Job) RETURN count(n) AS jobs;
+MATCH (:Job)-[r:PROMOTE_TO]->(:Job) RETURN count(r) AS promote_edges;
+MATCH (:Job)-[r:TRANSFER_TO]->(:Job) RETURN count(r) AS transfer_edges;
+```
+
+说明：
+
+- 后端会优先尝试 Neo4j。
+- 如果本机 Python Neo4j 驱动异常，岗位路径图谱接口会降级读取 `outputs/neo4j/*.csv`。
+- CSV fallback 只是读取已生成的真实图谱导入文件，不会编造路径。
+
+### 14.3 修复 SQLite 标准岗位名
+
+历史版本的 `outputs/sql/jobs.db` 可能存在 `standard_job_name` 为空的问题。提交前请运行：
+
+```powershell
+Set-Location E:\Agent\Agent-main
+python .\job_data\repair_sql_standard_job_names.py
+```
+
+这个脚本会：
+
+- 自动备份 `jobs.db` 到 `outputs/backups/sql`
+- 从 `outputs/intermediate/jobs_extracted_full.csv` 读取 `standard_job_name_y / standard_job_name_x`
+- 回写 `job_detail.standard_job_name`
+- 回写 `job_profile.standard_job_name`
+- 回写 `job_mapping.standard_job_name`
+- 创建统一 SQL 查询视图 `job_market_view`
+
+正常结果应看到：
+
+```text
+job_detail standard_job_name 非空 2638 / 2638
+job_profile standard_job_name 非空 2638 / 2638
+job_mapping standard_job_name 非空 50 / 50
+job_market_view_created = true
+```
+
+### 14.4 构建七维岗位能力资产
+
+```powershell
+Set-Location E:\Agent\Agent-main
+python .\job_data\build_job_ability_assets.py
+```
+
+输出文件：
+
+- `outputs/match_assets/job_ability_assets.json`
+- `outputs/match_assets/job_sample_ability_evidence.csv`
+- `outputs/match_assets/job_ability_assets_manifest.json`
+
+该资产用于岗位画像、人岗匹配和职业报告中的七维能力闭环：
+
+- 专业技能
+- 证书要求
+- 创新能力
+- 学习能力
+- 抗压能力
+- 沟通能力
+- 实习能力
+
+### 14.5 启动后端
+
+```powershell
+Set-Location E:\Agent\Agent-main
+python -m uvicorn api_server:app --host 127.0.0.1 --port 8000 --reload
+```
+
+### 14.6 启动前端
+
+```powershell
+Set-Location E:\Agent\frontend
+npm run dev
+```
+
+打开：
+
+- [http://localhost:3000](http://localhost:3000)
+
+### 14.7 运行提交前 Smoke Check
+
+```powershell
+Set-Location E:\Agent\Agent-main
+python .\scripts\submission_smoke_check.py
+```
+
+输出报告：
+
+- `outputs/submission_check/submission_smoke_report.json`
+- `outputs/submission_check/submission_smoke_report.md`
+
+检查项包括：
+
+- SQLite `jobs.db` 是否存在
+- `standard_job_name` 是否已经修复
+- `job_market_view` 是否可查询
+- 10 个核心岗位是否存在
+- 七维岗位能力画像是否存在
+- Neo4j CSV fallback 是否存在真实路径
+- 精选岗位路径图谱是否至少有真实晋升关系
+- 岗位画像、人岗匹配、职业路径、报告状态文件是否具备赛题字段
+- 前端关键页面是否存在
+
+如果报告中出现 `FAIL`，建议先修复再提交；如果只有 `WARN`，一般可以演示，但需要知道风险原因。
+
+### 14.8 页面验证清单
+
+提交前建议至少人工点一遍：
+
+1. 岗位画像：能看到 10 个核心岗位、学历/专业/证书分布、知识点、七维能力画像。
+2. 人岗匹配：能看到目标岗位、推荐岗位、硬门槛、知识点覆盖率、七维能力匹配。
+3. 职业规划：目标岗位无真实路径时不生成伪路径。
+4. 岗位路径图谱：默认展示“精选计算机岗位路径图谱”，并可切换“全部原始图谱”。
+5. AI 助手：能查询本地公司、城市、薪资、岗位要求、路径图谱，不默认展示杂乱 SQL 日志。
+6. 报告生成：报告中包含学历、专业、证书、知识点、七维能力差距和行动建议。
+
+### 14.9 Windows 前端 build 的 EPERM 处理
+
+如果执行：
+
+```powershell
+npm run build
+```
+
+出现类似：
+
+```text
+Error: spawn EPERM
+```
+
+通常是 Windows 本机权限、杀软或 esbuild 子进程启动问题。建议按顺序排查：
+
+1. 使用管理员 PowerShell 重新执行。
+2. 删除 `frontend\node_modules` 后重新 `npm install`。
+3. 关闭杀软或 Windows “受控文件夹访问”对项目目录的限制。
+4. 先执行 `npx tsc --noEmit`。
+5. 如果 `npx tsc --noEmit` 通过而 `vite build` 仍失败，多半是本机权限环境问题，不一定是 TypeScript 代码错误。
+
+---
+
 如果你后续还要把这个项目改成“多用户隔离状态 + 前端可选目标岗位 + 生产部署”，建议在当前 README 的基础上再单独补一份部署文档，而不要把部署细节和本地运行说明混在一起。

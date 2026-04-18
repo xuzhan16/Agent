@@ -202,6 +202,76 @@ def format_requirement_distribution(items: Any, top_n: int = 5) -> str:
     return "、".join(rows) if rows else "暂无明确记录"
 
 
+def format_ability_requirements(requirements: Any) -> str:
+    """格式化岗位七维能力画像。"""
+    source = safe_dict(requirements)
+    if not source:
+        return "暂无岗位七维能力画像资产"
+    rows = []
+    for item in source.values():
+        item_dict = safe_dict(item)
+        label = clean_text(item_dict.get("label") or item_dict.get("dimension"))
+        if not label:
+            continue
+        score = safe_float(item_dict.get("score"))
+        level = clean_text(item_dict.get("level"))
+        keywords = normalize_text_list(item_dict.get("keywords"))[:4]
+        evidence_ratio = format_percent(item_dict.get("evidence_ratio"), default_text="")
+        keyword_text = f"，关键词：{'、'.join(keywords)}" if keywords else ""
+        evidence_text = f"，样本证据占比{evidence_ratio}" if evidence_ratio else ""
+        rows.append(f"{label}{score:.0f}分（{level or '未明确'}{evidence_text}{keyword_text}）")
+    return "；".join(rows) if rows else "暂无岗位七维能力画像资产"
+
+
+def format_ability_match_summary(ability_match: Any) -> str:
+    """格式化学生能力与岗位能力差距。"""
+    source = safe_dict(ability_match)
+    dimensions = normalize_dict_list(source.get("dimensions"))
+    if not dimensions:
+        return clean_text(source.get("message")) or "暂无能力匹配数据"
+    rows = []
+    for item in dimensions:
+        item_dict = safe_dict(item)
+        label = clean_text(item_dict.get("label") or item_dict.get("dimension"))
+        student_score = safe_float(item_dict.get("student_score"))
+        job_score = safe_float(item_dict.get("job_required_score"))
+        gap = safe_float(item_dict.get("gap"))
+        risk = clean_text(item_dict.get("risk_level")) or "未明确"
+        message = clean_text(item_dict.get("message"))
+        rows.append(f"{label}：学生{student_score:.0f}分，岗位要求{job_score:.0f}分，差距{gap:.0f}分，风险={risk}，{message or '暂无说明'}")
+    return "；".join(rows)
+
+
+def build_ability_action_items(ability_match: Any, limit: int = 4) -> List[str]:
+    """根据能力匹配风险生成行动建议。"""
+    source = safe_dict(ability_match)
+    items = []
+    for item in normalize_dict_list(source.get("dimensions")):
+        item_dict = safe_dict(item)
+        risk = clean_text(item_dict.get("risk_level"))
+        if risk not in {"risk", "no_match"}:
+            continue
+        label = clean_text(item_dict.get("label") or item_dict.get("dimension"))
+        keywords = normalize_text_list(item_dict.get("job_keywords"))[:4]
+        if label == "沟通能力":
+            items.append("补充跨团队协作、需求沟通或客户对接案例，在简历中写清沟通对象、协作过程和交付结果。")
+        elif label == "实习能力":
+            items.append("优先补充与目标岗位相关的实习、真实项目或交付经历，用作品集证明岗位实践能力。")
+        elif label == "抗压能力":
+            items.append("补充高复杂度项目、紧急问题定位或多任务推进经历，体现抗压和结果导向。")
+        elif label == "创新能力":
+            items.append("沉淀项目优化、方案设计、技术攻关或创新改进案例，突出问题、方案和效果指标。")
+        elif label == "学习能力":
+            items.append("整理近期学习路线、技术复盘和新技术应用案例，证明快速学习和持续成长能力。")
+        elif label == "专业技能":
+            items.append(f"围绕岗位高频技能继续补强：{join_text_items(keywords)}。")
+        elif label == "证书要求":
+            items.append("结合岗位证书偏好补充可验证证书或资格证明，降低硬门槛风险。")
+        else:
+            items.append(f"围绕{label}补充可量化经历证据。")
+    return dedup_keep_order(items)[:limit]
+
+
 def filter_path_dependent_plan(items: Any) -> List[str]:
     """无真实路径时过滤依赖纵向/横向路径的旧计划话术。"""
     banned_terms = ["纵向路径", "横向转岗路径", "晋升路径", "转岗路径", "过渡路径"]
@@ -324,6 +394,10 @@ def build_job_section(report_input_payload: Dict[str, Any]) -> Dict[str, Any]:
     no_cert_ratio = format_percent(target_context.get("no_certificate_requirement_ratio"))
     required_knowledge = normalize_text_list(target_context.get("required_knowledge_points"))[:12]
     preferred_knowledge = normalize_text_list(target_context.get("preferred_knowledge_points"))[:12]
+    ability_requirements = safe_dict(
+        target_context.get("ability_requirements")
+        or job_snapshot.get("ability_requirements")
+    )
 
     semantic_reference_text = ""
     semantic_snapshot = safe_dict(generation_context.get("semantic_fact_snapshot"))
@@ -348,6 +422,7 @@ def build_job_section(report_input_payload: Dict[str, Any]) -> Dict[str, Any]:
         f"工具/技术栈要求：{join_text_items(job_snapshot.get('tool_skills'))}。",
         f"核心知识点要求：{join_text_items(required_knowledge)}。",
         f"加分知识点：{join_text_items(preferred_knowledge)}。",
+        f"岗位七维能力画像：{format_ability_requirements(ability_requirements)}。",
         f"软技能与实践要求：软技能包括{join_text_items(job_snapshot.get('soft_skills'))}；实践要求包括{join_text_items(job_snapshot.get('practice_requirement'))}。",
         f"薪资概况：{salary_text}。",
         f"城市分布：{format_named_distribution(job_snapshot.get('city_distribution'))}。",
@@ -377,6 +452,7 @@ def build_match_section(report_input_payload: Dict[str, Any]) -> Dict[str, Any]:
     hard_info_display = safe_dict(target_job_match.get("hard_info_display"))
     hard_info_evaluation = safe_dict(target_job_match.get("hard_info_evaluation"))
     skill_knowledge_match = safe_dict(target_job_match.get("skill_knowledge_match"))
+    ability_match = safe_dict(target_job_match.get("ability_match"))
     contest_evaluation = safe_dict(target_job_match.get("contest_evaluation"))
     degree_display = safe_dict(hard_info_display.get("degree"))
     major_display = safe_dict(hard_info_display.get("major"))
@@ -411,6 +487,7 @@ def build_match_section(report_input_payload: Dict[str, Any]) -> Dict[str, Any]:
         f"证书匹配：学生证书为{join_text_items(certificate_display.get('student_values') or certificate_eval.get('student_values'))}；必备证书为{join_text_items(certificate_eval.get('must_have_certificates') or certificate_display.get('must_have_certificates'))}；偏好证书为{join_text_items(certificate_eval.get('preferred_certificates') or certificate_display.get('preferred_certificates'))}；结论：{format_bool(certificate_eval.get('pass'))}；风险：{clean_text(certificate_display.get('risk_level')) or '暂无明确记录'}；说明：{clean_text(certificate_display.get('message') or certificate_eval.get('reason')) or '暂无明确记录'}。",
         f"三项硬门槛总体结论：{format_bool(hard_info_evaluation.get('all_pass'))}。",
         f"技能知识点匹配：要求知识点包括{join_text_items(skill_knowledge_match.get('required_knowledge_points'))}；已命中知识点包括{join_text_items(skill_knowledge_match.get('matched_knowledge_points'))}；缺失知识点包括{join_text_items(skill_knowledge_match.get('missing_knowledge_points'))}；知识点覆盖率为{knowledge_accuracy}；是否达到 80%：{format_bool(skill_knowledge_match.get('pass'))}。",
+        f"七维能力匹配：总体能力适配度为{format_percent(ability_match.get('overall_ability_match_score'))}；优势能力为{join_text_items(ability_match.get('main_strengths'))}；风险能力为{join_text_items(ability_match.get('main_risks'))}。能力差距明细：{format_ability_match_summary(ability_match)}。",
         f"赛题综合评测：硬门槛通过={format_bool(contest_evaluation.get('hard_info_pass'))}；技能准确性达标={format_bool(contest_evaluation.get('skill_accuracy_pass'))}；最终赛题匹配成功={format_bool(contest_evaluation.get('contest_match_success'))}。",
     ]
     if asset_warning:
@@ -518,6 +595,7 @@ def build_phase_plan_section(report_input_payload: Dict[str, Any]) -> Dict[str, 
     job_match_context = safe_dict(report_input_payload.get("job_match_context"))
     target_job_match = safe_dict(job_match_context.get("target_job_match") or match_snapshot.get("target_job_match"))
     skill_knowledge_match = safe_dict(target_job_match.get("skill_knowledge_match"))
+    ability_match = safe_dict(target_job_match.get("ability_match"))
     phase_plan = safe_dict(plan_snapshot.get("phase_plan"))
     career_goal = safe_dict(plan_snapshot.get("career_goal"))
     primary_plan_job = clean_text(career_goal.get("primary_plan_job") or career_goal.get("primary_target_job"))
@@ -547,6 +625,7 @@ def build_phase_plan_section(report_input_payload: Dict[str, Any]) -> Dict[str, 
                 f"优先补齐缺失知识点：{join_text_items(missing_points)}。",
                 f"准备 1-2 个与{primary_plan_job or '主路径岗位'}直接相关的项目案例，突出技术选型、问题定位和结果指标。",
             ]
+            + build_ability_action_items(ability_match)
         )
         mid_term_plan = dedup_keep_order(
             filter_path_dependent_plan(mid_term_plan)
@@ -585,6 +664,7 @@ def build_risk_section(report_input_payload: Dict[str, Any]) -> Dict[str, Any]:
     target_job_match = safe_dict(job_match_context.get("target_job_match") or match_snapshot.get("target_job_match"))
     hard_info_display = safe_dict(target_job_match.get("hard_info_display"))
     skill_knowledge_match = safe_dict(target_job_match.get("skill_knowledge_match"))
+    ability_match = safe_dict(target_job_match.get("ability_match"))
     contest_evaluation = safe_dict(target_job_match.get("contest_evaluation"))
 
     content_lines = [
@@ -594,6 +674,7 @@ def build_risk_section(report_input_payload: Dict[str, Any]) -> Dict[str, Any]:
         f"专业风险：{clean_text(safe_dict(hard_info_display.get('major')).get('message')) or '暂无明确记录'}",
         f"证书风险：{clean_text(safe_dict(hard_info_display.get('certificate')).get('message')) or '暂无明确记录'}",
         f"知识点缺口：{join_text_items(skill_knowledge_match.get('missing_knowledge_points'))}；知识点覆盖率：{format_percent(skill_knowledge_match.get('knowledge_point_accuracy'))}；是否达到 80%：{format_bool(skill_knowledge_match.get('pass'))}。",
+        f"七维能力风险：优势能力为{join_text_items(ability_match.get('main_strengths'))}；风险能力为{join_text_items(ability_match.get('main_risks'))}；建议行动：{join_text_items(build_ability_action_items(ability_match))}。",
         f"赛题匹配成功结论：{format_bool(contest_evaluation.get('contest_match_success'))}。",
         f"动态调整建议：{join_text_items(match_snapshot.get('improvement_suggestions'))}。",
         "建议每 1-2 个月根据岗位招聘要求、项目产出、实习反馈和技能掌握情况更新一次职业规划，并同步修订简历与目标岗位优先级。",

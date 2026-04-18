@@ -59,6 +59,7 @@ class MatchAssetLoader:
         self._requirement_root: Optional[Dict[str, Any]] = None
         self._core_jobs_root: Optional[Dict[str, Any]] = None
         self._skill_assets_root: Optional[Dict[str, Any]] = None
+        self._ability_assets_root: Optional[Dict[str, Any]] = None
         self._job_name_aliases: Optional[Dict[str, Any]] = None
         self.warnings: List[str] = []
 
@@ -103,6 +104,12 @@ class MatchAssetLoader:
         return self._skill_assets_root
 
     @property
+    def ability_assets_root(self) -> Dict[str, Any]:
+        if self._ability_assets_root is None:
+            self._ability_assets_root = self._load_json("job_ability_assets.json")
+        return self._ability_assets_root
+
+    @property
     def job_name_aliases(self) -> Dict[str, Any]:
         if self._job_name_aliases is None:
             path = self.project_root / DEFAULT_ALIAS_PATH
@@ -126,6 +133,9 @@ class MatchAssetLoader:
     def skill_jobs(self) -> Dict[str, Any]:
         return safe_dict(self.skill_assets_root.get("jobs"))
 
+    def ability_jobs(self) -> Dict[str, Any]:
+        return safe_dict(self.ability_assets_root.get("jobs"))
+
     def core_jobs(self) -> List[Dict[str, Any]]:
         return [safe_dict(item) for item in safe_list(self.core_jobs_root.get("jobs"))]
 
@@ -133,6 +143,7 @@ class MatchAssetLoader:
         names = (
             [clean_text(name) for name in self.requirement_jobs().keys() if clean_text(name)]
             + [clean_text(name) for name in self.skill_jobs().keys() if clean_text(name)]
+            + [clean_text(name) for name in self.ability_jobs().keys() if clean_text(name)]
             + [clean_text(item.get("standard_job_name")) for item in self.core_jobs() if clean_text(item.get("standard_job_name"))]
         )
         seen = set()
@@ -172,6 +183,10 @@ class MatchAssetLoader:
         """Return skill knowledge assets for a standard job name."""
         return self._lookup_from_mapping(self.skill_jobs(), job_name)
 
+    def get_ability_assets(self, job_name: Any) -> Dict[str, Any]:
+        """Return seven-dimension ability assets for a standard job name."""
+        return self._lookup_from_mapping(self.ability_jobs(), job_name)
+
     def get_requirement_stats_by_standard_name(self, standard_job_name: Any) -> Dict[str, Any]:
         """Return requirement stats without performing alias resolution."""
         return self._lookup_from_mapping(self.requirement_jobs(), standard_job_name)
@@ -180,6 +195,10 @@ class MatchAssetLoader:
         """Return skill assets without performing alias resolution."""
         return self._lookup_from_mapping(self.skill_jobs(), standard_job_name)
 
+    def get_ability_assets_by_standard_name(self, standard_job_name: Any) -> Dict[str, Any]:
+        """Return ability assets without performing alias resolution."""
+        return self._lookup_from_mapping(self.ability_jobs(), standard_job_name)
+
     def has_any_asset(self) -> bool:
         """Whether at least one asset file is available and has content."""
-        return bool(self.requirement_jobs() or self.core_jobs() or self.skill_jobs())
+        return bool(self.requirement_jobs() or self.core_jobs() or self.skill_jobs() or self.ability_jobs())

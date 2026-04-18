@@ -1,0 +1,119 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-18T17:13:41+08:00",
+  "summary": {
+    "PASS": 14
+  },
+  "items": [
+    {
+      "name": "文件资产检查",
+      "status": "PASS",
+      "message": "关键资产文件存在且非空",
+      "details": {
+        "missing": []
+      }
+    },
+    {
+      "name": "10 个核心岗位资产",
+      "status": "PASS",
+      "message": "核心岗位数量：10",
+      "details": {}
+    },
+    {
+      "name": "七维能力画像资产",
+      "status": "PASS",
+      "message": "岗位能力画像数量：49",
+      "details": {
+        "incomplete_jobs": []
+      }
+    },
+    {
+      "name": "SQLite 标准岗位名非空率",
+      "status": "PASS",
+      "message": "job_detail 行数 2638，standard_job_name 非空 2638（100.0%）",
+      "details": {}
+    },
+    {
+      "name": "job_market_view 统一查询视图",
+      "status": "PASS",
+      "message": "job_market_view 可查询",
+      "details": {}
+    },
+    {
+      "name": "SQLite 市场事实查询",
+      "status": "PASS",
+      "message": "北京公司、Java/前端岗位、薪资字段可查询",
+      "details": {
+        "beijing_rows": 243,
+        "java_rows": 265,
+        "frontend_rows": 230,
+        "salary_rows": 2591
+      }
+    },
+    {
+      "name": "Neo4j CSV fallback",
+      "status": "PASS",
+      "message": "CSV 晋升关系 298 条，转岗关系 279 条",
+      "details": {}
+    },
+    {
+      "name": "精选岗位路径图谱",
+      "status": "PASS",
+      "message": "精选图谱晋升关系 75 条，总关系 144 条",
+      "details": {
+        "source": "neo4j",
+        "scope": "curated",
+        "raw_node_count": 411,
+        "raw_edge_count": 577,
+        "filtered_node_count": 118,
+        "filtered_edge_count": 144
+      }
+    },
+    {
+      "name": "主链路状态文件",
+      "status": "PASS",
+      "message": "主链路状态文件存在",
+      "details": {
+        "missing": []
+      }
+    },
+    {
+      "name": "岗位画像输出结构",
+      "status": "PASS",
+      "message": "core_job_profiles=10",
+      "details": {
+        "target_has_ability": true
+      }
+    },
+    {
+      "name": "人岗匹配赛题结构",
+      "status": "PASS",
+      "message": "检查 hard_info_evaluation / skill_knowledge_match / ability_match",
+      "details": {
+        "hard_info": true,
+        "skill_knowledge": true,
+        "ability_match": true
+      }
+    },
+    {
+      "name": "职业路径不造伪路径",
+      "status": "PASS",
+      "message": "未发现典型伪路径话术",
+      "details": {}
+    },
+    {
+      "name": "报告赛题字段覆盖",
+      "status": "PASS",
+      "message": "报告中命中字段：学历, 专业, 证书, 知识点, 七维能力, 能力",
+      "details": {}
+    },
+    {
+      "name": "前端关键页面文件",
+      "status": "PASS",
+      "message": "前端关键页面存在",
+      "details": {
+        "missing": []
+      }
+    }
+  ]
+}

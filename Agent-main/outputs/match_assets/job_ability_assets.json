@@ -1,0 +1,7459 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-18T17:13:38+08:00",
+  "source_file": "E:\\Agent\\Agent-main\\outputs\\intermediate\\jobs_extracted_full.csv",
+  "jobs": {
+    "软件测试工程师": {
+      "standard_job_name": "软件测试工程师",
+      "sample_count": 342,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 100,
+          "level": "high",
+          "keywords": [
+            "功能测试",
+            "接口测试",
+            "数据测试",
+            "测试报告编写",
+            "测试用例设计",
+            "缺陷管理",
+            "JIRA",
+            "JMeter",
+            "MySQL",
+            "Postman",
+            "Selenium",
+            "TestLink"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 342,
+          "description": "该岗位专业技能要求较高，高频技能包括功能测试、接口测试、数据测试、测试报告编写、测试用例设计。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "ISTQB认证",
+            "软件评测师"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 342,
+          "description": "该岗位证书要求要求较高，常见证书为ISTQB认证、软件评测师。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 43,
+          "level": "medium",
+          "keywords": [
+            "改进",
+            "优化",
+            "研发",
+            "算法",
+            "新技术",
+            "解决方案",
+            "创新"
+          ],
+          "evidence_ratio": 0.3304,
+          "evidence_count": 113,
+          "description": "该岗位创新能力要求中等，证据关键词包括改进、优化、研发、算法、新技术。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "自驱",
+            "主动学习",
+            "培训",
+            "善于总结",
+            "快速学习",
+            "成长",
+            "适应能力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 342,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、自驱、主动学习、培训、善于总结。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "责任心",
+            "驻场",
+            "压力",
+            "承受压力",
+            "加班",
+            "抗压",
+            "高强度"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 342,
+          "description": "该岗位抗压能力要求较高，证据关键词包括责任心、驻场、压力、承受压力、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "团队协作",
+            "协作",
+            "协调",
+            "跨部门",
+            "表达",
+            "文档编写",
+            "汇报"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 342,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、团队协作、协作、协调、跨部门。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "实习",
+            "驻场",
+            "工作经验",
+            "交付",
+            "项目经验",
+            "上线",
+            "实际项目",
+            "实践经验"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 342,
+          "description": "该岗位实习能力要求较高，证据关键词包括实习、驻场、工作经验、交付、项目经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 100
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 78
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 43
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 89
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 89
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 89
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 89
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 1.0
+      }
+    },
+    "测试工程师": {
+      "standard_job_name": "测试工程师",
+      "sample_count": 338,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "产品改进建议评估",
+            "仪器仪表使用",
+            "接口知识（RS232/RS422/CAN/LVDS/PCI/PCIE/FPGAMGT）",
+            "板卡测试",
+            "测试大纲撰写",
+            "测试报告编写",
+            "测试数据整理",
+            "测试环境搭建",
+            "测试结果统计分析",
+            "万用表",
+            "信号源",
+            "示波器"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 338,
+          "description": "该岗位专业技能要求较高，高频技能包括产品改进建议评估、仪器仪表使用、接口知识（RS232/RS422/CAN/LVDS/PCI/PCIE/FPGAMGT）、板卡测试、测试大纲撰写。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 2,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0296,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "改进",
+            "研发",
+            "优化",
+            "新技术",
+            "解决方案",
+            "算法",
+            "创新",
+            "方案设计"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 338,
+          "description": "该岗位创新能力要求较高，证据关键词包括改进、研发、优化、新技术、解决方案。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 42,
+          "level": "medium",
+          "keywords": [
+            "自驱",
+            "学习能力",
+            "培训",
+            "快速学习",
+            "成长",
+            "主动学习",
+            "适应能力",
+            "善于总结"
+          ],
+          "evidence_ratio": 0.3107,
+          "evidence_count": 105,
+          "description": "该岗位学习能力要求中等，证据关键词包括自驱、学习能力、培训、快速学习、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 44,
+          "level": "medium",
+          "keywords": [
+            "驻场",
+            "责任心",
+            "加班",
+            "抗压",
+            "压力",
+            "高强度"
+          ],
+          "evidence_ratio": 0.355,
+          "evidence_count": 120,
+          "description": "该岗位抗压能力要求中等，证据关键词包括驻场、责任心、加班、抗压、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "团队协作",
+            "协作",
+            "协调",
+            "表达",
+            "汇报",
+            "文档编写",
+            "需求沟通"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 338,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、团队协作、协作、协调、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 44,
+          "level": "medium",
+          "keywords": [
+            "驻场",
+            "工作经验",
+            "实习",
+            "交付",
+            "项目经验",
+            "实际项目",
+            "上线",
+            "实践经验"
+          ],
+          "evidence_ratio": 0.3402,
+          "evidence_count": 115,
+          "description": "该岗位实习能力要求中等，证据关键词包括驻场、工作经验、实习、交付、项目经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 87
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 2
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 89
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 42
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 44
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 89
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 44
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.85
+      }
+    },
+    "Java开发工程师": {
+      "standard_job_name": "Java开发工程师",
+      "sample_count": 265,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 100,
+          "level": "high",
+          "keywords": [
+            "Android开发",
+            "C#开发",
+            "COBOL开发",
+            "C语言开发",
+            "IOS开发",
+            "Java开发",
+            "VB.NET开发",
+            "代码编写",
+            "技术攻关",
+            "技术方案设计",
+            "数据库优化",
+            "测试"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位专业技能要求较高，高频技能包括Android开发、C#开发、COBOL开发、C语言开发、IOS开发。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 74,
+          "level": "medium_high",
+          "keywords": [
+            "日语N3或以上"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位证书要求要求中高，常见证书为日语N3或以上。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "技术攻关",
+            "方案设计",
+            "优化",
+            "算法",
+            "新技术",
+            "研发",
+            "改进",
+            "解决方案"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位创新能力要求较高，证据关键词包括技术攻关、方案设计、优化、算法、新技术。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 44,
+          "level": "medium",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "善于总结",
+            "快速学习",
+            "成长",
+            "自驱",
+            "适应能力"
+          ],
+          "evidence_ratio": 0.3358,
+          "evidence_count": 89,
+          "description": "该岗位学习能力要求中等，证据关键词包括学习能力、培训、善于总结、快速学习、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "心理素质",
+            "责任心",
+            "加班",
+            "压力",
+            "驻场",
+            "承受压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、心理素质、责任心、加班、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "协作",
+            "团队协作",
+            "文档编写",
+            "表达",
+            "需求沟通",
+            "客户对接"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 265,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、协作、团队协作、文档编写。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 39,
+          "level": "medium",
+          "keywords": [
+            "实习",
+            "工作经验",
+            "交付",
+            "项目经验",
+            "上线",
+            "实践经验",
+            "实际项目",
+            "项目实施"
+          ],
+          "evidence_ratio": 0.2679,
+          "evidence_count": 71,
+          "description": "该岗位实习能力要求中等，证据关键词包括实习、工作经验、交付、项目经验、上线。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 100
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 74
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 89
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 44
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 89
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 89
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 39
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.85
+      }
+    },
+    "技术支持工程师": {
+      "standard_job_name": "技术支持工程师",
+      "sample_count": 245,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "产品功能培训",
+            "产品测试与质量控制",
+            "技术方案制定",
+            "故障诊断与排除",
+            "系统集成",
+            "跨部门协调",
+            "软件配置与部署",
+            "需求分析与对接"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 245,
+          "description": "该岗位专业技能要求较高，高频技能包括产品功能培训、产品测试与质量控制、技术方案制定、故障诊断与排除、系统集成。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 4,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0571,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "解决方案",
+            "研发",
+            "优化",
+            "改进",
+            "新技术",
+            "创新",
+            "算法",
+            "方案设计"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 245,
+          "description": "该岗位创新能力要求较高，证据关键词包括解决方案、研发、优化、改进、新技术。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "成长",
+            "学习新技术",
+            "适应能力",
+            "快速学习",
+            "主动学习"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 245,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训、成长、学习新技术、适应能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "责任心",
+            "压力",
+            "加班",
+            "结果导向",
+            "高强度",
+            "心理素质",
+            "驻场"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 245,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、责任心、压力、加班、结果导向。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "跨部门",
+            "团队协作",
+            "协作",
+            "文档编写",
+            "汇报"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 245,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达、跨部门、团队协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "实习",
+            "项目经验",
+            "交付",
+            "工作经验",
+            "项目实施",
+            "上线",
+            "实践经验",
+            "驻场"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 245,
+          "description": "该岗位实习能力要求较高，证据关键词包括实习、项目经验、交付、工作经验、项目实施。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 87
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 4
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 89
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 89
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 89
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 89
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 89
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 1.0
+      }
+    },
+    "C/C++嵌入式软件开发工程师": {
+      "standard_job_name": "C/C++嵌入式软件开发工程师",
+      "sample_count": 238,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 94,
+          "level": "high",
+          "keywords": [
+            "AUTOSAR基础软件平台设计与开发",
+            "C/C++编程",
+            "CAN/LIN/ETH通信协议栈开发",
+            "CPU虚拟化",
+            "信息安全开发",
+            "功能安全开发",
+            "外设虚拟化",
+            "存储协议栈开发",
+            "嵌入式软件开发",
+            "工具链开发",
+            "操作系统开发",
+            "汇编语言"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 238,
+          "description": "该岗位专业技能要求较高，高频技能包括AUTOSAR基础软件平台设计与开发、C/C++编程、CAN/LIN/ETH通信协议栈开发、CPU虚拟化、信息安全开发。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 3,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.042,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "改进",
+            "算法",
+            "优化",
+            "研发",
+            "新技术",
+            "解决方案",
+            "架构设计",
+            "创新"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 238,
+          "description": "该岗位创新能力要求较高，证据关键词包括改进、算法、优化、研发、新技术。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 37,
+          "level": "medium",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "善于总结",
+            "快速学习",
+            "学习新技术",
+            "适应能力",
+            "成长",
+            "自驱"
+          ],
+          "evidence_ratio": 0.2311,
+          "evidence_count": 55,
+          "description": "该岗位学习能力要求中等，证据关键词包括学习能力、培训、善于总结、快速学习、学习新技术。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 33,
+          "level": "low",
+          "keywords": [
+            "责任心",
+            "加班",
+            "压力",
+            "抗压",
+            "结果导向",
+            "心理素质"
+          ],
+          "evidence_ratio": 0.1933,
+          "evidence_count": 46,
+          "description": "该岗位抗压能力要求较低，证据关键词包括责任心、加班、压力、抗压、结果导向。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 53,
+          "level": "medium",
+          "keywords": [
+            "沟通",
+            "协作",
+            "团队协作",
+            "文档编写",
+            "协调",
+            "表达",
+            "汇报",
+            "跨部门"
+          ],
+          "evidence_ratio": 0.4748,
+          "evidence_count": 113,
+          "description": "该岗位沟通能力要求中等，证据关键词包括沟通、协作、团队协作、文档编写、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 36,
+          "level": "medium",
+          "keywords": [
+            "工作经验",
+            "实习",
+            "项目经验",
+            "上线",
+            "实践经验",
+            "交付",
+            "项目实施",
+            "实际项目"
+          ],
+          "evidence_ratio": 0.2185,
+          "evidence_count": 52,
+          "description": "该岗位实习能力要求中等，证据关键词包括工作经验、实习、项目经验、上线、实践经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 94
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 3
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 89
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 37
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 33
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 53
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 36
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 0.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.6
+      }
+    },
+    "实施工程师": {
+      "standard_job_name": "实施工程师",
+      "sample_count": 234,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 100,
+          "level": "high",
+          "keywords": [
+            "产品演示",
+            "客户培训",
+            "数据入库",
+            "数据处理",
+            "数据建库",
+            "数据核查",
+            "文档编写",
+            "软件测试",
+            "软件系统安装部署",
+            "软件维护与更新",
+            "arcgis",
+            "cass"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 234,
+          "description": "该岗位专业技能要求较高，高频技能包括产品演示、客户培训、数据入库、数据处理、数据建库。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 7,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.094,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 47,
+          "level": "medium",
+          "keywords": [
+            "优化",
+            "解决方案",
+            "新技术",
+            "研发",
+            "方案设计",
+            "改进",
+            "建模",
+            "创新"
+          ],
+          "evidence_ratio": 0.3803,
+          "evidence_count": 89,
+          "description": "该岗位创新能力要求中等，证据关键词包括优化、解决方案、新技术、研发、方案设计。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "培训",
+            "勤恳好学",
+            "学习能力",
+            "适应能力",
+            "成长",
+            "快速学习",
+            "学习新技术",
+            "主动学习"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 234,
+          "description": "该岗位学习能力要求较高，证据关键词包括培训、勤恳好学、学习能力、适应能力、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "责任心",
+            "抗压",
+            "压力",
+            "加班",
+            "驻场",
+            "心理素质",
+            "结果导向",
+            "多任务"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 234,
+          "description": "该岗位抗压能力要求较高，证据关键词包括责任心、抗压、压力、加班、驻场。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "团队协作",
+            "文档编写",
+            "协作",
+            "协调",
+            "表达",
+            "汇报",
+            "需求沟通"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 234,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、团队协作、文档编写、协作、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "实习",
+            "项目实施",
+            "交付",
+            "工作经验",
+            "上线",
+            "驻场",
+            "项目经验",
+            "实践经验"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 234,
+          "description": "该岗位实习能力要求较高，证据关键词包括实习、项目实施、交付、工作经验、上线。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 100
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 7
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 47
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 89
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 89
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 89
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 89
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 1.0
+      }
+    },
+    "前端开发工程师": {
+      "standard_job_name": "前端开发工程师",
+      "sample_count": 230,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 19,
+          "level": "low",
+          "keywords": [
+            "HTML/CSS基础",
+            "JavaScript基础",
+            "前端框架开发",
+            "接口联调"
+          ],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位专业技能要求较低，高频技能包括HTML/CSS基础、JavaScript基础、前端框架开发、接口联调。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0087,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 60,
+          "level": "medium_high",
+          "keywords": [
+            "优化",
+            "新技术",
+            "创新",
+            "研发",
+            "改进",
+            "算法",
+            "解决方案",
+            "架构设计"
+          ],
+          "evidence_ratio": 0.5739,
+          "evidence_count": 132,
+          "description": "该岗位创新能力要求中高，证据关键词包括优化、新技术、创新、研发、改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 41,
+          "level": "medium",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "成长",
+            "快速学习",
+            "自驱",
+            "学习新技术",
+            "主动学习",
+            "善于总结"
+          ],
+          "evidence_ratio": 0.287,
+          "evidence_count": 66,
+          "description": "该岗位学习能力要求中等，证据关键词包括学习能力、培训、成长、快速学习、自驱。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 28,
+          "level": "low",
+          "keywords": [
+            "责任心",
+            "抗压",
+            "压力",
+            "加班",
+            "心理素质"
+          ],
+          "evidence_ratio": 0.1565,
+          "evidence_count": 36,
+          "description": "该岗位抗压能力要求较低，证据关键词包括责任心、抗压、压力、加班、心理素质。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 56,
+          "level": "medium_high",
+          "keywords": [
+            "沟通",
+            "协作",
+            "协调",
+            "团队协作",
+            "表达",
+            "文档编写",
+            "跨部门"
+          ],
+          "evidence_ratio": 0.5217,
+          "evidence_count": 120,
+          "description": "该岗位沟通能力要求中高，证据关键词包括沟通、协作、协调、团队协作、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 43,
+          "level": "medium",
+          "keywords": [
+            "工作经验",
+            "项目经验",
+            "实习",
+            "交付",
+            "实际项目",
+            "实践经验",
+            "项目实施",
+            "上线"
+          ],
+          "evidence_ratio": 0.3217,
+          "evidence_count": 74,
+          "description": "该岗位实习能力要求中等，证据关键词包括工作经验、项目经验、实习、交付、实际项目。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 19
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 1
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 60
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 41
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 28
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 56
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 43
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 0.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 0.0,
+        "confidence": 0.35
+      }
+    },
+    "科研人员": {
+      "standard_job_name": "科研人员",
+      "sample_count": 93,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "专利撰写",
+            "人工智能芯片研究",
+            "大数据研究",
+            "科研项目管理",
+            "算法研究",
+            "芯片相关基础软件开发",
+            "英文文献阅读与写作",
+            "高水平论文发表"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 93,
+          "description": "该岗位专业技能要求较高，高频技能包括专利撰写、人工智能芯片研究、大数据研究、科研项目管理、算法研究。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 3,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.043,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 89,
+          "level": "high",
+          "keywords": [
+            "创新",
+            "算法",
+            "研发",
+            "优化",
+            "解决方案",
+            "建模",
+            "新技术",
+            "技术攻关"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 93,
+          "description": "该岗位创新能力要求较高，证据关键词包括创新、算法、研发、优化、解决方案。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 25,
+          "level": "low",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "快速学习",
+            "自驱",
+            "主动学习"
+          ],
+          "evidence_ratio": 0.1183,
+          "evidence_count": 11,
+          "description": "该岗位学习能力要求较低，证据关键词包括学习能力、培训、快速学习、自驱、主动学习。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 34,
+          "level": "low",
+          "keywords": [
+            "责任心",
+            "抗压",
+            "高强度",
+            "压力",
+            "承受压力",
+            "加班",
+            "多任务"
+          ],
+          "evidence_ratio": 0.2043,
+          "evidence_count": 19,
+          "description": "该岗位抗压能力要求较低，证据关键词包括责任心、抗压、高强度、压力、承受压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 88,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "团队协作",
+            "协作",
+            "协调",
+            "表达",
+            "汇报"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 93,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、团队协作、协作、协调、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 33,
+          "level": "low",
+          "keywords": [
+            "项目经验",
+            "工作经验",
+            "实习",
+            "实践经验",
+            "交付",
+            "实际项目"
+          ],
+          "evidence_ratio": 0.1935,
+          "evidence_count": 18,
+          "description": "该岗位实习能力要求较低，证据关键词包括项目经验、工作经验、实习、实践经验、交付。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 89
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 3
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 89
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 25
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 34
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 88
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 33
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 1.0
+      }
+    },
+    "硬件测试工程师": {
+      "standard_job_name": "硬件测试工程师",
+      "sample_count": 92,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "硬件功能测试",
+            "硬件售后维护",
+            "硬件性能测试",
+            "硬件技术支持"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 92,
+          "description": "该岗位专业技能要求较高，高频技能包括硬件功能测试、硬件售后维护、硬件性能测试、硬件技术支持。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 2,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0326,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 47,
+          "level": "medium",
+          "keywords": [
+            "研发",
+            "改进",
+            "新技术",
+            "优化",
+            "方案设计",
+            "解决方案"
+          ],
+          "evidence_ratio": 0.4022,
+          "evidence_count": 37,
+          "description": "该岗位创新能力要求中等，证据关键词包括研发、改进、新技术、优化、方案设计。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 92,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 28,
+          "level": "low",
+          "keywords": [
+            "责任心",
+            "加班",
+            "压力",
+            "抗压"
+          ],
+          "evidence_ratio": 0.1957,
+          "evidence_count": 18,
+          "description": "该岗位抗压能力要求较低，证据关键词包括责任心、加班、压力、抗压。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 47,
+          "level": "medium",
+          "keywords": [
+            "沟通",
+            "协作",
+            "团队协作",
+            "表达",
+            "协调",
+            "汇报",
+            "文档编写"
+          ],
+          "evidence_ratio": 0.3913,
+          "evidence_count": 36,
+          "description": "该岗位沟通能力要求中等，证据关键词包括沟通、协作、团队协作、表达、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 34,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "实习",
+            "交付",
+            "项目经验"
+          ],
+          "evidence_ratio": 0.2826,
+          "evidence_count": 26,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、实习、交付、项目经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 87
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 2
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 47
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 78
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 28
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 47
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 34
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.85
+      }
+    },
+    "商务拓展经理": {
+      "standard_job_name": "商务拓展经理",
+      "sample_count": 42,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 88,
+          "level": "high",
+          "keywords": [
+            "供应商沟通协调",
+            "售后协调跟进",
+            "商务信息收集与整理",
+            "商务文件编制",
+            "报表制作",
+            "标书制作协助",
+            "询价与报价",
+            "采购合同执行与跟踪"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 42,
+          "description": "该岗位专业技能要求较高，高频技能包括供应商沟通协调、售后协调跟进、商务信息收集与整理、商务文件编制、报表制作。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 28,
+          "level": "low",
+          "keywords": [
+            "优化",
+            "创新",
+            "解决方案",
+            "改进"
+          ],
+          "evidence_ratio": 0.2143,
+          "evidence_count": 9,
+          "description": "该岗位创新能力要求较低，证据关键词包括优化、创新、解决方案、改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 39,
+          "level": "medium",
+          "keywords": [
+            "培训",
+            "学习能力",
+            "成长"
+          ],
+          "evidence_ratio": 0.4048,
+          "evidence_count": 17,
+          "description": "该岗位学习能力要求中等，证据关键词包括培训、学习能力、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "压力",
+            "承受压力",
+            "抗压",
+            "责任心",
+            "加班",
+            "高强度"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 42,
+          "description": "该岗位抗压能力要求较高，证据关键词包括压力、承受压力、抗压、责任心、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "协作",
+            "团队协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 42,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达、协作、团队协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 28,
+          "level": "low",
+          "keywords": [
+            "上线",
+            "工作经验",
+            "实习",
+            "项目经验"
+          ],
+          "evidence_ratio": 0.2143,
+          "evidence_count": 9,
+          "description": "该岗位实习能力要求较低，证据关键词包括上线、工作经验、实习、项目经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 88
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 28
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 39
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 87
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 84
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 28
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.794
+      }
+    },
+    "大客户代表": {
+      "standard_job_name": "大客户代表",
+      "sample_count": 35,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 88,
+          "level": "high",
+          "keywords": [
+            "商务谈判",
+            "客户关系维护与开拓",
+            "客户需求分析与整理",
+            "市场与竞品分析",
+            "销售计划制定与实施",
+            "项目运作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 35,
+          "description": "该岗位专业技能要求较高，高频技能包括商务谈判、客户关系维护与开拓、客户需求分析与整理、市场与竞品分析、销售计划制定与实施。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 27,
+          "level": "low",
+          "keywords": [
+            "解决方案",
+            "改进",
+            "创新"
+          ],
+          "evidence_ratio": 0.2286,
+          "evidence_count": 8,
+          "description": "该岗位创新能力要求较低，证据关键词包括解决方案、改进、创新。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 79,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "自驱"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 35,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训、自驱。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 25,
+          "level": "low",
+          "keywords": [
+            "抗压",
+            "责任心",
+            "加班"
+          ],
+          "evidence_ratio": 0.2,
+          "evidence_count": 7,
+          "description": "该岗位抗压能力要求较低，证据关键词包括抗压、责任心、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "跨部门",
+            "协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 35,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达、跨部门、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 31,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "交付",
+            "实习",
+            "实践经验"
+          ],
+          "evidence_ratio": 0.2571,
+          "evidence_count": 9,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、交付、实习、实践经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 88
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 27
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 79
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 25
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 84
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 31
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.745
+      }
+    },
+    "资料管理": {
+      "standard_job_name": "资料管理",
+      "sample_count": 33,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "数据录入",
+            "档案保管",
+            "档案分类",
+            "档案利用",
+            "档案扫描",
+            "档案排序",
+            "档案数字化",
+            "档案整理",
+            "档案著录",
+            "档案装订",
+            "档案销毁",
+            "资料核对"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 33,
+          "description": "该岗位专业技能要求较高，高频技能包括数据录入、档案保管、档案分类、档案利用、档案扫描。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 23,
+          "level": "low",
+          "keywords": [
+            "改进",
+            "优化",
+            "创新"
+          ],
+          "evidence_ratio": 0.1818,
+          "evidence_count": 6,
+          "description": "该岗位创新能力要求较低，证据关键词包括改进、优化、创新。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 17,
+          "level": "low",
+          "keywords": [
+            "培训",
+            "学习能力"
+          ],
+          "evidence_ratio": 0.1212,
+          "evidence_count": 4,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训、学习能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "责任心",
+            "加班",
+            "抗压",
+            "压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 33,
+          "description": "该岗位抗压能力要求较高，证据关键词包括责任心、加班、抗压、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "团队协作",
+            "协作",
+            "协调",
+            "表达"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 33,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、团队协作、协作、协调、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 37,
+          "level": "medium",
+          "keywords": [
+            "工作经验",
+            "交付",
+            "项目经验",
+            "实践经验",
+            "实习"
+          ],
+          "evidence_ratio": 0.303,
+          "evidence_count": 10,
+          "description": "该岗位实习能力要求中等，证据关键词包括工作经验、交付、项目经验、实践经验、实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 86
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 23
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 17
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 82
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 84
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 37
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.731
+      }
+    },
+    "项目专员/助理": {
+      "standard_job_name": "项目专员/助理",
+      "sample_count": 32,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "启机调试",
+            "客户关系维护",
+            "应用程序开发",
+            "技术呼叫支持",
+            "现场培训支持",
+            "系统升级",
+            "系统故障排查",
+            "系统维护",
+            "销售机会挖掘",
+            "项目管理流程执行",
+            "DeltaV系统",
+            "全球服务中心（GSC）支持系统"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 32,
+          "description": "该岗位专业技能要求较高，高频技能包括启机调试、客户关系维护、应用程序开发、技术呼叫支持、现场培训支持。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "相关产品技术认证"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 32,
+          "description": "该岗位证书要求要求较高，常见证书为相关产品技术认证。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 39,
+          "level": "medium",
+          "keywords": [
+            "研发",
+            "解决方案",
+            "改进",
+            "优化",
+            "建模"
+          ],
+          "evidence_ratio": 0.3438,
+          "evidence_count": 11,
+          "description": "该岗位创新能力要求中等，证据关键词包括研发、解决方案、改进、优化、建模。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "自驱",
+            "主动学习",
+            "成长"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 32,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训、自驱、主动学习、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 43,
+          "level": "medium",
+          "keywords": [
+            "责任心",
+            "压力",
+            "多任务",
+            "加班",
+            "抗压",
+            "高强度",
+            "心理素质"
+          ],
+          "evidence_ratio": 0.3438,
+          "evidence_count": 11,
+          "description": "该岗位抗压能力要求中等，证据关键词包括责任心、压力、多任务、加班、抗压。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "团队协作",
+            "协作",
+            "表达",
+            "汇报",
+            "需求沟通",
+            "跨部门"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 32,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、团队协作、协作、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "实习",
+            "实践经验",
+            "交付",
+            "工作经验",
+            "项目实施",
+            "项目经验"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 32,
+          "description": "该岗位实习能力要求较高，证据关键词包括实习、实践经验、交付、工作经验、项目实施。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 86
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 78
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 39
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 84
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 43
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 87
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 86
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.874
+      }
+    },
+    "档案管理": {
+      "standard_job_name": "档案管理",
+      "sample_count": 31,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "档案扫描与图像处理",
+            "档案整理与分类",
+            "档案著录与信息录入",
+            "档案装订与保管",
+            "Office办公软件",
+            "计算机"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 31,
+          "description": "该岗位专业技能要求较高，高频技能包括档案扫描与图像处理、档案整理与分类、档案著录与信息录入、档案装订与保管、Office办公软件。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 8,
+          "level": "low",
+          "keywords": [
+            "改进"
+          ],
+          "evidence_ratio": 0.0323,
+          "evidence_count": 1,
+          "description": "该岗位创新能力要求较低，证据关键词包括改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 76,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 31,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 79,
+          "level": "high",
+          "keywords": [
+            "责任心",
+            "压力",
+            "加班"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 31,
+          "description": "该岗位抗压能力要求较高，证据关键词包括责任心、压力、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 38,
+          "level": "medium",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "跨部门",
+            "协作",
+            "汇报"
+          ],
+          "evidence_ratio": 0.2903,
+          "evidence_count": 9,
+          "description": "该岗位沟通能力要求中等，证据关键词包括沟通、协调、表达、跨部门、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 33,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "交付",
+            "实习"
+          ],
+          "evidence_ratio": 0.3226,
+          "evidence_count": 10,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、交付、实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 86
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 8
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 76
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 79
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 38
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 33
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.717
+      }
+    },
+    "商务专员": {
+      "standard_job_name": "商务专员",
+      "sample_count": 26,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "商务谈判",
+            "客户关系管理",
+            "市场分析与判断",
+            "招投标流程管理",
+            "标书编制",
+            "渠道拓展与维护",
+            "网络营销知识",
+            "订单跟进与处理",
+            "Office办公软件"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 26,
+          "description": "该岗位专业技能要求较高，高频技能包括商务谈判、客户关系管理、市场分析与判断、招投标流程管理、标书编制。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 3,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0385,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 29,
+          "level": "low",
+          "keywords": [
+            "解决方案",
+            "创新",
+            "新技术",
+            "研发"
+          ],
+          "evidence_ratio": 0.2308,
+          "evidence_count": 6,
+          "description": "该岗位创新能力要求较低，证据关键词包括解决方案、创新、新技术、研发。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 29,
+          "level": "low",
+          "keywords": [
+            "培训",
+            "学习能力",
+            "主动学习",
+            "成长"
+          ],
+          "evidence_ratio": 0.2308,
+          "evidence_count": 6,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训、学习能力、主动学习、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "加班",
+            "责任心",
+            "压力",
+            "抗压"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 26,
+          "description": "该岗位抗压能力要求较高，证据关键词包括加班、责任心、压力、抗压。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "团队协作",
+            "协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 26,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达、团队协作、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 34,
+          "level": "low",
+          "keywords": [
+            "实习",
+            "工作经验",
+            "交付"
+          ],
+          "evidence_ratio": 0.3462,
+          "evidence_count": 9,
+          "description": "该岗位实习能力要求较低，证据关键词包括实习、工作经验、交付。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 85
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 3
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 29
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 29
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 81
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 84
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 34
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.682
+      }
+    },
+    "日语翻译": {
+      "standard_job_name": "日语翻译",
+      "sample_count": 25,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "ID管理",
+            "IT系统监控与异常处理",
+            "技术问题解答",
+            "文档翻译与本地化",
+            "日语听说读写能力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 25,
+          "description": "该岗位专业技能要求较高，高频技能包括ID管理、IT系统监控与异常处理、技术问题解答、文档翻译与本地化、日语听说读写能力。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "日语能力测试N1级"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 25,
+          "description": "该岗位证书要求要求较高，常见证书为日语能力测试N1级。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 14,
+          "level": "low",
+          "keywords": [
+            "解决方案"
+          ],
+          "evidence_ratio": 0.12,
+          "evidence_count": 3,
+          "description": "该岗位创新能力要求较低，证据关键词包括解决方案。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 79,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "成长"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 25,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "责任心",
+            "加班",
+            "压力",
+            "承受压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 25,
+          "description": "该岗位抗压能力要求较高，证据关键词包括责任心、加班、压力、承受压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "团队协作",
+            "协作",
+            "汇报",
+            "表达"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 25,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、团队协作、协作、汇报、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 19,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "实习"
+          ],
+          "evidence_ratio": 0.16,
+          "evidence_count": 4,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 87
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 78
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 14
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 79
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 81
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 84
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 19
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.675
+      }
+    },
+    "内容审核专员": {
+      "standard_job_name": "内容审核专员",
+      "sample_count": 22,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "内容审核",
+            "平台规则理解",
+            "政治敏感信息识别",
+            "违规信息识别"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位专业技能要求较高，高频技能包括内容审核、平台规则理解、政治敏感信息识别、违规信息识别。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 26,
+          "level": "low",
+          "keywords": [
+            "优化",
+            "创新",
+            "改进"
+          ],
+          "evidence_ratio": 0.2273,
+          "evidence_count": 5,
+          "description": "该岗位创新能力要求较低，证据关键词包括优化、创新、改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "培训",
+            "学习能力",
+            "成长",
+            "快速学习",
+            "适应能力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位学习能力要求较高，证据关键词包括培训、学习能力、成长、快速学习、适应能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "责任心",
+            "加班",
+            "压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、责任心、加班、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "团队协作",
+            "协作",
+            "沟通",
+            "协调",
+            "表达",
+            "跨部门"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位沟通能力要求较高，证据关键词包括团队协作、协作、沟通、协调、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 35,
+          "level": "medium",
+          "keywords": [
+            "工作经验",
+            "实习",
+            "交付"
+          ],
+          "evidence_ratio": 0.3636,
+          "evidence_count": 8,
+          "description": "该岗位实习能力要求中等，证据关键词包括工作经验、实习、交付。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 85
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 26
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 84
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 81
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 86
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 35
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.654
+      }
+    },
+    "招聘专员助理": {
+      "standard_job_name": "招聘专员助理",
+      "sample_count": 22,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "人才搜寻与评估",
+            "候选人管理",
+            "招聘市场调研",
+            "招聘数据分析",
+            "招聘流程优化",
+            "简历筛选",
+            "面试安排与协调",
+            "招聘网站",
+            "数据分析工具",
+            "社交媒体招聘渠道"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位专业技能要求较高，高频技能包括人才搜寻与评估、候选人管理、招聘市场调研、招聘数据分析、招聘流程优化。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 79,
+          "level": "high",
+          "keywords": [
+            "优化",
+            "创新",
+            "解决方案"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位创新能力要求较高，证据关键词包括优化、创新、解决方案。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 29,
+          "level": "low",
+          "keywords": [
+            "培训",
+            "成长",
+            "学习能力",
+            "自驱"
+          ],
+          "evidence_ratio": 0.2273,
+          "evidence_count": 5,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训、成长、学习能力、自驱。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 38,
+          "level": "medium",
+          "keywords": [
+            "多任务",
+            "抗压",
+            "压力",
+            "加班"
+          ],
+          "evidence_ratio": 0.3636,
+          "evidence_count": 8,
+          "description": "该岗位抗压能力要求中等，证据关键词包括多任务、抗压、压力、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "团队协作",
+            "协作",
+            "表达",
+            "汇报"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、团队协作、协作、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 45,
+          "level": "medium",
+          "keywords": [
+            "工作经验",
+            "实习",
+            "交付"
+          ],
+          "evidence_ratio": 0.5,
+          "evidence_count": 11,
+          "description": "该岗位实习能力要求中等，证据关键词包括工作经验、实习、交付。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 87
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 79
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 29
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 38
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 86
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 45
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.654
+      }
+    },
+    "管培生/储备干部": {
+      "standard_job_name": "管培生/储备干部",
+      "sample_count": 22,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "业务拓展计划制定",
+            "供应链交付管理",
+            "客户开发",
+            "客户维护",
+            "解决方案制作",
+            "资源协调",
+            "销售目标达成"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位专业技能要求较高，高频技能包括业务拓展计划制定、供应链交付管理、客户开发、客户维护、解决方案制作。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 3,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0455,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "解决方案",
+            "优化",
+            "创新",
+            "研发",
+            "改进"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位创新能力要求较高，证据关键词包括解决方案、优化、创新、研发、改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "成长",
+            "主动学习"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训、成长、主动学习。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "责任心",
+            "压力",
+            "加班",
+            "承受压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、责任心、压力、加班、承受压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "团队协作",
+            "协作",
+            "表达",
+            "汇报"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、团队协作、协作、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "交付",
+            "工作经验",
+            "实习",
+            "业务实践",
+            "实践经验"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 22,
+          "description": "该岗位实习能力要求较高，证据关键词包括交付、工作经验、实习、业务实践、实践经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 87
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 3
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 84
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 81
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 84
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 86
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 84
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.654
+      }
+    },
+    "游戏运营": {
+      "standard_job_name": "游戏运营",
+      "sample_count": 21,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 99,
+          "level": "high",
+          "keywords": [
+            "内容运营",
+            "市场推广",
+            "数据分析",
+            "活动策划与执行",
+            "游戏版本管理",
+            "用户运营",
+            "社区管理",
+            "竞品分析",
+            "需求分析",
+            "项目管理",
+            "Office办公软件",
+            "数据分析工具（如Excel、SQL、Tableau）"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 21,
+          "description": "该岗位专业技能要求较高，高频技能包括内容运营、市场推广、数据分析、活动策划与执行、游戏版本管理。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "创新",
+            "优化",
+            "解决方案",
+            "改进"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 21,
+          "description": "该岗位创新能力要求较高，证据关键词包括创新、优化、解决方案、改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 79,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "快速学习"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 21,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训、快速学习。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "责任心",
+            "加班",
+            "压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 21,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、责任心、加班、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "协作",
+            "团队协作",
+            "表达"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 21,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、协作、团队协作、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "实习",
+            "项目经验",
+            "工作经验",
+            "上线",
+            "交付"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 21,
+          "description": "该岗位实习能力要求较高，证据关键词包括实习、项目经验、工作经验、上线、交付。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 99
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 81
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 79
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 81
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 84
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 84
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.797
+      }
+    },
+    "电话销售": {
+      "standard_job_name": "电话销售",
+      "sample_count": 18,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "客户关系维护",
+            "客户需求挖掘与分析",
+            "市场分析",
+            "电话沟通技巧",
+            "销售目标达成",
+            "销售话术设计",
+            "CRM客户关系管理系统",
+            "办公软件",
+            "电话系统"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位专业技能要求较高，高频技能包括客户关系维护、客户需求挖掘与分析、市场分析、电话沟通技巧、销售目标达成。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 19,
+          "level": "low",
+          "keywords": [
+            "解决方案",
+            "优化"
+          ],
+          "evidence_ratio": 0.1667,
+          "evidence_count": 3,
+          "description": "该岗位创新能力要求较低，证据关键词包括解决方案、优化。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 29,
+          "level": "low",
+          "keywords": [
+            "培训",
+            "成长",
+            "学习能力"
+          ],
+          "evidence_ratio": 0.2778,
+          "evidence_count": 5,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训、成长、学习能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "高强度",
+            "加班"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、高强度、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "表达",
+            "团队协作",
+            "协作",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、表达、团队协作、协作、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 23,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "实习"
+          ],
+          "evidence_ratio": 0.2222,
+          "evidence_count": 4,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 84
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 19
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 29
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 78
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 83
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 23
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.626
+      }
+    },
+    "运营助理/专员": {
+      "standard_job_name": "运营助理/专员",
+      "sample_count": 18,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "O2O平台运作",
+            "商家沟通与拓展",
+            "店铺问题解决",
+            "数据分析",
+            "运营策略制定"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位专业技能要求较高，高频技能包括O2O平台运作、商家沟通与拓展、店铺问题解决、数据分析、运营策略制定。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 28,
+          "level": "low",
+          "keywords": [
+            "CET-4",
+            "企业账号认证",
+            "持有证券从业资格证"
+          ],
+          "evidence_ratio": 0.2222,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为CET-4、企业账号认证、持有证券从业资格证。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 39,
+          "level": "medium",
+          "keywords": [
+            "优化",
+            "创新",
+            "改进",
+            "方案设计"
+          ],
+          "evidence_ratio": 0.3889,
+          "evidence_count": 7,
+          "description": "该岗位创新能力要求中等，证据关键词包括优化、创新、改进、方案设计。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "培训",
+            "成长",
+            "学习能力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位学习能力要求较高，证据关键词包括培训、成长、学习能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "责任心",
+            "加班",
+            "压力",
+            "抗压"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位抗压能力要求较高，证据关键词包括责任心、加班、压力、抗压。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协作",
+            "汇报",
+            "协调",
+            "跨部门",
+            "团队协作",
+            "表达"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协作、汇报、协调、跨部门。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 29,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "实习",
+            "交付"
+          ],
+          "evidence_ratio": 0.2778,
+          "evidence_count": 5,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、实习、交付。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 86
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 28
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 39
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 78
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 81
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 87
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 29
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.776
+      }
+    },
+    "项目经理/主管": {
+      "standard_job_name": "项目经理/主管",
+      "sample_count": 18,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "商务谈判",
+            "团队协调",
+            "客户需求对接",
+            "技术交流",
+            "技术跟踪",
+            "招投标支持",
+            "方案设计",
+            "需求分析"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位专业技能要求较高，高频技能包括商务谈判、团队协调、客户需求对接、技术交流、技术跟踪。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 23,
+          "level": "low",
+          "keywords": [
+            "PMP"
+          ],
+          "evidence_ratio": 0.2778,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为PMP。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "方案设计",
+            "新技术",
+            "研发",
+            "解决方案",
+            "改进"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位创新能力要求较高，证据关键词包括方案设计、新技术、研发、解决方案、改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 46,
+          "level": "medium",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "成长",
+            "适应能力",
+            "自驱"
+          ],
+          "evidence_ratio": 0.4444,
+          "evidence_count": 8,
+          "description": "该岗位学习能力要求中等，证据关键词包括学习能力、培训、成长、适应能力、自驱。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "心理素质",
+            "责任心",
+            "加班",
+            "结果导向",
+            "压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、心理素质、责任心、加班、结果导向。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 87,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "需求沟通",
+            "表达",
+            "协作",
+            "团队协作",
+            "汇报",
+            "客户对接"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 18,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、需求沟通、表达、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 59,
+          "level": "medium_high",
+          "keywords": [
+            "交付",
+            "工作经验",
+            "项目实施",
+            "上线",
+            "实习",
+            "业务实践"
+          ],
+          "evidence_ratio": 0.6111,
+          "evidence_count": 11,
+          "description": "该岗位实习能力要求中高，证据关键词包括交付、工作经验、项目实施、上线、实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 86
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 23
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 83
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 46
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 86
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 87
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 59
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.626
+      }
+    },
+    "项目招投标专员": {
+      "standard_job_name": "项目招投标专员",
+      "sample_count": 14,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "保证金管理",
+            "商务文件编制",
+            "招投标流程与操作规范",
+            "档案资料管理",
+            "资质文件整理"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 14,
+          "description": "该岗位专业技能要求较高，高频技能包括保证金管理、商务文件编制、招投标流程与操作规范、档案资料管理、资质文件整理。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 18,
+          "level": "low",
+          "keywords": [
+            "负责公司资质证书",
+            "负责资质证书"
+          ],
+          "evidence_ratio": 0.1429,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为负责公司资质证书、负责资质证书。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 17,
+          "level": "low",
+          "keywords": [
+            "新技术",
+            "改进"
+          ],
+          "evidence_ratio": 0.1429,
+          "evidence_count": 2,
+          "description": "该岗位创新能力要求较低，证据关键词包括新技术、改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 25,
+          "level": "low",
+          "keywords": [
+            "培训",
+            "学习能力",
+            "成长"
+          ],
+          "evidence_ratio": 0.2143,
+          "evidence_count": 3,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训、学习能力、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 22,
+          "level": "low",
+          "keywords": [
+            "责任心",
+            "压力"
+          ],
+          "evidence_ratio": 0.2143,
+          "evidence_count": 3,
+          "description": "该岗位抗压能力要求较低，证据关键词包括责任心、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "团队协作",
+            "协作",
+            "表达",
+            "汇报"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 14,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、团队协作、协作、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 17,
+          "level": "low",
+          "keywords": [
+            "实习",
+            "工作经验"
+          ],
+          "evidence_ratio": 0.1429,
+          "evidence_count": 2,
+          "description": "该岗位实习能力要求较低，证据关键词包括实习、工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 86
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 18
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 17
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 25
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 22
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 86
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 17
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.598
+      }
+    },
+    "法务专员助理": {
+      "standard_job_name": "法务专员助理",
+      "sample_count": 12,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "劳动人事调解仲裁法",
+            "劳动合同法",
+            "劳动法",
+            "合同审查",
+            "案件跟进",
+            "民事诉讼法",
+            "民商法",
+            "法律咨询解答",
+            "法律基础知识",
+            "法律指引",
+            "法律文书撰写与整理",
+            "诉讼准备"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 12,
+          "description": "该岗位专业技能要求较高，高频技能包括劳动人事调解仲裁法、劳动合同法、劳动法、合同审查、案件跟进。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 27,
+          "level": "low",
+          "keywords": [
+            "创新",
+            "解决方案",
+            "架构设计"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 3,
+          "description": "该岗位创新能力要求较低，证据关键词包括创新、解决方案、架构设计。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 25,
+          "level": "low",
+          "keywords": [
+            "培训",
+            "适应能力"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 3,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训、适应能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 58,
+          "level": "medium_high",
+          "keywords": [
+            "责任心",
+            "加班",
+            "抗压",
+            "压力"
+          ],
+          "evidence_ratio": 0.6667,
+          "evidence_count": 8,
+          "description": "该岗位抗压能力要求中高，证据关键词包括责任心、加班、抗压、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "团队协作",
+            "协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 12,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达、团队协作、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 25,
+          "level": "low",
+          "keywords": [
+            "实习",
+            "工作经验"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 3,
+          "description": "该岗位实习能力要求较低，证据关键词包括实习、工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 85
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 27
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 25
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 58
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 83
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 25
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.584
+      }
+    },
+    "电话客服": {
+      "standard_job_name": "电话客服",
+      "sample_count": 12,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "业务知识掌握",
+            "信息收集与录入",
+            "工单处理",
+            "应变能力",
+            "普通话标准",
+            "沟通能力",
+            "话术熟记",
+            "语言表达",
+            "外呼系统",
+            "工单系统"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 12,
+          "description": "该岗位专业技能要求较高，高频技能包括业务知识掌握、信息收集与录入、工单处理、应变能力、普通话标准。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 3,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 76,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 12,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 35,
+          "level": "medium",
+          "keywords": [
+            "压力",
+            "责任心",
+            "抗压",
+            "加班"
+          ],
+          "evidence_ratio": 0.3333,
+          "evidence_count": 4,
+          "description": "该岗位抗压能力要求中等，证据关键词包括压力、责任心、抗压、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "表达",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 12,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、表达、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 25,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "实习"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 3,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 85
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 3
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 76
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 35
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 78
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 25
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.584
+      }
+    },
+    "网络客服": {
+      "standard_job_name": "网络客服",
+      "sample_count": 12,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "商家入驻后问题处理",
+            "客户问题处理",
+            "打字速度不低于40字/分钟"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 12,
+          "description": "该岗位专业技能要求较高，高频技能包括商家入驻后问题处理、客户问题处理、打字速度不低于40字/分钟。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 10,
+          "level": "low",
+          "keywords": [
+            "CET-4"
+          ],
+          "evidence_ratio": 0.0833,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为CET-4。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 30,
+          "level": "low",
+          "keywords": [
+            "优化",
+            "改进",
+            "解决方案",
+            "创新"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 3,
+          "description": "该岗位创新能力要求较低，证据关键词包括优化、改进、解决方案、创新。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 76,
+          "level": "high",
+          "keywords": [
+            "培训",
+            "学习能力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 12,
+          "description": "该岗位学习能力要求较高，证据关键词包括培训、学习能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 27,
+          "level": "low",
+          "keywords": [
+            "加班",
+            "压力",
+            "责任心"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 3,
+          "description": "该岗位抗压能力要求较低，证据关键词包括加班、压力、责任心。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "表达",
+            "沟通",
+            "团队协作",
+            "协作",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 12,
+          "description": "该岗位沟通能力要求较高，证据关键词包括表达、沟通、团队协作、协作、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 25,
+          "level": "low",
+          "keywords": [
+            "实习",
+            "工作经验"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 3,
+          "description": "该岗位实习能力要求较低，证据关键词包括实习、工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 82
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 10
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 30
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 76
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 27
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 83
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 25
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.584
+      }
+    },
+    "产品专员助理": {
+      "standard_job_name": "产品专员助理",
+      "sample_count": 11,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "产品生命周期管理",
+            "产品策划",
+            "市场调查",
+            "数据分析",
+            "新品开发",
+            "流行趋势分析",
+            "用户需求分析",
+            "AI",
+            "PS"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位专业技能要求较高，高频技能包括产品生命周期管理、产品策划、市场调查、数据分析、新品开发。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 80,
+          "level": "high",
+          "keywords": [
+            "研发",
+            "创新",
+            "优化",
+            "解决方案"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位创新能力要求较高，证据关键词包括研发、创新、优化、解决方案。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 32,
+          "level": "low",
+          "keywords": [
+            "责任心",
+            "压力"
+          ],
+          "evidence_ratio": 0.3636,
+          "evidence_count": 4,
+          "description": "该岗位抗压能力要求较低，证据关键词包括责任心、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 86,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "协作",
+            "团队协作",
+            "汇报",
+            "跨部门",
+            "文档编写"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达、协作、团队协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 29,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "交付",
+            "实际项目"
+          ],
+          "evidence_ratio": 0.2727,
+          "evidence_count": 3,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、交付、实际项目。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 85
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 80
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 75
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 32
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 86
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 29
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.577
+      }
+    },
+    "咨询顾问": {
+      "standard_job_name": "咨询顾问",
+      "sample_count": 11,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 92,
+          "level": "high",
+          "keywords": [
+            "可行性研究",
+            "客户需求分析",
+            "市场调研",
+            "报告撰写",
+            "政策研究与分析",
+            "数据分析",
+            "绩效评价",
+            "行业研究",
+            "项目管理基础",
+            "项目评估与评审",
+            "Office办公软件（Word, Excel, PowerPoint）",
+            "数据分析工具（如SPSS, Stata）"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位专业技能要求较高，高频技能包括可行性研究、客户需求分析、市场调研、报告撰写、政策研究与分析。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "PMP项目管理专业人士资格认证",
+            "咨询工程师（投资）",
+            "注册咨询工程师"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位证书要求要求较高，常见证书为PMP项目管理专业人士资格认证、咨询工程师（投资）、注册咨询工程师。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 41,
+          "level": "medium",
+          "keywords": [
+            "创新",
+            "解决方案",
+            "新技术"
+          ],
+          "evidence_ratio": 0.4545,
+          "evidence_count": 5,
+          "description": "该岗位创新能力要求中等，证据关键词包括创新、解决方案、新技术。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "快速学习",
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、快速学习、培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "加班"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "团队协作",
+            "协作",
+            "汇报"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达、团队协作、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 80,
+          "level": "high",
+          "keywords": [
+            "实习",
+            "项目经验",
+            "工作经验",
+            "项目经历"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位实习能力要求较高，证据关键词包括实习、项目经验、工作经验、项目经历。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 92
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 82
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 41
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 78
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 75
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 85
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 80
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.727
+      }
+    },
+    "统计员": {
+      "standard_job_name": "统计员",
+      "sample_count": 11,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "会议组织安排",
+            "文件处理",
+            "文档排版",
+            "账单处理",
+            "邮件处理与归档",
+            "办公软件"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位专业技能要求较高，高频技能包括会议组织安排、文件处理、文档排版、账单处理、邮件处理与归档。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 10,
+          "level": "low",
+          "keywords": [
+            "公司资质证书及人员证书"
+          ],
+          "evidence_ratio": 0.0909,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为公司资质证书及人员证书。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 11,
+          "level": "low",
+          "keywords": [
+            "解决方案"
+          ],
+          "evidence_ratio": 0.0909,
+          "evidence_count": 1,
+          "description": "该岗位创新能力要求较低，证据关键词包括解决方案。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "适应能力",
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、适应能力、培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 80,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "加班",
+            "责任心",
+            "压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、加班、责任心、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "团队协作",
+            "协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达、团队协作、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 32,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "实习"
+          ],
+          "evidence_ratio": 0.3636,
+          "evidence_count": 4,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 85
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 10
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 11
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 78
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 80
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 83
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 32
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.577
+      }
+    },
+    "英语翻译": {
+      "standard_job_name": "英语翻译",
+      "sample_count": 11,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "业务分类标注",
+            "产品优化建议收集",
+            "产品功能问题识别",
+            "用户反馈监控与分析",
+            "用户需求挖掘",
+            "英文读写能力",
+            "电脑办公软件"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位专业技能要求较高，高频技能包括业务分类标注、产品优化建议收集、产品功能问题识别、用户反馈监控与分析、用户需求挖掘。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 45,
+          "level": "medium",
+          "keywords": [
+            "CET-6",
+            "负责组织培训认证",
+            "CET-4",
+            "有口译证书",
+            "有英语或专业英语相关等级证书"
+          ],
+          "evidence_ratio": 0.3636,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求中等，常见证书为CET-6、负责组织培训认证、CET-4、有口译证书、有英语或专业英语相关等级证书。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 80,
+          "level": "high",
+          "keywords": [
+            "优化",
+            "创新",
+            "改进",
+            "解决方案"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位创新能力要求较高，证据关键词包括优化、创新、改进、解决方案。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 41,
+          "level": "medium",
+          "keywords": [
+            "培训",
+            "学习能力",
+            "成长"
+          ],
+          "evidence_ratio": 0.4545,
+          "evidence_count": 5,
+          "description": "该岗位学习能力要求中等，证据关键词包括培训、学习能力、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "责任心",
+            "加班"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、责任心、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "团队协作",
+            "协作",
+            "协调",
+            "表达"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 11,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、团队协作、协作、协调、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 30,
+          "level": "low",
+          "keywords": [
+            "工作经验"
+          ],
+          "evidence_ratio": 0.3636,
+          "evidence_count": 4,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 85
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 45
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 80
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 41
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 78
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 83
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 30
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.577
+      }
+    },
+    "售后客服": {
+      "standard_job_name": "售后客服",
+      "sample_count": 10,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "业务协调",
+            "业务流程讲解",
+            "客户关系管理",
+            "客户沟通与安抚",
+            "客户线索开发转化",
+            "客户维护与激活",
+            "数据填报",
+            "问题解决",
+            "CRM系统",
+            "买家开发App"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 10,
+          "description": "该岗位专业技能要求较高，高频技能包括业务协调、业务流程讲解、客户关系管理、客户沟通与安抚、客户线索开发转化。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 2,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 18,
+          "level": "low",
+          "keywords": [
+            "培训"
+          ],
+          "evidence_ratio": 0.2,
+          "evidence_count": 2,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 12,
+          "level": "low",
+          "keywords": [
+            "责任心"
+          ],
+          "evidence_ratio": 0.1,
+          "evidence_count": 1,
+          "description": "该岗位抗压能力要求较低，证据关键词包括责任心。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 10,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 21,
+          "level": "low",
+          "keywords": [
+            "工作经验",
+            "实习"
+          ],
+          "evidence_ratio": 0.2,
+          "evidence_count": 2,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验、实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 83
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 2
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 18
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 12
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 78
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 21
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.57
+      }
+    },
+    "广告销售": {
+      "standard_job_name": "广告销售",
+      "sample_count": 10,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "商务沟通",
+            "客户关系管理",
+            "客户开发与维护",
+            "市场分析与洞察",
+            "广告产品知识",
+            "销售目标达成",
+            "销售谈判技巧",
+            "CRM系统",
+            "公司内部销售平台",
+            "办公软件（如Office）"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 10,
+          "description": "该岗位专业技能要求较高，高频技能包括商务沟通、客户关系管理、客户开发与维护、市场分析与洞察、广告产品知识。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 11,
+          "level": "low",
+          "keywords": [
+            "CET-4"
+          ],
+          "evidence_ratio": 0.1,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为CET-4。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 12,
+          "level": "low",
+          "keywords": [
+            "优化"
+          ],
+          "evidence_ratio": 0.1,
+          "evidence_count": 1,
+          "description": "该岗位创新能力要求较低，证据关键词包括优化。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "成长"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 10,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训、成长。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "压力",
+            "责任心"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 10,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、压力、责任心。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "表达",
+            "团队协作",
+            "协作",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 10,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、表达、团队协作、协作、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "实习",
+            "工作经验"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 10,
+          "description": "该岗位实习能力要求较高，证据关键词包括实习、工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 83
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 11
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 12
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 78
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 78
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 83
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 75
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.72
+      }
+    },
+    "APP推广专员": {
+      "standard_job_name": "APP推广专员",
+      "sample_count": 9,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "地推执行",
+            "客户引导注册",
+            "社区/商圈推广",
+            "门店配送（部分样本）"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 9,
+          "description": "该岗位专业技能要求较高，高频技能包括地推执行、客户引导注册、社区/商圈推广、门店配送（部分样本）。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 2,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 27,
+          "level": "low",
+          "keywords": [
+            "培训"
+          ],
+          "evidence_ratio": 0.3333,
+          "evidence_count": 3,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 2,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位抗压能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "团队协作",
+            "协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 9,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、团队协作、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 2,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位实习能力要求较低，证据关键词包括暂无明确记录。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 83
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 2
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 27
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 2
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 78
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 2
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.563
+      }
+    },
+    "质量管理/测试工程师": {
+      "standard_job_name": "质量管理/测试工程师",
+      "sample_count": 9,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "KPI管控",
+            "培训与指导",
+            "数据分析",
+            "时效管理",
+            "服务质量管理",
+            "标准制定与落地",
+            "流程优化",
+            "质量监控",
+            "问题分析与解决",
+            "信息化监控工具",
+            "数据分析工具",
+            "菜鸟系统"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 9,
+          "description": "该岗位专业技能要求较高，高频技能包括KPI管控、培训与指导、数据分析、时效管理、服务质量管理。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "优化",
+            "解决方案"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 9,
+          "description": "该岗位创新能力要求较高，证据关键词包括优化、解决方案。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 73,
+          "level": "medium_high",
+          "keywords": [
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 9,
+          "description": "该岗位学习能力要求中高，证据关键词包括培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "责任心",
+            "加班"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 9,
+          "description": "该岗位抗压能力要求较高，证据关键词包括责任心、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "团队协作",
+            "协作",
+            "客户对接"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 9,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、团队协作、协作、客户对接。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 2,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位实习能力要求较低，证据关键词包括暂无明确记录。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 85
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 75
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 73
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 75
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 83
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 2
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.563
+      }
+    },
+    "总经理助理/CEO助理/董事长助理": {
+      "standard_job_name": "总经理助理/CEO助理/董事长助理",
+      "sample_count": 8,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "业务推进与跟进",
+            "产品演示与讲解",
+            "数据汇报与分析",
+            "文件起草与归档",
+            "日程安排",
+            "跨部门协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 8,
+          "description": "该岗位专业技能要求较高，高频技能包括业务推进与跟进、产品演示与讲解、数据汇报与分析、文件起草与归档、日程安排。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 2,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 8,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 13,
+          "level": "low",
+          "keywords": [
+            "加班"
+          ],
+          "evidence_ratio": 0.125,
+          "evidence_count": 1,
+          "description": "该岗位抗压能力要求较低，证据关键词包括加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "跨部门",
+            "汇报",
+            "协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 8,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、跨部门、汇报、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 13,
+          "level": "low",
+          "keywords": [
+            "工作经验"
+          ],
+          "evidence_ratio": 0.125,
+          "evidence_count": 1,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 82
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 2
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 75
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 13
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 83
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 13
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.556
+      }
+    },
+    "猎头顾问": {
+      "standard_job_name": "猎头顾问",
+      "sample_count": 8,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "人才寻访与甄选",
+            "商务谈判",
+            "客户关系管理",
+            "客户需求分析",
+            "招聘流程管理",
+            "行业与市场分析",
+            "销售技巧",
+            "面试与评估",
+            "ATS（申请人跟踪系统）",
+            "CRM（客户关系管理）系统",
+            "办公软件（Word, Excel, PowerPoint）",
+            "招聘网站（如猎聘、智联、LinkedIn）"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 8,
+          "description": "该岗位专业技能要求较高，高频技能包括人才寻访与甄选、商务谈判、客户关系管理、客户需求分析、招聘流程管理。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 13,
+          "level": "low",
+          "keywords": [
+            "有家庭教育指导师资质认证"
+          ],
+          "evidence_ratio": 0.125,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为有家庭教育指导师资质认证。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 27,
+          "level": "low",
+          "keywords": [
+            "解决方案",
+            "优化",
+            "改进"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 2,
+          "description": "该岗位创新能力要求较低，证据关键词包括解决方案、优化、改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 80,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "成长",
+            "培训",
+            "适应能力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 8,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、成长、培训、适应能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 80,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "责任心",
+            "压力",
+            "加班"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 8,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、责任心、压力、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 85,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "表达",
+            "团队协作",
+            "协作",
+            "汇报",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 8,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、表达、团队协作、协作、汇报。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "实习",
+            "工作经验"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 8,
+          "description": "该岗位实习能力要求较高，证据关键词包括实习、工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 82
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 13
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 27
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 80
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 80
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 85
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 75
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.706
+      }
+    },
+    "培训师": {
+      "standard_job_name": "培训师",
+      "sample_count": 7,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "培训效果评估",
+            "培训需求分析",
+            "培训项目管理",
+            "新人入职培训",
+            "演讲与表达",
+            "经验萃取与知识管理",
+            "话术设计与优化",
+            "课程设计与开发",
+            "PPT/Keynote",
+            "在线学习平台",
+            "视频会议系统",
+            "课程开发工具"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位专业技能要求较高，高频技能包括培训效果评估、培训需求分析、培训项目管理、新人入职培训、演讲与表达。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 14,
+          "level": "low",
+          "keywords": [
+            "具备培训工作经验或持有网络安全相关专业认证证书"
+          ],
+          "evidence_ratio": 0.1429,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为具备培训工作经验或持有网络安全相关专业认证证书。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "优化",
+            "创新"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位创新能力要求较高，证据关键词包括优化、创新。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "责任心"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、责任心。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 34,
+          "level": "low",
+          "keywords": [
+            "工作经验"
+          ],
+          "evidence_ratio": 0.4286,
+          "evidence_count": 3,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 84
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 14
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 75
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 75
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 75
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 78
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 34
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.549
+      }
+    },
+    "知识产权专利代理": {
+      "standard_job_name": "知识产权专利代理",
+      "sample_count": 7,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "专利审查意见答复",
+            "专利无效与诉讼支持",
+            "专利检索与分析",
+            "专利流程管理",
+            "专利申请文件撰写",
+            "技术交底书理解与转化",
+            "知识产权法律知识",
+            "Office办公软件",
+            "专利检索数据库（如CNIPA、EPO、USPTO）",
+            "专利管理软件"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位专业技能要求较高，高频技能包括专利审查意见答复、专利无效与诉讼支持、专利检索与分析、专利流程管理、专利申请文件撰写。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 78,
+          "level": "high",
+          "keywords": [
+            "专利代理师资格证"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位证书要求要求较高，常见证书为专利代理师资格证。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 36,
+          "level": "medium",
+          "keywords": [
+            "研发",
+            "新技术"
+          ],
+          "evidence_ratio": 0.4286,
+          "evidence_count": 3,
+          "description": "该岗位创新能力要求中等，证据关键词包括研发、新技术。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 80,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训",
+            "成长",
+            "主动学习"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训、成长、主动学习。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 36,
+          "level": "medium",
+          "keywords": [
+            "压力",
+            "责任心"
+          ],
+          "evidence_ratio": 0.4286,
+          "evidence_count": 3,
+          "description": "该岗位抗压能力要求中等，证据关键词包括压力、责任心。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "表达",
+            "团队协作",
+            "协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、表达、团队协作、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 14,
+          "level": "low",
+          "keywords": [
+            "工作经验"
+          ],
+          "evidence_ratio": 0.1429,
+          "evidence_count": 1,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 82
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 78
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 36
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 80
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 36
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 83
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 14
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.549
+      }
+    },
+    "风电工程师": {
+      "standard_job_name": "风电工程师",
+      "sample_count": 7,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 84,
+          "level": "high",
+          "keywords": [
+            "施工安全管控",
+            "施工质量点见证与验收",
+            "电气/机械系统基础",
+            "风机吊装施工",
+            "风电项目现场作业"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位专业技能要求较高，高频技能包括施工安全管控、施工质量点见证与验收、电气/机械系统基础、风机吊装施工、风电项目现场作业。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "特种电工证",
+            "登高作业证"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位证书要求要求较高，常见证书为特种电工证、登高作业证。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 14,
+          "level": "low",
+          "keywords": [
+            "优化"
+          ],
+          "evidence_ratio": 0.1429,
+          "evidence_count": 1,
+          "description": "该岗位创新能力要求较低，证据关键词包括优化。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 17,
+          "level": "low",
+          "keywords": [
+            "学习能力",
+            "适应能力"
+          ],
+          "evidence_ratio": 0.1429,
+          "evidence_count": 1,
+          "description": "该岗位学习能力要求较低，证据关键词包括学习能力、适应能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 14,
+          "level": "low",
+          "keywords": [
+            "责任心"
+          ],
+          "evidence_ratio": 0.1429,
+          "evidence_count": 1,
+          "description": "该岗位抗压能力要求较低，证据关键词包括责任心。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 7,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 24,
+          "level": "low",
+          "keywords": [
+            "工作经验"
+          ],
+          "evidence_ratio": 0.2857,
+          "evidence_count": 2,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 84
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 82
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 14
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 17
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 14
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 75
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 24
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.549
+      }
+    },
+    "销售助理": {
+      "standard_job_name": "销售助理",
+      "sample_count": 5,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 90,
+          "level": "high",
+          "keywords": [
+            "公文写作",
+            "售后服务知识",
+            "客诉处理流程",
+            "数据分析与统计",
+            "数据整理",
+            "网点管理",
+            "订单处理",
+            "费用结算",
+            "办公软件（如Excel等）",
+            "派工平台系统",
+            "计算机操作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 5,
+          "description": "该岗位专业技能要求较高，高频技能包括公文写作、售后服务知识、客诉处理流程、数据分析与统计、数据整理。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 22,
+          "level": "low",
+          "keywords": [
+            "MOS认证",
+            "试用期通过后提供MOS认证"
+          ],
+          "evidence_ratio": 0.2,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为MOS认证、试用期通过后提供MOS认证。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 2,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "学习能力",
+            "培训"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 5,
+          "description": "该岗位学习能力要求较高，证据关键词包括学习能力、培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 66,
+          "level": "medium_high",
+          "keywords": [
+            "压力",
+            "责任心",
+            "加班",
+            "承受压力"
+          ],
+          "evidence_ratio": 0.8,
+          "evidence_count": 4,
+          "description": "该岗位抗压能力要求中高，证据关键词包括压力、责任心、加班、承受压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 77,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "表达",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 5,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、表达、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 18,
+          "level": "low",
+          "keywords": [
+            "工作经验"
+          ],
+          "evidence_ratio": 0.2,
+          "evidence_count": 1,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 90
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 22
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 2
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 75
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 66
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 77
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 18
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.535
+      }
+    },
+    "销售工程师": {
+      "standard_job_name": "销售工程师",
+      "sample_count": 5,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "商务谈判",
+            "商机挖掘",
+            "客户关系管理",
+            "客户拜访",
+            "市场开拓",
+            "方案编写与展示",
+            "销售技巧",
+            "项目跟单",
+            "CRM系统",
+            "OA软件",
+            "业务软件",
+            "政务软件"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 5,
+          "description": "该岗位专业技能要求较高，高频技能包括商务谈判、商机挖掘、客户关系管理、客户拜访、市场开拓。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 64,
+          "level": "medium_high",
+          "keywords": [
+            "解决方案",
+            "改进",
+            "方案设计"
+          ],
+          "evidence_ratio": 0.8,
+          "evidence_count": 4,
+          "description": "该岗位创新能力要求中高，证据关键词包括解决方案、改进、方案设计。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 18,
+          "level": "low",
+          "keywords": [
+            "培训"
+          ],
+          "evidence_ratio": 0.2,
+          "evidence_count": 1,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 5,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "表达",
+            "团队协作",
+            "协作",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 5,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、表达、团队协作、协作、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 34,
+          "level": "low",
+          "keywords": [
+            "实习",
+            "工作经验"
+          ],
+          "evidence_ratio": 0.4,
+          "evidence_count": 2,
+          "description": "该岗位实习能力要求较低，证据关键词包括实习、工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 81
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 64
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 18
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 75
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 82
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 34
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.535
+      }
+    },
+    "质检员": {
+      "standard_job_name": "质检员",
+      "sample_count": 4,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 83,
+          "level": "high",
+          "keywords": [
+            "ISO9000质量体系标准",
+            "不合格物料跟踪处理",
+            "产品质量检验",
+            "机加工和装配工艺",
+            "标准化流程及规定",
+            "生产过程监督",
+            "质量标准与检验规范制定协助",
+            "质量检验规程",
+            "质量记录与信息整理",
+            "测量工具"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 4,
+          "description": "该岗位专业技能要求较高，高频技能包括ISO9000质量体系标准、不合格物料跟踪处理、产品质量检验、机加工和装配工艺、标准化流程及规定。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 21,
+          "level": "low",
+          "keywords": [
+            "改进"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 1,
+          "description": "该岗位创新能力要求较低，证据关键词包括改进。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 21,
+          "level": "low",
+          "keywords": [
+            "培训"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 1,
+          "description": "该岗位学习能力要求较低，证据关键词包括培训。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "责任心",
+            "加班"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 4,
+          "description": "该岗位抗压能力要求较高，证据关键词包括责任心、加班。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 75,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 4,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 21,
+          "level": "low",
+          "keywords": [
+            "工作经验"
+          ],
+          "evidence_ratio": 0.25,
+          "evidence_count": 1,
+          "description": "该岗位实习能力要求较低，证据关键词包括工作经验。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 83
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 21
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 21
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 75
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 75
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 21
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.528
+      }
+    },
+    "储备经理人": {
+      "standard_job_name": "储备经理人",
+      "sample_count": 3,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "业务活动策划",
+            "业绩目标管理",
+            "团队发展",
+            "团队管理",
+            "客户洽谈",
+            "客户资源开发",
+            "家庭财务配置优化",
+            "方案定制"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 3,
+          "description": "该岗位专业技能要求较高，高频技能包括业务活动策划、业绩目标管理、团队发展、团队管理、客户洽谈。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 27,
+          "level": "low",
+          "keywords": [
+            "学信网认证"
+          ],
+          "evidence_ratio": 0.3333,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为学信网认证。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 72,
+          "level": "medium_high",
+          "keywords": [
+            "优化"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 3,
+          "description": "该岗位创新能力要求中高，证据关键词包括优化。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 74,
+          "level": "medium_high",
+          "keywords": [
+            "培训",
+            "学习能力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 3,
+          "description": "该岗位学习能力要求中高，证据关键词包括培训、学习能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 27,
+          "level": "low",
+          "keywords": [
+            "抗压"
+          ],
+          "evidence_ratio": 0.3333,
+          "evidence_count": 1,
+          "description": "该岗位抗压能力要求较低，证据关键词包括抗压。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 74,
+          "level": "medium_high",
+          "keywords": [
+            "沟通",
+            "协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 3,
+          "description": "该岗位沟通能力要求中高，证据关键词包括沟通、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 52,
+          "level": "medium",
+          "keywords": [
+            "工作经验",
+            "实习"
+          ],
+          "evidence_ratio": 0.6667,
+          "evidence_count": 2,
+          "description": "该岗位实习能力要求中等，证据关键词包括工作经验、实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 82
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 27
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 72
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 74
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 27
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 74
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 52
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.521
+      }
+    },
+    "律师": {
+      "standard_job_name": "律师",
+      "sample_count": 3,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "出庭应诉",
+            "案件分析与策略制定",
+            "法律咨询",
+            "法律文书撰写",
+            "涉外法律事务处理",
+            "证据材料整理",
+            "非诉业务处理"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 3,
+          "description": "该岗位专业技能要求较高，高频技能包括出庭应诉、案件分析与策略制定、法律咨询、法律文书撰写、涉外法律事务处理。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 74,
+          "level": "medium_high",
+          "keywords": [
+            "律师执业证"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 3,
+          "description": "该岗位证书要求要求中高，常见证书为律师执业证。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位学习能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 77,
+          "level": "high",
+          "keywords": [
+            "抗压",
+            "责任心",
+            "压力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 3,
+          "description": "该岗位抗压能力要求较高，证据关键词包括抗压、责任心、压力。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 79,
+          "level": "high",
+          "keywords": [
+            "沟通",
+            "协调",
+            "团队协作",
+            "协作"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 3,
+          "description": "该岗位沟通能力要求较高，证据关键词包括沟通、协调、团队协作、协作。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位实习能力要求较低，证据关键词包括暂无明确记录。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 82
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 74
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 1
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 1
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 77
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 79
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 1
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.521
+      }
+    },
+    "社区运营": {
+      "standard_job_name": "社区运营",
+      "sample_count": 3,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "内容管理",
+            "标准化流程执行",
+            "用户问题处理",
+            "运营管理"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 3,
+          "description": "该岗位专业技能要求较高，高频技能包括内容管理、标准化流程执行、用户问题处理、运营管理。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位学习能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位抗压能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位沟通能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位实习能力要求较低，证据关键词包括暂无明确记录。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 81
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 1
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 1
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 1
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 1
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 1
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 0.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.271
+      }
+    },
+    "律师助理": {
+      "standard_job_name": "律师助理",
+      "sample_count": 2,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 82,
+          "level": "high",
+          "keywords": [
+            "IPO",
+            "上市公司再融资",
+            "信息检索",
+            "并购重组",
+            "民事诉讼业务知识",
+            "法律逻辑",
+            "私募基金设立及投资"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 2,
+          "description": "该岗位专业技能要求较高，高频技能包括IPO、上市公司再融资、信息检索、并购重组、民事诉讼业务知识。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 74,
+          "level": "medium_high",
+          "keywords": [
+            "法律职业资格证书（通过法考）"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 2,
+          "description": "该岗位证书要求要求中高，常见证书为法律职业资格证书（通过法考）。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位学习能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 72,
+          "level": "medium_high",
+          "keywords": [
+            "责任心"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 2,
+          "description": "该岗位抗压能力要求中高，证据关键词包括责任心。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 74,
+          "level": "medium_high",
+          "keywords": [
+            "沟通",
+            "协调"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 2,
+          "description": "该岗位沟通能力要求中高，证据关键词包括沟通、协调。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 72,
+          "level": "medium_high",
+          "keywords": [
+            "实习"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 2,
+          "description": "该岗位实习能力要求中高，证据关键词包括实习。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 82
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 74
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 1
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 1
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 72
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 74
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 72
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.664
+      }
+    },
+    "网络销售": {
+      "standard_job_name": "网络销售",
+      "sample_count": 1,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 81,
+          "level": "high",
+          "keywords": [
+            "客户服务",
+            "客户沟通",
+            "客户维护",
+            "问题解决",
+            "企业微信"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 1,
+          "description": "该岗位专业技能要求较高，高频技能包括客户服务、客户沟通、客户维护、问题解决、企业微信。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位学习能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位抗压能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 71,
+          "level": "medium_high",
+          "keywords": [
+            "沟通"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 1,
+          "description": "该岗位沟通能力要求中高，证据关键词包括沟通。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位实习能力要求较低，证据关键词包括暂无明确记录。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 81
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 1
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 1
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 1
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 71
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 1
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 0.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.507
+      }
+    },
+    "销售运营": {
+      "standard_job_name": "销售运营",
+      "sample_count": 1,
+      "ability_requirements": {
+        "professional_skill": {
+          "dimension": "professional_skill",
+          "label": "专业技能",
+          "score": 88,
+          "level": "high",
+          "keywords": [
+            "基础数据分析",
+            "报表制作",
+            "效果汇总",
+            "数据整理",
+            "活动策划与执行",
+            "Excel",
+            "PPT"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 1,
+          "description": "该岗位专业技能要求较高，高频技能包括基础数据分析、报表制作、效果汇总、数据整理、活动策划与执行。"
+        },
+        "certificate": {
+          "dimension": "certificate",
+          "label": "证书要求",
+          "score": 0,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位证书要求要求较低，常见证书为多数样本无明确证书要求。"
+        },
+        "innovation": {
+          "dimension": "innovation",
+          "label": "创新能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位创新能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "learning": {
+          "dimension": "learning",
+          "label": "学习能力",
+          "score": 71,
+          "level": "medium_high",
+          "keywords": [
+            "学习能力"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 1,
+          "description": "该岗位学习能力要求中高，证据关键词包括学习能力。"
+        },
+        "pressure_resistance": {
+          "dimension": "pressure_resistance",
+          "label": "抗压能力",
+          "score": 71,
+          "level": "medium_high",
+          "keywords": [
+            "责任心"
+          ],
+          "evidence_ratio": 1.0,
+          "evidence_count": 1,
+          "description": "该岗位抗压能力要求中高，证据关键词包括责任心。"
+        },
+        "communication": {
+          "dimension": "communication",
+          "label": "沟通能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位沟通能力要求较低，证据关键词包括暂无明确记录。"
+        },
+        "internship_practice": {
+          "dimension": "internship_practice",
+          "label": "实习能力",
+          "score": 1,
+          "level": "low",
+          "keywords": [],
+          "evidence_ratio": 0.0,
+          "evidence_count": 0,
+          "description": "该岗位实习能力要求较低，证据关键词包括暂无明确记录。"
+        }
+      },
+      "ability_radar": [
+        {
+          "dimension": "专业技能",
+          "key": "professional_skill",
+          "score": 88
+        },
+        {
+          "dimension": "证书要求",
+          "key": "certificate",
+          "score": 0
+        },
+        {
+          "dimension": "创新能力",
+          "key": "innovation",
+          "score": 1
+        },
+        {
+          "dimension": "学习能力",
+          "key": "learning",
+          "score": 71
+        },
+        {
+          "dimension": "抗压能力",
+          "key": "pressure_resistance",
+          "score": 71
+        },
+        {
+          "dimension": "沟通能力",
+          "key": "communication",
+          "score": 1
+        },
+        {
+          "dimension": "实习能力",
+          "key": "internship_practice",
+          "score": 1
+        }
+      ],
+      "source_quality": {
+        "soft_skill_coverage": 1.0,
+        "practice_coverage": 1.0,
+        "hard_skill_coverage": 1.0,
+        "confidence": 0.657
+      }
+    }
+  }
+}

@@ -38,6 +38,16 @@ def _skill_knowledge_snapshot(skill_assets: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _ability_snapshot(ability_assets: Dict[str, Any]) -> Dict[str, Any]:
+    """Extract seven-dimension ability assets for profile display."""
+    ability_assets = safe_dict(ability_assets)
+    return {
+        "ability_requirements": deepcopy(safe_dict(ability_assets.get("ability_requirements"))),
+        "ability_radar": deepcopy(safe_list(ability_assets.get("ability_radar"))),
+        "ability_source_quality": deepcopy(safe_dict(ability_assets.get("source_quality"))),
+    }
+
+
 def build_core_job_profiles(
     loader: Optional[MatchAssetLoader] = None,
     limit: Optional[int] = None,
@@ -53,6 +63,7 @@ def build_core_job_profiles(
 
         stats = asset_loader.get_requirement_stats(job_name)
         skill_assets = asset_loader.get_skill_assets(job_name)
+        ability_assets = asset_loader.get_ability_assets(job_name)
         profile = {
             "standard_job_name": job_name,
             "sample_count": core_job.get("sample_count") or stats.get("sample_count", 0),
@@ -74,6 +85,7 @@ def build_core_job_profiles(
         }
         profile.update(_requirement_distributions(stats))
         profile.update(_skill_knowledge_snapshot(skill_assets))
+        profile.update(_ability_snapshot(ability_assets))
         profiles.append(profile)
 
     profiles.sort(key=lambda item: int(item.get("display_order") or 9999))
@@ -122,12 +134,16 @@ def build_target_job_profile_assets(
             "preferred_certificates": [],
             "required_knowledge_points": [],
             "preferred_knowledge_points": [],
+            "ability_requirements": {},
+            "ability_radar": [],
+            "ability_source_quality": {},
         }
 
     asset_job_name = clean_text(resolution.get("resolved_standard_job_name")) if resolution.get("asset_found") else job_name
     stats = asset_loader.get_requirement_stats_by_standard_name(asset_job_name)
     skill_assets = asset_loader.get_skill_assets_by_standard_name(asset_job_name)
-    if not stats and not skill_assets:
+    ability_assets = asset_loader.get_ability_assets_by_standard_name(asset_job_name)
+    if not stats and not skill_assets and not ability_assets:
         return {
             "requested_job_name": job_name,
             "standard_job_name": asset_job_name,
@@ -149,6 +165,9 @@ def build_target_job_profile_assets(
             "preferred_certificates": [],
             "required_knowledge_points": [],
             "preferred_knowledge_points": [],
+            "ability_requirements": {},
+            "ability_radar": [],
+            "ability_source_quality": {},
         }
 
     target_assets = {
@@ -175,6 +194,7 @@ def build_target_job_profile_assets(
     }
     target_assets.update(_requirement_distributions(stats))
     target_assets.update(_skill_knowledge_snapshot(skill_assets))
+    target_assets.update(_ability_snapshot(ability_assets))
     return target_assets
 
 

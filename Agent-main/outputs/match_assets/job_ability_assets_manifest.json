@@ -1,0 +1,54 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-18T17:13:38+08:00",
+  "source_file": "E:\\Agent\\Agent-main\\outputs\\intermediate\\jobs_extracted_full.csv",
+  "job_count": 49,
+  "sample_count": 2638,
+  "evidence_row_count": 11958,
+  "output_files": {
+    "job_ability_assets_json": "E:\\Agent\\Agent-main\\outputs\\match_assets\\job_ability_assets.json",
+    "job_sample_ability_evidence_csv": "E:\\Agent\\Agent-main\\outputs\\match_assets\\job_sample_ability_evidence.csv",
+    "job_ability_assets_manifest_json": "E:\\Agent\\Agent-main\\outputs\\match_assets\\job_ability_assets_manifest.json"
+  },
+  "ability_dimensions": [
+    {
+      "key": "professional_skill",
+      "label": "专业技能",
+      "keyword_count": 10
+    },
+    {
+      "key": "certificate",
+      "label": "证书要求",
+      "keyword_count": 8
+    },
+    {
+      "key": "innovation",
+      "label": "创新能力",
+      "keyword_count": 12
+    },
+    {
+      "key": "learning",
+      "label": "学习能力",
+      "keyword_count": 10
+    },
+    {
+      "key": "pressure_resistance",
+      "label": "抗压能力",
+      "keyword_count": 11
+    },
+    {
+      "key": "communication",
+      "label": "沟通能力",
+      "keyword_count": 11
+    },
+    {
+      "key": "internship_practice",
+      "label": "实习能力",
+      "keyword_count": 11
+    }
+  ],
+  "notes": [
+    "本资产由已处理岗位样本后处理生成，不依赖运行时 LLM。",
+    "能力分数基于关键词覆盖、结构化技能/证书字段、样本量和资产完整度估算。"
+  ]
+}

@@ -3,6 +3,16 @@ import type { ReactNode } from 'react'
 import { Card, Row, Col, Progress, Tag, Table, Tooltip, Divider, Alert, Button, Space, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import {
+  Legend,
+  PolarAngleAxis,
+  PolarGrid,
+  PolarRadiusAxis,
+  Radar,
+  RadarChart,
+  ResponsiveContainer,
+  Tooltip as RechartsTooltip,
+} from 'recharts'
+import {
   AimOutlined,
   ArrowRightOutlined,
   ArrowUpOutlined,
@@ -10,6 +20,7 @@ import {
   BulbOutlined,
   InfoCircleOutlined,
   SafetyCertificateOutlined,
+  TeamOutlined,
   TrophyOutlined,
 } from '@ant-design/icons'
 import { useCareerStore } from '../store'
@@ -17,6 +28,7 @@ import { useNavigate } from 'react-router-dom'
 import { careerApi } from '../services/api'
 import TargetJobConfirmation from '../components/TargetJobConfirmation'
 import type {
+  AbilityMatch,
   HardInfoDisplay,
   RecommendedJobMatch,
   RequirementDistributionItem,
@@ -54,6 +66,14 @@ const getRiskMeta = (risk?: string) => {
     return { label: '资产不足', color: 'default', className: 'risk-unknown' }
   }
   return { label: risk ? '有风险' : '待评估', color: 'orange', className: 'risk-mid' }
+}
+
+const abilityLevelText = (level?: string) => {
+  if (level === 'high') return '较高'
+  if (level === 'medium_high') return '中高'
+  if (level === 'medium') return '中等'
+  if (level === 'low') return '较低'
+  return '未明确'
 }
 
 const passText = (value?: boolean | null) => {
@@ -449,6 +469,101 @@ const KnowledgePointPanel = ({ match }: { match?: TargetJobMatch }) => {
   )
 }
 
+const AbilityMatchPanel = ({ match }: { match?: TargetJobMatch }) => {
+  const abilityMatch: AbilityMatch | undefined = match?.ability_match
+  if (isNeedsConfirmation(match)) {
+    return (
+      <Card className="match-card" title={<span><TeamOutlined /> 七维能力匹配</span>}>
+        <Alert
+          message="七维能力匹配待确认"
+          description="请先选择本次评估采用的本地标准岗位，系统随后会基于该岗位能力画像计算学生能力差距。"
+          type="warning"
+          showIcon
+        />
+      </Card>
+    )
+  }
+  if (!abilityMatch || abilityMatch.evaluation_status === 'insufficient_asset' || !(abilityMatch.dimensions || []).length) {
+    return (
+      <Card className="match-card" title={<span><TeamOutlined /> 七维能力匹配</span>}>
+        <Alert
+          message="暂无岗位能力画像资产"
+          description={abilityMatch?.message || '当前岗位尚未生成七维能力画像，不影响学历、专业、证书硬门槛和知识点评测。'}
+          type="info"
+          showIcon
+        />
+      </Card>
+    )
+  }
+
+  const dimensions = abilityMatch.dimensions || []
+  const radarData = dimensions.map((item) => ({
+    dimension: item.label || item.dimension || '',
+    student_score: Math.round(item.student_score || 0),
+    job_required_score: Math.round(item.job_required_score || 0),
+  }))
+  const score = Math.round(abilityMatch.overall_ability_match_score || 0)
+
+  return (
+    <Card className="match-card ability-match-card" title={<span><TeamOutlined /> 七维能力匹配</span>}>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={9}>
+          <div className="ability-match-summary">
+            <span>岗位能力适配度</span>
+            <strong>{score}%</strong>
+            <Progress percent={score} strokeColor={getScoreColor(score)} showInfo={false} />
+            <div className="ability-match-tags">
+              <span>优势能力</span>
+              <TagList items={abilityMatch.main_strengths} color="green" empty="暂无明显优势" />
+            </div>
+            <div className="ability-match-tags">
+              <span>风险能力</span>
+              <TagList items={abilityMatch.main_risks} color="orange" empty="暂无明显风险" />
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} lg={15}>
+          <div className="ability-match-radar">
+            <ResponsiveContainer width="100%" height={320}>
+              <RadarChart data={radarData} margin={{ top: 16, right: 28, bottom: 8, left: 28 }}>
+                <PolarGrid stroke="#dbe7f5" />
+                <PolarAngleAxis dataKey="dimension" tick={{ fill: '#334155', fontSize: 12, fontWeight: 700 }} />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} tickCount={6} tick={{ fill: '#64748b', fontSize: 11 }} />
+                <Radar name="学生能力" dataKey="student_score" stroke="#16a34a" fill="#16a34a" fillOpacity={0.2} strokeWidth={2} />
+                <Radar name="岗位要求" dataKey="job_required_score" stroke="#2563eb" fill="#2563eb" fillOpacity={0.18} strokeWidth={2} />
+                <Legend />
+                <RechartsTooltip formatter={(value) => [`${value} 分`, '']} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+        </Col>
+      </Row>
+      <Divider />
+      <Row gutter={[12, 12]}>
+        {dimensions.map((item) => {
+          const riskMeta = getRiskMeta(item.risk_level)
+          return (
+            <Col xs={24} md={12} xl={8} key={item.dimension || item.label}>
+              <div className={`ability-gap-card ${riskMeta.className}`}>
+                <div className="ability-gap-head">
+                  <strong>{item.label || item.dimension || emptyText}</strong>
+                  <Tag color={riskMeta.color}>{riskMeta.label}</Tag>
+                </div>
+                <div className="ability-gap-scores">
+                  <span>学生 {Math.round(item.student_score || 0)} · {abilityLevelText(item.student_level)}</span>
+                  <span>岗位 {Math.round(item.job_required_score || 0)} · {abilityLevelText(item.job_required_level)}</span>
+                </div>
+                <p>{item.message || '暂无能力差距说明'}</p>
+                <TagList items={item.job_keywords} color="geekblue" limit={4} empty="暂无岗位关键词" />
+              </div>
+            </Col>
+          )
+        })}
+      </Row>
+    </Card>
+  )
+}
+
 const JobMatching = () => {
   const studentInfo = useCareerStore((state) => state.studentInfo)
   const studentProfile = useCareerStore((state) => state.studentProfile)
@@ -820,6 +935,10 @@ const JobMatching = () => {
 
       <div className="section-card">
         <KnowledgePointPanel match={targetJobMatch} />
+      </div>
+
+      <div className="section-card">
+        <AbilityMatchPanel match={targetJobMatch} />
       </div>
 
       <Row gutter={[24, 24]} className="section-card">

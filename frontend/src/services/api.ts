@@ -88,8 +88,8 @@ export const careerApi = {
   },
 
   // 全量岗位路径知识图谱
-  getJobPathGraph: (): Promise<ApiResponse<JobPathGraphResponse>> => {
-    return api.get('/job-path-graph/all')
+  getJobPathGraph: (scope: 'curated' | 'all' = 'curated'): Promise<ApiResponse<JobPathGraphResponse>> => {
+    return api.get('/job-path-graph/all', { params: { scope } })
   },
 
   // 职业路径查询（状态接口，不消费请求体）
