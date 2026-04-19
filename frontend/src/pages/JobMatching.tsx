@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import type { ReactNode } from 'react'
 import { Card, Row, Col, Progress, Tag, Table, Tooltip, Divider, Alert, Button, Space, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import {
@@ -27,11 +26,18 @@ import { useCareerStore } from '../store'
 import { useNavigate } from 'react-router-dom'
 import { careerApi } from '../services/api'
 import TargetJobConfirmation from '../components/TargetJobConfirmation'
+import {
+  DistributionBars as ProductDistributionBars,
+  EmptyState,
+  EvidenceNote,
+  MatchDecisionPanel,
+  MetricCard,
+  RiskSummaryCard,
+} from '../components/ui'
 import type {
   AbilityMatch,
   HardInfoDisplay,
   RecommendedJobMatch,
-  RequirementDistributionItem,
   TargetJobCandidate,
   TargetJobConfirmation as TargetJobConfirmationData,
   TargetJobProfileAssets,
@@ -120,10 +126,6 @@ const getOptionalMatchDisplayScore = (match?: TargetJobMatch | RecommendedJobMat
   return value === undefined || value === null ? null : Math.round(value)
 }
 
-const getMatchDisplayScore = (match?: TargetJobMatch | RecommendedJobMatch, fallbackScore?: number) => (
-  getOptionalMatchDisplayScore(match, fallbackScore) ?? 0
-)
-
 const getRuleScore = (match?: TargetJobMatch | RecommendedJobMatch, fallbackScore?: number) => (
   Math.round(match?.rule_match_score ?? match?.overall_match_score ?? fallbackScore ?? 0)
 )
@@ -209,43 +211,6 @@ const ScoreGuideCard = ({ targetMatch }: { targetMatch?: TargetJobMatch }) => {
   )
 }
 
-const DistributionBars = ({
-  title,
-  data,
-  emptyHint = '暂无分布数据',
-}: {
-  title: string
-  data?: RequirementDistributionItem[]
-  emptyHint?: string
-}) => {
-  const items = (data || []).slice(0, 5)
-  return (
-    <div className="distribution-block">
-      <div className="distribution-title">{title}</div>
-      {items.length > 0 ? (
-        items.map((item, index) => {
-          const percent = toPercent(item.ratio)
-          return (
-            <div className="distribution-row" key={`${title}-${item.name || index}`}>
-              <div className="distribution-label" title={item.name || emptyText}>
-                {item.name || emptyText}
-              </div>
-              <div className="distribution-track">
-                <div className="distribution-fill" style={{ width: `${Math.min(percent, 100)}%` }} />
-              </div>
-              <div className="distribution-value">
-                {percent}%{item.count ? ` · ${item.count}` : ''}
-              </div>
-            </div>
-          )
-        })
-      ) : (
-        <div className="empty-inline">{emptyHint}</div>
-      )}
-    </div>
-  )
-}
-
 const TagList = ({
   items,
   color = 'blue',
@@ -271,109 +236,8 @@ const TagList = ({
 }
 
 const MetricPill = ({ label, value, tone = 'blue' }: { label: string; value: string; tone?: string }) => (
-  <div className={`hero-metric hero-metric-${tone}`}>
-    <span>{label}</span>
-    <strong>{value || emptyText}</strong>
-  </div>
+  <MetricCard className={`hero-metric hero-metric-${tone}`} label={label} value={value || emptyText} tone={tone} />
 )
-
-const MatchCompareCard = ({
-  title,
-  match,
-  fallbackScore,
-  accent,
-  description,
-}: {
-  title: string
-  match?: TargetJobMatch | RecommendedJobMatch
-  fallbackScore?: number
-  accent: 'target' | 'recommended'
-  description?: string
-}) => {
-  const pending = isNeedsConfirmation(match)
-  const score = getMatchDisplayScore(match, fallbackScore)
-  const ruleScore = getRuleScore(match, fallbackScore)
-  const assetScore = getAssetScore(match)
-  const risk = getRiskMeta(match?.risk_level)
-  const knowledgePercent = toPercent(match?.skill_knowledge_match?.knowledge_point_accuracy)
-  const hardPass = match?.contest_evaluation?.hard_info_pass
-  const skillPass = match?.contest_evaluation?.skill_accuracy_pass
-  const contestPass = match?.contest_evaluation?.contest_match_success
-  const contestText = getContestStatusText(match)
-  const reason = (match as RecommendedJobMatch | undefined)?.recommendation_reason || description || '暂无详细说明'
-
-  return (
-    <Card className={`match-card compare-card compare-card-${accent}`}>
-      <div className="compare-card-top">
-        <div>
-          <span className="compare-eyebrow">{title}</span>
-          <h2>{match?.job_name || emptyText}</h2>
-        </div>
-        <Tag color={risk.color}>{risk.label}</Tag>
-      </div>
-      <div className="compare-score-row">
-        <Progress
-          type="circle"
-          percent={score}
-          width={120}
-          strokeColor={getScoreColor(score)}
-          format={() => <span className="compare-score">{pending ? '待确认' : `${score}%`}</span>}
-        />
-        <div className="compare-facts">
-          <div><span>赛题资产分</span><strong>{pending ? '待确认' : `${assetScore}%`}</strong></div>
-          <div><span>旧规则总分</span><strong>{pending ? '仅供参考' : `${ruleScore}%`}</strong></div>
-          <div><span>硬门槛</span><strong>{passText(hardPass)}</strong></div>
-          <div><span>知识点</span><strong>{knowledgePercent}%</strong></div>
-          <div><span>技能达标</span><strong>{passText(skillPass)}</strong></div>
-          <div><span>赛题评测</span><strong>{contestText || passText(contestPass)}</strong></div>
-        </div>
-      </div>
-      {pending && (
-        <Alert
-          className="compare-pending-alert"
-          message="请先确认本地标准岗位"
-          description={match?.message || '当前目标岗位未唯一命中标准岗位资产，暂不计算最终赛题评测分。'}
-          type="warning"
-          showIcon
-        />
-      )}
-      <p className="compare-reason">{reason}</p>
-    </Card>
-  )
-}
-
-const RiskCard = ({
-  title,
-  icon,
-  risk,
-  studentValue,
-  gateValue,
-  ratioLabel,
-  message,
-}: {
-  title: string
-  icon: ReactNode
-  risk?: string
-  studentValue: string
-  gateValue: string
-  ratioLabel: string
-  message?: string
-}) => {
-  const riskMeta = getRiskMeta(risk)
-  return (
-    <div className={`risk-card ${riskMeta.className}`}>
-      <div className="risk-card-title">
-        <span>{icon}</span>
-        <strong>{title}</strong>
-        <Tag color={riskMeta.color}>{riskMeta.label}</Tag>
-      </div>
-      <div className="risk-field"><span>学生侧</span><b>{studentValue || emptyText}</b></div>
-      <div className="risk-field"><span>岗位侧</span><b>{gateValue || emptyText}</b></div>
-      <div className="risk-field"><span>覆盖情况</span><b>{ratioLabel}</b></div>
-      <p>{message || '暂无风险说明'}</p>
-    </div>
-  )
-}
 
 const HardInfoRiskCards = ({ hardInfo }: { hardInfo?: HardInfoDisplay }) => {
   const degree = hardInfo?.degree
@@ -382,35 +246,35 @@ const HardInfoRiskCards = ({ hardInfo }: { hardInfo?: HardInfoDisplay }) => {
   return (
     <Row gutter={[16, 16]}>
       <Col xs={24} lg={8}>
-        <RiskCard
+        <RiskSummaryCard
           title="学历匹配"
           icon={<SafetyCertificateOutlined />}
-          risk={degree?.risk_level}
+          riskLevel={degree?.risk_level}
           studentValue={degree?.student_value || ''}
-          gateValue={degree?.mainstream_requirement || ''}
-          ratioLabel={`可覆盖 ${toPercent(degree?.qualified_ratio)}%，更高要求 ${toPercent(degree?.higher_requirement_ratio)}%`}
+          jobValue={degree?.mainstream_requirement || ''}
+          ratio={`可覆盖 ${toPercent(degree?.qualified_ratio)}%，更高要求 ${toPercent(degree?.higher_requirement_ratio)}%`}
           message={degree?.message}
         />
       </Col>
       <Col xs={24} lg={8}>
-        <RiskCard
+        <RiskSummaryCard
           title="专业匹配"
           icon={<AimOutlined />}
-          risk={major?.risk_level}
+          riskLevel={major?.risk_level}
           studentValue={major?.student_value || ''}
-          gateValue={(major?.mainstream_majors || []).slice(0, 3).join('、')}
-          ratioLabel={`匹配占比 ${toPercent(major?.matched_ratio)}%`}
+          jobValue={(major?.mainstream_majors || []).slice(0, 3).join('、')}
+          ratio={`匹配占比 ${toPercent(major?.matched_ratio)}%`}
           message={major?.message}
         />
       </Col>
       <Col xs={24} lg={8}>
-        <RiskCard
+        <RiskSummaryCard
           title="证书匹配"
           icon={<TrophyOutlined />}
-          risk={certificate?.risk_level}
+          riskLevel={certificate?.risk_level}
           studentValue={(certificate?.student_values || []).join('、')}
-          gateValue={firstNonEmpty(certificate?.must_have_certificates, certificate?.preferred_certificates).slice(0, 3).join('、')}
-          ratioLabel={`命中比例 ${toPercent(certificate?.matched_ratio)}%`}
+          jobValue={firstNonEmpty(certificate?.must_have_certificates, certificate?.preferred_certificates).slice(0, 3).join('、')}
+          ratio={`命中比例 ${toPercent(certificate?.matched_ratio)}%`}
           message={certificate?.message}
         />
       </Col>
@@ -579,13 +443,14 @@ const JobMatching = () => {
   if (!studentInfo || jobMatches.length === 0) {
     return (
       <div className="job-matching-container">
-        <h1 className="page-title">📊 岗位匹配</h1>
+        <h1 className="page-title">岗位匹配</h1>
         <p className="page-description">基于你的学生画像，系统自动计算与各个岗位的匹配度</p>
         <Card className="match-card" style={{ textAlign: 'center' }}>
-          <Alert message="暂无匹配结果" description="暂无匹配结果，请先完成画像信息录入。" type="info" showIcon />
-          <Button type="primary" style={{ marginTop: 24 }} onClick={() => navigate('/profile')}>
-            前往学生画像
-          </Button>
+          <EmptyState
+            title="暂无匹配结果"
+            description="请先完成画像信息录入，系统会基于学生画像、岗位资产和知识点生成匹配分析。"
+            action={<Button type="primary" onClick={() => navigate('/profile')}>前往学生画像</Button>}
+          />
         </Card>
       </div>
     )
@@ -815,6 +680,20 @@ const JobMatching = () => {
         </div>
       </section>
 
+      <MatchDecisionPanel
+        targetMatch={targetJobMatch}
+        recommendedMatch={recommendedJobMatch}
+        fallbackTargetScore={primaryMatch.match_score}
+        targetName={targetName}
+        recommendedName={recommendedName}
+      />
+
+      <EvidenceNote
+        title="评分口径说明"
+        description="页面只展示后端已生成的规则分、赛题资产分、知识点覆盖和七维能力结果；推荐岗位由后端匹配模块计算，前端不重新排序或改写结论。"
+        sources={['job_match_result', 'match_assets', 'student_profile']}
+      />
+
       <ScoreGuideCard targetMatch={targetJobMatch} />
 
       {targetNeedsConfirmation && (
@@ -877,13 +756,13 @@ const JobMatching = () => {
             <Col xs={24} lg={16}>
               <Row gutter={[16, 16]}>
                 <Col xs={24} md={8}>
-                  <DistributionBars title="学历分布" data={targetAssets?.degree_distribution || targetJobMatch?.requirement_distributions?.degree_distribution} />
+                  <ProductDistributionBars title="学历分布" data={targetAssets?.degree_distribution || targetJobMatch?.requirement_distributions?.degree_distribution} />
                 </Col>
                 <Col xs={24} md={8}>
-                  <DistributionBars title="专业分布" data={targetAssets?.major_distribution || targetJobMatch?.requirement_distributions?.major_distribution} />
+                  <ProductDistributionBars title="专业分布" data={targetAssets?.major_distribution || targetJobMatch?.requirement_distributions?.major_distribution} accent="green" />
                 </Col>
                 <Col xs={24} md={8}>
-                  <DistributionBars title="证书分布" data={targetAssets?.certificate_distribution || targetJobMatch?.requirement_distributions?.certificate_distribution} />
+                  <ProductDistributionBars title="证书分布" data={targetAssets?.certificate_distribution || targetJobMatch?.requirement_distributions?.certificate_distribution} accent="orange" />
                   <div className="no-cert-ratio">
                     无明确证书要求：{toPercent(targetAssets?.no_certificate_requirement_ratio || targetJobMatch?.requirement_distributions?.no_certificate_requirement_ratio)}%
                   </div>
@@ -908,26 +787,6 @@ const JobMatching = () => {
           </Row>
         )}
       </Card>
-
-      <Row gutter={[24, 24]} className="section-card">
-        <Col xs={24} lg={12}>
-          <MatchCompareCard
-            title="用户目标岗位"
-            match={targetJobMatch}
-            fallbackScore={primaryMatch.match_score}
-            accent="target"
-            description={primaryMatch.analysis_summary}
-          />
-        </Col>
-        <Col xs={24} lg={12}>
-          <MatchCompareCard
-            title="系统最推荐岗位"
-            match={recommendedJobMatch}
-            accent="recommended"
-            description={primaryMatch.recommendation}
-          />
-        </Col>
-      </Row>
 
       <Card className="match-card section-card" title={<span><SafetyCertificateOutlined /> 学历 / 专业 / 证书风险</span>}>
         <HardInfoRiskCards hardInfo={targetJobMatch?.hard_info_display} />

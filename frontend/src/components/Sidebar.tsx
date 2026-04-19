@@ -86,14 +86,15 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
           justifyContent: 'center',
           color: 'white',
           fontSize: collapsed ? 20 : 16,
-          fontWeight: 700,
+          fontWeight: 800,
+          letterSpacing: collapsed ? 0 : '-0.02em',
           padding: '0 16px',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
           textAlign: 'center',
         }}
       >
-        {collapsed ? '📘' : 'Career Planning'}
+        {collapsed ? 'CP' : 'Career Planning'}
       </div>
       <Menu
         theme="dark"

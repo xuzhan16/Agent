@@ -17,12 +17,12 @@ import {
   TeamOutlined,
 } from '@ant-design/icons'
 import { careerApi } from '../services/api'
+import { DistributionBars as ProductDistributionBars, EmptyState, EvidenceNote, MetricCard } from '../components/ui'
 import type {
   CoreJobProfile,
   JobAbilityRadarItem,
   JobAbilityRequirement,
   JobProfileAssetsData,
-  RequirementDistributionItem,
 } from '../types'
 import '../styles/JobProfile.css'
 
@@ -140,43 +140,6 @@ const AbilityRequirementCards = ({ requirements }: { requirements?: Record<strin
   )
 }
 
-const DistributionBars = ({
-  title,
-  data,
-  maxItems = 5,
-}: {
-  title: string
-  data?: RequirementDistributionItem[]
-  maxItems?: number
-}) => {
-  const items = (data || []).slice(0, maxItems)
-  return (
-    <div className="profile-distribution">
-      <div className="profile-distribution-title">{title}</div>
-      {items.length ? (
-        items.map((item, index) => {
-          const percent = toPercent(item.ratio)
-          return (
-            <div className="profile-distribution-row" key={`${title}-${item.name || index}`}>
-              <span className="profile-distribution-label" title={item.name || emptyText}>
-                {item.name || emptyText}
-              </span>
-              <div className="profile-distribution-track">
-                <div className="profile-distribution-fill" style={{ width: `${Math.min(percent, 100)}%` }} />
-              </div>
-              <span className="profile-distribution-value">
-                {percent}%{item.count ? ` · ${item.count}` : ''}
-              </span>
-            </div>
-          )
-        })
-      ) : (
-        <span className="job-profile-empty">暂无分布数据</span>
-      )}
-    </div>
-  )
-}
-
 const CoreJobCard = ({
   job,
   selected,
@@ -223,7 +186,7 @@ const JobDetail = ({ job }: { job?: CoreJobProfile }) => {
   if (!job) {
     return (
       <Card className="job-profile-card">
-        <Alert message="请选择一个岗位" description="点击上方核心岗位卡片后查看详情。" type="info" showIcon />
+        <EmptyState title="请选择一个岗位" description="点击上方核心岗位卡片后查看详情。" />
       </Card>
     )
   }
@@ -247,13 +210,13 @@ const JobDetail = ({ job }: { job?: CoreJobProfile }) => {
         <Col xs={24} lg={16}>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
-              <DistributionBars title="学历分布" data={job.degree_distribution} />
+              <ProductDistributionBars title="学历分布" data={job.degree_distribution} />
             </Col>
             <Col xs={24} md={8}>
-              <DistributionBars title="专业分布" data={job.major_distribution} />
+              <ProductDistributionBars title="专业分布" data={job.major_distribution} accent="green" />
             </Col>
             <Col xs={24} md={8}>
-              <DistributionBars title="证书分布" data={job.certificate_distribution} />
+              <ProductDistributionBars title="证书分布" data={job.certificate_distribution} accent="orange" />
               <div className="profile-no-cert">
                 无明确证书要求：{toPercent(job.no_certificate_requirement_ratio)}%
               </div>
@@ -365,10 +328,10 @@ const JobProfile = () => {
           <p>岗位画像是全局岗位资产，所有用户看到一致；这里不计算学生风险，只展示岗位本身。</p>
         </div>
         <div className="job-profile-metrics">
-          <div><span>核心岗位</span><strong>{data.summary?.core_job_count || coreJobs.length || 0}</strong></div>
-          <div><span>标准岗位</span><strong>{data.summary?.standard_job_count || 0}</strong></div>
-          <div><span>岗位样本</span><strong>{data.summary?.sample_count || 0}</strong></div>
-          <div><span>更新时间</span><strong>{data.summary?.generated_at || emptyText}</strong></div>
+          <MetricCard label="核心岗位" value={data.summary?.core_job_count || coreJobs.length || 0} />
+          <MetricCard label="标准岗位" value={data.summary?.standard_job_count || 0} tone="green" />
+          <MetricCard label="岗位样本" value={data.summary?.sample_count || 0} tone="orange" />
+          <MetricCard label="更新时间" value={data.summary?.generated_at || emptyText} tone="purple" />
         </div>
       </section>
 
@@ -394,11 +357,9 @@ const JobProfile = () => {
               ))}
             </div>
           ) : (
-            <Alert
-              message="暂无核心岗位画像"
+            <EmptyState
+              title="暂无核心岗位画像"
               description="请确认 outputs/match_assets 中已经生成 core_jobs.json 等后处理资产。"
-              type="info"
-              showIcon
             />
           )}
         </Card>
@@ -409,10 +370,13 @@ const JobProfile = () => {
 
         <Row gutter={[24, 24]} className="job-profile-section">
           <Col xs={24} md={12}>
-            <Card className="job-profile-card" title={<span><DatabaseOutlined /> 数据说明</span>}>
-              <p className="profile-help-text">
-                该页面读取本地后处理资产，展示岗位样本聚合后的主流画像、要求分布和知识点资产，不依赖具体学生。
-              </p>
+            <Card className="job-profile-card" title={<span><DatabaseOutlined /> 数据来源</span>}>
+              <EvidenceNote
+                title="岗位样本后处理资产"
+                description="该页面读取本地后处理资产，展示岗位样本聚合后的主流画像、要求分布、知识点和七维能力资产，不依赖具体学生。"
+                sources={['core_jobs.json', 'job_requirement_stats.json', 'job_ability_assets.json']}
+                compact
+              />
             </Card>
           </Col>
           <Col xs={24} md={12}>

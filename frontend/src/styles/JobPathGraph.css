@@ -10,27 +10,26 @@
   gap: 24px;
   align-items: flex-start;
   padding: 28px 32px;
-  border-radius: 24px;
+  border-radius: var(--radius-xl);
   background:
-    radial-gradient(circle at 12% 12%, rgba(14, 165, 233, 0.24), transparent 28%),
-    radial-gradient(circle at 92% 10%, rgba(139, 92, 246, 0.22), transparent 30%),
-    linear-gradient(135deg, #f8fbff 0%, #f3f0ff 100%);
-  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.18);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96)),
+    radial-gradient(circle at 12% 12%, rgba(15, 118, 110, 0.1), transparent 28%);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-soft);
 }
 
 .job-path-hero h1 {
   margin: 14px 0 10px;
   font-size: 34px;
   line-height: 1.2;
-  color: #0f172a;
+  color: var(--text-primary);
   letter-spacing: -0.04em;
 }
 
 .job-path-hero p {
   max-width: 760px;
   margin: 0;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 15px;
   line-height: 1.8;
 }
@@ -44,10 +43,8 @@
   margin-top: 18px;
 }
 
-.job-path-stats .ant-card {
-  border: 0;
-  border-radius: 18px;
-  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.07);
+.job-path-stats .product-metric-card {
+  min-height: 96px;
 }
 
 .job-path-workspace {
@@ -63,10 +60,10 @@
 .graph-canvas-card,
 .job-path-list-card,
 .job-path-note-card {
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-xl);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-card);
 }
 
 .graph-control-panel,
@@ -77,7 +74,7 @@
 .graph-control-panel h3,
 .graph-detail-panel h3 {
   margin: 0 0 16px;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .control-group {
@@ -88,7 +85,7 @@
 }
 
 .control-group span {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
@@ -97,7 +94,7 @@
   flex-direction: column;
   gap: 12px;
   margin-top: 22px;
-  color: #475569;
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
@@ -138,9 +135,8 @@
   min-height: 680px;
   overflow: hidden;
   background:
-    linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
-    radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08), transparent 36%),
+    linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px),
     #ffffff;
   background-size: 28px 28px, 28px 28px, auto, auto;
 }
@@ -155,6 +151,12 @@
   align-items: center;
   justify-content: center;
   height: 680px;
+  padding: 24px;
+}
+
+.graph-empty .product-empty-state {
+  max-width: 520px;
+  width: 100%;
 }
 
 .graph-detail-panel {

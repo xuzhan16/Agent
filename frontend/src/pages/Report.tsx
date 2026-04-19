@@ -4,6 +4,15 @@ import { useState } from 'react'
 import { useCareerStore } from '../store'
 import { careerApi } from '../services/api'
 import { ReportDetail } from '../types'
+import {
+  EmptyState,
+  EvidencePanel,
+  HeroPanel,
+  InsightCard,
+  MetricCard,
+  PageShell,
+  SectionCard,
+} from '../components/ui'
 import '../styles/Report.css'
 
 const Report = () => {
@@ -37,15 +46,8 @@ const Report = () => {
   }
 
   const handleGenerateReport = async () => {
-    console.log('[Report] handleGenerateReport called')
-    console.log('[Report] studentInfo:', studentInfo)
-    console.log('[Report] studentProfile:', studentProfile)
-    console.log('[Report] jobMatches length:', jobMatches?.length)
-    console.log('[Report] careerPath:', careerPath)
-    
     if (!studentInfo || !studentProfile || jobMatches.length === 0 || !careerPath) {
       const msg = '请先完成简历解析、学生画像、岗位匹配和职业规划流程，再生成报告。'
-      console.warn('[Report]', msg)
       setError(msg)
       return
     }
@@ -61,24 +63,17 @@ const Report = () => {
         career_path: careerPath,
         report_format: reportFormat,
       }
-      
-      console.log('[Report] Sending generateReport request with payload:', payload)
       const response = await careerApi.generateReport(payload)
-      console.log('[Report] generateReport response:', response)
 
       if (response.success) {
-        console.log('[Report] Report generated successfully, filename:', response.data)
         setReportFileName(response.data)
         setReportGenerated(true)
-        const detail = await loadReportDetail()
-        console.log('[Report] Report detail loaded, length:', detail.report_text?.length)
+        await loadReportDetail()
       } else {
         const msg = response.message || '报告生成失败，请重试'
-        console.error('[Report]', msg)
         setError(msg)
       }
     } catch (err) {
-      console.error('[Report] generateReport error:', err)
       setError('报告生成接口调用失败，请检查后端服务')
     } finally {
       setGenerating(false)
@@ -114,10 +109,7 @@ const Report = () => {
   }
 
   const downloadReport = async () => {
-    console.log('[Report] downloadReport called, reportFileName:', reportFileName)
-    
     if (!reportFileName) {
-      console.warn('[Report] No reportFileName available')
       setError('报告尚未生成或文件名为空')
       return
     }
@@ -126,24 +118,18 @@ const Report = () => {
     setError(null)
 
     try {
-      console.log('[Report] Starting download with format:', reportFormat)
-      
       // 获取报告内容
       let content = editableReport || reportContent
       if (!content) {
-        console.log('[Report] Fetching report content from server')
         const detail = await loadReportDetail()
         content = detail.report_text
       }
-
-      console.log('[Report] Content length:', content?.length)
 
       // 根据选择的格式创建文件
       let filename = reportFileName
       let fileContent: Blob
 
       if (reportFormat === 'pdf') {
-        console.log('[Report] Generating PDF via print dialog')
         const htmlContent = `<!DOCTYPE html>
 <html>
 <head>
@@ -203,14 +189,12 @@ const Report = () => {
           printWindow.document.write(htmlContent)
           printWindow.document.close()
           printWindow.focus()
-          console.log('[Report] Print window opened for PDF generation')
         } else {
           alert('浏览器阻止了弹窗，请允许弹窗后重试，或使用TXT格式下载')
         }
 
         return
       } else if (reportFormat === 'html') {
-        console.log('[Report] Generating HTML')
         const htmlContent = `<!DOCTYPE html>
 <html>
 <head>
@@ -229,19 +213,15 @@ const Report = () => {
 </html>`
         fileContent = new Blob([htmlContent], { type: 'text/html' })
         filename = reportFileName.replace(/\.[^.]+$/, '.html')
-        console.log('[Report] HTML generated, size:', fileContent.size)
       } else {
-        console.log('[Report] Generating TXT')
         fileContent = new Blob([content], { type: 'text/plain' })
         filename = reportFileName.replace(/\.[^.]+$/, '.txt')
-        console.log('[Report] TXT generated, size:', fileContent.size)
       }
 
       const link = document.createElement('a')
       const objectUrl = URL.createObjectURL(fileContent)
       link.href = objectUrl
       link.download = filename
-      console.log('[Report] Triggering download:', filename)
 
       document.body.appendChild(link)
       link.click()
@@ -249,12 +229,8 @@ const Report = () => {
       setTimeout(() => {
         document.body.removeChild(link)
         URL.revokeObjectURL(objectUrl)
-        console.log('[Report] Download cleanup completed')
       }, 100)
-
-      console.log('[Report] Download triggered successfully')
     } catch (err) {
-      console.error('[Report] Download error:', err)
       const errMsg = `下载失败：${err instanceof Error ? err.message : '未知错误'}`
       setError(errMsg)
     } finally {
@@ -286,7 +262,6 @@ const Report = () => {
       printWindow.focus()
       printWindow.print()
     } catch (err) {
-      console.error(err)
       setError('打印预览失败，请检查后端服务或浏览器弹窗设置')
     }
   }
@@ -312,7 +287,6 @@ const Report = () => {
       await loadReportDetail()
       message.success('报告内容已保存')
     } catch (err) {
-      console.error('[Report] saveReportEdits error:', err)
       setError('保存报告内容失败，请稍后重试')
     } finally {
       setSavingEdits(false)
@@ -349,7 +323,6 @@ const Report = () => {
         message.success('分享链接已复制到剪贴板')
       }
     } catch (err) {
-      console.error('[Report] shareReport error:', err)
       message.error('分享链接失败，请稍后重试')
     }
   }
@@ -371,34 +344,59 @@ const Report = () => {
           '长期发展路径'
         ]
   }
+  const reportReady = Boolean(studentInfo && studentProfile && jobMatches.length > 0 && careerPath)
+  const primaryMatch = jobMatches[0]
+  const targetMatch = primaryMatch?.target_job_match
+  const recommendedMatch = primaryMatch?.recommended_job_match
+  const knowledgeAccuracy = targetMatch?.skill_knowledge_match?.knowledge_point_accuracy
+  const abilityScore = targetMatch?.ability_match?.overall_ability_match_score
 
   return (
-    <div className="report-container">
-      <h1 className="page-title">📋 报告生成</h1>
-      <p className="page-description">
-        根据完整的分析数据生成专业的职业规划分析报告
-      </p>
+    <PageShell className="report-container">
+      <HeroPanel
+        eyebrow="Career Report"
+        title="职业规划报告工作台"
+        description="报告会汇总学生画像、岗位画像、人岗匹配、职业规划和本地知识源证据，形成可下载、可预览、可编辑的最终交付物。"
+        extra={(
+          <Row gutter={[12, 12]}>
+            <Col span={12}>
+              <MetricCard label="报告对象" value={reportData.studentName} />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="主路径岗位" value={careerPath?.primary_target_job || '待生成'} tone="green" />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="知识点覆盖" value={typeof knowledgeAccuracy === 'number' ? `${Math.round(knowledgeAccuracy * 100)}%` : '待评估'} tone="purple" />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="能力适配" value={typeof abilityScore === 'number' ? `${Math.round(abilityScore)}%` : '待评估'} />
+            </Col>
+          </Row>
+        )}
+      />
 
       {!reportGenerated ? (
         <>
           {error && (
-            <Row gutter={[24, 24]}>
-              <Col xs={24}>
-                <Alert
-                  message="错误"
-                  description={error}
-                  type="error"
-                  showIcon
-                  closable
-                  style={{ marginBottom: 24 }}
-                />
-              </Col>
-            </Row>
+            <EmptyState
+              status="error"
+              title="报告暂时无法生成"
+              description={error}
+              action={<Button onClick={() => setError(null)}>关闭提示</Button>}
+            />
+          )}
+          {!reportReady && (
+            <EmptyState
+              status="warning"
+              title="生成报告前还需要补齐主链路"
+              description="请先完成简历解析、学生画像、岗位匹配和职业规划，报告会自动消费这些上游结果。"
+              action={<Button type="primary" href="/resume">从简历上传开始</Button>}
+            />
           )}
           {/* 报告配置 */}
           <Row gutter={[24, 24]}>
             <Col xs={24}>
-              <Card className="report-card" title="报告配置">
+              <SectionCard title="报告配置">
                 <Row gutter={[24, 24]}>
                   <Col xs={24} sm={12}>
                     <div className="config-item">
@@ -455,7 +453,7 @@ const Report = () => {
                     </div>
                   </Col>
                 </Row>
-              </Card>
+              </SectionCard>
             </Col>
           </Row>
 
@@ -511,7 +509,8 @@ const Report = () => {
           {/* 生成成功提示 */}
           <Row gutter={[24, 24]}>
             <Col xs={24}>
-              <Card className="report-card" style={{ textAlign: 'center', padding: '60px 40px' }}>
+              <SectionCard>
+                <div className="report-success-panel">
                 <CheckCircleOutlined style={{ fontSize: 64, color: '#52c41a', marginBottom: 24 }} />
                 <h2 style={{ margin: '0 0 16px 0', color: '#333' }}>报告生成成功</h2>
                 <p style={{ color: '#666', marginBottom: 24 }}>
@@ -540,7 +539,35 @@ const Report = () => {
                     />
                   </Col>
                 </Row>
-              </Card>
+                </div>
+              </SectionCard>
+            </Col>
+          </Row>
+
+          <Row gutter={[18, 18]} style={{ marginTop: 24 }}>
+            <Col xs={24} lg={8}>
+              <InsightCard
+                eyebrow="主路径"
+                title={careerPath?.primary_target_job || '未明确'}
+                description={careerPath?.goal_positioning || reportDetail?.report_summary || '暂无主路径说明'}
+                status="info"
+              />
+            </Col>
+            <Col xs={24} lg={8}>
+              <InsightCard
+                eyebrow="推荐岗位"
+                title={recommendedMatch?.job_name || '暂无推荐岗位'}
+                description={recommendedMatch?.recommendation_reason || '报告会保留系统推荐岗位及其原因。'}
+                status="success"
+              />
+            </Col>
+            <Col xs={24} lg={8}>
+              <InsightCard
+                eyebrow="主要风险"
+                title={targetMatch?.risk_level || '待评估'}
+                description={targetMatch?.message || '风险结论来自人岗匹配和赛题资产，不由前端重新计算。'}
+                status={targetMatch?.risk_level === 'no_match' ? 'danger' : targetMatch?.risk_level === 'risk' ? 'warning' : 'neutral'}
+              />
             </Col>
           </Row>
 
@@ -743,9 +770,20 @@ const Report = () => {
               </Card>
             </Col>
           </Row>
+
+          <EvidencePanel
+            title="报告依据"
+            description="报告正文来自后端报告生成结果，前端只负责结构化展示和轻量编辑。"
+            sources={[
+              { label: '学生画像', value: studentProfile ? '已消费' : '缺失', status: studentProfile ? 'available' : 'warning' },
+              { label: '人岗匹配', value: jobMatches.length > 0 ? `${jobMatches.length} 条` : '缺失', status: jobMatches.length > 0 ? 'available' : 'warning' },
+              { label: '职业规划', value: careerPath ? '已消费' : '缺失', status: careerPath ? 'available' : 'warning' },
+              { label: '岗位资产', value: '学历 / 专业 / 证书 / 知识点 / 能力画像' },
+            ]}
+          />
         </>
       )}
-    </div>
+    </PageShell>
   )
 }
 

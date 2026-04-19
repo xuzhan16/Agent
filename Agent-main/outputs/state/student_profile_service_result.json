@@ -1,453 +1,578 @@
 {
   "student_profile_result": {
     "skill_profile": {
-      "Git": "待模型评估"
+      "C++": "待模型评估",
+      "Java": "待模型评估",
+      "SQL": "待模型评估",
+      "eclipse": "待模型评估",
+      "Linux": "待模型评估",
+      "Excel": "待模型评估"
     },
-    "certificate_profile": [],
+    "certificate_profile": [
+      "CET-6",
+      "普通话二级甲等",
+      "C1驾照"
+    ],
     "soft_skill_profile": {},
     "soft_skills": [],
     "employment_ability_profile": {
       "专业技能": {
-        "score": 7.14,
-        "level": "待提升",
+        "score": 60.0,
+        "level": "中等",
         "evidence": [
-          "硬技能 0 项",
-          "工具技能 1 项",
-          "待补充硬技能"
+          "硬技能 4 项",
+          "工具技能 2 项",
+          "核心技能示例: C++, Java, SQL"
         ]
       },
       "证书": {
-        "score": 30.0,
-        "level": "待提升",
+        "score": 100.0,
+        "level": "优秀",
         "evidence": [
-          "证书/背书 0 项",
-          "暂无证书背书"
+          "证书/背书 3 项",
+          "证书示例: CET-6, 普通话二级甲等, C1驾照"
         ]
       },
       "创新能力": {
-        "score": 63.0,
-        "level": "中等",
+        "score": 87.0,
+        "level": "优秀",
         "evidence": [
           "项目经历 2 段",
-          "获奖/竞赛 1 项",
-          "实践标签: 项目:建模算法, 项目:工程开发, 奖项:科研实践"
+          "获奖/竞赛 3 项",
+          "实践标签: 项目:数据处理, 项目:建模算法, 项目:工程开发"
         ]
       },
       "学习能力": {
-        "score": 13.21,
-        "level": "待提升",
+        "score": 61.0,
+        "level": "中等",
         "evidence": [
-          "已覆盖技能总数 1 项",
+          "已覆盖技能总数 6 项",
           "建议补充学习能力证明",
           "学历层次: 本科"
         ]
       },
       "抗压能力": {
-        "score": 28.0,
-        "level": "待提升",
+        "score": 80.0,
+        "level": "良好",
         "evidence": [
-          "项目 + 实习共 2 段",
+          "项目 + 实习共 4 段",
           "建议补充高压场景实践证据"
         ]
       },
       "沟通能力": {
-        "score": 20.0,
-        "level": "待提升",
+        "score": 74.0,
+        "level": "良好",
         "evidence": [
           "项目经历 2 段",
-          "实习经历 0 段",
+          "实习经历 2 段",
           "建议补充跨团队协作案例"
         ]
       },
       "实习能力": {
-        "score": 0.0,
-        "level": "待提升",
+        "score": 100.0,
+        "level": "优秀",
         "evidence": [
-          "实习经历 0 段",
-          "暂无实习关键词证据"
+          "实习经历 2 段",
+          "实习关键词: 开发, 前端, 工程"
         ]
       }
     },
     "potential_profile": {
-      "growth_level": "待提升",
+      "growth_level": "较强",
       "preferred_directions": [
-        "后端开发",
+        "java工程师",
         "前端开发"
       ],
       "domain_tags": [
         "软件研发",
+        "商业分析",
+        "云计算/大数据",
         "信息技术"
       ],
-      "basis_score": 42.5,
+      "basis_score": 94.0,
       "reason": "根据规则评分、职业方向标签和领域标签生成的兜底潜力画像。"
     },
-    "complete_score": 68.14,
-    "competitiveness_score": 42.5,
-    "score_level": "D-当前竞争力偏弱",
+    "complete_score": 96.0,
+    "competitiveness_score": 94.0,
+    "score_level": "A-竞争力较强",
     "strengths": [
       "基本信息较完整，已包含身份、教育背景和联系方式。",
       "教育信息完整，学历、学校、专业和毕业年份均已明确。",
-      "已有明确技能信息，当前识别 1 项。",
+      "技能信息较丰富，已识别 6 项技能/工具。",
       "已有项目经历 2 段，可作为能力证明材料。",
+      "已有实习经历 2 段，有助于证明岗位实践能力。",
       "有竞赛/获奖记录，可增强简历背书。",
-      "已有一定职业方向信号，但表达还可以更明确。",
+      "求职意向较明确，方向聚焦在 java工程师, 前端开发。",
       "学历背景具备一定竞争力，当前学历为本科。",
-      "已有工具技能 1 项。",
+      "已有 4 项硬技能，但仍有扩展空间。",
+      "已有工具技能 2 项。",
       "项目经历数量较充足，对岗位能力证明较有帮助。",
-      "已有一定证书或获奖背书。",
-      "已有职业方向信号，但求职目标仍可进一步收敛。"
+      "实习经历较丰富，具备一定岗位场景适应基础。",
+      "证书/获奖背书较好，可增强简历可信度。",
+      "职业方向较聚焦，当前方向信号为 java工程师, 前端开发。"
     ],
     "weaknesses": [
-      "技能数量偏少，建议补充与目标岗位直接相关的工具栈和硬技能。",
-      "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
-      "建议在简历中补充更明确的目标岗位或岗位方向。",
-      "硬技能储备偏弱，建议优先补充岗位要求中的核心技能。",
-      "实习经验不足，建议优先争取与目标方向一致的实习。"
+      "硬技能数量尚不充分，建议围绕目标岗位补强核心技能。"
     ],
-    "missing_dimensions": [
-      "实习经历"
-    ],
-    "summary": "该学生在后端开发方向已有一定基础，建议结合技能、项目和实习短板继续补强。",
+    "missing_dimensions": [],
+    "summary": "该学生在java工程师方向已有一定基础，建议结合技能、项目和实习短板继续补强。",
     "ability_evidence": {
       "project_examples": [
         {
-          "project_name": "健身大师智能体",
-          "role": "后端开发工程师",
-          "start_date": "",
-          "end_date": "",
-          "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
+          "project_name": "网络爬虫",
+          "role": "",
+          "start_date": "2015.12",
+          "end_date": "2016.02",
+          "description": "开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来; 此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。"
         },
         {
-          "project_name": "面试在线刷题平台",
-          "role": "后端开发工程师",
-          "start_date": "",
-          "end_date": "",
-          "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
+          "project_name": "爆街僵尸",
+          "role": "",
+          "start_date": "2013.09",
+          "end_date": "2014.06",
+          "description": "开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
         }
       ],
-      "internship_examples": [],
+      "internship_examples": [
+        {
+          "company_name": "苏州云开网络科技有限公司",
+          "position": "前端工程师",
+          "start_date": "2015.07",
+          "end_date": "2015.08",
+          "description": "负责游戏中一个重要的组件编程,并和同事对接相应的功能; 负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。"
+        },
+        {
+          "company_name": "北京乔布有限公司",
+          "position": "前端工程师",
+          "start_date": "2014.07",
+          "end_date": "2014.08",
+          "description": "参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ; 负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。"
+        }
+      ],
       "certificate_tags": [
         "学历:本科",
-        "学校:哈尔滨工程大学",
-        "专业:计算机科学与技术"
+        "学校:中国社会大学",
+        "专业:计算机科学与技术",
+        "证书:CET-6",
+        "证书:普通话二级甲等",
+        "证书:C1驾照"
       ],
       "practice_tags": [
+        "项目:数据处理",
         "项目:建模算法",
         "项目:工程开发",
-        "奖项:科研实践",
-        "项目:业务协作",
+        "实习:工程开发",
         "有项目经历",
+        "有实习经历",
         "有竞赛/获奖经历"
       ],
       "project_keywords": [
-        "模型",
-        "推荐",
-        "开发",
-        "接口",
-        "平台",
-        "后端",
-        "工程",
-        "业务",
-        "需求"
+        "sql",
+        "分类",
+        "开发"
       ],
-      "internship_keywords": [],
+      "internship_keywords": [
+        "开发",
+        "前端",
+        "工程"
+      ],
       "score_evidence": {
-        "profile_completeness_score": 68.14,
-        "competitiveness_base_score": 42.5,
-        "score_level": "D-当前竞争力偏弱"
+        "profile_completeness_score": 96.0,
+        "competitiveness_base_score": 94.0,
+        "score_level": "A-竞争力较强"
       }
     },
     "rule_score_result": {
-      "profile_completeness_score": 68.14,
-      "competitiveness_base_score": 42.5,
-      "score_level": "D-当前竞争力偏弱",
+      "profile_completeness_score": 96.0,
+      "competitiveness_base_score": 94.0,
+      "score_level": "A-竞争力较强",
       "completeness_detail": {
-        "basic_info_score": 17.14,
+        "basic_info_score": 20.0,
         "education_score": 15.0,
-        "skill_score": 8.0,
+        "skill_score": 16.0,
         "project_score": 15.0,
-        "internship_score": 0.0,
+        "internship_score": 15.0,
         "qualification_score": 10.0,
-        "intention_score": 3.0
+        "intention_score": 5.0
       },
       "competitiveness_detail": {
         "education_base_score": 15.0,
-        "skill_base_score": 0.0,
-        "tool_base_score": 2.5,
+        "skill_base_score": 16.0,
+        "tool_base_score": 5.0,
         "project_base_score": 15.0,
-        "internship_base_score": 0.0,
-        "qualification_base_score": 3.0,
-        "occupation_focus_score": 3.0,
-        "domain_bonus_score": 4.0
+        "internship_base_score": 20.0,
+        "qualification_base_score": 10.0,
+        "occupation_focus_score": 5.0,
+        "domain_bonus_score": 8.0
       },
       "score_reasons": {
         "strengths": [
           "基本信息较完整，已包含身份、教育背景和联系方式。",
           "教育信息完整，学历、学校、专业和毕业年份均已明确。",
-          "已有明确技能信息，当前识别 1 项。",
+          "技能信息较丰富，已识别 6 项技能/工具。",
           "已有项目经历 2 段，可作为能力证明材料。",
+          "已有实习经历 2 段，有助于证明岗位实践能力。",
           "有竞赛/获奖记录，可增强简历背书。",
-          "已有一定职业方向信号，但表达还可以更明确。",
+          "求职意向较明确，方向聚焦在 java工程师, 前端开发。",
           "学历背景具备一定竞争力，当前学历为本科。",
-          "已有工具技能 1 项。",
+          "已有 4 项硬技能，但仍有扩展空间。",
+          "已有工具技能 2 项。",
           "项目经历数量较充足，对岗位能力证明较有帮助。",
-          "已有一定证书或获奖背书。",
-          "已有职业方向信号，但求职目标仍可进一步收敛。"
+          "实习经历较丰富，具备一定岗位场景适应基础。",
+          "证书/获奖背书较好，可增强简历可信度。",
+          "职业方向较聚焦，当前方向信号为 java工程师, 前端开发。"
         ],
         "weaknesses": [
-          "技能数量偏少，建议补充与目标岗位直接相关的工具栈和硬技能。",
-          "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
-          "建议在简历中补充更明确的目标岗位或岗位方向。",
-          "硬技能储备偏弱，建议优先补充岗位要求中的核心技能。",
-          "实习经验不足，建议优先争取与目标方向一致的实习。"
+          "硬技能数量尚不充分，建议围绕目标岗位补强核心技能。"
         ],
         "suggestions": [
-          "围绕目标岗位补充核心硬技能和常用工具，并在项目/实习中给出使用场景。",
-          "补充 1-2 个可量化成果的课程项目、竞赛项目或个人作品项目。",
-          "尽量争取与目标岗位方向一致的实习、校企实践或真实业务协作经历。"
+          "围绕目标岗位补充核心硬技能和常用工具，并在项目/实习中给出使用场景。"
         ]
       }
     },
     "profile_input_payload": {
       "basic_info": {
-        "name": "黄学聪",
+        "name": "李明",
         "gender": "",
-        "phone": "15820429828",
-        "email": "",
-        "school": "哈尔滨工程大学",
+        "phone": "138-0000-0000",
+        "email": "138-0000-000012345678@qq.com138-0000-000012345678",
+        "school": "中国社会大学",
         "major": "计算机科学与技术",
         "degree": "本科",
-        "graduation_year": "2027"
+        "graduation_year": "2016"
       },
       "normalized_education": {
         "degree": "本科",
-        "school": "哈尔滨工程大学",
+        "school": "中国社会大学",
         "major_raw": "计算机科学与技术",
         "major_std": "计算机科学与技术",
-        "graduation_year": "2027"
+        "graduation_year": "2016"
       },
       "explicit_profile": {
-        "skills": [],
-        "tools": [
-          "Git"
+        "skills": [
+          "C++",
+          "Java",
+          "SQL",
+          "eclipse"
         ],
-        "certificates": [],
+        "tools": [
+          "Linux",
+          "Excel"
+        ],
+        "certificates": [
+          "CET-6",
+          "普通话二级甲等",
+          "C1驾照"
+        ],
         "project_experience": [
           {
-            "project_name": "健身大师智能体",
-            "role": "后端开发工程师",
-            "start_date": "",
-            "end_date": "",
-            "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
+            "project_name": "网络爬虫",
+            "role": "",
+            "start_date": "2015.12",
+            "end_date": "2016.02",
+            "description": "开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来; 此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。"
           },
           {
-            "project_name": "面试在线刷题平台",
-            "role": "后端开发工程师",
-            "start_date": "",
-            "end_date": "",
-            "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
+            "project_name": "爆街僵尸",
+            "role": "",
+            "start_date": "2013.09",
+            "end_date": "2014.06",
+            "description": "开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
           }
         ],
-        "internship_experience": [],
-        "awards": [
-          "在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
+        "internship_experience": [
+          {
+            "company_name": "苏州云开网络科技有限公司",
+            "position": "前端工程师",
+            "start_date": "2015.07",
+            "end_date": "2015.08",
+            "description": "负责游戏中一个重要的组件编程,并和同事对接相应的功能; 负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。"
+          },
+          {
+            "company_name": "北京乔布有限公司",
+            "position": "前端工程师",
+            "start_date": "2014.07",
+            "end_date": "2014.08",
+            "description": "参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ; 负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。"
+          }
         ],
-        "target_job_intention": "",
+        "awards": [
+          "2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景",
+          "毕业设计为一款简单手机游戏,用JS编写,获得优秀等级",
+          "连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次"
+        ],
+        "target_job_intention": "java工程师",
         "self_evaluation": ""
       },
       "normalized_profile": {
         "major_std": "计算机科学与技术",
-        "hard_skills": [],
+        "hard_skills": [
+          "C++",
+          "Java",
+          "SQL",
+          "eclipse"
+        ],
         "tool_skills": [
-          "Git"
+          "Linux",
+          "Excel"
         ],
         "qualification_tags": [
           "学历:本科",
-          "学校:哈尔滨工程大学",
-          "专业:计算机科学与技术"
+          "学校:中国社会大学",
+          "专业:计算机科学与技术",
+          "证书:CET-6",
+          "证书:普通话二级甲等",
+          "证书:C1驾照"
         ],
         "experience_tags": [
+          "项目:数据处理",
           "项目:建模算法",
           "项目:工程开发",
-          "奖项:科研实践",
-          "项目:业务协作",
+          "实习:工程开发",
           "有项目经历",
+          "有实习经历",
           "有竞赛/获奖经历"
         ],
         "occupation_hints": [
-          "后端开发",
+          "java工程师",
           "前端开发"
         ],
         "domain_tags": [
           "软件研发",
+          "商业分析",
+          "云计算/大数据",
           "信息技术"
         ]
       },
       "practice_profile": {
         "project_count": 2,
-        "internship_count": 0,
-        "award_count": 1,
+        "internship_count": 2,
+        "award_count": 3,
         "has_project_experience": true,
-        "has_internship_experience": false,
+        "has_internship_experience": true,
         "has_competition_or_award": true,
-        "has_target_job_intention": false,
-        "total_practice_items": 3,
+        "has_target_job_intention": true,
+        "total_practice_items": 7,
         "project_keywords": [
-          "模型",
-          "推荐",
-          "开发",
-          "接口",
-          "平台",
-          "后端",
-          "工程",
-          "业务",
-          "需求"
+          "sql",
+          "分类",
+          "开发"
         ],
-        "internship_keywords": [],
+        "internship_keywords": [
+          "开发",
+          "前端",
+          "工程"
+        ],
         "practice_tags": [
+          "项目:数据处理",
           "项目:建模算法",
           "项目:工程开发",
-          "奖项:科研实践",
-          "项目:业务协作",
+          "实习:工程开发",
           "有项目经历",
+          "有实习经历",
           "有竞赛/获奖经历"
         ]
       },
       "evidence_summary": {
         "project_count": 2,
-        "internship_count": 0,
-        "award_count": 1,
-        "skill_count": 0,
-        "certificate_count": 0,
+        "internship_count": 2,
+        "award_count": 3,
+        "skill_count": 4,
+        "certificate_count": 3,
         "parse_warnings": [
-          "技能相关正文存在，但未解析到稳定技能列表",
-          "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY.",
-          "未解析到技能列表"
+          "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
         ]
       },
       "source_snapshot": {
         "resume_parse_result": {
           "basic_info": {
-            "name": "黄学聪",
+            "name": "李明",
             "gender": "",
-            "phone": "15820429828",
-            "email": "",
-            "school": "哈尔滨工程大学",
+            "phone": "138-0000-0000",
+            "email": "138-0000-000012345678@qq.com138-0000-000012345678",
+            "school": "中国社会大学",
             "major": "计算机科学与技术",
             "degree": "本科",
-            "graduation_year": "2027"
+            "graduation_year": "2016"
           },
           "education_experience": [
             {
-              "school": "哈尔滨工程大学",
+              "school": "中国社会大学",
               "major": "计算机科学与技术",
               "degree": "本科",
-              "start_date": "2023.08",
-              "end_date": "至今",
-              "description": "全日制 计算机科学与技术学院 在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
-            }
-          ],
-          "internship_experience": [],
-          "project_experience": [
-            {
-              "project_name": "健身大师智能体",
-              "role": "后端开发工程师",
-              "start_date": "",
-              "end_date": "",
-              "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
+              "start_date": "2012.09",
+              "end_date": "2016.07",
+              "description": "毕业设计为一款简单手机游戏 用JS编写 获得优秀等级连续2年获得校综合奖学金“励志奖” 获校二等奖学金、国家励志奖学金各一次"
             },
             {
-              "project_name": "面试在线刷题平台",
-              "role": "后端开发工程师",
-              "start_date": "",
-              "end_date": "",
-              "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
+              "school": "网络爬虫开发环境:vc6.0项目描述:找到学校",
+              "major": "网站上所有的word pdf excel等文件的URL 然后根据后缀名分类 用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求 接收html文件 找出其中站内的URL 属于文件的保存下来 属于新页面的也记录下来 此网页中的链接找完后 有在新的页面链接中查找 如此反复 直到搜索完所有的站内链接",
+              "degree": "",
+              "start_date": "2015.12",
+              "end_date": "2016.02",
+              "description": "2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
             }
           ],
-          "skills": [],
-          "certificates": [],
+          "internship_experience": [
+            {
+              "company_name": "苏州云开网络科技有限公司",
+              "position": "前端工程师",
+              "start_date": "2015.07",
+              "end_date": "2015.08",
+              "description": "负责游戏中一个重要的组件编程,并和同事对接相应的功能; 负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。"
+            },
+            {
+              "company_name": "北京乔布有限公司",
+              "position": "前端工程师",
+              "start_date": "2014.07",
+              "end_date": "2014.08",
+              "description": "参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ; 负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。"
+            }
+          ],
+          "project_experience": [
+            {
+              "project_name": "网络爬虫",
+              "role": "",
+              "start_date": "2015.12",
+              "end_date": "2016.02",
+              "description": "开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来; 此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。"
+            },
+            {
+              "project_name": "爆街僵尸",
+              "role": "",
+              "start_date": "2013.09",
+              "end_date": "2014.06",
+              "description": "开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
+            }
+          ],
+          "skills": [
+            "C++",
+            "Java",
+            "Oracle",
+            "Mysql",
+            "eclipse",
+            "C"
+          ],
+          "certificates": [
+            "大学英语六级",
+            "普通话二级甲等",
+            "C1驾照"
+          ],
           "awards": [
-            "在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
+            "2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景",
+            "毕业设计为一款简单手机游戏,用JS编写,获得优秀等级",
+            "连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次"
           ],
           "self_evaluation": "",
-          "target_job_intention": "",
-          "raw_resume_text": "黄学聪\n15820429828 @ .com https://gitee.com /hxc\n在读 J ava后端实习生\n教育经历\n哈尔滨工程大学(211) 计算机科学与技术 大三 2023-08 ~ 至今\n全日制 计算机科学与技术学院\n在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金\n专业技能\nJ AVAS E: 具 有扎实的J ava基础,熟练使用集合、IO流、反射、泛型等J AVA API。\n框架: 熟悉SS M , M yBatis-Plus, S pring Boot, S pring Cloud等主流框架,理解IOC、AOP思想与Bean的生命周期。\nM yS QL: 熟悉常用S QL语句,理解索引、事务、存储引擎、M VCC、锁、主从同步,具 备一定的S QL调优能力。\nRedis: 熟悉Redis基本使用,了解常⻅缓存读写策略,了解redis生产问题、持久化机制、内存管理、集群、分布式锁、性\n能优化。\nS pring AI: 熟悉框架核心特性,能快速实现具 有会话记忆 + RAG 知识库 + 工具调用 + M CP 能力的AI智能体。\n并发编程: 熟悉线程的基础知识,了解 synchronized, volatile、ConcurrentHashM ap、ThreadLocal 原理,了解\nCAS 、线程池、死锁及其解决方法。\nJ VM :深入理解J VM 底层原理,如内存结构、垃圾回收、类加载机制,具 备一定的J VM 调优能力。\n消息队列:熟悉RabbitM Q的五种工作模式,了解RabbitM Q的消息可靠传输、死信队列、延迟队列等,熟悉消息丢失、消\n息积压、消息重复消费的解决方案。\n项目经历\n健身大师智能体 - ~ -\n后端开发工程师 http://.../ai/\n项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。支持多轮对话和RAG知识库检索等能力,并基\n于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并\n生成文档。\n技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP\nAI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活\n切换,适应不同业务需求。\nAI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多\n轮对话中保持语境连贯。\nRAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据\n库,支持语义相似度搜索和多维度过滤,提高了检索精准度。\n集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐\n健身地点。\n分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能\n力,实现了高扩展性和可维护性。\nAl流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻\n塞主线程,提升了用戶体验。\n面试在线刷题平台 - ~ -\n后端开发工程师 http://.../\n项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题\n并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。\n技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos\n批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。\n刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。并通过本地缓存\n+返回值优化+位运算进一步提升接口性能。\n分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring\nS cheduler定时同步近期发生更新的M yS QL题目到ES 。\n缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防\n止瞬时流量击垮数据库。\n分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和\n封禁用戶,有效防止内容盗取。\n限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。\n防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。",
+          "target_job_intention": "java工程师",
+          "raw_resume_text": "李明李明138-0000-000012345678@qq.com138-0000-000012345678@qq.com1994.05.15上海市杨浦区1994.05.15上海市杨浦区\n李明\n138-0000-0000\n12345678@qq.com\n1994.05.15\n上海市杨浦区\n2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景\n2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位\n毕业设计为一款简单手机游戏,用JS编写,获得优秀等级\n连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次\n教育背景\n工作经历工作经历\n工作经历\n2015.07~2015.08苏州云开网络科技有限公司前端工程师负责游戏中一个重要的组件编程,并和同事对接相应的功能;负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。2014.07~2014.08北京乔布有限公司前端工程师参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。2015.07~2015.08苏州云开网络科技有限公司前端工程师负责游戏中一个重要的组件编程,并和同事对接相应的功能;负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。2014.07~2014.08北京乔布有限公司前端工程师参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n2015.07~2015.08苏州云开网络科技有限公司前端工程师\n负责游戏中一个重要的组件编程,并和同事对接相应的功能;\n负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。\n2014.07~2014.08北京乔布有限公司前端工程师\n参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;\n负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n2015.07~2015.08苏州云开网络科技有限公司前端工程师\n负责游戏中一个重要的组件编程,并和同事对接相应的功能;\n负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。\n2014.07~2014.08北京乔布有限公司前端工程师\n参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;\n负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n项目经历项目经历\n项目经历\n2015.12~2016.02网络爬虫开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。2015.12~2016.02网络爬虫开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n2015.12~2016.02网络爬虫\n开发环境:vc6.0\n项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件\n负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。\n2013.09~2014.06爆街僵尸\n开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;\n项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;\n责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n2015.12~2016.02网络爬虫\n开发环境:vc6.0\n项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件\n负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。\n2013.09~2014.06爆街僵尸\n开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;\n项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;\n责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n技能证书技能证书\n技能证书\n语言能力:通过大学英语六级、普通话二级甲等计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程其他能力:C1驾照目标岗位:java工程师语言能力:通过大学英语六级、普通话二级甲等计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程其他能力:C1驾照目标岗位:java工程师\n语言能力:通过大学英语六级、普通话二级甲等\n计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程\n其他能力:C1驾照\n目标岗位:java工程师",
           "parse_warnings": [
-            "技能相关正文存在，但未解析到稳定技能列表",
-            "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY.",
-            "未解析到技能列表"
+            "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
           ]
         }
       }
     },
     "llm_profile_result": {},
     "build_warnings": [
-      "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY.",
-      "技能相关正文存在，但未解析到稳定技能列表",
-      "未解析到技能列表"
+      "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
     ]
   },
   "student_state": {
     "basic_info": {
-      "name": "黄学聪",
+      "name": "李明",
       "gender": "",
-      "phone": "15820429828",
-      "email": "",
-      "school": "哈尔滨工程大学",
+      "phone": "138-0000-0000",
+      "email": "138-0000-000012345678@qq.com138-0000-000012345678",
+      "school": "中国社会大学",
       "major": "计算机科学与技术",
       "degree": "本科",
-      "graduation_year": "2027"
+      "graduation_year": "2016",
+      "target_job": "java工程师"
     },
     "resume_parse_result": {
       "basic_info": {
-        "name": "黄学聪",
+        "name": "李明",
         "gender": "",
-        "phone": "15820429828",
-        "email": "",
-        "school": "哈尔滨工程大学",
+        "phone": "138-0000-0000",
+        "email": "138-0000-000012345678@qq.com138-0000-000012345678",
+        "school": "中国社会大学",
         "major": "计算机科学与技术",
         "degree": "本科",
-        "graduation_year": "2027"
+        "graduation_year": "2016"
       },
       "education_experience": [
         {
-          "school": "哈尔滨工程大学",
+          "school": "中国社会大学",
           "major": "计算机科学与技术",
           "degree": "本科",
-          "start_date": "2023.08",
-          "end_date": "至今",
-          "description": "全日制 计算机科学与技术学院 在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
-        }
-      ],
-      "internship_experience": [],
-      "project_experience": [
-        {
-          "project_name": "健身大师智能体",
-          "role": "后端开发工程师",
-          "start_date": "",
-          "end_date": "",
-          "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
+          "start_date": "2012.09",
+          "end_date": "2016.07",
+          "description": "毕业设计为一款简单手机游戏 用JS编写 获得优秀等级连续2年获得校综合奖学金“励志奖” 获校二等奖学金、国家励志奖学金各一次"
         },
         {
-          "project_name": "面试在线刷题平台",
-          "role": "后端开发工程师",
-          "start_date": "",
-          "end_date": "",
-          "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
+          "school": "网络爬虫开发环境:vc6.0项目描述:找到学校",
+          "major": "网站上所有的word pdf excel等文件的URL 然后根据后缀名分类 用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求 接收html文件 找出其中站内的URL 属于文件的保存下来 属于新页面的也记录下来 此网页中的链接找完后 有在新的页面链接中查找 如此反复 直到搜索完所有的站内链接",
+          "degree": "",
+          "start_date": "2015.12",
+          "end_date": "2016.02",
+          "description": "2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
         }
       ],
-      "skills": [],
-      "certificates": [],
+      "internship_experience": [
+        {
+          "company_name": "苏州云开网络科技有限公司",
+          "position": "前端工程师",
+          "start_date": "2015.07",
+          "end_date": "2015.08",
+          "description": "负责游戏中一个重要的组件编程,并和同事对接相应的功能; 负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。"
+        },
+        {
+          "company_name": "北京乔布有限公司",
+          "position": "前端工程师",
+          "start_date": "2014.07",
+          "end_date": "2014.08",
+          "description": "参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ; 负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。"
+        }
+      ],
+      "project_experience": [
+        {
+          "project_name": "网络爬虫",
+          "role": "",
+          "start_date": "2015.12",
+          "end_date": "2016.02",
+          "description": "开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来; 此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。"
+        },
+        {
+          "project_name": "爆街僵尸",
+          "role": "",
+          "start_date": "2013.09",
+          "end_date": "2014.06",
+          "description": "开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
+        }
+      ],
+      "skills": [
+        "C++",
+        "Java",
+        "Oracle",
+        "Mysql",
+        "eclipse",
+        "C"
+      ],
+      "certificates": [
+        "大学英语六级",
+        "普通话二级甲等",
+        "C1驾照"
+      ],
       "awards": [
-        "在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
+        "2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景",
+        "毕业设计为一款简单手机游戏,用JS编写,获得优秀等级",
+        "连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次"
       ],
       "self_evaluation": "",
-      "target_job_intention": "",
-      "raw_resume_text": "黄学聪\n15820429828 @ .com https://gitee.com /hxc\n在读 J ava后端实习生\n教育经历\n哈尔滨工程大学(211) 计算机科学与技术 大三 2023-08 ~ 至今\n全日制 计算机科学与技术学院\n在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金\n专业技能\nJ AVAS E: 具 有扎实的J ava基础,熟练使用集合、IO流、反射、泛型等J AVA API。\n框架: 熟悉SS M , M yBatis-Plus, S pring Boot, S pring Cloud等主流框架,理解IOC、AOP思想与Bean的生命周期。\nM yS QL: 熟悉常用S QL语句,理解索引、事务、存储引擎、M VCC、锁、主从同步,具 备一定的S QL调优能力。\nRedis: 熟悉Redis基本使用,了解常⻅缓存读写策略,了解redis生产问题、持久化机制、内存管理、集群、分布式锁、性\n能优化。\nS pring AI: 熟悉框架核心特性,能快速实现具 有会话记忆 + RAG 知识库 + 工具调用 + M CP 能力的AI智能体。\n并发编程: 熟悉线程的基础知识,了解 synchronized, volatile、ConcurrentHashM ap、ThreadLocal 原理,了解\nCAS 、线程池、死锁及其解决方法。\nJ VM :深入理解J VM 底层原理,如内存结构、垃圾回收、类加载机制,具 备一定的J VM 调优能力。\n消息队列:熟悉RabbitM Q的五种工作模式,了解RabbitM Q的消息可靠传输、死信队列、延迟队列等,熟悉消息丢失、消\n息积压、消息重复消费的解决方案。\n项目经历\n健身大师智能体 - ~ -\n后端开发工程师 http://.../ai/\n项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。支持多轮对话和RAG知识库检索等能力,并基\n于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并\n生成文档。\n技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP\nAI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活\n切换,适应不同业务需求。\nAI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多\n轮对话中保持语境连贯。\nRAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据\n库,支持语义相似度搜索和多维度过滤,提高了检索精准度。\n集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐\n健身地点。\n分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能\n力,实现了高扩展性和可维护性。\nAl流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻\n塞主线程,提升了用戶体验。\n面试在线刷题平台 - ~ -\n后端开发工程师 http://.../\n项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题\n并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。\n技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos\n批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。\n刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。并通过本地缓存\n+返回值优化+位运算进一步提升接口性能。\n分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring\nS cheduler定时同步近期发生更新的M yS QL题目到ES 。\n缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防\n止瞬时流量击垮数据库。\n分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和\n封禁用戶,有效防止内容盗取。\n限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。\n防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。",
+      "target_job_intention": "java工程师",
+      "raw_resume_text": "李明李明138-0000-000012345678@qq.com138-0000-000012345678@qq.com1994.05.15上海市杨浦区1994.05.15上海市杨浦区\n李明\n138-0000-0000\n12345678@qq.com\n1994.05.15\n上海市杨浦区\n2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景\n2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位\n毕业设计为一款简单手机游戏,用JS编写,获得优秀等级\n连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次\n教育背景\n工作经历工作经历\n工作经历\n2015.07~2015.08苏州云开网络科技有限公司前端工程师负责游戏中一个重要的组件编程,并和同事对接相应的功能;负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。2014.07~2014.08北京乔布有限公司前端工程师参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。2015.07~2015.08苏州云开网络科技有限公司前端工程师负责游戏中一个重要的组件编程,并和同事对接相应的功能;负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。2014.07~2014.08北京乔布有限公司前端工程师参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n2015.07~2015.08苏州云开网络科技有限公司前端工程师\n负责游戏中一个重要的组件编程,并和同事对接相应的功能;\n负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。\n2014.07~2014.08北京乔布有限公司前端工程师\n参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;\n负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n2015.07~2015.08苏州云开网络科技有限公司前端工程师\n负责游戏中一个重要的组件编程,并和同事对接相应的功能;\n负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。\n2014.07~2014.08北京乔布有限公司前端工程师\n参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;\n负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n项目经历项目经历\n项目经历\n2015.12~2016.02网络爬虫开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。2015.12~2016.02网络爬虫开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n2015.12~2016.02网络爬虫\n开发环境:vc6.0\n项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件\n负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。\n2013.09~2014.06爆街僵尸\n开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;\n项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;\n责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n2015.12~2016.02网络爬虫\n开发环境:vc6.0\n项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件\n负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。\n2013.09~2014.06爆街僵尸\n开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;\n项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;\n责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n技能证书技能证书\n技能证书\n语言能力:通过大学英语六级、普通话二级甲等计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程其他能力:C1驾照目标岗位:java工程师语言能力:通过大学英语六级、普通话二级甲等计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程其他能力:C1驾照目标岗位:java工程师\n语言能力:通过大学英语六级、普通话二级甲等\n计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程\n其他能力:C1驾照\n目标岗位:java工程师",
       "parse_warnings": [
-        "技能相关正文存在，但未解析到稳定技能列表",
-        "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY.",
-        "未解析到技能列表"
+        "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
       ]
     },
     "job_extract_result": {},
@@ -4553,390 +4678,480 @@
     },
     "student_profile_result": {
       "skill_profile": {
-        "Git": "待模型评估"
+        "C++": "待模型评估",
+        "Java": "待模型评估",
+        "SQL": "待模型评估",
+        "eclipse": "待模型评估",
+        "Linux": "待模型评估",
+        "Excel": "待模型评估"
       },
-      "certificate_profile": [],
+      "certificate_profile": [
+        "CET-6",
+        "普通话二级甲等",
+        "C1驾照"
+      ],
       "soft_skill_profile": {},
       "soft_skills": [],
       "employment_ability_profile": {
         "专业技能": {
-          "score": 7.14,
-          "level": "待提升",
+          "score": 60.0,
+          "level": "中等",
           "evidence": [
-            "硬技能 0 项",
-            "工具技能 1 项",
-            "待补充硬技能"
+            "硬技能 4 项",
+            "工具技能 2 项",
+            "核心技能示例: C++, Java, SQL"
           ]
         },
         "证书": {
-          "score": 30.0,
-          "level": "待提升",
+          "score": 100.0,
+          "level": "优秀",
           "evidence": [
-            "证书/背书 0 项",
-            "暂无证书背书"
+            "证书/背书 3 项",
+            "证书示例: CET-6, 普通话二级甲等, C1驾照"
           ]
         },
         "创新能力": {
-          "score": 63.0,
-          "level": "中等",
+          "score": 87.0,
+          "level": "优秀",
           "evidence": [
             "项目经历 2 段",
-            "获奖/竞赛 1 项",
-            "实践标签: 项目:建模算法, 项目:工程开发, 奖项:科研实践"
+            "获奖/竞赛 3 项",
+            "实践标签: 项目:数据处理, 项目:建模算法, 项目:工程开发"
           ]
         },
         "学习能力": {
-          "score": 13.21,
-          "level": "待提升",
+          "score": 61.0,
+          "level": "中等",
           "evidence": [
-            "已覆盖技能总数 1 项",
+            "已覆盖技能总数 6 项",
             "建议补充学习能力证明",
             "学历层次: 本科"
           ]
         },
         "抗压能力": {
-          "score": 28.0,
-          "level": "待提升",
+          "score": 80.0,
+          "level": "良好",
           "evidence": [
-            "项目 + 实习共 2 段",
+            "项目 + 实习共 4 段",
             "建议补充高压场景实践证据"
           ]
         },
         "沟通能力": {
-          "score": 20.0,
-          "level": "待提升",
+          "score": 74.0,
+          "level": "良好",
           "evidence": [
             "项目经历 2 段",
-            "实习经历 0 段",
+            "实习经历 2 段",
             "建议补充跨团队协作案例"
           ]
         },
         "实习能力": {
-          "score": 0.0,
-          "level": "待提升",
+          "score": 100.0,
+          "level": "优秀",
           "evidence": [
-            "实习经历 0 段",
-            "暂无实习关键词证据"
+            "实习经历 2 段",
+            "实习关键词: 开发, 前端, 工程"
           ]
         }
       },
       "potential_profile": {
-        "growth_level": "待提升",
+        "growth_level": "较强",
         "preferred_directions": [
-          "后端开发",
+          "java工程师",
           "前端开发"
         ],
         "domain_tags": [
           "软件研发",
+          "商业分析",
+          "云计算/大数据",
           "信息技术"
         ],
-        "basis_score": 42.5,
+        "basis_score": 94.0,
         "reason": "根据规则评分、职业方向标签和领域标签生成的兜底潜力画像。"
       },
-      "complete_score": 68.14,
-      "competitiveness_score": 42.5,
-      "score_level": "D-当前竞争力偏弱",
+      "complete_score": 96.0,
+      "competitiveness_score": 94.0,
+      "score_level": "A-竞争力较强",
       "strengths": [
         "基本信息较完整，已包含身份、教育背景和联系方式。",
         "教育信息完整，学历、学校、专业和毕业年份均已明确。",
-        "已有明确技能信息，当前识别 1 项。",
+        "技能信息较丰富，已识别 6 项技能/工具。",
         "已有项目经历 2 段，可作为能力证明材料。",
+        "已有实习经历 2 段，有助于证明岗位实践能力。",
         "有竞赛/获奖记录，可增强简历背书。",
-        "已有一定职业方向信号，但表达还可以更明确。",
+        "求职意向较明确，方向聚焦在 java工程师, 前端开发。",
         "学历背景具备一定竞争力，当前学历为本科。",
-        "已有工具技能 1 项。",
+        "已有 4 项硬技能，但仍有扩展空间。",
+        "已有工具技能 2 项。",
         "项目经历数量较充足，对岗位能力证明较有帮助。",
-        "已有一定证书或获奖背书。",
-        "已有职业方向信号，但求职目标仍可进一步收敛。"
+        "实习经历较丰富，具备一定岗位场景适应基础。",
+        "证书/获奖背书较好，可增强简历可信度。",
+        "职业方向较聚焦，当前方向信号为 java工程师, 前端开发。"
       ],
       "weaknesses": [
-        "技能数量偏少，建议补充与目标岗位直接相关的工具栈和硬技能。",
-        "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
-        "建议在简历中补充更明确的目标岗位或岗位方向。",
-        "硬技能储备偏弱，建议优先补充岗位要求中的核心技能。",
-        "实习经验不足，建议优先争取与目标方向一致的实习。"
+        "硬技能数量尚不充分，建议围绕目标岗位补强核心技能。"
       ],
-      "missing_dimensions": [
-        "实习经历"
-      ],
-      "summary": "该学生在后端开发方向已有一定基础，建议结合技能、项目和实习短板继续补强。",
+      "missing_dimensions": [],
+      "summary": "该学生在java工程师方向已有一定基础，建议结合技能、项目和实习短板继续补强。",
       "ability_evidence": {
         "project_examples": [
           {
-            "project_name": "健身大师智能体",
-            "role": "后端开发工程师",
-            "start_date": "",
-            "end_date": "",
-            "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
+            "project_name": "网络爬虫",
+            "role": "",
+            "start_date": "2015.12",
+            "end_date": "2016.02",
+            "description": "开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来; 此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。"
           },
           {
-            "project_name": "面试在线刷题平台",
-            "role": "后端开发工程师",
-            "start_date": "",
-            "end_date": "",
-            "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
+            "project_name": "爆街僵尸",
+            "role": "",
+            "start_date": "2013.09",
+            "end_date": "2014.06",
+            "description": "开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
           }
         ],
-        "internship_examples": [],
+        "internship_examples": [
+          {
+            "company_name": "苏州云开网络科技有限公司",
+            "position": "前端工程师",
+            "start_date": "2015.07",
+            "end_date": "2015.08",
+            "description": "负责游戏中一个重要的组件编程,并和同事对接相应的功能; 负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。"
+          },
+          {
+            "company_name": "北京乔布有限公司",
+            "position": "前端工程师",
+            "start_date": "2014.07",
+            "end_date": "2014.08",
+            "description": "参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ; 负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。"
+          }
+        ],
         "certificate_tags": [
           "学历:本科",
-          "学校:哈尔滨工程大学",
-          "专业:计算机科学与技术"
+          "学校:中国社会大学",
+          "专业:计算机科学与技术",
+          "证书:CET-6",
+          "证书:普通话二级甲等",
+          "证书:C1驾照"
         ],
         "practice_tags": [
+          "项目:数据处理",
           "项目:建模算法",
           "项目:工程开发",
-          "奖项:科研实践",
-          "项目:业务协作",
+          "实习:工程开发",
           "有项目经历",
+          "有实习经历",
           "有竞赛/获奖经历"
         ],
         "project_keywords": [
-          "模型",
-          "推荐",
-          "开发",
-          "接口",
-          "平台",
-          "后端",
-          "工程",
-          "业务",
-          "需求"
+          "sql",
+          "分类",
+          "开发"
         ],
-        "internship_keywords": [],
+        "internship_keywords": [
+          "开发",
+          "前端",
+          "工程"
+        ],
         "score_evidence": {
-          "profile_completeness_score": 68.14,
-          "competitiveness_base_score": 42.5,
-          "score_level": "D-当前竞争力偏弱"
+          "profile_completeness_score": 96.0,
+          "competitiveness_base_score": 94.0,
+          "score_level": "A-竞争力较强"
         }
       },
       "rule_score_result": {
-        "profile_completeness_score": 68.14,
-        "competitiveness_base_score": 42.5,
-        "score_level": "D-当前竞争力偏弱",
+        "profile_completeness_score": 96.0,
+        "competitiveness_base_score": 94.0,
+        "score_level": "A-竞争力较强",
         "completeness_detail": {
-          "basic_info_score": 17.14,
+          "basic_info_score": 20.0,
           "education_score": 15.0,
-          "skill_score": 8.0,
+          "skill_score": 16.0,
           "project_score": 15.0,
-          "internship_score": 0.0,
+          "internship_score": 15.0,
           "qualification_score": 10.0,
-          "intention_score": 3.0
+          "intention_score": 5.0
         },
         "competitiveness_detail": {
           "education_base_score": 15.0,
-          "skill_base_score": 0.0,
-          "tool_base_score": 2.5,
+          "skill_base_score": 16.0,
+          "tool_base_score": 5.0,
           "project_base_score": 15.0,
-          "internship_base_score": 0.0,
-          "qualification_base_score": 3.0,
-          "occupation_focus_score": 3.0,
-          "domain_bonus_score": 4.0
+          "internship_base_score": 20.0,
+          "qualification_base_score": 10.0,
+          "occupation_focus_score": 5.0,
+          "domain_bonus_score": 8.0
         },
         "score_reasons": {
           "strengths": [
             "基本信息较完整，已包含身份、教育背景和联系方式。",
             "教育信息完整，学历、学校、专业和毕业年份均已明确。",
-            "已有明确技能信息，当前识别 1 项。",
+            "技能信息较丰富，已识别 6 项技能/工具。",
             "已有项目经历 2 段，可作为能力证明材料。",
+            "已有实习经历 2 段，有助于证明岗位实践能力。",
             "有竞赛/获奖记录，可增强简历背书。",
-            "已有一定职业方向信号，但表达还可以更明确。",
+            "求职意向较明确，方向聚焦在 java工程师, 前端开发。",
             "学历背景具备一定竞争力，当前学历为本科。",
-            "已有工具技能 1 项。",
+            "已有 4 项硬技能，但仍有扩展空间。",
+            "已有工具技能 2 项。",
             "项目经历数量较充足，对岗位能力证明较有帮助。",
-            "已有一定证书或获奖背书。",
-            "已有职业方向信号，但求职目标仍可进一步收敛。"
+            "实习经历较丰富，具备一定岗位场景适应基础。",
+            "证书/获奖背书较好，可增强简历可信度。",
+            "职业方向较聚焦，当前方向信号为 java工程师, 前端开发。"
           ],
           "weaknesses": [
-            "技能数量偏少，建议补充与目标岗位直接相关的工具栈和硬技能。",
-            "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
-            "建议在简历中补充更明确的目标岗位或岗位方向。",
-            "硬技能储备偏弱，建议优先补充岗位要求中的核心技能。",
-            "实习经验不足，建议优先争取与目标方向一致的实习。"
+            "硬技能数量尚不充分，建议围绕目标岗位补强核心技能。"
           ],
           "suggestions": [
-            "围绕目标岗位补充核心硬技能和常用工具，并在项目/实习中给出使用场景。",
-            "补充 1-2 个可量化成果的课程项目、竞赛项目或个人作品项目。",
-            "尽量争取与目标岗位方向一致的实习、校企实践或真实业务协作经历。"
+            "围绕目标岗位补充核心硬技能和常用工具，并在项目/实习中给出使用场景。"
           ]
         }
       },
       "profile_input_payload": {
         "basic_info": {
-          "name": "黄学聪",
+          "name": "李明",
           "gender": "",
-          "phone": "15820429828",
-          "email": "",
-          "school": "哈尔滨工程大学",
+          "phone": "138-0000-0000",
+          "email": "138-0000-000012345678@qq.com138-0000-000012345678",
+          "school": "中国社会大学",
           "major": "计算机科学与技术",
           "degree": "本科",
-          "graduation_year": "2027"
+          "graduation_year": "2016"
         },
         "normalized_education": {
           "degree": "本科",
-          "school": "哈尔滨工程大学",
+          "school": "中国社会大学",
           "major_raw": "计算机科学与技术",
           "major_std": "计算机科学与技术",
-          "graduation_year": "2027"
+          "graduation_year": "2016"
         },
         "explicit_profile": {
-          "skills": [],
-          "tools": [
-            "Git"
+          "skills": [
+            "C++",
+            "Java",
+            "SQL",
+            "eclipse"
           ],
-          "certificates": [],
+          "tools": [
+            "Linux",
+            "Excel"
+          ],
+          "certificates": [
+            "CET-6",
+            "普通话二级甲等",
+            "C1驾照"
+          ],
           "project_experience": [
             {
-              "project_name": "健身大师智能体",
-              "role": "后端开发工程师",
-              "start_date": "",
-              "end_date": "",
-              "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
+              "project_name": "网络爬虫",
+              "role": "",
+              "start_date": "2015.12",
+              "end_date": "2016.02",
+              "description": "开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来; 此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。"
             },
             {
-              "project_name": "面试在线刷题平台",
-              "role": "后端开发工程师",
-              "start_date": "",
-              "end_date": "",
-              "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
+              "project_name": "爆街僵尸",
+              "role": "",
+              "start_date": "2013.09",
+              "end_date": "2014.06",
+              "description": "开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
             }
           ],
-          "internship_experience": [],
-          "awards": [
-            "在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
+          "internship_experience": [
+            {
+              "company_name": "苏州云开网络科技有限公司",
+              "position": "前端工程师",
+              "start_date": "2015.07",
+              "end_date": "2015.08",
+              "description": "负责游戏中一个重要的组件编程,并和同事对接相应的功能; 负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。"
+            },
+            {
+              "company_name": "北京乔布有限公司",
+              "position": "前端工程师",
+              "start_date": "2014.07",
+              "end_date": "2014.08",
+              "description": "参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ; 负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。"
+            }
           ],
-          "target_job_intention": "",
+          "awards": [
+            "2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景",
+            "毕业设计为一款简单手机游戏,用JS编写,获得优秀等级",
+            "连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次"
+          ],
+          "target_job_intention": "java工程师",
           "self_evaluation": ""
         },
         "normalized_profile": {
           "major_std": "计算机科学与技术",
-          "hard_skills": [],
+          "hard_skills": [
+            "C++",
+            "Java",
+            "SQL",
+            "eclipse"
+          ],
           "tool_skills": [
-            "Git"
+            "Linux",
+            "Excel"
           ],
           "qualification_tags": [
             "学历:本科",
-            "学校:哈尔滨工程大学",
-            "专业:计算机科学与技术"
+            "学校:中国社会大学",
+            "专业:计算机科学与技术",
+            "证书:CET-6",
+            "证书:普通话二级甲等",
+            "证书:C1驾照"
           ],
           "experience_tags": [
+            "项目:数据处理",
             "项目:建模算法",
             "项目:工程开发",
-            "奖项:科研实践",
-            "项目:业务协作",
+            "实习:工程开发",
             "有项目经历",
+            "有实习经历",
             "有竞赛/获奖经历"
           ],
           "occupation_hints": [
-            "后端开发",
+            "java工程师",
             "前端开发"
           ],
           "domain_tags": [
             "软件研发",
+            "商业分析",
+            "云计算/大数据",
             "信息技术"
           ]
         },
         "practice_profile": {
           "project_count": 2,
-          "internship_count": 0,
-          "award_count": 1,
+          "internship_count": 2,
+          "award_count": 3,
           "has_project_experience": true,
-          "has_internship_experience": false,
+          "has_internship_experience": true,
           "has_competition_or_award": true,
-          "has_target_job_intention": false,
-          "total_practice_items": 3,
+          "has_target_job_intention": true,
+          "total_practice_items": 7,
           "project_keywords": [
-            "模型",
-            "推荐",
-            "开发",
-            "接口",
-            "平台",
-            "后端",
-            "工程",
-            "业务",
-            "需求"
+            "sql",
+            "分类",
+            "开发"
           ],
-          "internship_keywords": [],
+          "internship_keywords": [
+            "开发",
+            "前端",
+            "工程"
+          ],
           "practice_tags": [
+            "项目:数据处理",
             "项目:建模算法",
             "项目:工程开发",
-            "奖项:科研实践",
-            "项目:业务协作",
+            "实习:工程开发",
             "有项目经历",
+            "有实习经历",
             "有竞赛/获奖经历"
           ]
         },
         "evidence_summary": {
           "project_count": 2,
-          "internship_count": 0,
-          "award_count": 1,
-          "skill_count": 0,
-          "certificate_count": 0,
+          "internship_count": 2,
+          "award_count": 3,
+          "skill_count": 4,
+          "certificate_count": 3,
           "parse_warnings": [
-            "技能相关正文存在，但未解析到稳定技能列表",
-            "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY.",
-            "未解析到技能列表"
+            "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
           ]
         },
         "source_snapshot": {
           "resume_parse_result": {
             "basic_info": {
-              "name": "黄学聪",
+              "name": "李明",
               "gender": "",
-              "phone": "15820429828",
-              "email": "",
-              "school": "哈尔滨工程大学",
+              "phone": "138-0000-0000",
+              "email": "138-0000-000012345678@qq.com138-0000-000012345678",
+              "school": "中国社会大学",
               "major": "计算机科学与技术",
               "degree": "本科",
-              "graduation_year": "2027"
+              "graduation_year": "2016"
             },
             "education_experience": [
               {
-                "school": "哈尔滨工程大学",
+                "school": "中国社会大学",
                 "major": "计算机科学与技术",
                 "degree": "本科",
-                "start_date": "2023.08",
-                "end_date": "至今",
-                "description": "全日制 计算机科学与技术学院 在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
-              }
-            ],
-            "internship_experience": [],
-            "project_experience": [
-              {
-                "project_name": "健身大师智能体",
-                "role": "后端开发工程师",
-                "start_date": "",
-                "end_date": "",
-                "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
+                "start_date": "2012.09",
+                "end_date": "2016.07",
+                "description": "毕业设计为一款简单手机游戏 用JS编写 获得优秀等级连续2年获得校综合奖学金“励志奖” 获校二等奖学金、国家励志奖学金各一次"
               },
               {
-                "project_name": "面试在线刷题平台",
-                "role": "后端开发工程师",
-                "start_date": "",
-                "end_date": "",
-                "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
+                "school": "网络爬虫开发环境:vc6.0项目描述:找到学校",
+                "major": "网站上所有的word pdf excel等文件的URL 然后根据后缀名分类 用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求 接收html文件 找出其中站内的URL 属于文件的保存下来 属于新页面的也记录下来 此网页中的链接找完后 有在新的页面链接中查找 如此反复 直到搜索完所有的站内链接",
+                "degree": "",
+                "start_date": "2015.12",
+                "end_date": "2016.02",
+                "description": "2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
               }
             ],
-            "skills": [],
-            "certificates": [],
+            "internship_experience": [
+              {
+                "company_name": "苏州云开网络科技有限公司",
+                "position": "前端工程师",
+                "start_date": "2015.07",
+                "end_date": "2015.08",
+                "description": "负责游戏中一个重要的组件编程,并和同事对接相应的功能; 负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。"
+              },
+              {
+                "company_name": "北京乔布有限公司",
+                "position": "前端工程师",
+                "start_date": "2014.07",
+                "end_date": "2014.08",
+                "description": "参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ; 负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。"
+              }
+            ],
+            "project_experience": [
+              {
+                "project_name": "网络爬虫",
+                "role": "",
+                "start_date": "2015.12",
+                "end_date": "2016.02",
+                "description": "开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来; 此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。"
+              },
+              {
+                "project_name": "爆街僵尸",
+                "role": "",
+                "start_date": "2013.09",
+                "end_date": "2014.06",
+                "description": "开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
+              }
+            ],
+            "skills": [
+              "C++",
+              "Java",
+              "Oracle",
+              "Mysql",
+              "eclipse",
+              "C"
+            ],
+            "certificates": [
+              "大学英语六级",
+              "普通话二级甲等",
+              "C1驾照"
+            ],
             "awards": [
-              "在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
+              "2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景",
+              "毕业设计为一款简单手机游戏,用JS编写,获得优秀等级",
+              "连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次"
             ],
             "self_evaluation": "",
-            "target_job_intention": "",
-            "raw_resume_text": "黄学聪\n15820429828 @ .com https://gitee.com /hxc\n在读 J ava后端实习生\n教育经历\n哈尔滨工程大学(211) 计算机科学与技术 大三 2023-08 ~ 至今\n全日制 计算机科学与技术学院\n在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金\n专业技能\nJ AVAS E: 具 有扎实的J ava基础,熟练使用集合、IO流、反射、泛型等J AVA API。\n框架: 熟悉SS M , M yBatis-Plus, S pring Boot, S pring Cloud等主流框架,理解IOC、AOP思想与Bean的生命周期。\nM yS QL: 熟悉常用S QL语句,理解索引、事务、存储引擎、M VCC、锁、主从同步,具 备一定的S QL调优能力。\nRedis: 熟悉Redis基本使用,了解常⻅缓存读写策略,了解redis生产问题、持久化机制、内存管理、集群、分布式锁、性\n能优化。\nS pring AI: 熟悉框架核心特性,能快速实现具 有会话记忆 + RAG 知识库 + 工具调用 + M CP 能力的AI智能体。\n并发编程: 熟悉线程的基础知识,了解 synchronized, volatile、ConcurrentHashM ap、ThreadLocal 原理,了解\nCAS 、线程池、死锁及其解决方法。\nJ VM :深入理解J VM 底层原理,如内存结构、垃圾回收、类加载机制,具 备一定的J VM 调优能力。\n消息队列:熟悉RabbitM Q的五种工作模式,了解RabbitM Q的消息可靠传输、死信队列、延迟队列等,熟悉消息丢失、消\n息积压、消息重复消费的解决方案。\n项目经历\n健身大师智能体 - ~ -\n后端开发工程师 http://.../ai/\n项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。支持多轮对话和RAG知识库检索等能力,并基\n于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并\n生成文档。\n技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP\nAI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活\n切换,适应不同业务需求。\nAI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多\n轮对话中保持语境连贯。\nRAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据\n库,支持语义相似度搜索和多维度过滤,提高了检索精准度。\n集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐\n健身地点。\n分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能\n力,实现了高扩展性和可维护性。\nAl流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻\n塞主线程,提升了用戶体验。\n面试在线刷题平台 - ~ -\n后端开发工程师 http://.../\n项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题\n并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。\n技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos\n批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。\n刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。并通过本地缓存\n+返回值优化+位运算进一步提升接口性能。\n分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring\nS cheduler定时同步近期发生更新的M yS QL题目到ES 。\n缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防\n止瞬时流量击垮数据库。\n分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和\n封禁用戶,有效防止内容盗取。\n限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。\n防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。",
+            "target_job_intention": "java工程师",
+            "raw_resume_text": "李明李明138-0000-000012345678@qq.com138-0000-000012345678@qq.com1994.05.15上海市杨浦区1994.05.15上海市杨浦区\n李明\n138-0000-0000\n12345678@qq.com\n1994.05.15\n上海市杨浦区\n2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景\n2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位\n毕业设计为一款简单手机游戏,用JS编写,获得优秀等级\n连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次\n教育背景\n工作经历工作经历\n工作经历\n2015.07~2015.08苏州云开网络科技有限公司前端工程师负责游戏中一个重要的组件编程,并和同事对接相应的功能;负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。2014.07~2014.08北京乔布有限公司前端工程师参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。2015.07~2015.08苏州云开网络科技有限公司前端工程师负责游戏中一个重要的组件编程,并和同事对接相应的功能;负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。2014.07~2014.08北京乔布有限公司前端工程师参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n2015.07~2015.08苏州云开网络科技有限公司前端工程师\n负责游戏中一个重要的组件编程,并和同事对接相应的功能;\n负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。\n2014.07~2014.08北京乔布有限公司前端工程师\n参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;\n负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n2015.07~2015.08苏州云开网络科技有限公司前端工程师\n负责游戏中一个重要的组件编程,并和同事对接相应的功能;\n负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。\n2014.07~2014.08北京乔布有限公司前端工程师\n参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;\n负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n项目经历项目经历\n项目经历\n2015.12~2016.02网络爬虫开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。2015.12~2016.02网络爬虫开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n2015.12~2016.02网络爬虫\n开发环境:vc6.0\n项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件\n负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。\n2013.09~2014.06爆街僵尸\n开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;\n项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;\n责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n2015.12~2016.02网络爬虫\n开发环境:vc6.0\n项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件\n负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。\n2013.09~2014.06爆街僵尸\n开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;\n项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;\n责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n技能证书技能证书\n技能证书\n语言能力:通过大学英语六级、普通话二级甲等计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程其他能力:C1驾照目标岗位:java工程师语言能力:通过大学英语六级、普通话二级甲等计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程其他能力:C1驾照目标岗位:java工程师\n语言能力:通过大学英语六级、普通话二级甲等\n计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程\n其他能力:C1驾照\n目标岗位:java工程师",
             "parse_warnings": [
-              "技能相关正文存在，但未解析到稳定技能列表",
-              "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY.",
-              "未解析到技能列表"
+              "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
             ]
           }
         }
       },
       "llm_profile_result": {},
       "build_warnings": [
-        "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY.",
-        "技能相关正文存在，但未解析到稳定技能列表",
-        "未解析到技能列表"
+        "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
       ]
     },
     "job_match_result": {
@@ -27966,7 +28181,7 @@
         "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
       ]
     },
-    "latest_shared_report_file": "report_20260418T083852352972Z.json",
+    "latest_shared_report_file": "report_20260418T092244059814Z.json",
     "target_job_confirmation": {
       "requested_job_name": "后端开发",
       "confirmed_standard_job_name": "Java开发工程师",
@@ -27976,224 +28191,291 @@
   },
   "profile_input_payload": {
     "basic_info": {
-      "name": "黄学聪",
+      "name": "李明",
       "gender": "",
-      "phone": "15820429828",
-      "email": "",
-      "school": "哈尔滨工程大学",
+      "phone": "138-0000-0000",
+      "email": "138-0000-000012345678@qq.com138-0000-000012345678",
+      "school": "中国社会大学",
       "major": "计算机科学与技术",
       "degree": "本科",
-      "graduation_year": "2027"
+      "graduation_year": "2016"
     },
     "normalized_education": {
       "degree": "本科",
-      "school": "哈尔滨工程大学",
+      "school": "中国社会大学",
       "major_raw": "计算机科学与技术",
       "major_std": "计算机科学与技术",
-      "graduation_year": "2027"
+      "graduation_year": "2016"
     },
     "explicit_profile": {
-      "skills": [],
-      "tools": [
-        "Git"
+      "skills": [
+        "C++",
+        "Java",
+        "SQL",
+        "eclipse"
       ],
-      "certificates": [],
+      "tools": [
+        "Linux",
+        "Excel"
+      ],
+      "certificates": [
+        "CET-6",
+        "普通话二级甲等",
+        "C1驾照"
+      ],
       "project_experience": [
         {
-          "project_name": "健身大师智能体",
-          "role": "后端开发工程师",
-          "start_date": "",
-          "end_date": "",
-          "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
+          "project_name": "网络爬虫",
+          "role": "",
+          "start_date": "2015.12",
+          "end_date": "2016.02",
+          "description": "开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来; 此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。"
         },
         {
-          "project_name": "面试在线刷题平台",
-          "role": "后端开发工程师",
-          "start_date": "",
-          "end_date": "",
-          "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
+          "project_name": "爆街僵尸",
+          "role": "",
+          "start_date": "2013.09",
+          "end_date": "2014.06",
+          "description": "开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
         }
       ],
-      "internship_experience": [],
-      "awards": [
-        "在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
+      "internship_experience": [
+        {
+          "company_name": "苏州云开网络科技有限公司",
+          "position": "前端工程师",
+          "start_date": "2015.07",
+          "end_date": "2015.08",
+          "description": "负责游戏中一个重要的组件编程,并和同事对接相应的功能; 负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。"
+        },
+        {
+          "company_name": "北京乔布有限公司",
+          "position": "前端工程师",
+          "start_date": "2014.07",
+          "end_date": "2014.08",
+          "description": "参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ; 负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。"
+        }
       ],
-      "target_job_intention": "",
+      "awards": [
+        "2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景",
+        "毕业设计为一款简单手机游戏,用JS编写,获得优秀等级",
+        "连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次"
+      ],
+      "target_job_intention": "java工程师",
       "self_evaluation": ""
     },
     "normalized_profile": {
       "major_std": "计算机科学与技术",
-      "hard_skills": [],
+      "hard_skills": [
+        "C++",
+        "Java",
+        "SQL",
+        "eclipse"
+      ],
       "tool_skills": [
-        "Git"
+        "Linux",
+        "Excel"
       ],
       "qualification_tags": [
         "学历:本科",
-        "学校:哈尔滨工程大学",
-        "专业:计算机科学与技术"
+        "学校:中国社会大学",
+        "专业:计算机科学与技术",
+        "证书:CET-6",
+        "证书:普通话二级甲等",
+        "证书:C1驾照"
       ],
       "experience_tags": [
+        "项目:数据处理",
         "项目:建模算法",
         "项目:工程开发",
-        "奖项:科研实践",
-        "项目:业务协作",
+        "实习:工程开发",
         "有项目经历",
+        "有实习经历",
         "有竞赛/获奖经历"
       ],
       "occupation_hints": [
-        "后端开发",
+        "java工程师",
         "前端开发"
       ],
       "domain_tags": [
         "软件研发",
+        "商业分析",
+        "云计算/大数据",
         "信息技术"
       ]
     },
     "practice_profile": {
       "project_count": 2,
-      "internship_count": 0,
-      "award_count": 1,
+      "internship_count": 2,
+      "award_count": 3,
       "has_project_experience": true,
-      "has_internship_experience": false,
+      "has_internship_experience": true,
       "has_competition_or_award": true,
-      "has_target_job_intention": false,
-      "total_practice_items": 3,
+      "has_target_job_intention": true,
+      "total_practice_items": 7,
       "project_keywords": [
-        "模型",
-        "推荐",
-        "开发",
-        "接口",
-        "平台",
-        "后端",
-        "工程",
-        "业务",
-        "需求"
+        "sql",
+        "分类",
+        "开发"
       ],
-      "internship_keywords": [],
+      "internship_keywords": [
+        "开发",
+        "前端",
+        "工程"
+      ],
       "practice_tags": [
+        "项目:数据处理",
         "项目:建模算法",
         "项目:工程开发",
-        "奖项:科研实践",
-        "项目:业务协作",
+        "实习:工程开发",
         "有项目经历",
+        "有实习经历",
         "有竞赛/获奖经历"
       ]
     },
     "evidence_summary": {
       "project_count": 2,
-      "internship_count": 0,
-      "award_count": 1,
-      "skill_count": 0,
-      "certificate_count": 0,
+      "internship_count": 2,
+      "award_count": 3,
+      "skill_count": 4,
+      "certificate_count": 3,
       "parse_warnings": [
-        "技能相关正文存在，但未解析到稳定技能列表",
-        "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY.",
-        "未解析到技能列表"
+        "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
       ]
     },
     "source_snapshot": {
       "resume_parse_result": {
         "basic_info": {
-          "name": "黄学聪",
+          "name": "李明",
           "gender": "",
-          "phone": "15820429828",
-          "email": "",
-          "school": "哈尔滨工程大学",
+          "phone": "138-0000-0000",
+          "email": "138-0000-000012345678@qq.com138-0000-000012345678",
+          "school": "中国社会大学",
           "major": "计算机科学与技术",
           "degree": "本科",
-          "graduation_year": "2027"
+          "graduation_year": "2016"
         },
         "education_experience": [
           {
-            "school": "哈尔滨工程大学",
+            "school": "中国社会大学",
             "major": "计算机科学与技术",
             "degree": "本科",
-            "start_date": "2023.08",
-            "end_date": "至今",
-            "description": "全日制 计算机科学与技术学院 在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
-          }
-        ],
-        "internship_experience": [],
-        "project_experience": [
-          {
-            "project_name": "健身大师智能体",
-            "role": "后端开发工程师",
-            "start_date": "",
-            "end_date": "",
-            "description": "项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。 支持多轮对话和RAG知识库检索等能力,并基 于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并 生成文档。 技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP AI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活 切换,适应不同业务需求。 AI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多 轮对话中保持语境连贯。 RAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据 库,支持语义相似度搜索和多维度过滤,提高了检索精准度。 集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐 健身地点。 分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能 力,实现了高扩展性和可维护性。 Al流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻 塞主线程,提升了用戶体验。"
+            "start_date": "2012.09",
+            "end_date": "2016.07",
+            "description": "毕业设计为一款简单手机游戏 用JS编写 获得优秀等级连续2年获得校综合奖学金“励志奖” 获校二等奖学金、国家励志奖学金各一次"
           },
           {
-            "project_name": "面试在线刷题平台",
-            "role": "后端开发工程师",
-            "start_date": "",
-            "end_date": "",
-            "description": "项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题 并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。 技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos 批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。 刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。 并通过本地缓存 +返回值优化+位运算进一步提升接口性能。 分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring S cheduler定时同步近期发生更新的M yS QL题目到ES 。 缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防 止瞬时流量击垮数据库。 分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和 封禁用戶,有效防止内容盗取。 限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。 防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。"
+            "school": "网络爬虫开发环境:vc6.0项目描述:找到学校",
+            "major": "网站上所有的word pdf excel等文件的URL 然后根据后缀名分类 用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求 接收html文件 找出其中站内的URL 属于文件的保存下来 属于新页面的也记录下来 此网页中的链接找完后 有在新的页面链接中查找 如此反复 直到搜索完所有的站内链接",
+            "degree": "",
+            "start_date": "2015.12",
+            "end_date": "2016.02",
+            "description": "2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
           }
         ],
-        "skills": [],
-        "certificates": [],
+        "internship_experience": [
+          {
+            "company_name": "苏州云开网络科技有限公司",
+            "position": "前端工程师",
+            "start_date": "2015.07",
+            "end_date": "2015.08",
+            "description": "负责游戏中一个重要的组件编程,并和同事对接相应的功能; 负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。"
+          },
+          {
+            "company_name": "北京乔布有限公司",
+            "position": "前端工程师",
+            "start_date": "2014.07",
+            "end_date": "2014.08",
+            "description": "参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ; 负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。"
+          }
+        ],
+        "project_experience": [
+          {
+            "project_name": "网络爬虫",
+            "role": "",
+            "start_date": "2015.12",
+            "end_date": "2016.02",
+            "description": "开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来; 此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。"
+          },
+          {
+            "project_name": "爆街僵尸",
+            "role": "",
+            "start_date": "2013.09",
+            "end_date": "2014.06",
+            "description": "开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux; 项目介绍:3D三国题材回合制(连击)角色扮演手机游戏; 责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。"
+          }
+        ],
+        "skills": [
+          "C++",
+          "Java",
+          "Oracle",
+          "Mysql",
+          "eclipse",
+          "C"
+        ],
+        "certificates": [
+          "大学英语六级",
+          "普通话二级甲等",
+          "C1驾照"
+        ],
         "awards": [
-          "在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金"
+          "2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景",
+          "毕业设计为一款简单手机游戏,用JS编写,获得优秀等级",
+          "连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次"
         ],
         "self_evaluation": "",
-        "target_job_intention": "",
-        "raw_resume_text": "黄学聪\n15820429828 @ .com https://gitee.com /hxc\n在读 J ava后端实习生\n教育经历\n哈尔滨工程大学(211) 计算机科学与技术 大三 2023-08 ~ 至今\n全日制 计算机科学与技术学院\n在校期间已通过CET-(550),CET-(529),获得数学竞赛省二等奖,获得多次校级三等奖学金\n专业技能\nJ AVAS E: 具 有扎实的J ava基础,熟练使用集合、IO流、反射、泛型等J AVA API。\n框架: 熟悉SS M , M yBatis-Plus, S pring Boot, S pring Cloud等主流框架,理解IOC、AOP思想与Bean的生命周期。\nM yS QL: 熟悉常用S QL语句,理解索引、事务、存储引擎、M VCC、锁、主从同步,具 备一定的S QL调优能力。\nRedis: 熟悉Redis基本使用,了解常⻅缓存读写策略,了解redis生产问题、持久化机制、内存管理、集群、分布式锁、性\n能优化。\nS pring AI: 熟悉框架核心特性,能快速实现具 有会话记忆 + RAG 知识库 + 工具调用 + M CP 能力的AI智能体。\n并发编程: 熟悉线程的基础知识,了解 synchronized, volatile、ConcurrentHashM ap、ThreadLocal 原理,了解\nCAS 、线程池、死锁及其解决方法。\nJ VM :深入理解J VM 底层原理,如内存结构、垃圾回收、类加载机制,具 备一定的J VM 调优能力。\n消息队列:熟悉RabbitM Q的五种工作模式,了解RabbitM Q的消息可靠传输、死信队列、延迟队列等,熟悉消息丢失、消\n息积压、消息重复消费的解决方案。\n项目经历\n健身大师智能体 - ~ -\n后端开发工程师 http://.../ai/\n项目描述: 基于S pringBoot 构建健身大师智能体,为用戶提供训练指导服务。支持多轮对话和RAG知识库检索等能力,并基\n于React模式,能够自主思考并调用工具来完成复杂任务,比如利用网⻚搜索,资源 下载和PDF生成工具 制定完整训练计划并\n生成文档。\n技术栈: S pring Boot ,S pring AI,RAG,Tool Calling,M CP\nAI大模型集成:利用S pring Al框架快速接入通义,Ollam a等多种Al大模型,并封装统一的调用接口,实现了大模型的灵 活\n切换,适应不同业务需求。\nAI多轮对话:通过S pring Al的M essageChatM em oryAdvisor和ChatM em ory特性实现对话上下文记忆功能,使AI能在多\n轮对话中保持语境连贯。\nRAG向量存储:自定义VectorStore 实现,结合Em bedding M odel将文本转换为语义向量并存储到PGvector向量数据\n库,支持语义相似度搜索和多维度过滤,提高了检索精准度。\n集成地图M CP:利用S pringAl的M CP Client以本地S tdio模式集成高德地图M CP,让AI能够准确地基于真实地理位置推荐\n健身地点。\n分层智能体架构:参考OpenM anus实现了分层Al智能体架构(BaseAgent,ReActAgent,ToolCallAgent),拥有自主规划能\n力,实现了高扩展性和可维护性。\nAl流式接口:使用S seEm itter实现了SS E流式响应Al应用接口,并通过Com pletableFuture将Al推理任务异步化,避免阻\n塞主线程,提升了用戶体验。\n面试在线刷题平台 - ~ -\n后端开发工程师 http://.../\n项目描述: 基于S pringBoot构建的在线刷题平台,管理员可以创建题库并批量操作题目,用戶可以分 词检索题目,在线刷题\n并查看刷题记录日历等,并运用企业级安全方案全面优化性能和安全性,项目现已部署上线。\n技术栈: S pringBoot,Redis,M yS QL,Elasticsearch,Druid,Caffeine,HotKey,S a-Token,S entinel,Nacos\n批量管理:基于M yBatis的batch操作实现题目批量管理,并通过任务拆分+Com pletableFuture并发编程提升性能。\n刷题记录:基于Redis BitM ap+Redisson实用戶年度刷题记录的统计,相比数据库存储节约几百倍空间。并通过本地缓存\n+返回值优化+位运算进一步提升接口性能。\n分词搜索:自主搭建ES 代替M yS QL模糊查询,并通过为索引绑定ik分词器实现了更灵活的分词搜索,且使用S pring\nS cheduler定时同步近期发生更新的M yS QL题目到ES 。\n缓存策略:使用Caffeine本地缓存提升题库查询性能,并通过接入Hotkey并配置热key探测规则来自动缓存热⻔题目,防\n止瞬时流量击垮数据库。\n分级反爬虫策略:基于Redis实现用戶访问题目频率统计,并通过Lua脚本保证原子更新,超限时自动给管理员发送告警和\n封禁用戶,有效防止内容盗取。\n限制恶意用戶访问:基于W ebFilter+Bloom Filter实现IP黑名单拦截,并通过Nacos配置中心动态更新黑名单。\n防止账号共享:通过U serAgent识别用戶设备,并基于S a-Token快速实现同端登录冲突检测。",
+        "target_job_intention": "java工程师",
+        "raw_resume_text": "李明李明138-0000-000012345678@qq.com138-0000-000012345678@qq.com1994.05.15上海市杨浦区1994.05.15上海市杨浦区\n李明\n138-0000-0000\n12345678@qq.com\n1994.05.15\n上海市杨浦区\n2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位毕业设计为一款简单手机游戏,用JS编写,获得优秀等级连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次教育背景教育背景\n2012.09~2016.07 中国社会大学 计算机科学与技术 本科学位\n毕业设计为一款简单手机游戏,用JS编写,获得优秀等级\n连续2年获得校综合奖学金“励志奖”,获校二等奖学金、国家励志奖学金各一次\n教育背景\n工作经历工作经历\n工作经历\n2015.07~2015.08苏州云开网络科技有限公司前端工程师负责游戏中一个重要的组件编程,并和同事对接相应的功能;负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。2014.07~2014.08北京乔布有限公司前端工程师参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。2015.07~2015.08苏州云开网络科技有限公司前端工程师负责游戏中一个重要的组件编程,并和同事对接相应的功能;负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。2014.07~2014.08北京乔布有限公司前端工程师参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n2015.07~2015.08苏州云开网络科技有限公司前端工程师\n负责游戏中一个重要的组件编程,并和同事对接相应的功能;\n负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。\n2014.07~2014.08北京乔布有限公司前端工程师\n参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;\n负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n2015.07~2015.08苏州云开网络科技有限公司前端工程师\n负责游戏中一个重要的组件编程,并和同事对接相应的功能;\n负责游戏UI界面设计,完善显示的细节,整理并发现的bug,修复bug。\n2014.07~2014.08北京乔布有限公司前端工程师\n参与多个项目的研发,了解一款游戏从策划到完成的完整过程 ;\n负责分到的模块开发任务,参与游戏测试以及bug修复, 负责游戏的音效寻找和插入。\n项目经历项目经历\n项目经历\n2015.12~2016.02网络爬虫开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。2015.12~2016.02网络爬虫开发环境:vc6.0项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。2013.09~2014.06爆街僵尸开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n2015.12~2016.02网络爬虫\n开发环境:vc6.0\n项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件\n负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。\n2013.09~2014.06爆街僵尸\n开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;\n项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;\n责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n2015.12~2016.02网络爬虫\n开发环境:vc6.0\n项目描述:找到学校网站上所有的word,pdf,excel等文件的URL,然后根据后缀名分类,用户可以通过关键字快速搜索出相应的文件\n负责用C语言发起请求,接收html文件,找出其中站内的URL,属于文件的保存下来,属于新页面的也记录下来;此网页中的链接找完后,有在新的页面链接中查找,如此反复,直到搜索完所有的站内链接。\n2013.09~2014.06爆街僵尸\n开发环境:Netty,Dubbo,Mysql,Jquery,Bootstrap,SSH,Linux;\n项目介绍:3D三国题材回合制(连击)角色扮演手机游戏;\n责任描述:参与项目的立项过程,负责武器商城和战斗前装备以及游戏音效资源的收集,测试游戏bug和游戏相关的优化。\n技能证书技能证书\n技能证书\n语言能力:通过大学英语六级、普通话二级甲等计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程其他能力:C1驾照目标岗位:java工程师语言能力:通过大学英语六级、普通话二级甲等计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程其他能力:C1驾照目标岗位:java工程师\n语言能力:通过大学英语六级、普通话二级甲等\n计算机能力:熟练掌握C,C++,Java等编程语言,熟练掌握Oracle、Mysql等数据库开发技术,熟练使用eclipse软件进行java编程\n其他能力:C1驾照\n目标岗位:java工程师",
         "parse_warnings": [
-          "技能相关正文存在，但未解析到稳定技能列表",
-          "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY.",
-          "未解析到技能列表"
+          "LLM 调用失败: Real LLM call requires API key. Please set LOCAL_LLM_API_KEY in llm_interface_layer/local_llm_config.py or env var LLM_API_KEY."
         ]
       }
     }
   },
   "rule_score_result": {
-    "profile_completeness_score": 68.14,
-    "competitiveness_base_score": 42.5,
-    "score_level": "D-当前竞争力偏弱",
+    "profile_completeness_score": 96.0,
+    "competitiveness_base_score": 94.0,
+    "score_level": "A-竞争力较强",
     "completeness_detail": {
-      "basic_info_score": 17.14,
+      "basic_info_score": 20.0,
       "education_score": 15.0,
-      "skill_score": 8.0,
+      "skill_score": 16.0,
       "project_score": 15.0,
-      "internship_score": 0.0,
+      "internship_score": 15.0,
       "qualification_score": 10.0,
-      "intention_score": 3.0
+      "intention_score": 5.0
     },
     "competitiveness_detail": {
       "education_base_score": 15.0,
-      "skill_base_score": 0.0,
-      "tool_base_score": 2.5,
+      "skill_base_score": 16.0,
+      "tool_base_score": 5.0,
       "project_base_score": 15.0,
-      "internship_base_score": 0.0,
-      "qualification_base_score": 3.0,
-      "occupation_focus_score": 3.0,
-      "domain_bonus_score": 4.0
+      "internship_base_score": 20.0,
+      "qualification_base_score": 10.0,
+      "occupation_focus_score": 5.0,
+      "domain_bonus_score": 8.0
     },
     "score_reasons": {
       "strengths": [
         "基本信息较完整，已包含身份、教育背景和联系方式。",
         "教育信息完整，学历、学校、专业和毕业年份均已明确。",
-        "已有明确技能信息，当前识别 1 项。",
+        "技能信息较丰富，已识别 6 项技能/工具。",
         "已有项目经历 2 段，可作为能力证明材料。",
+        "已有实习经历 2 段，有助于证明岗位实践能力。",
         "有竞赛/获奖记录，可增强简历背书。",
-        "已有一定职业方向信号，但表达还可以更明确。",
+        "求职意向较明确，方向聚焦在 java工程师, 前端开发。",
         "学历背景具备一定竞争力，当前学历为本科。",
-        "已有工具技能 1 项。",
+        "已有 4 项硬技能，但仍有扩展空间。",
+        "已有工具技能 2 项。",
         "项目经历数量较充足，对岗位能力证明较有帮助。",
-        "已有一定证书或获奖背书。",
-        "已有职业方向信号，但求职目标仍可进一步收敛。"
+        "实习经历较丰富，具备一定岗位场景适应基础。",
+        "证书/获奖背书较好，可增强简历可信度。",
+        "职业方向较聚焦，当前方向信号为 java工程师, 前端开发。"
       ],
       "weaknesses": [
-        "技能数量偏少，建议补充与目标岗位直接相关的工具栈和硬技能。",
-        "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
-        "建议在简历中补充更明确的目标岗位或岗位方向。",
-        "硬技能储备偏弱，建议优先补充岗位要求中的核心技能。",
-        "实习经验不足，建议优先争取与目标方向一致的实习。"
+        "硬技能数量尚不充分，建议围绕目标岗位补强核心技能。"
       ],
       "suggestions": [
-        "围绕目标岗位补充核心硬技能和常用工具，并在项目/实习中给出使用场景。",
-        "补充 1-2 个可量化成果的课程项目、竞赛项目或个人作品项目。",
-        "尽量争取与目标岗位方向一致的实习、校企实践或真实业务协作经历。"
+        "围绕目标岗位补充核心硬技能和常用工具，并在项目/实习中给出使用场景。"
       ]
     }
   },

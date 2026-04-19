@@ -1,199 +1,218 @@
-import { Card, Row, Col, Statistic, Button, Timeline, Space } from 'antd'
-import { UserOutlined, BarChartOutlined, NodeIndexOutlined, FileTextOutlined, RocketOutlined, CheckCircleOutlined } from '@ant-design/icons'
+import { Button, Col, Row, Tag } from 'antd'
+import {
+  ApartmentOutlined,
+  BarChartOutlined,
+  MessageOutlined,
+  NodeIndexOutlined,
+  ProfileOutlined,
+  UploadOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import { useCareerStore } from '../store'
+import {
+  EvidencePanel,
+  HeroPanel,
+  InsightCard,
+  MetricCard,
+  PageShell,
+  SectionCard,
+  WorkflowStepper,
+  type WorkflowStepItem,
+} from '../components/ui'
 import '../styles/Home.css'
 
 const Home = () => {
+  const studentInfo = useCareerStore((state) => state.studentInfo)
+  const studentProfile = useCareerStore((state) => state.studentProfile)
+  const jobMatches = useCareerStore((state) => state.jobMatches)
+  const careerPath = useCareerStore((state) => state.careerPath)
+
+  const hasResume = Boolean(studentInfo)
+  const hasProfile = Boolean(studentProfile)
+  const hasMatch = jobMatches.length > 0
+  const hasCareerPath = Boolean(careerPath)
+  const matchCount = jobMatches.length
+
+  const workflowSteps: WorkflowStepItem[] = [
+    {
+      title: '简历上传',
+      description: hasResume ? '已解析基础信息' : '等待上传或文本录入',
+      status: hasResume ? 'finish' : 'process',
+      tag: hasResume ? '完成' : '当前',
+    },
+    {
+      title: '学生画像',
+      description: hasProfile ? '能力画像已生成' : '解析后自动生成',
+      status: hasProfile ? 'finish' : hasResume ? 'process' : 'wait',
+      tag: hasProfile ? '完成' : '待处理',
+    },
+    {
+      title: '岗位画像',
+      description: '查看核心岗位与目标岗位资产',
+      status: hasProfile ? 'finish' : 'wait',
+      tag: '本地资产',
+    },
+    {
+      title: '岗位匹配',
+      description: hasMatch ? `已生成 ${matchCount} 条匹配结果` : '需要学生画像后执行',
+      status: hasMatch ? 'finish' : hasProfile ? 'process' : 'wait',
+      tag: hasMatch ? '完成' : '待分析',
+    },
+    {
+      title: '职业规划',
+      description: hasCareerPath ? '规划结果已生成' : '基于匹配结果生成',
+      status: hasCareerPath ? 'finish' : hasMatch ? 'process' : 'wait',
+      tag: hasCareerPath ? '完成' : '待生成',
+    },
+    {
+      title: '报告生成',
+      description: '汇总画像、匹配、路径与行动建议',
+      status: hasCareerPath ? 'process' : 'wait',
+      tag: '最终交付',
+    },
+  ]
+
+  const workflowCurrent = hasCareerPath ? 5 : hasMatch ? 4 : hasProfile ? 3 : hasResume ? 1 : 0
+
+  const moduleCards = [
+    {
+      title: '学生画像分析',
+      description: '查看教育背景、技能、项目、实习和七维能力证据链。',
+      icon: <UserOutlined />,
+      to: '/profile',
+      status: hasProfile ? '已生成' : '待生成',
+    },
+    {
+      title: '岗位画像中心',
+      description: '集中查看 10 个核心岗位、目标岗位要求和能力画像。',
+      icon: <ProfileOutlined />,
+      to: '/job-profile',
+      status: '本地资产',
+    },
+    {
+      title: '人岗匹配决策',
+      description: '对比目标岗位和系统推荐岗位，识别硬门槛与知识点风险。',
+      icon: <BarChartOutlined />,
+      to: '/matching',
+      status: hasMatch ? '已分析' : '待分析',
+    },
+    {
+      title: '职业规划',
+      description: '基于匹配结果生成主目标、备选目标和阶段行动计划。',
+      icon: <NodeIndexOutlined />,
+      to: '/career',
+      status: hasCareerPath ? '已生成' : '待生成',
+    },
+    {
+      title: '岗位路径图谱',
+      description: '查看 Neo4j 中真实 PROMOTE_TO / TRANSFER_TO 岗位路径关系。',
+      icon: <ApartmentOutlined />,
+      to: '/job-path-graph',
+      status: '图谱事实',
+    },
+    {
+      title: 'AI 本地问答助手',
+      description: '基于本地 SQL、图谱、语义知识库和状态文件进行追问。',
+      icon: <MessageOutlined />,
+      to: '/ai-assistant',
+      status: '未联网',
+    },
+  ]
+
   return (
-    <div className="home-container">
-      <div className="hero-section">
-        <h1 className="page-title">欢迎使用 AI 职业规划系统</h1>
-        <p className="page-description">
-          基于人工智能的职业规划平台，为您提供智能的岗位匹配、职业路径规划和个性化建议
-        </p>
-        <Space size="large">
-          <Link to="/resume">
-            <Button type="primary" size="large" className="primary-button">
-              开始规划 →
-            </Button>
-          </Link>
-          <Button size="large">了解更多</Button>
-        </Space>
+    <PageShell className="home-workbench">
+      <HeroPanel
+        eyebrow="Career Planning Workbench"
+        title="职业规划智能工作台"
+        description="把学生画像、岗位资产、人岗匹配、路径图谱和报告生成放在同一条决策链路里，帮助你快速判断目标岗位风险和可执行的补强方向。"
+        extra={(
+          <Row gutter={[12, 12]}>
+            <Col span={12}>
+              <MetricCard label="学生画像" value={hasProfile ? '已生成' : '待生成'} tone={hasProfile ? 'green' : 'orange'} />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="匹配结果" value={hasMatch ? `${matchCount} 条` : '待分析'} />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="职业规划" value={hasCareerPath ? '已完成' : '待生成'} tone={hasCareerPath ? 'green' : 'purple'} />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="本地知识源" value="SQL / Neo4j / RAG" tone="purple" />
+            </Col>
+          </Row>
+        )}
+      />
+
+      <div className="home-primary-actions">
+        <Link to="/resume">
+          <Button type="primary" icon={<UploadOutlined />} size="large">
+            开始或更新简历解析
+          </Button>
+        </Link>
+        <Link to={hasMatch ? '/matching' : '/job-profile'}>
+          <Button size="large">
+            {hasMatch ? '查看匹配决策' : '先看岗位画像'}
+          </Button>
+        </Link>
       </div>
 
-      <Row gutter={[24, 24]} style={{ marginTop: 48 }}>
-        <Col xs={24} sm={12} lg={6}>
-          <Card className="stat-card" hoverable>
-            <Statistic
-              title="已处理简历"
-              value={1}
-              prefix={<UserOutlined />}
-              suffix="份"
-              valueStyle={{ color: '#667eea' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card className="stat-card" hoverable>
-            <Statistic
-              title="岗位匹配"
-              value={0}
-              prefix={<BarChartOutlined />}
-              suffix="次"
-              valueStyle={{ color: '#764ba2' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card className="stat-card" hoverable>
-            <Statistic
-              title="职业规划"
-              value={0}
-              prefix={<NodeIndexOutlined />}
-              suffix="个"
-              valueStyle={{ color: '#f093fb' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card className="stat-card" hoverable>
-            <Statistic
-              title="生成报告"
-              value={0}
-              prefix={<FileTextOutlined />}
-              suffix="份"
-              valueStyle={{ color: '#4facfe' }}
-            />
-          </Card>
-        </Col>
+      <WorkflowStepper steps={workflowSteps} current={workflowCurrent} className="home-workflow" />
+
+      <Row gutter={[18, 18]} className="home-module-grid">
+        {moduleCards.map((item) => (
+          <Col xs={24} md={12} xl={8} key={item.title}>
+            <Link to={item.to} className="home-module-link">
+              <InsightCard
+                eyebrow={<span className="home-module-icon">{item.icon}</span>}
+                title={item.title}
+                description={item.description}
+                status="info"
+                action={<Tag>{item.status}</Tag>}
+              />
+            </Link>
+          </Col>
+        ))}
       </Row>
 
-      <Row gutter={[24, 24]} style={{ marginTop: 48 }}>
-        <Col xs={24} lg={12}>
-          <Card 
-            title={<h3 style={{ margin: 0, color: '#667eea' }}>✨ 核心功能</h3>}
-            className="feature-card"
-          >
-            <ul style={{ lineHeight: 2.5 }}>
-              <li>
-                <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
-                <strong>简历智能解析</strong> - 支持多种格式的简历文件上传和 AI 解析
-              </li>
-              <li>
-                <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
-                <strong>学生画像构建</strong> - 基于简历信息自动生成职业画像
-              </li>
-              <li>
-                <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
-                <strong>岗位智能匹配</strong> - 精准计算与目标岗位的匹配度
-              </li>
-              <li>
-                <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
-                <strong>职业路径规划</strong> - 生成个性化的职业发展路径
-              </li>
-              <li>
-                <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
-                <strong>报告自动生成</strong> - 导出专业的职业规划分析报告
-              </li>
-            </ul>
-          </Card>
+      <Row gutter={[18, 18]} className="home-bottom-grid">
+        <Col xs={24} lg={14}>
+          <SectionCard title="当前链路状态">
+            <div className="home-status-board">
+              <div>
+                <span>简历解析</span>
+                <strong>{hasResume ? studentInfo?.name || '已完成' : '未开始'}</strong>
+              </div>
+              <div>
+                <span>目标岗位</span>
+                <strong>{studentInfo?.position || careerPath?.primary_target_job || '待确认'}</strong>
+              </div>
+              <div>
+                <span>系统主路径</span>
+                <strong>{careerPath?.primary_target_job || '待生成'}</strong>
+              </div>
+              <div>
+                <span>报告准备度</span>
+                <strong>{hasResume && hasProfile && hasMatch && hasCareerPath ? '可生成' : '待补齐流程'}</strong>
+              </div>
+            </div>
+          </SectionCard>
         </Col>
-
-        <Col xs={24} lg={12}>
-          <Card 
-            title={<h3 style={{ margin: 0, color: '#764ba2' }}>🚀 使用流程</h3>}
-            className="feature-card"
-          >
-            <Timeline
-              items={[
-                {
-                  dot: <RocketOutlined style={{ fontSize: 16 }} />,
-                  children: (
-                    <div>
-                      <Link to="/resume">
-                        <strong>第一步：上传简历</strong>
-                      </Link>
-                      <p style={{ margin: '4px 0 0 0', color: '#666', fontSize: 12 }}>
-                        上传你的简历文件，系统将进行智能解析
-                      </p>
-                    </div>
-                  ),
-                },
-                {
-                  dot: <UserOutlined style={{ fontSize: 16 }} />,
-                  children: (
-                    <div>
-                      <Link to="/profile">
-                        <strong>第二步：查看画像</strong>
-                      </Link>
-                      <p style={{ margin: '4px 0 0 0', color: '#666', fontSize: 12 }}>
-                        系统根据简历自动构建你的职业画像
-                      </p>
-                    </div>
-                  ),
-                },
-                {
-                  dot: <BarChartOutlined style={{ fontSize: 16 }} />,
-                  children: (
-                    <div>
-                      <Link to="/matching">
-                        <strong>第三步：岗位匹配</strong>
-                      </Link>
-                      <p style={{ margin: '4px 0 0 0', color: '#666', fontSize: 12 }}>
-                        获得与目标岗位的匹配度分析
-                      </p>
-                    </div>
-                  ),
-                },
-                {
-                  dot: <NodeIndexOutlined style={{ fontSize: 16 }} />,
-                  children: (
-                    <div>
-                      <Link to="/career">
-                        <strong>第四步：规划路径</strong>
-                      </Link>
-                      <p style={{ margin: '4px 0 0 0', color: '#666', fontSize: 12 }}>
-                        获得个性化的职业发展路径建议
-                      </p>
-                    </div>
-                  ),
-                },
-                {
-                  dot: <FileTextOutlined style={{ fontSize: 16 }} />,
-                  children: (
-                    <div>
-                      <Link to="/report">
-                        <strong>第五步：生成报告</strong>
-                      </Link>
-                      <p style={{ margin: '4px 0 0 0', color: '#666', fontSize: 12 }}>
-                        导出完整的职业规划分析报告
-                      </p>
-                    </div>
-                  ),
-                },
-              ]}
-            />
-          </Card>
+        <Col xs={24} lg={10}>
+          <EvidencePanel
+            title="本地知识底座"
+            description="系统默认使用本地可信知识源，不把事实判断交给大模型凭空生成。"
+            sources={[
+              { label: 'SQLite', value: '岗位事实与市场细节' },
+              { label: 'Neo4j', value: '岗位结构与路径关系' },
+              { label: 'JSON + embedding', value: '语义召回与相似要求' },
+              { label: 'LLM', value: '解释、归纳、报告生成' },
+            ]}
+            defaultOpen
+          />
         </Col>
       </Row>
-
-      <Row gutter={[24, 24]} style={{ marginTop: 48 }}>
-        <Col xs={24}>
-          <Card 
-            title={<h3 style={{ margin: 0 }}>💡 如何使用本系统</h3>}
-          >
-            <ol style={{ lineHeight: 2 }}>
-              <li>进入"简历上传"页面，上传你的简历文件（支持 PDF、Word、TXT 格式）</li>
-              <li>系统将使用 AI 技术解析你的简历，提取关键信息如技能、学历、经验等</li>
-              <li>在"学生画像"页面查看系统为你生成的职业画像和能力评估</li>
-              <li>切换到"岗位匹配"页面，查看与你意向岗位的匹配度分析</li>
-              <li>在"职业规划"页面获得个性化的职业发展路径和建议</li>
-              <li>最后，生成并下载你的职业规划分析报告</li>
-            </ol>
-          </Card>
-        </Col>
-      </Row>
-    </div>
+    </PageShell>
   )
 }
 

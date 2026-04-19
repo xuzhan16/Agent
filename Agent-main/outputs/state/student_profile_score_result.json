@@ -1,51 +1,48 @@
 {
-  "profile_completeness_score": 68.14,
-  "competitiveness_base_score": 42.5,
-  "score_level": "D-当前竞争力偏弱",
+  "profile_completeness_score": 96.0,
+  "competitiveness_base_score": 94.0,
+  "score_level": "A-竞争力较强",
   "completeness_detail": {
-    "basic_info_score": 17.14,
+    "basic_info_score": 20.0,
     "education_score": 15.0,
-    "skill_score": 8.0,
+    "skill_score": 16.0,
     "project_score": 15.0,
-    "internship_score": 0.0,
+    "internship_score": 15.0,
     "qualification_score": 10.0,
-    "intention_score": 3.0
+    "intention_score": 5.0
   },
   "competitiveness_detail": {
     "education_base_score": 15.0,
-    "skill_base_score": 0.0,
-    "tool_base_score": 2.5,
+    "skill_base_score": 16.0,
+    "tool_base_score": 5.0,
     "project_base_score": 15.0,
-    "internship_base_score": 0.0,
-    "qualification_base_score": 3.0,
-    "occupation_focus_score": 3.0,
-    "domain_bonus_score": 4.0
+    "internship_base_score": 20.0,
+    "qualification_base_score": 10.0,
+    "occupation_focus_score": 5.0,
+    "domain_bonus_score": 8.0
   },
   "score_reasons": {
     "strengths": [
       "基本信息较完整，已包含身份、教育背景和联系方式。",
       "教育信息完整，学历、学校、专业和毕业年份均已明确。",
-      "已有明确技能信息，当前识别 1 项。",
+      "技能信息较丰富，已识别 6 项技能/工具。",
       "已有项目经历 2 段，可作为能力证明材料。",
+      "已有实习经历 2 段，有助于证明岗位实践能力。",
       "有竞赛/获奖记录，可增强简历背书。",
-      "已有一定职业方向信号，但表达还可以更明确。",
+      "求职意向较明确，方向聚焦在 java工程师, 前端开发。",
       "学历背景具备一定竞争力，当前学历为本科。",
-      "已有工具技能 1 项。",
+      "已有 4 项硬技能，但仍有扩展空间。",
+      "已有工具技能 2 项。",
       "项目经历数量较充足，对岗位能力证明较有帮助。",
-      "已有一定证书或获奖背书。",
-      "已有职业方向信号，但求职目标仍可进一步收敛。"
+      "实习经历较丰富，具备一定岗位场景适应基础。",
+      "证书/获奖背书较好，可增强简历可信度。",
+      "职业方向较聚焦，当前方向信号为 java工程师, 前端开发。"
     ],
     "weaknesses": [
-      "技能数量偏少，建议补充与目标岗位直接相关的工具栈和硬技能。",
-      "缺少实习经历，建议争取相关岗位实习或校企实践项目。",
-      "建议在简历中补充更明确的目标岗位或岗位方向。",
-      "硬技能储备偏弱，建议优先补充岗位要求中的核心技能。",
-      "实习经验不足，建议优先争取与目标方向一致的实习。"
+      "硬技能数量尚不充分，建议围绕目标岗位补强核心技能。"
     ],
     "suggestions": [
-      "围绕目标岗位补充核心硬技能和常用工具，并在项目/实习中给出使用场景。",
-      "补充 1-2 个可量化成果的课程项目、竞赛项目或个人作品项目。",
-      "尽量争取与目标岗位方向一致的实习、校企实践或真实业务协作经历。"
+      "围绕目标岗位补充核心硬技能和常用工具，并在项目/实习中给出使用场景。"
     ]
   }
 }

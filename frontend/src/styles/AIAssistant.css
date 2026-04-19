@@ -1,22 +1,42 @@
 .ai-assistant-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--layout-max);
   margin: 0 auto;
+}
+
+.ai-assistant-hero {
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+}
+
+.ai-hero-source-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ai-hero-source-grid span {
+  min-height: 58px;
+  padding: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.82);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .ai-summary-card,
 .ai-capability-card,
 .ai-chat-card {
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-card);
   margin-bottom: 20px;
+  overflow: hidden;
 }
 
 .ai-capability-card {
-  background:
-    radial-gradient(circle at 8% 12%, rgba(59, 130, 246, 0.14), transparent 28%),
-    linear-gradient(135deg, #ffffff 0%, #f5f7ff 52%, #eef2ff 100%);
+  background: var(--surface-card);
 }
 
 .ai-capability-header {
@@ -27,7 +47,7 @@
 
 .ai-capability-header .anticon {
   margin-top: 4px;
-  color: #2563eb;
+  color: var(--brand-primary);
   font-size: 24px;
 }
 
@@ -42,6 +62,57 @@
   margin-top: 14px;
 }
 
+.ai-capability-note {
+  margin-top: 16px;
+}
+
+.ai-scenario-card {
+  margin-bottom: 20px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.ai-scenario-card .ant-card-head {
+  border-bottom-color: var(--border-soft);
+  background: var(--surface-card);
+}
+
+.ai-scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ai-scenario-item {
+  display: grid;
+  gap: 8px;
+  min-height: 92px;
+  padding: 14px;
+  text-align: left;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface-card-subtle);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.ai-scenario-item:hover {
+  border-color: rgba(36, 84, 214, 0.35);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+.ai-scenario-item strong {
+  color: var(--text-primary);
+}
+
+.ai-scenario-item span {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .ai-context-tags {
   display: flex;
   flex-wrap: wrap;
@@ -52,9 +123,9 @@
 .ai-chat-messages {
   height: 520px;
   overflow-y: auto;
-  border: 1px solid #e8ebf3;
-  border-radius: 10px;
-  background: #f7f8fb;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface-card-subtle);
   padding: 14px;
 }
 
@@ -70,7 +141,7 @@
 }
 
 .ai-message-avatar {
-  color: #4f46e5;
+  color: var(--brand-primary);
   font-size: 16px;
   margin-bottom: 8px;
 }
@@ -82,17 +153,17 @@
 .ai-message-bubble {
   max-width: 78%;
   padding: 12px 14px;
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
 }
 
 .ai-message-bubble.assistant {
-  background: #ffffff;
-  border: 1px solid #edf1fa;
+  background: var(--surface-card);
+  border: 1px solid var(--border-soft);
 }
 
 .ai-message-bubble.user {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: var(--brand-primary);
   color: #ffffff;
 }
 
@@ -112,9 +183,9 @@
 }
 
 .ai-company-result-card {
-  border-radius: 12px;
-  border: 1px solid #e7eefc;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-card);
 }
 
 .ai-company-card-header {
@@ -146,9 +217,9 @@
 .ai-result-table-wrap {
   margin-top: 14px;
   padding: 12px;
-  border: 1px solid #edf1fa;
-  border-radius: 12px;
-  background: #fbfdff;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
 }
 
 .ai-result-table-wrap .ant-table-wrapper {
@@ -195,9 +266,9 @@
 .ai-path-graph-result {
   margin-top: 14px;
   padding: 12px;
-  border: 1px solid #d7f0ff;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #f8fdff 0%, #eef9ff 100%);
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: var(--radius-md);
+  background: #f0fdfa;
 }
 
 .ai-path-graph-header {
@@ -278,6 +349,11 @@
   }
 
   .ai-company-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-scenario-grid,
+  .ai-hero-source-grid {
     grid-template-columns: 1fr;
   }
 }

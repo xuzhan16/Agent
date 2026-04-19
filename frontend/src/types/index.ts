@@ -482,6 +482,24 @@ export interface JobPathGraphResponse {
 // 职业路径规划结果
 export interface CareerPathResult {
   primary_target_job: string
+  user_target_job?: string
+  system_recommended_job?: string
+  primary_plan_job?: string
+  target_job_role?: string
+  recommended_job_role?: string
+  goal_decision_source?: string
+  goal_decision_confidence?: string
+  goal_decision_reason?: string[]
+  goal_decision_context?: Record<string, unknown>
+  llm_goal_decision_explanation?: {
+    decision_reason_summary?: string
+    why_recommended_job?: string
+    why_target_job_not_primary?: string
+    how_to_balance_target_and_recommended?: string
+    short_term_focus?: string[]
+    mid_term_focus?: string[]
+    risk_notes?: string[]
+  }
   secondary_target_jobs: string[]
   goal_positioning: string
   goal_reason: string

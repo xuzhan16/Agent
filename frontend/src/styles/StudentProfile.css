@@ -2,6 +2,12 @@
   width: 100%;
   max-width: 1240px;
   margin: 0 auto;
+  display: grid;
+  gap: var(--content-gap);
+}
+
+.student-profile-container > .ant-row {
+  margin-top: 0 !important;
 }
 
 .hero-assessment-section {
