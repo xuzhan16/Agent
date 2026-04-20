@@ -121,6 +121,7 @@ const StudentProfile = () => {
   const projectExperience = studentInfo.project_experience || []
   const internshipExperience = studentInfo.internship_experience || []
   const profilePayload = studentProfile?.profile_input_payload
+  const normalizedEducation = profilePayload?.normalized_education
   const normalizedProfile = profilePayload?.normalized_profile
   const explicitProfile = profilePayload?.explicit_profile
   const practiceProfile = profilePayload?.practice_profile
@@ -144,6 +145,11 @@ const StudentProfile = () => {
   const missingDimensions = studentProfile?.missing_dimensions || []
   const preferredDirections = studentProfile?.potential_profile?.preferred_directions || normalizedProfile?.occupation_hints || []
   const employmentAbilityProfile = studentProfile?.employment_ability_profile || {}
+  const schoolLevel = studentInfo.school_level || normalizedEducation?.school_level || ''
+  const schoolName = studentInfo.school || normalizedEducation?.school || ''
+  const majorName = studentInfo.major || normalizedEducation?.major_std || normalizedEducation?.major_raw || ''
+  const degreeName = studentInfo.degree || normalizedEducation?.degree || ''
+  const graduationYear = studentInfo.graduation_year || normalizedEducation?.graduation_year || ''
 
   const projectCount = practiceProfile?.project_count || projectExperience.length
   const internshipCount = practiceProfile?.internship_count || internshipExperience.length
@@ -246,7 +252,7 @@ const StudentProfile = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <h2 style={{ margin: 0, fontSize: 24, color: '#333' }}>{studentInfo.name}</h2>
                   <p style={{ margin: '4px 0', color: '#666' }}>
-                    {studentInfo.degree} | {studentInfo.major}
+                    {degreeName || '学历待确认'} | {majorName || '专业待确认'}
                   </p>
                   <Space size={16}>
                     <span>📧 {studentInfo.email}</span>
@@ -259,7 +265,8 @@ const StudentProfile = () => {
                   <Space wrap>
                     <Tag color="blue">学生</Tag>
                     <Tag color="green">求职中</Tag>
-                    <Tag color="magenta">{studentInfo.graduation_year}届</Tag>
+                    {schoolLevel && <Tag color="gold">{schoolLevel}</Tag>}
+                    <Tag color="magenta">{graduationYear ? `${graduationYear}届` : '毕业年份待确认'}</Tag>
                   </Space>
                 </div>
               </Col>
@@ -304,11 +311,14 @@ const StudentProfile = () => {
         <Col xs={24} sm={12}>
           <Card title={<span><DatabaseOutlined /> 教育背景</span>} className="profile-card">
             <div className="timeline-item">
-              <div className="timeline-year">{studentInfo.graduation_year}</div>
+              <div className="timeline-year">{graduationYear || '待确认'}</div>
               <div className="timeline-content">
-                <p style={{ margin: '4px 0', fontWeight: 600 }}>{studentInfo.school}</p>
-                <p style={{ margin: '4px 0', color: '#666' }}>{studentInfo.major}</p>
-                <p style={{ margin: '4px 0', color: '#999', fontSize: 12 }}>{studentInfo.degree} 学位</p>
+                <p style={{ margin: '4px 0', fontWeight: 600 }}>{schoolName || '学校待确认'}</p>
+                <p style={{ margin: '4px 0', color: '#666' }}>{majorName || '专业待确认'}</p>
+                <Space size={6} wrap>
+                  <Tag color="blue">{degreeName || '学历待确认'}</Tag>
+                  {schoolLevel && <Tag color="gold">{schoolLevel}</Tag>}
+                </Space>
               </div>
             </div>
           </Card>

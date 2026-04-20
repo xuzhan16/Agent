@@ -1,5 +1,5 @@
 {
-  "standard_job_name": "java工程师",
+  "standard_job_name": "后端开发",
   "job_category": "",
   "job_level": "",
   "degree_requirement": "",
@@ -10,8 +10,8 @@
   "certificate_requirement": [],
   "practice_requirement": [],
   "soft_skills": [],
-  "suitable_student_profile": "适合具备硬件功能测试、硬件售后维护、硬件性能测试、硬件技术支持等相关技能基础，且有一定项目或实践经历的学生。",
-  "summary": "硬件测试工程师属于硬件测试岗位，岗位层级为未明确层级。 常见学历要求为大专及以上，专业要求为通讯自动化及相关理工类专业。 经验要求：有岗位工作经验或物联网行业经验优先。 核心硬技能包括：硬件功能测试、硬件售后维护、硬件性能测试、硬件技术支持。 常见工具或技术栈包括：硬件功能测试、硬件售后维护、硬件性能测试、硬件技术支持。 软技能要求包括：动手能力强、学习能力强。 岗位摘要：负责硬件产品的功能、性能测试及售后维护支持，要求大专及以上学历…",
+  "suitable_student_profile": "适合具备业务推进与跟进、产品演示与讲解、数据汇报与分析、文件起草与归档、日程安排等相关技能基础，且有一定项目或实践经历的学生。",
+  "summary": "总经理助理/CEO助理/董事长助理属于行政/文秘/助理岗位，岗位层级为未明确层级。 常见学历要求为中专及以上，专业要求为未明确。 经验要求：有相关工作经验为佳。 核心硬技能包括：业务推进与跟进、产品演示与讲解、数据汇报与分析、文件起草与归档、日程安排、跨部门协调。 常见工具或技术栈包括：业务推进与跟进、产品演示与讲解、数据汇报与分析、文件起草与归档、日程安排、跨部门协调。 软技能要求包括：协调能力、学习能力、执行力、沟通能力、踏实肯干…",
   "vertical_paths": [],
   "transfer_paths": [],
   "skill_frequency": [],
@@ -32,7 +32,7 @@
     "valid_salary_count": 0
   },
   "group_summary": {
-    "standard_job_name": "java工程师",
+    "standard_job_name": "后端开发",
     "job_count": 0,
     "city_distribution": {},
     "province_distribution": {},
@@ -65,9 +65,7 @@
     "practice_tags": [],
     "soft_skill_tags": [],
     "experience_tags": [],
-    "domain_tags": [
-      "软件开发"
-    ]
+    "domain_tags": []
   },
   "representative_samples": [],
   "core_job_profiles": [
@@ -3634,23 +3632,25 @@
     }
   ],
   "target_job_profile_assets": {
-    "requested_job_name": "java工程师",
+    "requested_job_name": "后端开发",
     "standard_job_name": "Java开发工程师",
     "resolved_standard_job_name": "Java开发工程师",
     "asset_found": true,
-    "resolution_method": "alias",
-    "resolution_confidence": 0.98,
+    "resolution_method": "user_confirmed",
+    "resolution_confidence": 1.0,
     "asset_resolution": {
-      "requested_job_name": "java工程师",
-      "resolved_standard_job_name": "Java开发工程师",
-      "asset_found": true,
-      "resolution_method": "alias",
-      "resolution_confidence": 0.98,
-      "candidate_jobs": [],
-      "matched_alias": "java工程师",
       "resolution_status": "resolved",
+      "requested_job_name": "后端开发",
+      "resolved_standard_job_name": "Java开发工程师",
+      "confirmed_standard_job_name": "Java开发工程师",
+      "asset_found": true,
+      "resolution_method": "user_confirmed",
+      "resolution_confidence": 1.0,
+      "candidate_jobs": [],
       "candidate_job_names": [],
-      "message": "已命中本地标准岗位：Java开发工程师。"
+      "confirmation_source": "user_selected",
+      "confirmed_at": "2026-04-18T02:07:04.246441Z",
+      "message": "已使用用户确认的本地标准岗位：Java开发工程师。"
     },
     "evaluation_status": "ok",
     "sample_count": 265,
@@ -4086,7 +4086,7 @@
   },
   "llm_profile_result": {},
   "build_warnings": [
-    "未找到 standard_job_name=java工程师 的岗位组数据",
+    "未找到 standard_job_name=后端开发 的岗位组数据",
     "未从岗位描述中抽取到明确学历要求",
     "未从岗位描述中抽取到明确技能要求",
     "未从岗位描述中抽取到明确经验要求",

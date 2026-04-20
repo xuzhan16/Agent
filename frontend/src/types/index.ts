@@ -5,6 +5,7 @@ export interface StudentInfo {
   phone: string
   email: string
   school: string
+  school_level?: string
   major: string
   degree: string
   graduation_year: string
@@ -77,8 +78,17 @@ export interface StudentProfileResult {
     basic_info?: {
       name?: string
       school?: string
+      school_level?: string
       major?: string
       degree?: string
+      graduation_year?: string
+    }
+    normalized_education?: {
+      degree?: string
+      school?: string
+      school_level?: string
+      major_raw?: string
+      major_std?: string
       graduation_year?: string
     }
     normalized_profile?: {

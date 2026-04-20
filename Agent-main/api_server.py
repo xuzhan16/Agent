@@ -2860,7 +2860,17 @@ def _build_resume_response(all_data: dict) -> dict:
     basic_info = _safe_dict(resume_res.get("basic_info"))
     response = dict(resume_res)
 
-    for field in ("name", "gender", "phone", "email", "school", "major", "degree", "graduation_year"):
+    for field in (
+        "name",
+        "gender",
+        "phone",
+        "email",
+        "school",
+        "school_level",
+        "major",
+        "degree",
+        "graduation_year",
+    ):
         response[field] = _clean_text(response.get(field) or basic_info.get(field))
 
     response["skills"] = _safe_list(response.get("skills"))
@@ -2877,6 +2887,7 @@ def _build_resume_response(all_data: dict) -> dict:
         item
         for item in [
             _clean_text(response.get("school")),
+            _clean_text(response.get("school_level")),
             _clean_text(response.get("major")),
             _clean_text(response.get("degree")),
         ]
