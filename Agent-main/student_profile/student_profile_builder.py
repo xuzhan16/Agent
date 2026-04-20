@@ -296,6 +296,9 @@ def extract_basic_and_resume(student_state: Dict[str, Any]) -> Tuple[Dict[str, A
         "phone": _clean_text(top_basic_info.get("phone") or nested_basic_info.get("phone")),
         "email": _clean_text(top_basic_info.get("email") or nested_basic_info.get("email")),
         "school": _clean_text(top_basic_info.get("school") or nested_basic_info.get("school")),
+        "school_level": _clean_text(
+            top_basic_info.get("school_level") or nested_basic_info.get("school_level")
+        ),
         "major": _clean_text(top_basic_info.get("major") or nested_basic_info.get("major")),
         "degree": _clean_text(top_basic_info.get("degree") or nested_basic_info.get("degree")),
         "graduation_year": _clean_text(
@@ -353,6 +356,7 @@ def collect_explicit_fields(
     return {
         "degree": _clean_text(basic_info.get("degree")),
         "school": _clean_text(basic_info.get("school")),
+        "school_level": _clean_text(basic_info.get("school_level")),
         "major": _clean_text(basic_info.get("major")),
         "skills": skills,
         "tools": _dedup_keep_order(tool_candidates),
@@ -386,17 +390,26 @@ def build_hard_and_tool_skills(skills: List[str], tools: List[str]) -> Tuple[Lis
     return hard_skills, tool_skills
 
 
-def build_qualification_tags(degree: str, school: str, major: str, certificates: List[str]) -> List[str]:
+def build_qualification_tags(
+    degree: str,
+    school: str,
+    major: str,
+    certificates: List[str],
+    school_level: str = "",
+) -> List[str]:
     """构造资格标签。"""
     tags = []
     degree_text = _clean_text(degree)
     school_text = _clean_text(school)
+    school_level_text = _clean_text(school_level)
     major_text = normalize_major(major)
 
     if degree_text:
         tags.append(f"学历:{degree_text}")
     if school_text:
         tags.append(f"学校:{school_text}")
+    if school_level_text:
+        tags.append(f"学校层次:{school_level_text}")
     if major_text:
         tags.append(f"专业:{major_text}")
     for certificate in certificates:
@@ -605,6 +618,7 @@ def build_normalized_profile(explicit_fields: Dict[str, Any]) -> Dict[str, Any]:
         "qualification_tags": build_qualification_tags(
             degree=_clean_text(explicit_fields.get("degree", "")),
             school=_clean_text(explicit_fields.get("school", "")),
+            school_level=_clean_text(explicit_fields.get("school_level", "")),
             major=normalized_major,
             certificates=certificates,
         ),
@@ -628,6 +642,7 @@ def build_profile_input_payload_from_state(
         normalized_education={
             "degree": _clean_text(explicit_fields.get("degree", "")),
             "school": _clean_text(explicit_fields.get("school", "")),
+            "school_level": _clean_text(explicit_fields.get("school_level", "")),
             "major_raw": _clean_text(explicit_fields.get("major", "")),
             "major_std": normalized_profile.get("major_std", ""),
             "graduation_year": _clean_text(basic_info.get("graduation_year", "")),

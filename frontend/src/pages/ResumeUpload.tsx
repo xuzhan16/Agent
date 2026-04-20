@@ -1,10 +1,26 @@
-import { Upload, Card, Row, Col, Button, Steps, Alert, Space, Spin, message, Input } from 'antd'
-import { UploadOutlined, FileTextOutlined, CheckCircleOutlined, SyncOutlined } from '@ant-design/icons'
+import { Upload, Row, Col, Button, Alert, Space, Spin, message, Input, Tag } from 'antd'
+import {
+  ArrowRightOutlined,
+  FileTextOutlined,
+  UploadOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { careerApi } from '../services/api'
 import { useCareerStore } from '../store'
 import { PipelineStatus } from '../types'
+import {
+  EmptyState,
+  HeroPanel,
+  InsightCard,
+  MetricCard,
+  PageShell,
+  PageToolbar,
+  SectionCard,
+  WorkflowStepper,
+  type WorkflowStepItem,
+} from '../components/ui'
 import '../styles/ResumeUpload.css'
 
 const { Dragger } = Upload
@@ -19,6 +35,8 @@ const ResumeUpload = () => {
   const [pipelineStatus, setPipelineStatus] = useState<PipelineStatus | null>(null)
   const pollTimerRef = useRef<number | null>(null)
 
+  const studentProfile = useCareerStore((state) => state.studentProfile)
+  const jobMatches = useCareerStore((state) => state.jobMatches)
   const setStudentInfo = useCareerStore((state) => state.setStudentInfo)
   const setStudentProfile = useCareerStore((state) => state.setStudentProfile)
   const navigate = useNavigate()
@@ -156,191 +174,183 @@ const ResumeUpload = () => {
     },
   }
 
-  return (
-    <div className="resume-upload-container">
-      <h1 className="page-title">📄 简历上传与解析</h1>
-      <p className="page-description">
-        上传你的简历，我们将使用 AI 技术自动解析并提取关键信息
-      </p>
+  const workflowSteps: WorkflowStepItem[] = [
+    {
+      title: '提交简历',
+      description: file ? file.name : manualResumeText ? '已录入文本' : '上传文件或粘贴文本',
+      status: uploadSuccess ? 'finish' : uploading ? 'finish' : 'process',
+      tag: file ? '文件' : manualResumeText ? '文本' : '待提交',
+    },
+    {
+      title: '解析画像',
+      description: uploading ? pipelineStatus?.step_name || '正在解析' : uploadSuccess ? '学生画像已生成' : '提交后自动执行',
+      status: uploadSuccess ? 'finish' : uploading ? 'process' : 'wait',
+      tag: uploading ? '运行中' : uploadSuccess ? '完成' : '待处理',
+    },
+    {
+      title: '进入匹配',
+      description: jobMatches.length > 0 ? '已有匹配结果' : '画像生成后可继续分析',
+      status: jobMatches.length > 0 ? 'finish' : uploadSuccess || studentProfile ? 'process' : 'wait',
+      tag: jobMatches.length > 0 ? '完成' : '下一步',
+    },
+  ]
 
-      <Row gutter={[24, 24]}>
+  const currentStep = jobMatches.length > 0 ? 2 : uploadSuccess || studentProfile ? 2 : uploading ? 1 : 0
+  const parsedSkills = Array.isArray(parseResult?.skills) ? parseResult.skills : []
+
+  return (
+    <PageShell className="resume-upload-container">
+      <HeroPanel
+        eyebrow="Resume Intake"
+        title="简历上传与画像生成"
+        description="从文件或文本开始，系统会抽取教育背景、技能、项目、实习和证书证据，并把结果接入后续岗位画像、人岗匹配和报告生成。"
+        extra={(
+          <Row gutter={[12, 12]}>
+            <Col span={12}>
+              <MetricCard label="输入方式" value={file ? '文件上传' : manualResumeText ? '文本录入' : '待选择'} />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="解析状态" value={uploading ? '解析中' : uploadSuccess ? '已完成' : '待开始'} tone={uploadSuccess ? 'green' : 'orange'} />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="学生画像" value={studentProfile ? '已生成' : '待生成'} tone={studentProfile ? 'green' : 'purple'} />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="匹配结果" value={jobMatches.length > 0 ? `${jobMatches.length} 条` : '待分析'} />
+            </Col>
+          </Row>
+        )}
+      />
+
+      <WorkflowStepper steps={workflowSteps} current={currentStep} />
+
+      <Row gutter={[18, 18]} className="resume-input-grid">
         <Col xs={24} lg={12}>
-          <Card className="upload-card" title="步骤 1：上传简历">
+          <SectionCard title="上传简历文件">
             <Dragger {...props} className="upload-area">
-              <div style={{ padding: '40px 0' }}>
+              <div className="resume-dragger-content">
                 <p className="ant-upload-drag-icon">
-                  <UploadOutlined style={{ fontSize: 48, color: '#3b82f6' }} />
+                  <UploadOutlined />
                 </p>
-                <p className="ant-upload-text" style={{ fontSize: 16, fontWeight: 600 }}>
-                  点击或拖拽简历文件到此区域
-                </p>
-                <p className="ant-upload-hint">
-                  支持 PDF、Word (.doc/.docx) 或 TXT 格式 • 文件大小不超过 5MB
-                </p>
+                <p className="ant-upload-text">点击或拖拽简历文件到此区域</p>
+                <p className="ant-upload-hint">支持 PDF、Word 或 TXT，文件大小不超过 5MB</p>
               </div>
             </Dragger>
             {file && (
-              <div style={{ marginTop: 16 }}>
-                <Space>
-                  <FileTextOutlined style={{ fontSize: 20, color: '#3b82f6' }} />
-                  <span>{file.name}</span>
-                </Space>
+              <div className="resume-file-chip">
+                <FileTextOutlined />
+                <span>{file.name}</span>
               </div>
             )}
-          </Card>
+          </SectionCard>
         </Col>
 
         <Col xs={24} lg={12}>
-          <Card className="upload-card" title="步骤 1：手动录入">
+          <SectionCard title="直接粘贴简历文本">
             <Input.TextArea
               value={manualResumeText}
               onChange={(event) => setManualResumeText(event.target.value)}
-              placeholder="如果你暂时没有文件，也可以直接粘贴简历正文。建议至少包含：教育背景、项目经历、实习经历、技能证书、求职意向。"
+              placeholder="如果你暂时没有文件，也可以直接粘贴简历正文。建议包含教育背景、项目经历、实习经历、技能证书和求职意向。"
               autoSize={{ minRows: 10, maxRows: 16 }}
               maxLength={12000}
             />
-            <div style={{ marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-              <span style={{ color: '#666', fontSize: 12 }}>
-                已输入 {manualResumeText.length} / 12000 字
-              </span>
-              <Button type="primary" onClick={handleManualSubmit} loading={uploading}>
-                使用文本生成画像
-              </Button>
-            </div>
-          </Card>
+            <PageToolbar
+              className="resume-text-toolbar"
+              description={`已输入 ${manualResumeText.length} / 12000 字`}
+              actions={(
+                <Button type="primary" onClick={handleManualSubmit} loading={uploading}>
+                  使用文本生成画像
+                </Button>
+              )}
+            />
+          </SectionCard>
         </Col>
       </Row>
 
-      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
-        <Col xs={24}>
-          <Card className="progress-card" title="处理进度">
-            <Steps
-              current={uploadSuccess ? 2 : uploading ? 1 : 0}
-              items={[
-                {
-                  title: '上传文件',
-                  description: file ? '已选择文件' : manualResumeText ? '已录入文本' : '等待上传',
-                  icon: <UploadOutlined />,
-                },
-                {
-                  title: '解析中',
-                  description: uploading ? '正在处理' : uploadSuccess ? '已完成' : '待处理',
-                  icon: uploading ? <SyncOutlined spin /> : <CheckCircleOutlined />,
-                },
-                {
-                  title: '完成',
-                  description: uploadSuccess ? '解析成功' : '待处理',
-                  icon: <CheckCircleOutlined />,
-                },
-              ]}
-            />
-            {error && (
-              <Alert
-                style={{ marginTop: 16 }}
-                message="错误"
-                description={error}
-                type="error"
-                showIcon
-                closable
-              />
-            )}
-            {uploading && pipelineStatus && (
-              <Alert
-                style={{ marginTop: 16 }}
-                message={`当前进度：第 ${pipelineStatus.current_step || 0}/${pipelineStatus.total_steps || 6} 步`}
-                description={`状态：${pipelineStatus.status || 'running'}；步骤：${pipelineStatus.step_name || '处理中'}${pipelineStatus.error ? `；错误：${pipelineStatus.error}` : ''}`}
-                type={pipelineStatus.status === 'failed' ? 'error' : 'info'}
-                showIcon
-              />
-            )}
-          </Card>
-        </Col>
-      </Row>
-
-      {!uploadSuccess && !uploading && (
-        <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
-          <Col xs={24}>
-            <Alert
-              message="提示"
-              description="支持的文件格式包括 PDF、Microsoft Word 和纯文本文件。系统将使用 AI 技术自动提取您的个人信息、教育背景、工作经验和技能等。"
-              type="info"
-              showIcon
-              closable
-            />
-          </Col>
-        </Row>
+      {error && (
+        <EmptyState
+          status="error"
+          title="简历解析未完成"
+          description={`${error}。你可以检查后端服务，或改用文本录入方式再次提交。`}
+          action={<Button onClick={() => setError(null)}>我知道了</Button>}
+        />
       )}
 
-      {uploading && (
-        <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
-          <Col xs={24}>
-            <Card style={{ textAlign: 'center', padding: '40px' }}>
-              <Spin size="large" tip="正在解析简历..." />
-            </Card>
-          </Col>
-        </Row>
+      {uploading && pipelineStatus && (
+        <SectionCard title="处理进度">
+          <div className="resume-running-panel">
+            <Spin size="large" />
+            <div>
+              <strong>第 {pipelineStatus.current_step || 0}/{pipelineStatus.total_steps || 6} 步：{pipelineStatus.step_name || '处理中'}</strong>
+              <p>状态：{pipelineStatus.status || 'running'}{pipelineStatus.error ? `；错误：${pipelineStatus.error}` : ''}</p>
+            </div>
+          </div>
+        </SectionCard>
+      )}
+
+      {!uploadSuccess && !uploading && (
+        <Alert
+          message="流程说明"
+          description="简历解析完成后，系统会自动构建学生画像。画像生成后，你可以继续进入岗位画像、人岗匹配、职业规划和报告生成。"
+          type="info"
+          showIcon
+        />
       )}
 
       {uploadSuccess && parseResult && (
-        <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
-          <Col xs={24}>
-            <Card
-              title={<span style={{ color: '#16a34a' }}>✓ 简历解析成功</span>}
-              extra={<Button type="primary" onClick={() => navigate('/profile')}>查看学生画像</Button>}
-            >
-              <Row gutter={[24, 24]}>
-                <Col xs={24} sm={12}>
-                  <div className="result-item">
-                    <label>姓名</label>
-                    <p>{parseResult.name}</p>
+        <SectionCard
+          title="解析结果"
+          extra={<Button type="primary" icon={<ArrowRightOutlined />} onClick={() => navigate('/profile')}>查看学生画像</Button>}
+        >
+          <Row gutter={[18, 18]}>
+            <Col xs={24} lg={8}>
+              <InsightCard
+                eyebrow={<UserOutlined />}
+                title={parseResult.name || '学生信息已解析'}
+                description={`求职意向：${parseResult.position || '暂无明确记录'}`}
+                points={[
+                  `邮箱：${parseResult.email || '暂无'}`,
+                  `电话：${parseResult.phone || '暂无'}`,
+                  `教育背景：${parseResult.education || '暂无'}`,
+                ]}
+                status="success"
+              />
+            </Col>
+            <Col xs={24} lg={16}>
+              <div className="resume-result-grid">
+                <div>
+                  <span>工作经验</span>
+                  <strong>{parseResult.experience || '暂无明确记录'}</strong>
+                </div>
+                <div>
+                  <span>技能证据</span>
+                  <div className="resume-skill-tags">
+                    {parsedSkills.length > 0 ? (
+                      parsedSkills.slice(0, 12).map((skill: string, index: number) => (
+                        <Tag key={`${skill}-${index}`}>{skill}</Tag>
+                      ))
+                    ) : (
+                      <span className="product-empty-inline">暂无技能数据</span>
+                    )}
                   </div>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <div className="result-item">
-                    <label>邮箱</label>
-                    <p>{parseResult.email}</p>
-                  </div>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <div className="result-item">
-                    <label>电话</label>
-                    <p>{parseResult.phone}</p>
-                  </div>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <div className="result-item">
-                    <label>求职意向</label>
-                    <p>{parseResult.position}</p>
-                  </div>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <div className="result-item">
-                    <label>教育背景</label>
-                    <p>{parseResult.education}</p>
-                  </div>
-                </Col>
-                <Col xs={24} sm={12}>
-                  <div className="result-item">
-                    <label>工作经验</label>
-                    <p>{parseResult.experience}</p>
-                  </div>
-                </Col>
-                <Col xs={24}>
-                  <div className="result-item">
-                    <label>技能</label>
-                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-                      {parseResult.skills?.map((skill: string, index: number) => (
-                        <span key={index} className="skill-tag">{skill}</span>
-                      ))}
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-        </Row>
+                </div>
+              </div>
+              <PageToolbar
+                className="resume-next-toolbar"
+                title="下一步"
+                description="建议先查看学生画像，再进入岗位匹配分析。"
+                actions={(
+                  <Space wrap>
+                    <Button onClick={() => navigate('/profile')}>查看学生画像</Button>
+                    <Button type="primary" onClick={() => navigate('/matching')}>进入岗位匹配</Button>
+                  </Space>
+                )}
+              />
+            </Col>
+          </Row>
+        </SectionCard>
       )}
-    </div>
+    </PageShell>
   )
 }
 

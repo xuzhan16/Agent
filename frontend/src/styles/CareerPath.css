@@ -2,6 +2,8 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  display: grid;
+  gap: var(--content-gap);
 }
 
 .path-card {
@@ -9,6 +11,10 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: none;
   transition: all 0.3s ease;
+}
+
+.career-path-container > .ant-row {
+  margin-top: 0 !important;
 }
 
 .path-card:hover {

@@ -26,20 +26,21 @@ function App() {
       <Layout>
         <Header 
           style={{ 
-            background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+            background: '#0f172a',
             padding: '0 24px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            boxShadow: '0 8px 24px rgba(59, 130, 246, 0.15)',
-            borderBottom: '1px solid rgba(255,255,255,0.12)',
+            boxShadow: '0 10px 28px rgba(15, 23, 42, 0.12)',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
           }}
         >
-          <div style={{ color: 'white', fontSize: 20, fontWeight: 700 }}>
-            🚀 AI 职业规划系统
+          <div style={{ color: 'white', fontSize: 19, fontWeight: 760, letterSpacing: '-0.02em' }}>
+            AI 职业规划系统
           </div>
           <Button 
             type="text" 
+            aria-label={collapsed ? '展开左侧导航' : '收起左侧导航'}
             style={{ color: 'white', fontSize: 18 }}
             onClick={() => setCollapsed(!collapsed)}
           >

@@ -1,4 +1,4 @@
-import { Card, Row, Col, Progress, Avatar, Tag, Space, Timeline, Alert, Button } from 'antd'
+import { Card, Row, Col, Progress, Avatar, Tag, Space, Timeline, Button } from 'antd'
 import { UserOutlined, DatabaseOutlined, CodeOutlined, FileTextOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import {
   Radar,
@@ -13,6 +13,15 @@ import { useCareerStore } from '../store'
 import { useNavigate } from 'react-router-dom'
 import { careerApi } from '../services/api'
 import { useState } from 'react'
+import {
+  EmptyState,
+  EvidencePanel,
+  HeroPanel,
+  InsightCard,
+  MetricCard,
+  PageShell,
+  PageToolbar,
+} from '../components/ui'
 import '../styles/StudentProfile.css'
 
 const EMPLOYMENT_ABILITY_DIMENSIONS = ['专业技能', '证书', '创新能力', '学习能力', '抗压能力', '沟通能力', '实习能力']
@@ -94,28 +103,25 @@ const StudentProfile = () => {
 
   if (!studentInfo) {
     return (
-      <div className="student-profile-container">
-        <h1 className="page-title">👤 学生画像</h1>
-        <p className="page-description">请先上传简历，生成学生画像后即可查看此页面。</p>
-
-        <Card className="profile-card" style={{ textAlign: 'center' }}>
-          <Alert
-            message="还没有学生画像"
-            description="请前往“简历上传”页面提交简历，系统会自动解析并生成画像。"
-            type="info"
-            showIcon
-          />
-          <Button type="primary" style={{ marginTop: 24 }} onClick={() => navigate('/resume')}>
-            前往简历上传
-          </Button>
-        </Card>
-      </div>
+      <PageShell className="student-profile-container">
+        <HeroPanel
+          eyebrow="Student Evidence Profile"
+          title="学生能力画像"
+          description="学生画像会把简历中的教育、技能、项目、实习和证书证据整理成后续岗位匹配可用的能力依据。"
+        />
+        <EmptyState
+          title="还没有学生画像"
+          description="请先上传简历或粘贴简历正文，系统会自动解析并生成学生画像。"
+          action={<Button type="primary" onClick={() => navigate('/resume')}>前往简历上传</Button>}
+        />
+      </PageShell>
     )
   }
 
   const projectExperience = studentInfo.project_experience || []
   const internshipExperience = studentInfo.internship_experience || []
   const profilePayload = studentProfile?.profile_input_payload
+  const normalizedEducation = profilePayload?.normalized_education
   const normalizedProfile = profilePayload?.normalized_profile
   const explicitProfile = profilePayload?.explicit_profile
   const practiceProfile = profilePayload?.practice_profile
@@ -139,6 +145,11 @@ const StudentProfile = () => {
   const missingDimensions = studentProfile?.missing_dimensions || []
   const preferredDirections = studentProfile?.potential_profile?.preferred_directions || normalizedProfile?.occupation_hints || []
   const employmentAbilityProfile = studentProfile?.employment_ability_profile || {}
+  const schoolLevel = studentInfo.school_level || normalizedEducation?.school_level || ''
+  const schoolName = studentInfo.school || normalizedEducation?.school || ''
+  const majorName = studentInfo.major || normalizedEducation?.major_std || normalizedEducation?.major_raw || ''
+  const degreeName = studentInfo.degree || normalizedEducation?.degree || ''
+  const graduationYear = studentInfo.graduation_year || normalizedEducation?.graduation_year || ''
 
   const projectCount = practiceProfile?.project_count || projectExperience.length
   const internshipCount = practiceProfile?.internship_count || internshipExperience.length
@@ -193,13 +204,38 @@ const StudentProfile = () => {
     dimension: item.dimension,
     score: item.score,
   }))
+  const topAbilities = employmentAbilityDimensions
+    .filter((item) => item.score >= 70)
+    .slice(0, 3)
+    .map((item) => item.dimension)
+  const riskAbilities = employmentAbilityDimensions
+    .filter((item) => item.score < 60)
+    .slice(0, 3)
+    .map((item) => item.dimension)
 
   return (
-    <div className="student-profile-container">
-      <h1 className="page-title">👤 学生画像</h1>
-      <p className="page-description">
-        基于简历信息自动生成的个性化职业画像
-      </p>
+    <PageShell className="student-profile-container">
+      <HeroPanel
+        eyebrow="Student Evidence Profile"
+        title="学生能力画像"
+        description="把简历信息拆解为可验证的教育、技能、项目、实习和证书证据，作为后续岗位匹配、风险判断和报告生成的输入。"
+        extra={(
+          <Row gutter={[12, 12]}>
+            <Col span={12}>
+              <MetricCard label="画像完整度" value={`${completenessScore}%`} tone="green" />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="竞争力分" value={`${technicalScore}%`} />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="项目 / 实习" value={`${projectCount} / ${internshipCount}`} tone="purple" />
+            </Col>
+            <Col span={12}>
+              <MetricCard label="目标方向" value={studentInfo.position || preferredDirections[0] || '待确认'} />
+            </Col>
+          </Row>
+        )}
+      />
 
       <Row gutter={[24, 24]}>
         <Col xs={24}>
@@ -216,7 +252,7 @@ const StudentProfile = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <h2 style={{ margin: 0, fontSize: 24, color: '#333' }}>{studentInfo.name}</h2>
                   <p style={{ margin: '4px 0', color: '#666' }}>
-                    {studentInfo.degree} | {studentInfo.major}
+                    {degreeName || '学历待确认'} | {majorName || '专业待确认'}
                   </p>
                   <Space size={16}>
                     <span>📧 {studentInfo.email}</span>
@@ -229,7 +265,8 @@ const StudentProfile = () => {
                   <Space wrap>
                     <Tag color="blue">学生</Tag>
                     <Tag color="green">求职中</Tag>
-                    <Tag color="magenta">{studentInfo.graduation_year}届</Tag>
+                    {schoolLevel && <Tag color="gold">{schoolLevel}</Tag>}
+                    <Tag color="magenta">{graduationYear ? `${graduationYear}届` : '毕业年份待确认'}</Tag>
                   </Space>
                 </div>
               </Col>
@@ -238,15 +275,50 @@ const StudentProfile = () => {
         </Col>
       </Row>
 
+      <Row gutter={[18, 18]} style={{ marginTop: 24 }}>
+        <Col xs={24} lg={8}>
+          <InsightCard
+            eyebrow="证据链"
+            title="当前画像证据已归档"
+            description="系统会把简历中的教育、技能、项目、实习和证书拆成后续匹配可引用的证据。"
+            points={[
+              `硬技能 ${hardSkills.length} 项，工具技能 ${toolSkills.length} 项`,
+              `项目经历 ${projectCount} 段，实习经历 ${internshipCount} 段`,
+              `证书/资格 ${certificateCount} 项`,
+            ]}
+            status="info"
+          />
+        </Col>
+        <Col xs={24} lg={8}>
+          <InsightCard
+            eyebrow="能力强项"
+            title={topAbilities.length > 0 ? topAbilities.join(' / ') : '暂无明显高分维度'}
+            description="这些维度会在岗位匹配和报告中优先作为优势证据呈现。"
+            status={topAbilities.length > 0 ? 'success' : 'neutral'}
+          />
+        </Col>
+        <Col xs={24} lg={8}>
+          <InsightCard
+            eyebrow="待补强"
+            title={riskAbilities.length > 0 ? riskAbilities.join(' / ') : '暂无明显短板'}
+            description="低分维度不会直接判定失败，但会影响岗位适配解释和行动计划建议。"
+            status={riskAbilities.length > 0 ? 'warning' : 'success'}
+          />
+        </Col>
+      </Row>
+
       <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
         <Col xs={24} sm={12}>
           <Card title={<span><DatabaseOutlined /> 教育背景</span>} className="profile-card">
             <div className="timeline-item">
-              <div className="timeline-year">{studentInfo.graduation_year}</div>
+              <div className="timeline-year">{graduationYear || '待确认'}</div>
               <div className="timeline-content">
-                <p style={{ margin: '4px 0', fontWeight: 600 }}>{studentInfo.school}</p>
-                <p style={{ margin: '4px 0', color: '#666' }}>{studentInfo.major}</p>
-                <p style={{ margin: '4px 0', color: '#999', fontSize: 12 }}>{studentInfo.degree} 学位</p>
+                <p style={{ margin: '4px 0', fontWeight: 600 }}>{schoolName || '学校待确认'}</p>
+                <p style={{ margin: '4px 0', color: '#666' }}>{majorName || '专业待确认'}</p>
+                <Space size={6} wrap>
+                  <Tag color="blue">{degreeName || '学历待确认'}</Tag>
+                  {schoolLevel && <Tag color="gold">{schoolLevel}</Tag>}
+                </Space>
               </div>
             </div>
           </Card>
@@ -524,31 +596,32 @@ const StudentProfile = () => {
         </Row>
       )}
 
-      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
-        <Col xs={24}>
-          <Card className="profile-card" style={{ textAlign: 'center' }}>
-            <Space direction="vertical" size="large">
-              <div>
-                <h3 style={{ margin: '0 0 8px 0', color: '#333' }}>🎯 下一步：岗位匹配分析</h3>
-                <p style={{ margin: 0, color: '#666' }}>
-                  基于你的学生画像，系统将为你推荐最适合的岗位并分析匹配度
-                </p>
-              </div>
-              <Button
-                type="primary"
-                size="large"
-                icon={<ArrowRightOutlined />}
-                loading={generatingMatches}
-                onClick={handleGenerateJobMatches}
-                style={{ height: 48, fontSize: 16 }}
-              >
-                {generatingMatches ? '正在分析岗位匹配...' : '开始岗位匹配分析'}
-              </Button>
-            </Space>
-          </Card>
-        </Col>
-      </Row>
-    </div>
+      <EvidencePanel
+        title="画像证据来源"
+        description="学生画像只消费简历解析结果和规则画像，不在前端重新生成能力结论。"
+        sources={[
+          { label: '简历解析', value: studentInfo.name || '已加载' },
+          { label: '学生画像', value: studentProfile ? '已生成' : '待生成', status: studentProfile ? 'available' : 'warning' },
+          { label: '能力维度', value: `${employmentAbilityDimensions.length} 项` },
+        ]}
+      />
+
+      <PageToolbar
+        title="下一步：岗位匹配分析"
+        description="基于学生画像与岗位后处理资产，系统会给出目标岗位匹配、推荐岗位、风险和知识点覆盖情况。"
+        actions={(
+          <Button
+            type="primary"
+            size="large"
+            icon={<ArrowRightOutlined />}
+            loading={generatingMatches}
+            onClick={handleGenerateJobMatches}
+          >
+            {generatingMatches ? '正在分析岗位匹配...' : '开始岗位匹配分析'}
+          </Button>
+        )}
+      />
+    </PageShell>
   )
 }
 

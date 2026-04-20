@@ -23,6 +23,7 @@ class ResumeBasicInfo:
     phone: str = ""
     email: str = ""
     school: str = ""
+    school_level: str = ""
     major: str = ""
     degree: str = ""
     graduation_year: str = ""
@@ -33,6 +34,7 @@ class EducationExperienceItem:
     """单条教育经历；日期字段保留原始字符串以兼容「至今」「在读」等写法。"""
 
     school: str = ""
+    school_level: str = ""
     major: str = ""
     degree: str = ""
     start_date: str = ""

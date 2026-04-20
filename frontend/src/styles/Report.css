@@ -124,6 +124,16 @@
   color: #333;
 }
 
+.report-success-panel {
+  padding: 48px 32px;
+  text-align: center;
+}
+
+.report-container .product-page-toolbar,
+.report-container .product-evidence-panel {
+  margin-top: 24px;
+}
+
 .mb-24 {
   margin-bottom: 24px;
 }

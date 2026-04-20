@@ -37,6 +37,11 @@ try:
 except ImportError:
     from resume_parse_module.resume_schema import default_resume_parse_result_dict
 
+try:
+    from .pdf_ocr_extractor import extract_text_from_pdf_header_ocr
+except ImportError:
+    from resume_parse_module.pdf_ocr_extractor import extract_text_from_pdf_header_ocr
+
 
 LOGGER = logging.getLogger(__name__)
 # 与 load_resume_file 分支一一对应；新增格式需同步扩展抽取函数与 file_meta
@@ -137,6 +142,13 @@ DEGREE_DURATION_YEARS = {
     "博士": 4,
     "专科": 3,
 }
+SCHOOL_LEVEL_PATTERNS = (
+    ("985", re.compile(r"(?<!\d)985(?!\d)|九八五")),
+    ("211", re.compile(r"(?<!\d)211(?!\d)|二一一")),
+    ("双一流", re.compile(r"双一流|一流大学|一流学科")),
+    ("一本", re.compile(r"一本|本科一批")),
+    ("二本", re.compile(r"二本|本科二批")),
+)
 
 PROJECT_SECTION_HEADING_SET = {
     "项目经历",
@@ -230,12 +242,66 @@ def _load_pdf_reader(file_path: str | Path):
             ) from exc
 
 
-def extract_text_from_pdf(file_path: str | Path) -> str:
-    """
-    从 PDF 简历提取文本。
+INCOMPLETE_EMAIL_HINT_PATTERN = re.compile(
+    r"(?:@\s*\.(?:com|cn|net|org|edu|gov)\b)"
+    r"|(?:@\s*(?:qq|163|126|gmail|outlook|hotmail|foxmail)\s*\.)"
+    r"|(?:(?:邮箱|Email|E-mail)\s*[:：]?\s*@)",
+    re.IGNORECASE,
+)
 
-    如果是扫描件 PDF，这里可能提取不到正文，OCR 逻辑先只预留在 parse_warnings 中提示。
-    """
+
+def _empty_pdf_text_diagnosis(text: str = "") -> Dict[str, Any]:
+    text = _ensure_str(text)
+    return {
+        "text_length": len(text),
+        "has_at_symbol": "@" in text,
+        "has_valid_email": False,
+        "has_phone": False,
+        "has_incomplete_email_hint": False,
+        "incomplete_email_hints": [],
+        "maybe_scanned_pdf": len(text.strip()) < 30,
+        "quality_score": 0.0,
+    }
+
+
+def _diagnose_pdf_text_quality(text: str) -> Dict[str, Any]:
+    normalized_text = _normalize_contact_text(text)
+    valid_email = bool(_extract_email_candidates(normalized_text))
+    has_phone = bool(_extract_phone_candidates(normalized_text))
+    incomplete_hints = _dedup_keep_order(
+        match.group(0).strip()
+        for match in INCOMPLETE_EMAIL_HINT_PATTERN.finditer(normalized_text)
+    )
+    meaningful_chars = re.findall(r"[\u4e00-\u9fffA-Za-z0-9]", normalized_text)
+    text_length = len(normalized_text)
+    maybe_scanned_pdf = text_length < 30 or len(meaningful_chars) < 20
+
+    quality_score = min(text_length / 40.0, 45.0)
+    if valid_email:
+        quality_score += 45.0
+    if has_phone:
+        quality_score += 18.0
+    if not maybe_scanned_pdf:
+        quality_score += 10.0
+    if incomplete_hints and not valid_email:
+        quality_score -= 12.0
+    if maybe_scanned_pdf:
+        quality_score -= 25.0
+    quality_score = max(0.0, round(quality_score, 2))
+
+    return {
+        "text_length": text_length,
+        "has_at_symbol": "@" in normalized_text,
+        "has_valid_email": valid_email,
+        "has_phone": has_phone,
+        "has_incomplete_email_hint": bool(incomplete_hints),
+        "incomplete_email_hints": incomplete_hints,
+        "maybe_scanned_pdf": maybe_scanned_pdf,
+        "quality_score": quality_score,
+    }
+
+
+def _extract_pdf_text_with_pypdf(file_path: str | Path) -> str:
     reader = _load_pdf_reader(file_path)
     page_texts: List[str] = []
     for page in reader.pages:
@@ -243,6 +309,136 @@ def extract_text_from_pdf(file_path: str | Path) -> str:
         if page_text.strip():
             page_texts.append(page_text)
     return "\n".join(page_texts)
+
+
+def _extract_pdf_text_with_pdfminer(file_path: str | Path) -> str:
+    try:
+        from pdfminer.high_level import extract_text
+    except ImportError as exc:
+        raise RuntimeError("pdfminer.six not installed") from exc
+    return extract_text(str(file_path)) or ""
+
+
+def _extract_pdf_text_with_pdfplumber(file_path: str | Path) -> str:
+    try:
+        import pdfplumber
+    except ImportError as exc:
+        raise RuntimeError("pdfplumber not installed") from exc
+
+    page_texts: List[str] = []
+    with pdfplumber.open(str(file_path)) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text() or ""
+            if page_text.strip():
+                page_texts.append(page_text)
+    return "\n".join(page_texts)
+
+
+def _extract_pdf_text_with_pymupdf(file_path: str | Path) -> str:
+    try:
+        import fitz
+    except ImportError as exc:
+        raise RuntimeError("PyMuPDF/fitz not installed") from exc
+
+    page_texts: List[str] = []
+    with fitz.open(str(file_path)) as document:
+        for page in document:
+            page_text = page.get_text("text") or ""
+            if page_text.strip():
+                page_texts.append(page_text)
+    return "\n".join(page_texts)
+
+
+def _build_pdf_extraction_attempt(
+    method: str,
+    extractor,
+    file_path: str | Path,
+) -> Dict[str, Any]:
+    try:
+        text = extractor(file_path)
+        diagnosis = _diagnose_pdf_text_quality(text)
+        return {
+            "method": method,
+            "available": True,
+            "success": bool(text.strip()),
+            "text": text,
+            "diagnosis": diagnosis,
+            "error": "" if text.strip() else "empty text extracted",
+        }
+    except Exception as exc:
+        return {
+            "method": method,
+            "available": "not installed" not in str(exc).lower(),
+            "success": False,
+            "text": "",
+            "diagnosis": _empty_pdf_text_diagnosis(""),
+            "error": str(exc),
+        }
+
+
+def _pdf_attempt_public_summary(attempt: Dict[str, Any]) -> Dict[str, Any]:
+    diagnosis = _ensure_dict(attempt.get("diagnosis"))
+    return {
+        "method": _ensure_str(attempt.get("method")),
+        "available": bool(attempt.get("available")),
+        "success": bool(attempt.get("success")),
+        "text_length": int(diagnosis.get("text_length", 0) or 0),
+        "has_valid_email": bool(diagnosis.get("has_valid_email")),
+        "has_phone": bool(diagnosis.get("has_phone")),
+        "has_incomplete_email_hint": bool(diagnosis.get("has_incomplete_email_hint")),
+        "incomplete_email_hints": _ensure_str_list(diagnosis.get("incomplete_email_hints", [])),
+        "maybe_scanned_pdf": bool(diagnosis.get("maybe_scanned_pdf")),
+        "quality_score": float(diagnosis.get("quality_score", 0) or 0),
+        "error": _ensure_str(attempt.get("error")),
+    }
+
+
+def _select_best_pdf_extraction_attempt(attempts: List[Dict[str, Any]]) -> Dict[str, Any]:
+    successful_attempts = [attempt for attempt in attempts if attempt.get("success")]
+    if not successful_attempts:
+        return {
+            "method": "none",
+            "available": False,
+            "success": False,
+            "text": "",
+            "diagnosis": _empty_pdf_text_diagnosis(""),
+            "error": "all PDF text extraction engines failed",
+        }
+    return max(
+        successful_attempts,
+        key=lambda attempt: (
+            bool(_ensure_dict(attempt.get("diagnosis")).get("has_valid_email")),
+            float(_ensure_dict(attempt.get("diagnosis")).get("quality_score", 0) or 0),
+            int(_ensure_dict(attempt.get("diagnosis")).get("text_length", 0) or 0),
+        ),
+    )
+
+
+def extract_text_from_pdf(file_path: str | Path) -> str:
+    """
+    从 PDF 简历提取文本。
+
+    如果是扫描件 PDF，这里可能提取不到正文，OCR 逻辑先只预留在 parse_warnings 中提示。
+    """
+    attempts = [
+        _build_pdf_extraction_attempt("pypdf", _extract_pdf_text_with_pypdf, file_path),
+        _build_pdf_extraction_attempt("pdfminer", _extract_pdf_text_with_pdfminer, file_path),
+        _build_pdf_extraction_attempt("pdfplumber", _extract_pdf_text_with_pdfplumber, file_path),
+        _build_pdf_extraction_attempt("pymupdf", _extract_pdf_text_with_pymupdf, file_path),
+    ]
+    best_attempt = _select_best_pdf_extraction_attempt(attempts)
+    extract_text_from_pdf.last_meta = {
+        "pdf_extraction_method": _ensure_str(best_attempt.get("method")),
+        "pdf_text_quality": deepcopy(_ensure_dict(best_attempt.get("diagnosis"))),
+        "pdf_extraction_attempts": [
+            _pdf_attempt_public_summary(attempt)
+            for attempt in attempts
+        ],
+    }
+    return _ensure_str(best_attempt.get("text", ""))
+
+
+extract_text_from_pdf.last_meta = {}
 
 
 def load_resume_file(file_path: str | Path) -> Tuple[str, Dict[str, Any]]:
@@ -270,6 +466,7 @@ def load_resume_file(file_path: str | Path) -> Tuple[str, Dict[str, Any]]:
     else:
         resume_text = extract_text_from_pdf(path)
         extraction_method = "pdf_text_reader"
+    pdf_meta = deepcopy(getattr(extract_text_from_pdf, "last_meta", {})) if suffix == ".pdf" else {}
 
     file_meta = {
         "file_name": path.name,
@@ -280,6 +477,11 @@ def load_resume_file(file_path: str | Path) -> Tuple[str, Dict[str, Any]]:
         "text_length": len(resume_text or ""),
         "maybe_scanned_pdf": suffix == ".pdf" and len((resume_text or "").strip()) < 30,
     }
+    if pdf_meta:
+        file_meta.update(pdf_meta)
+        pdf_text_quality = _ensure_dict(pdf_meta.get("pdf_text_quality"))
+        if pdf_text_quality:
+            file_meta["maybe_scanned_pdf"] = bool(pdf_text_quality.get("maybe_scanned_pdf"))
     return resume_text, file_meta
 
 
@@ -417,14 +619,260 @@ def _extract_resume_sections(resume_text: str) -> Dict[str, List[str]]:
     }
 
 
+EMAIL_CONTEXT_KEYWORDS = ("邮箱", "邮件", "Email", "E-mail", "email", "mail", "联系方式", "联系")
+PHONE_CONTEXT_KEYWORDS = ("电话", "手机", "Tel", "TEL", "tel", "Phone", "phone", "联系方式", "联系")
+KNOWN_EMAIL_SUFFIXES = (
+    "com.cn",
+    "edu.cn",
+    "net.cn",
+    "org.cn",
+    "gov.cn",
+    "qq.com",
+    "163.com",
+    "126.com",
+    "gmail.com",
+    "outlook.com",
+    "hotmail.com",
+    "foxmail.com",
+    "icloud.com",
+    "sina.com",
+    "sohu.com",
+    "yeah.net",
+    "com",
+    "cn",
+    "net",
+    "org",
+    "edu",
+    "gov",
+    "io",
+    "ai",
+    "co",
+    "me",
+    "vip",
+    "top",
+    "xyz",
+    "info",
+    "biz",
+    "pro",
+    "name",
+    "cc",
+    "tv",
+)
+EMAIL_VALID_PATTERN = re.compile(
+    r"^[A-Za-z0-9][A-Za-z0-9._%+\-]{0,63}@"
+    r"(?:[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?\.)+"
+    r"[A-Za-z]{2,10}$"
+)
+EMAIL_CANDIDATE_PATTERN = re.compile(
+    r"[A-Za-z0-9][A-Za-z0-9._%+\-]{0,100}@"
+    r"[A-Za-z0-9][A-Za-z0-9.\-]{1,150}",
+    re.IGNORECASE,
+)
+MOBILE_PHONE_PATTERN = re.compile(
+    r"(?<!\d)(?:\+?86[-\s]*)?1[3-9]\d[-\s]*\d{4}[-\s]*\d{4}",
+    re.IGNORECASE,
+)
+LANDLINE_PHONE_PATTERN = re.compile(r"(?<!\d)0\d{2,3}[-\s]?\d{7,8}(?!\d)")
+
+
+def _normalize_contact_text(text: str) -> str:
+    normalized = unicodedata.normalize("NFKC", _ensure_str(text))
+    normalized = normalized.replace("\x00", "")
+    normalized = re.sub(r"[\x01-\x08\x0b-\x1f\x7f]", " ", normalized)
+    normalized = normalized.replace("\u00a0", " ")
+    normalized = normalized.replace("\u200b", "")
+    normalized = normalized.replace("（", "(").replace("）", ")")
+    normalized = normalized.replace("－", "-").replace("—", "-").replace("–", "-")
+    return normalized
+
+
+def _context_line_for_position(text: str, position: int) -> str:
+    if not text:
+        return ""
+    start = text.rfind("\n", 0, max(position, 0)) + 1
+    end = text.find("\n", max(position, 0))
+    if end == -1:
+        end = min(len(text), position + 160)
+    return text[start:end].strip()
+
+
+def _domain_prefix(domain: str) -> str:
+    domain = domain.strip(".- \t\r\n")
+    if not domain:
+        return ""
+    lower_domain = domain.lower()
+    for suffix in KNOWN_EMAIL_SUFFIXES:
+        marker = f".{suffix}"
+        index = lower_domain.find(marker)
+        if index < 0:
+            continue
+        end = index + len(marker)
+        if end == len(domain) or not domain[end].isalpha():
+            return domain[:end].strip(".-")
+
+    generic_match = re.match(
+        r"^((?:[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,10})(?=$|[^A-Za-z])",
+        domain,
+    )
+    if generic_match:
+        return generic_match.group(1).strip(".-")
+    return ""
+
+
+def _clean_email_candidate(candidate: str) -> str:
+    candidate = _normalize_contact_text(candidate).strip()
+    candidate = candidate.strip(" \t\r\n<>[]{}()（）【】,，;；。:：")
+    if "@" not in candidate:
+        return ""
+
+    local, domain = candidate.split("@", 1)
+    local = local.strip(" \t\r\n<>[]{}()（）【】,，;；。:：")
+    domain = _domain_prefix(domain)
+    if not local or not domain:
+        return ""
+
+    # PDF/Word 抽取常把手机号和邮箱前缀粘在一起，如 138-0000-000012345678@qq.com。
+    # 但 “11 位手机号@139.com/qq.com” 本身也是常见合法邮箱，不能一刀切删掉。
+    mobile_prefix = re.match(r"^(?:\+?86[-\s]*)?1[3-9]\d[-\s]*\d{4}[-\s]*\d{4}", local)
+    if mobile_prefix:
+        tail = local[mobile_prefix.end():]
+        if re.sub(r"[\s._%+-]+", "", tail):
+            local = tail.strip("._%+-")
+    if not local:
+        return ""
+
+    email = f"{local}@{domain}".strip()
+    return email if _is_valid_email(email) else ""
+
+
+def _is_valid_email(email: str) -> bool:
+    email = _normalize_contact_text(email).strip()
+    if not email or len(email) > 254 or email.count("@") != 1:
+        return False
+    if ".." in email:
+        return False
+    return bool(EMAIL_VALID_PATTERN.fullmatch(email))
+
+
+def _score_email_candidate(email: str, context_line: str, position: int) -> float:
+    score = 100.0
+    if any(keyword in context_line for keyword in EMAIL_CONTEXT_KEYWORDS):
+        score += 30.0
+    if position < 800:
+        score += 18.0
+    elif position < 2000:
+        score += 8.0
+    domain = email.split("@", 1)[-1].lower()
+    if domain in KNOWN_EMAIL_SUFFIXES or any(domain.endswith(f".{suffix}") for suffix in KNOWN_EMAIL_SUFFIXES[:13]):
+        score += 8.0
+    if len(email) <= 40:
+        score += 5.0
+    if re.search(r"[-+%]{2,}", email):
+        score -= 12.0
+    return score
+
+
+def _extract_email_candidates(text: str) -> List[Dict[str, Any]]:
+    normalized_text = _normalize_contact_text(text)
+    candidates: List[Dict[str, Any]] = []
+    seen = set()
+    for match in EMAIL_CANDIDATE_PATTERN.finditer(normalized_text):
+        raw_candidate = match.group(0)
+        cleaned = _clean_email_candidate(raw_candidate)
+        if not cleaned or cleaned.lower() in seen:
+            continue
+        seen.add(cleaned.lower())
+        context_line = _context_line_for_position(normalized_text, match.start())
+        candidates.append(
+            {
+                "value": cleaned,
+                "raw_value": raw_candidate,
+                "position": match.start(),
+                "context_line": context_line,
+                "score": _score_email_candidate(cleaned, context_line, match.start()),
+            }
+        )
+    candidates.sort(key=lambda item: (-float(item.get("score", 0)), int(item.get("position", 0))))
+    return candidates
+
+
 def _extract_phone(text: str) -> str:
-    match = re.search(r"1[3-9]\d[- ]?\d{4}[- ]?\d{4}", text)
-    return match.group(0).replace(" ", "") if match else ""
+    candidates = _extract_phone_candidates(text)
+    return _ensure_str(candidates[0].get("value", "")) if candidates else ""
 
 
 def _extract_email(text: str) -> str:
-    match = re.search(r"[A-Za-z0-9_.+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9-.]+", text)
-    return match.group(0) if match else ""
+    candidates = _extract_email_candidates(text)
+    return _ensure_str(candidates[0].get("value", "")) if candidates else ""
+
+
+def _clean_phone_candidate(candidate: str) -> str:
+    candidate = _normalize_contact_text(candidate)
+    digits = re.sub(r"\D", "", candidate)
+    if digits.startswith("0086") and len(digits) >= 15:
+        digits = digits[4:]
+    elif digits.startswith("86") and len(digits) >= 13:
+        digits = digits[2:]
+
+    mobile_match = re.search(r"1[3-9]\d{9}", digits)
+    if mobile_match:
+        return mobile_match.group(0)
+
+    if re.fullmatch(r"0\d{9,11}", digits):
+        return digits
+    return ""
+
+
+def _is_valid_phone(phone: str) -> bool:
+    phone = _clean_phone_candidate(phone)
+    if re.fullmatch(r"1[3-9]\d{9}", phone):
+        return True
+    return bool(re.fullmatch(r"0\d{9,11}", phone))
+
+
+def _score_phone_candidate(phone: str, context_line: str, position: int, phone_type: str = "mobile") -> float:
+    score = 110.0 if phone_type == "mobile" else 72.0
+    if any(keyword in context_line for keyword in PHONE_CONTEXT_KEYWORDS):
+        score += 28.0
+    if position < 800:
+        score += 18.0
+    elif position < 2000:
+        score += 8.0
+    if phone_type == "mobile" and re.fullmatch(r"1[3-9]\d{9}", phone):
+        score += 8.0
+    if re.search(r"(?:身份证|学号|编号|日期|生日|出生)", context_line):
+        score -= 40.0
+    return score
+
+
+def _extract_phone_candidates(text: str) -> List[Dict[str, Any]]:
+    normalized_text = _normalize_contact_text(text)
+    candidates: List[Dict[str, Any]] = []
+    seen = set()
+
+    for phone_type, pattern in (("mobile", MOBILE_PHONE_PATTERN), ("landline", LANDLINE_PHONE_PATTERN)):
+        for match in pattern.finditer(normalized_text):
+            raw_candidate = match.group(0)
+            cleaned = _clean_phone_candidate(raw_candidate)
+            if not cleaned or cleaned in seen:
+                continue
+            if not _is_valid_phone(cleaned):
+                continue
+            seen.add(cleaned)
+            context_line = _context_line_for_position(normalized_text, match.start())
+            candidates.append(
+                {
+                    "value": cleaned,
+                    "raw_value": raw_candidate,
+                    "phone_type": phone_type,
+                    "position": match.start(),
+                    "context_line": context_line,
+                    "score": _score_phone_candidate(cleaned, context_line, match.start(), phone_type),
+                }
+            )
+
+    candidates.sort(key=lambda item: (-float(item.get("score", 0)), int(item.get("position", 0))))
+    return candidates
 
 
 def _extract_gender(text: str) -> str:
@@ -517,6 +965,18 @@ def _infer_degree_from_text(text: str) -> str:
     return ""
 
 
+def _extract_school_level(text: str) -> str:
+    normalized = clean_resume_text(_ensure_str(text))
+    if not normalized:
+        return ""
+    matched_levels = [
+        level
+        for level, pattern in SCHOOL_LEVEL_PATTERNS
+        if pattern.search(normalized)
+    ]
+    return " / ".join(_dedup_keep_order(matched_levels))
+
+
 def _infer_graduation_year_from_education(education_experience: List[Dict[str, str]]) -> str:
     for item in education_experience:
         end_date = str(item.get("end_date") or "").strip()
@@ -541,9 +1001,10 @@ def _infer_graduation_year_from_education(education_experience: List[Dict[str, s
     return ""
 
 
-def _parse_school_major_degree(text: str) -> Tuple[str, str, str, str]:
+def _parse_school_major_degree(text: str) -> Tuple[str, str, str, str, str]:
     body = str(text or "").strip()
     school = ""
+    school_level = _extract_school_level(body)
     major = ""
     degree = ""
     description = ""
@@ -589,7 +1050,7 @@ def _parse_school_major_degree(text: str) -> Tuple[str, str, str, str]:
     after_degree = re.sub(r"[，,；;。]+", " ", after_degree)
     after_degree = re.sub(r"\s+", " ", after_degree).strip()
     description = f"{description} {after_degree}".strip()
-    return school, major, degree, description
+    return school, major, degree, description, school_level
 
 
 def _append_description(current: Dict[str, Any], line: str) -> None:
@@ -626,12 +1087,13 @@ def _parse_education_entries(section_lines: List[str]) -> List[Dict[str, str]]:
     for line in _split_lines_by_date_ranges(section_lines):
         start_date, end_date = _extract_date_range(line)
         line_has_school = any(token in line for token in ("大学", "学院", "学校"))
-        if start_date and (line_has_school or any(keyword in line for keyword in DEGREE_KEYWORDS)):
-            if current:
-                entries.append(current)
-            school, major, degree, inline_description = _parse_school_major_degree(_remove_date_range_prefix(line))
+        if line_has_school and not current:
+            school, major, degree, inline_description, school_level = _parse_school_major_degree(
+                _remove_date_range_prefix(line)
+            )
             current = {
                 "school": school,
+                "school_level": school_level,
                 "major": major,
                 "degree": degree,
                 "start_date": start_date,
@@ -639,7 +1101,50 @@ def _parse_education_entries(section_lines: List[str]) -> List[Dict[str, str]]:
                 "description": _clean_description_text(inline_description),
             }
             continue
+
+        if start_date and (line_has_school or any(keyword in line for keyword in DEGREE_KEYWORDS)):
+            if current:
+                entries.append(current)
+            school, major, degree, inline_description, school_level = _parse_school_major_degree(_remove_date_range_prefix(line))
+            current = {
+                "school": school,
+                "school_level": school_level,
+                "major": major,
+                "degree": degree,
+                "start_date": start_date,
+                "end_date": end_date,
+                "description": _clean_description_text(inline_description),
+            }
+            continue
+        if current and start_date:
+            current["start_date"] = current.get("start_date") or start_date
+            current["end_date"] = current.get("end_date") or end_date
+            remaining = _remove_date_range_prefix(line)
+            if remaining:
+                school, major, degree, inline_description, school_level = _parse_school_major_degree(remaining)
+                if school and not current.get("school"):
+                    current["school"] = school
+                if school_level and not current.get("school_level"):
+                    current["school_level"] = school_level
+                if major and not current.get("major"):
+                    current["major"] = major
+                if degree and not current.get("degree"):
+                    current["degree"] = degree
+                if inline_description:
+                    _append_description(current, inline_description)
+            continue
         if current:
+            inferred_degree = _infer_degree_from_text(line)
+            if inferred_degree and not current.get("degree"):
+                current["degree"] = inferred_degree
+                continue
+            if not current.get("major") and not re.search(
+                r"(?:全日制|在校期间|奖学金|CET|英语|通过|获得|学院$)",
+                line,
+                re.IGNORECASE,
+            ):
+                current["major"] = line.strip()
+                continue
             _append_description(current, line)
 
     if current:
@@ -898,6 +1403,7 @@ def _build_rule_resume_parse_result(resume_text: str) -> Tuple[Dict[str, Any], D
     awards = _extract_awards_by_rule(award_lines + education_lines, resume_text)
 
     fallback_school = education_experience[0]["school"] if education_experience else ""
+    fallback_school_level = education_experience[0].get("school_level", "") if education_experience else ""
     fallback_major = education_experience[0]["major"] if education_experience else ""
     fallback_degree = education_experience[0]["degree"] if education_experience else ""
     if not fallback_degree:
@@ -911,6 +1417,7 @@ def _build_rule_resume_parse_result(resume_text: str) -> Tuple[Dict[str, Any], D
         "phone": _extract_phone(resume_text),
         "email": _extract_email(resume_text),
         "school": fallback_school,
+        "school_level": fallback_school_level or _extract_school_level(" ".join(education_lines[:5])),
         "major": fallback_major,
         "degree": fallback_degree,
         "graduation_year": fallback_graduation_year,
@@ -948,6 +1455,16 @@ def _merge_basic_info(
     for field_name in default_resume_parse_result_dict()["basic_info"].keys():
         llm_value = _ensure_str(llm_basic_info.get(field_name, ""))
         rule_value = _ensure_str(rule_basic_info.get(field_name, ""))
+        if field_name == "email":
+            rule_email = _clean_email_candidate(rule_value)
+            llm_email = _clean_email_candidate(llm_value)
+            merged[field_name] = rule_email or llm_email
+            continue
+        if field_name == "phone":
+            rule_phone = _clean_phone_candidate(rule_value)
+            llm_phone = _clean_phone_candidate(llm_value)
+            merged[field_name] = rule_phone or llm_phone
+            continue
         merged[field_name] = llm_value or rule_value
     return merged
 
@@ -1105,6 +1622,7 @@ def build_resume_parse_input(
                 "phone",
                 "email",
                 "school",
+                "school_level",
                 "major",
                 "degree",
                 "graduation_year",
@@ -1210,6 +1728,7 @@ def validate_resume_parse_result(
             source.get("education_experience", []),
             {
                 "school": "",
+                "school_level": "",
                 "major": "",
                 "degree": "",
                 "start_date": "",
@@ -1251,6 +1770,63 @@ def validate_resume_parse_result(
     if not normalized["raw_resume_text"]:
         normalized["raw_resume_text"] = _ensure_str(raw_resume_text)
 
+    if isinstance(source.get("pdf_header_ocr"), dict):
+        normalized["pdf_header_ocr"] = deepcopy(source.get("pdf_header_ocr"))
+
+    if not normalized["basic_info"].get("school_level"):
+        education_text = " ".join(
+            " ".join(
+                [
+                _ensure_str(row.get("school")),
+                _ensure_str(row.get("school_level")),
+                _ensure_str(row.get("description")),
+                ]
+            )
+            for row in normalized["education_experience"]
+        )
+        normalized["basic_info"]["school_level"] = (
+            _extract_school_level(education_text)
+            or _extract_school_level(normalized["raw_resume_text"])
+        )
+    for row in normalized["education_experience"]:
+        if not row.get("school_level"):
+            row["school_level"] = normalized["basic_info"].get("school_level", "")
+
+    contact_text = normalized["raw_resume_text"] or _ensure_str(raw_resume_text)
+    current_email = normalized["basic_info"].get("email", "")
+    cleaned_email = _clean_email_candidate(current_email)
+    if cleaned_email:
+        if cleaned_email != current_email:
+            normalized["parse_warnings"].append("邮箱字段已由规则校正")
+        normalized["basic_info"]["email"] = cleaned_email
+    else:
+        repaired_email = _extract_email(contact_text)
+        if repaired_email:
+            normalized["basic_info"]["email"] = repaired_email
+            normalized["parse_warnings"].append("邮箱字段已由规则校正")
+        else:
+            normalized["basic_info"]["email"] = ""
+            if INCOMPLETE_EMAIL_HINT_PATTERN.search(_normalize_contact_text(contact_text)):
+                normalized["parse_warnings"].append(
+                    "文本中存在邮箱痕迹但未提取到完整邮箱，可能是文本层缺失、特殊字体或格式粘连导致。"
+                )
+            normalized["parse_warnings"].append("未能从简历文本中稳定识别邮箱")
+
+    current_phone = normalized["basic_info"].get("phone", "")
+    cleaned_phone = _clean_phone_candidate(current_phone)
+    if cleaned_phone:
+        if cleaned_phone != current_phone:
+            normalized["parse_warnings"].append("电话字段已由规则校正")
+        normalized["basic_info"]["phone"] = cleaned_phone
+    else:
+        repaired_phone = _extract_phone(contact_text)
+        if repaired_phone:
+            normalized["basic_info"]["phone"] = repaired_phone
+            normalized["parse_warnings"].append("电话字段已由规则校正")
+        else:
+            normalized["basic_info"]["phone"] = ""
+            normalized["parse_warnings"].append("未能从简历文本中稳定识别电话")
+
     # 业务级质量提示：不抛错，仅追加 parse_warnings 供上游展示
     if not normalized["basic_info"]["name"]:
         normalized["parse_warnings"].append("未解析到姓名字段")
@@ -1275,6 +1851,142 @@ def validate_resume_parse_result(
 # ---------------------------------------------------------------------------
 # 对外 API：调模型、写状态、命令行入口
 # ---------------------------------------------------------------------------
+
+
+def _pdf_parse_warnings_from_file_meta(file_meta: Optional[Dict[str, Any]]) -> List[str]:
+    if not file_meta or _ensure_str(file_meta.get("file_suffix")).lower() != ".pdf":
+        return []
+
+    warnings: List[str] = []
+    pdf_text_quality = _ensure_dict(file_meta.get("pdf_text_quality"))
+    if (
+        pdf_text_quality.get("has_incomplete_email_hint")
+        and not pdf_text_quality.get("has_valid_email")
+    ):
+        warnings.append(
+            "PDF 文本层存在邮箱痕迹但未提取到完整邮箱，可能是特殊字体、图片或文本层缺失，建议启用 OCR 或上传可复制文本的简历文件。"
+        )
+
+    if file_meta.get("maybe_scanned_pdf"):
+        warnings.append(
+            "PDF 文本提取内容过少，疑似扫描件；该 PDF 可能需要 OCR 才能完整识别联系方式。"
+        )
+
+    attempts = _ensure_str_list([])
+    raw_attempts = file_meta.get("pdf_extraction_attempts", [])
+    if isinstance(raw_attempts, list):
+        optional_methods = {"pdfminer", "pdfplumber", "pymupdf"}
+        unavailable_optional = [
+            _ensure_str(attempt.get("method"))
+            for attempt in raw_attempts
+            if isinstance(attempt, dict)
+            and _ensure_str(attempt.get("method")) in optional_methods
+            and not attempt.get("available")
+        ]
+        attempts = unavailable_optional
+    if attempts and len(set(attempts)) >= 3:
+        warnings.append(
+            "当前环境未安装 pdfminer/pdfplumber/PyMuPDF，已使用基础 PDF 文本抽取；若 PDF 文本层异常，建议安装备用 PDF 抽取库或启用 OCR。"
+        )
+
+    return _dedup_keep_order(warnings)
+
+
+def should_use_pdf_header_ocr(
+    file_meta: Optional[Dict[str, Any]],
+    parsed_result: Dict[str, Any],
+) -> bool:
+    if not file_meta or _ensure_str(file_meta.get("file_suffix")).lower() != ".pdf":
+        return False
+
+    basic_info = _ensure_dict(parsed_result.get("basic_info"))
+    email = _ensure_str(basic_info.get("email"))
+    phone = _ensure_str(basic_info.get("phone"))
+    if _is_valid_email(email) and _is_valid_phone(phone):
+        return False
+    if _is_valid_email(email):
+        return False
+
+    pdf_text_quality = _ensure_dict(file_meta.get("pdf_text_quality"))
+    warnings_text = "\n".join(_ensure_str_list(parsed_result.get("parse_warnings", [])))
+    return bool(
+        pdf_text_quality.get("has_incomplete_email_hint")
+        or (
+            pdf_text_quality.get("has_at_symbol")
+            and not pdf_text_quality.get("has_valid_email")
+        )
+        or file_meta.get("maybe_scanned_pdf")
+        or "未能从简历文本中稳定识别邮箱" in warnings_text
+    )
+
+
+def _ocr_unavailable_warning(error: str) -> str:
+    normalized_error = _ensure_str(error)
+    if "not installed" in normalized_error.lower():
+        return "PDF 首页顶部 OCR 未启用：当前环境未安装 PyMuPDF 或 PaddleOCR。"
+    return "PDF 首页顶部 OCR 执行失败，已保留文本层解析结果。"
+
+
+def _repair_contact_fields_with_pdf_header_ocr(
+    result: Dict[str, Any],
+    file_meta: Optional[Dict[str, Any]],
+) -> Dict[str, Any]:
+    repaired = deepcopy(result)
+    repaired.setdefault("basic_info", {})
+    repaired.setdefault("parse_warnings", [])
+
+    if not should_use_pdf_header_ocr(file_meta, repaired):
+        return repaired
+
+    pdf_path = _ensure_str(_ensure_dict(file_meta).get("file_path"))
+    if not pdf_path:
+        repaired["parse_warnings"] = _dedup_keep_order(
+            repaired.get("parse_warnings", [])
+            + ["PDF 首页顶部 OCR 未启用：缺少 PDF 文件路径。"]
+        )
+        return repaired
+
+    ocr_result = extract_text_from_pdf_header_ocr(pdf_path)
+    repaired["pdf_header_ocr"] = {
+        "enabled": bool(ocr_result.get("enabled")),
+        "success": bool(ocr_result.get("success")),
+        "ocr_engine": _ensure_str(ocr_result.get("ocr_engine", "paddleocr")),
+        "line_count": int(ocr_result.get("line_count", 0) or 0),
+        "ocr_confidence": float(ocr_result.get("ocr_confidence", 0) or 0),
+        "used_for_email": False,
+        "used_for_phone": False,
+        "error": _ensure_str(ocr_result.get("error", "")),
+    }
+
+    warnings = _ensure_str_list(repaired.get("parse_warnings", []))
+    if not ocr_result.get("success"):
+        warnings.append(_ocr_unavailable_warning(_ensure_str(ocr_result.get("error"))))
+        repaired["parse_warnings"] = _dedup_keep_order(warnings)
+        return repaired
+
+    ocr_text = _ensure_str(ocr_result.get("ocr_text"))
+    ocr_email = _extract_email(ocr_text)
+    ocr_phone = _extract_phone(ocr_text)
+    basic_info = _ensure_dict(repaired.get("basic_info"))
+
+    current_email = _ensure_str(basic_info.get("email"))
+    if not _is_valid_email(current_email) and _is_valid_email(ocr_email):
+        basic_info["email"] = ocr_email
+        repaired["pdf_header_ocr"]["used_for_email"] = True
+        warnings.append("邮箱字段已由 PDF 首页顶部 OCR 修复。")
+
+    current_phone = _ensure_str(basic_info.get("phone"))
+    if not _is_valid_phone(current_phone) and _is_valid_phone(ocr_phone):
+        basic_info["phone"] = ocr_phone
+        repaired["pdf_header_ocr"]["used_for_phone"] = True
+        warnings.append("电话字段已由 PDF 首页顶部 OCR 修复。")
+
+    if not _is_valid_email(_ensure_str(basic_info.get("email"))):
+        warnings.append("PDF 首页顶部 OCR 未识别到合法邮箱，建议上传可复制文本的 PDF 或 DOCX 简历。")
+
+    repaired["basic_info"] = basic_info
+    repaired["parse_warnings"] = _dedup_keep_order(warnings)
+    return repaired
 
 
 def parse_resume_with_llm(
@@ -1320,10 +2032,16 @@ def parse_resume_with_llm(
     except Exception as exc:
         LOGGER.exception("call_llm('resume_parse', ...) failed")
         rule_result["parse_warnings"] = _dedup_keep_order(
-            rule_result.get("parse_warnings", []) + [f"LLM 调用失败: {exc}"]
+            rule_result.get("parse_warnings", [])
+            + _pdf_parse_warnings_from_file_meta(file_meta)
+            + [f"LLM 调用失败: {exc}"]
+        )
+        validated_result = validate_resume_parse_result(
+            rule_result,
+            raw_resume_text=cleaned_resume_text,
         )
         return validate_resume_parse_result(
-            rule_result,
+            _repair_contact_fields_with_pdf_header_ocr(validated_result, file_meta),
             raw_resume_text=cleaned_resume_text,
         )
 
@@ -1334,13 +2052,17 @@ def parse_resume_with_llm(
         raw_resume_text=cleaned_resume_text,
     )
 
-    if file_meta and file_meta.get("maybe_scanned_pdf"):
-        merged_result["parse_warnings"].append(
-            "PDF 文本提取内容过少，疑似扫描件；OCR 接口已预留但当前未启用"
-        )
+    merged_result["parse_warnings"] = _dedup_keep_order(
+        merged_result.get("parse_warnings", [])
+        + _pdf_parse_warnings_from_file_meta(file_meta)
+    )
     # 二次校验：合并扫描件警告后再次去重/补全
-    return validate_resume_parse_result(
+    validated_result = validate_resume_parse_result(
         merged_result,
+        raw_resume_text=cleaned_resume_text,
+    )
+    return validate_resume_parse_result(
+        _repair_contact_fields_with_pdf_header_ocr(validated_result, file_meta),
         raw_resume_text=cleaned_resume_text,
     )
 

@@ -9,11 +9,8 @@ import {
   Input,
   Radio,
   Row,
-  Space,
   Spin,
-  Statistic,
   Tag,
-  Tooltip,
 } from 'antd'
 import {
   AimOutlined,
@@ -24,6 +21,7 @@ import {
   ShareAltOutlined,
 } from '@ant-design/icons'
 import { careerApi } from '../services/api'
+import { EmptyState, EvidenceNote, MetricCard } from '../components/ui'
 import type { JobPathGraphEdge, JobPathGraphNode, JobPathGraphResponse } from '../types'
 import '../styles/JobPathGraph.css'
 
@@ -525,31 +523,31 @@ const JobPathGraph = () => {
 
       <Row gutter={[16, 16]} className="job-path-stats">
         <Col xs={12} md={6}>
-          <Card><Statistic title="岗位节点数" value={stats.job_node_count || 0} prefix={<AimOutlined />} /></Card>
+          <MetricCard label={<><AimOutlined /> 岗位节点数</>} value={stats.job_node_count || 0} />
         </Col>
         <Col xs={12} md={6}>
-          <Card><Statistic title="晋升关系数" value={stats.promote_edge_count || 0} prefix={<BranchesOutlined />} /></Card>
+          <MetricCard label={<><BranchesOutlined /> 晋升关系数</>} value={stats.promote_edge_count || 0} tone="green" />
         </Col>
         <Col xs={12} md={6}>
-          <Card><Statistic title="转岗关系数" value={stats.transfer_edge_count || 0} prefix={<ShareAltOutlined />} /></Card>
+          <MetricCard label={<><ShareAltOutlined /> 转岗关系数</>} value={stats.transfer_edge_count || 0} tone="orange" />
         </Col>
         <Col xs={12} md={6}>
-          <Card><Statistic title="总关系数" value={stats.total_edge_count || 0} /></Card>
+          <MetricCard label="总关系数" value={stats.total_edge_count || 0} tone="purple" />
         </Col>
       </Row>
 
       <Row gutter={[16, 16]} className="job-path-stats">
         <Col xs={12} md={6}>
-          <Card><Statistic title="原始节点数" value={graphData?.raw_node_count || stats.job_node_count || 0} /></Card>
+          <MetricCard label="原始节点数" value={graphData?.raw_node_count || stats.job_node_count || 0} />
         </Col>
         <Col xs={12} md={6}>
-          <Card><Statistic title="原始关系数" value={graphData?.raw_edge_count || stats.total_edge_count || 0} /></Card>
+          <MetricCard label="原始关系数" value={graphData?.raw_edge_count || stats.total_edge_count || 0} />
         </Col>
         <Col xs={12} md={6}>
-          <Card><Statistic title="当前展示节点" value={graphData?.filtered_node_count || stats.job_node_count || 0} /></Card>
+          <MetricCard label="当前展示节点" value={graphData?.filtered_node_count || stats.job_node_count || 0} tone="green" />
         </Col>
         <Col xs={12} md={6}>
-          <Card><Statistic title="当前展示关系" value={graphData?.filtered_edge_count || stats.total_edge_count || 0} /></Card>
+          <MetricCard label="当前展示关系" value={graphData?.filtered_edge_count || stats.total_edge_count || 0} tone="purple" />
         </Col>
       </Row>
 
@@ -601,8 +599,14 @@ const JobPathGraph = () => {
               <div ref={containerRef} className="graph-canvas" />
             ) : (
               <div className="graph-empty">
-                <Empty
-                  description={graphStatus === 'available' ? '当前筛选条件下暂无关系' : '暂无岗位路径图谱数据'}
+                <EmptyState
+                  title={graphStatus === 'available' ? '当前筛选条件下暂无关系' : '暂无岗位路径图谱数据'}
+                  description={graphScope === 'curated'
+                    ? '精选图谱会过滤低质量或非典型计算机岗位名。如需查看原始 Neo4j 数据，可以切换到全部原始图谱。'
+                    : '当前数据源没有返回可展示的真实 PROMOTE_TO / TRANSFER_TO 关系。'}
+                  action={graphScope === 'curated' ? (
+                    <Button type="primary" onClick={() => setGraphScope('all')}>查看全部原始图谱</Button>
+                  ) : undefined}
                 />
               </div>
             )}
@@ -632,15 +636,11 @@ const JobPathGraph = () => {
       </Row>
 
       <Card className="job-path-note-card">
-        <Space direction="vertical" size={8}>
-          <b>可信边界说明</b>
-          <span>
-            本页面只展示 Neo4j 或本地 Neo4j 导入 CSV 中真实存在的路径关系，不使用 LLM 生成路径，也不代表每个用户目标岗位都存在对应晋升路径。
-          </span>
-          <Tooltip title="CareerPath 页面仍负责当前用户目标岗位路径状态；本页面负责查看全局岗位路径事实。">
-            <Tag color="blue">全局图谱事实展示</Tag>
-          </Tooltip>
-        </Space>
+        <EvidenceNote
+          title="可信边界说明"
+          description="本页面只展示 Neo4j 或本地 Neo4j 导入 CSV 中真实存在的路径关系，不使用 LLM 生成路径，也不代表每个用户目标岗位都存在对应晋升路径。"
+          sources={['Neo4j', 'CSV fallback', graphScope === 'curated' ? '精选图谱' : '全部原始图谱']}
+        />
       </Card>
     </div>
   )

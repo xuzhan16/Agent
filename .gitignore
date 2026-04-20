@@ -26,6 +26,8 @@ dist/
 .infra/neo4j/
 outputs/backups/
 Agent-main/outputs/backups/
+outputs/ocr_cache/
+Agent-main/outputs/ocr_cache/
 outputs/sql/*.db
 Agent-main/outputs/sql/*.db
 Agent-main/llm_interface_layer/local_llm_config.py

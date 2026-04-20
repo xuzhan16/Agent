@@ -2,10 +2,34 @@ import { useEffect, useRef, useState } from 'react'
 import { Alert, Button, Card, Collapse, Empty, Input, Space, Spin, Table, Tag, Typography } from 'antd'
 import { MessageOutlined, ReloadOutlined, RobotOutlined, SendOutlined, UserOutlined } from '@ant-design/icons'
 import { careerApi } from '../services/api'
+import { DataSourceTags, EvidenceNote, HeroPanel } from '../components/ui'
 import { AIChatData, AIContextSummaryData, AIResultCard } from '../types'
 import '../styles/AIAssistant.css'
 
 const { TextArea } = Input
+
+const scenarioPrompts = [
+  {
+    title: '查公司机会',
+    desc: '按城市、薪资、岗位方向查询本地岗位样本',
+    prompt: '北京 20k 以上有哪些前端岗位和公司？',
+  },
+  {
+    title: '看岗位要求',
+    desc: '查询学历、专业、证书和知识点要求',
+    prompt: '当前推荐岗位的学历、专业、证书和知识点要求是什么？',
+  },
+  {
+    title: '解释匹配风险',
+    desc: '解释硬门槛、知识点和七维能力差距',
+    prompt: '我的岗位匹配主要风险是什么，下一步应该补什么？',
+  },
+  {
+    title: '查岗位路径',
+    desc: '基于本地图谱查看晋升和转岗关系',
+    prompt: '岗位路径图谱里有哪些真实晋升关系？',
+  },
+]
 
 interface ChatMessage {
   id: string
@@ -305,37 +329,7 @@ const AIAssistant = () => {
     const sources = data?.local_sources_used && data.local_sources_used.length > 0
       ? data.local_sources_used
       : (data?.used_context_sources || [])
-    const labelMap: Record<string, string> = {
-      jobs_db: 'SQLite jobs.db',
-      csv_fallback: 'CSV fallback',
-      student_profile: '学生画像',
-      job_match: '人岗匹配',
-      career_path: '职业路径',
-      report_data: '报告摘要',
-      semantic_kb: '岗位语义知识库',
-      job_path_graph: '岗位路径图谱',
-      path_graph: '岗位路径图谱',
-      sql_query: '结构化查询',
-      offline_mode: '未联网',
-    }
-    const colorMap: Record<string, string> = {
-      jobs_db: 'green',
-      csv_fallback: 'orange',
-      semantic_kb: 'purple',
-      job_path_graph: 'cyan',
-      path_graph: 'cyan',
-      offline_mode: 'gold',
-    }
-    const normalizedSources = Array.from(new Set([...sources, 'offline_mode']))
-    return (
-      <div className="ai-local-source-tags">
-        {normalizedSources.map((source) => (
-          <Tag key={source} color={colorMap[source] || 'blue'}>
-            {labelMap[source] || source}
-          </Tag>
-        ))}
-      </div>
-    )
+    return <DataSourceTags sources={sources} className="ai-local-source-tags" offline />
   }
 
   const renderAssistantMessage = (message: ChatMessage) => {
@@ -369,8 +363,20 @@ const AIAssistant = () => {
 
   return (
     <div className="ai-assistant-container">
-      <h1 className="page-title">AI 助手</h1>
-      <p className="page-description">基于学生画像、岗位匹配、职业路径与报告数据进行智能问答。</p>
+      <HeroPanel
+        className="ai-assistant-hero"
+        eyebrow="本地多知识源 Agent"
+        title="AI 助手工作台"
+        description="基于学生画像、岗位匹配、职业路径与报告数据进行问答；公司、薪资、岗位路径等事实优先来自本地知识源。"
+        extra={(
+          <div className="ai-hero-source-grid">
+            <span>SQLite jobs.db</span>
+            <span>Neo4j 路径图谱</span>
+            <span>JSON + embedding</span>
+            <span>未联网</span>
+          </div>
+        )}
+      />
 
       <Card className="ai-capability-card">
         <div className="ai-capability-header">
@@ -390,6 +396,24 @@ const AIAssistant = () => {
           <Tag color="green">分析推荐岗位差异</Tag>
           <Tag color="geekblue">总结报告行动建议</Tag>
           <Tag color="orange">联网检索暂未启用</Tag>
+        </div>
+        <EvidenceNote
+          className="ai-capability-note"
+          title="回答边界"
+          description="公司、薪资、城市与路径事实来自本地知识源；LLM 负责解释和组织答案，不直接编造事实。"
+          sources={['jobs.db', 'Neo4j', 'semantic KB', 'state files']}
+          compact
+        />
+      </Card>
+
+      <Card className="ai-scenario-card" title="常用分析场景">
+        <div className="ai-scenario-grid">
+          {scenarioPrompts.map((item) => (
+            <button className="ai-scenario-item" key={item.title} type="button" onClick={() => handleQuickPrompt(item.prompt)}>
+              <strong>{item.title}</strong>
+              <span>{item.desc}</span>
+            </button>
+          ))}
         </div>
       </Card>
 

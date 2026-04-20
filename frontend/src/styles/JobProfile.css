@@ -1,6 +1,6 @@
 .job-profile-container {
   width: 100%;
-  max-width: 1240px;
+  max-width: var(--layout-max);
   margin: 0 auto;
 }
 
@@ -13,13 +13,12 @@
   padding: 34px;
   margin-bottom: 24px;
   overflow: hidden;
-  border-radius: 26px;
+  border-radius: var(--radius-xl);
   background:
-    radial-gradient(circle at 10% 18%, rgba(59, 130, 246, 0.22), transparent 34%),
-    radial-gradient(circle at 92% 16%, rgba(139, 92, 246, 0.25), transparent 32%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(239, 246, 255, 0.93));
-  box-shadow: 0 24px 70px rgba(59, 130, 246, 0.14);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96)),
+    radial-gradient(circle at 10% 18%, rgba(36, 84, 214, 0.12), transparent 34%);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-soft);
 }
 
 .job-profile-kicker {
@@ -27,8 +26,8 @@
   margin-bottom: 12px;
   padding: 6px 12px;
   border-radius: 999px;
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
+  color: var(--brand-primary);
+  background: rgba(36, 84, 214, 0.08);
   font-size: 13px;
   font-weight: 700;
 }
@@ -36,7 +35,7 @@
 .job-profile-hero h1 {
   max-width: 760px;
   margin: 0 0 12px;
-  color: #0f172a;
+  color: var(--text-primary);
   font-size: 34px;
   line-height: 1.25;
   font-weight: 800;
@@ -46,7 +45,7 @@
 .job-profile-hero p {
   max-width: 720px;
   margin: 0;
-  color: #475569;
+  color: var(--text-secondary);
   line-height: 1.8;
 }
 
@@ -58,27 +57,21 @@
   gap: 12px;
 }
 
-.job-profile-metrics div {
+.job-profile-metrics .product-metric-card {
   min-height: 84px;
-  padding: 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.76);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
-  backdrop-filter: blur(12px);
 }
 
-.job-profile-metrics span {
+.job-profile-metrics .product-metric-label {
   display: block;
   margin-bottom: 8px;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
-.job-profile-metrics strong {
+.job-profile-metrics .product-metric-value {
   display: -webkit-box;
   overflow: hidden;
-  color: #1e293b;
+  color: var(--text-primary);
   font-size: 18px;
   line-height: 1.35;
   -webkit-line-clamp: 2;
@@ -86,15 +79,15 @@
 }
 
 .job-profile-card {
-  border-radius: 18px;
-  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-soft);
   overflow: hidden;
 }
 
 .job-profile-card .ant-card-head {
-  border-bottom: 1px solid rgba(226, 232, 240, 0.95);
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.06), rgba(139, 92, 246, 0.07));
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--surface-card);
 }
 
 .job-profile-section {
@@ -111,24 +104,24 @@
   width: 100%;
   min-height: 252px;
   padding: 16px;
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   text-align: left;
   cursor: pointer;
   color: inherit;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid rgba(226, 232, 240, 0.92);
-  transition: all 0.25s ease;
+  background: var(--surface-card);
+  border: 1px solid var(--border-soft);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .profile-job-card:hover,
 .profile-job-card.selected {
   border-color: rgba(59, 130, 246, 0.58);
-  box-shadow: 0 18px 38px rgba(59, 130, 246, 0.13);
-  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
 }
 
 .profile-job-card.selected {
-  background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
+  background: linear-gradient(180deg, #f8fbff 0%, var(--surface-card) 100%);
 }
 
 .profile-job-card-head {
@@ -140,7 +133,7 @@
 }
 
 .profile-job-card-head span:first-child {
-  color: #3b82f6;
+  color: var(--brand-primary);
   font-weight: 800;
 }
 
@@ -192,9 +185,9 @@
 .detail-summary-panel {
   height: 100%;
   padding: 24px;
-  border-radius: 22px;
+  border-radius: var(--radius-xl);
   color: white;
-  background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+  background: linear-gradient(135deg, #102a6b, #0f766e);
 }
 
 .detail-kicker {
@@ -241,9 +234,9 @@
 .profile-distribution {
   height: 100%;
   padding: 16px;
-  border-radius: 16px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  background: var(--surface-card-subtle);
+  border: 1px solid var(--border-soft);
 }
 
 .profile-distribution-title {
@@ -278,7 +271,7 @@
 .profile-distribution-fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
 }
 
 .profile-distribution-value {
@@ -311,23 +304,20 @@
 .ability-radar-panel {
   min-height: 300px;
   padding: 10px 8px 4px;
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   background:
-    radial-gradient(circle at 85% 10%, rgba(59, 130, 246, 0.12), transparent 34%),
-    linear-gradient(180deg, #ffffff, #f8fbff);
-  border: 1px solid rgba(148, 163, 184, 0.16);
+    linear-gradient(180deg, var(--surface-card), var(--surface-card-subtle));
+  border: 1px solid var(--border-soft);
 }
 
 .ability-requirement-card {
   height: 100%;
   min-height: 188px;
   padding: 16px;
-  border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  background:
-    radial-gradient(circle at 88% 12%, rgba(37, 99, 235, 0.09), transparent 35%),
-    #ffffff;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-card);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.045);
 }
 
 .ability-requirement-head {
